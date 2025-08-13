@@ -2,6 +2,7 @@ personal_ws-1.1 en 0 utf-8
 abcabcabc
 abcd
 abcdefghijklmnopqrstuvwxyz
+ABIs
 AddAssign
 Addr
 adfb
@@ -309,6 +310,7 @@ memoization
 metadata
 Metadata
 metaprogramming
+metavariable
 mibbit
 Mibbit
 microcontroller

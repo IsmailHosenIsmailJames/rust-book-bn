@@ -1,19 +1,19 @@
-## Cargo Workspaces
+## কার্গো ওয়ার্কস্পেস (Cargo Workspaces)
 
-Chapter 12-এ, আমরা একটি প্যাকেজ তৈরি করেছি যাতে একটি বাইনারি ক্রেট এবং একটি লাইব্রেরি ক্রেট অন্তর্ভুক্ত ছিল। আপনার প্রোজেক্ট develop হওয়ার সাথে সাথে, আপনি হয়তো দেখতে পাবেন যে লাইব্রেরি ক্রেটটি আরও বড় হচ্ছে এবং আপনি আপনার প্যাকেজটিকে আরও multiple library crate-এ split করতে চান। Cargo _workspaces_ নামক একটি feature offer করে যা একসাথে develop করা multiple related package গুলোকে manage করতে সাহায্য করতে পারে।
+অধ্যায় ১২-এ, আমরা একটি প্যাকেজ তৈরি করেছিলাম যেখানে একটি বাইনারি ক্রেট এবং একটি লাইব্রেরি ক্রেট অন্তর্ভুক্ত ছিল। আপনার প্রজেক্ট বড় হওয়ার সাথে সাথে আপনি দেখতে পারেন যে লাইব্রেরি ক্রেটটি আরও বড় হচ্ছে এবং আপনি আপনার প্যাকেজটিকে একাধিক লাইব্রেরি ক্রেটে ভাগ করতে চান। কার্গো এই ক্ষেত্রে _ওয়ার্কস্পেস_ (workspaces) নামে একটি ফিচার সরবরাহ করে যা একসাথে ডেভেলপ করা একাধিক সম্পর্কিত প্যাকেজ পরিচালনা করতে সাহায্য করতে পারে।
 
 ### একটি ওয়ার্কস্পেস তৈরি করা
 
-একটি _ওয়ার্কস্পেস_ হল প্যাকেজগুলোর একটি set যা একই _Cargo.lock_ এবং আউটপুট ডিরেক্টরি share করে। আসুন একটি ওয়ার্কস্পেস ব্যবহার করে একটি প্রোজেক্ট তৈরি করি—আমরা trivial কোড ব্যবহার করব যাতে আমরা ওয়ার্কস্পেসের structure-এর উপর মনোযোগ দিতে পারি। একটি ওয়ার্কস্পেসকে structure করার একাধিক উপায় রয়েছে, তাই আমরা শুধুমাত্র একটি common উপায় দেখাব। আমাদের কাছে একটি বাইনারি এবং দুটি লাইব্রেরি ধারণকারী একটি ওয়ার্কস্পেস থাকবে। বাইনারি, যেটি main functionality provide করবে, দুটি লাইব্রেরির উপর নির্ভর করবে। একটি লাইব্রেরি একটি `add_one` ফাংশন provide করবে, এবং দ্বিতীয় লাইব্রেরি একটি `add_two` ফাংশন provide করবে। এই তিনটি crate একই ওয়ার্কস্পেসের অংশ হবে। আমরা ওয়ার্কস্পেসের জন্য একটি নতুন ডিরেক্টরি তৈরি করে শুরু করব:
+একটি _ওয়ার্কস্পেস_ হলো এমন一组 প্যাকেজ যা একই _Cargo.lock_ এবং আউটপুট ডিরেক্টরি শেয়ার করে। আসুন আমরা একটি ওয়ার্কস্পেস ব্যবহার করে একটি প্রজেক্ট তৈরি করি—আমরা এখানে সাধারণ কোড ব্যবহার করব যাতে আমরা ওয়ার্কস্পেসের কাঠামোর উপর মনোযোগ দিতে পারি। একটি ওয়ার্কস্পেস গঠন করার বিভিন্ন উপায় আছে, তাই আমরা শুধু একটি সাধারণ উপায় দেখাব। আমাদের একটি ওয়ার্কস্পেস থাকবে যাতে একটি বাইনারি এবং দুটি লাইব্রেরি থাকবে। বাইনারিটি, যা মূল কার্যকারিতা প্রদান করবে, দুটি লাইব্রেরির উপর নির্ভর করবে। একটি লাইব্রেরি `add_one` ফাংশন এবং অন্য লাইব্রেরিটি `add_two` ফাংশন প্রদান করবে। এই তিনটি ক্রেট একই ওয়ার্কস্পেসের অংশ হবে। আমরা ওয়ার্কস্পেসের জন্য একটি নতুন ডিরেক্টরি তৈরি করে শুরু করব:
 
 ```console
 $ mkdir add
 $ cd add
 ```
 
-এরপরে, _add_ ডিরেক্টরিতে, আমরা _Cargo.toml_ ফাইলটি তৈরি করি যা সম্পূর্ণ ওয়ার্কস্পেস configure করবে। এই ফাইলটিতে একটি `[package]` section থাকবে না। পরিবর্তে, এটি একটি `[workspace]` section দিয়ে শুরু হবে যা আমাদের ওয়ার্কস্পেসে member যোগ করার অনুমতি দেবে। আমরা আমাদের ওয়ার্কস্পেসে Cargo-এর resolver algorithm-এর latest and greatest version ব্যবহার করার জন্য `resolver` কে `"2"`-তে set করে রাখি।
+এরপর, _add_ ডিরেক্টরিতে, আমরা _Cargo.toml_ ফাইল তৈরি করব যা পুরো ওয়ার্কস্পেস কনফিগার করবে। এই ফাইলে কোনো `[package]` সেকশন থাকবে না। পরিবর্তে, এটি একটি `[workspace]` সেকশন দিয়ে শুরু হবে যা আমাদের ওয়ার্কস্পেসে মেম্বার যোগ করার সুযোগ দেবে। আমরা আমাদের ওয়ার্কস্পেসে কার্গোর সর্বশেষ এবং সর্বশ্রেষ্ঠ রিজলভার অ্যালগরিদম ব্যবহার করার জন্য `resolver`-এর মান `"3"` সেট করব।
 
-<span class="filename">Filename: Cargo.toml</span>
+<span class="filename">ফাইলের নাম: Cargo.toml</span>
 
 ```toml
 {{#include ../listings/ch14-more-about-cargo/no-listing-01-workspace/add/Cargo.toml}}
@@ -31,17 +31,17 @@ copy output below
 
 ```console
 $ cargo new adder
-    Creating binary (application) `adder` package
+     Created binary (application) `adder` package
       Adding `adder` as member of workspace at `file:///projects/add`
 ```
 
-ওয়ার্কস্পেসের ভিতরে `cargo new` চালানো স্বয়ংক্রিয়ভাবে newly created প্যাকেজটিকে ওয়ার্কস্পেস `Cargo.toml`-এর `[workspace]` ডেফিনিশনে `members` কী-তে যোগ করে, এইভাবে:
+একটি ওয়ার্কস্পেসের ভিতরে `cargo new` চালালে নতুন তৈরি হওয়া প্যাকেজটি স্বয়ংক্রিয়ভাবে ওয়ার্কস্পেসের _Cargo.toml_-এর `[workspace]` ডেফিনিশনের `members` কী-তে যোগ হয়ে যায়, যেমন:
 
 ```toml
 {{#include ../listings/ch14-more-about-cargo/output-only-01-adder-crate/add/Cargo.toml}}
 ```
 
-এই সময়ে, আমরা `cargo build` চালিয়ে ওয়ার্কস্পেস build করতে পারি। আপনার _add_ ডিরেক্টরির ফাইলগুলো এইরকম হওয়া উচিত:
+এই মুহূর্তে, আমরা `cargo build` চালিয়ে ওয়ার্কস্পেসটি বিল্ড করতে পারি। আপনার _add_ ডিরেক্টরির ফাইলগুলো এইরকম দেখতে হবে:
 
 ```text
 ├── Cargo.lock
@@ -53,19 +53,11 @@ $ cargo new adder
 └── target
 ```
 
-ওয়ার্কস্পেসের top level-এ একটি _target_ ডিরেক্টরি রয়েছে যেখানে compiled artifact গুলো রাখা হবে; `adder` প্যাকেজের নিজস্ব _target_ ডিরেক্টরি নেই। এমনকি যদি আমরা _adder_ ডিরেক্টরির ভেতর থেকে `cargo build` চালাই, তাহলেও compiled artifact গুলো _add/adder/target_-এর পরিবর্তে _add/target_-এ থাকবে। Cargo এইভাবে একটি ওয়ার্কস্পেসে _target_ ডিরেক্টরিকে structure করে কারণ একটি ওয়ার্কস্পেসের crate গুলো একে অপরের উপর নির্ভর করে। যদি প্রতিটি crate-এর নিজস্ব _target_ ডিরেক্টরি থাকত, তাহলে প্রতিটি crate-কে তার নিজস্ব _target_ ডিরেক্টরিতে artifact গুলো রাখার জন্য ওয়ার্কস্পেসের প্রতিটি অন্য crate-কে recompile করতে হত। একটি _target_ ডিরেক্টরি share করে, crate গুলো অপ্রয়োজনীয় rebuilding এড়াতে পারে।
+ওয়ার্কস্পেসের টপ লেভেলে একটি _target_ ডিরেক্টরি রয়েছে যেখানে কম্পাইল করা আর্টিফ্যাক্টগুলো রাখা হবে; `adder` প্যাকেজের নিজস্ব কোনো _target_ ডিরেক্টরি নেই। এমনকি যদি আমরা _adder_ ডিরেক্টরির ভেতর থেকে `cargo build` চালাই, কম্পাইল করা আর্টিফ্যাক্টগুলো _add/adder/target_ এর পরিবর্তে _add/target_ এই ডিরেক্টরিতেই জমা হবে। কার্গো একটি ওয়ার্কস্পেসের _target_ ডিরেক্টরি এইভাবে গঠন করে কারণ একটি ওয়ার্কস্পেসের ক্রেটগুলো একে অপরের উপর নির্ভর করার জন্য তৈরি। যদি প্রতিটি ক্রেটের নিজস্ব _target_ ডিরেক্টরি থাকত, তবে প্রতিটি ক্রেটকে ওয়ার্কস্পেসের অন্য ক্রেটগুলোকে পুনরায় কম্পাইল করতে হতো যাতে আর্টিফ্যাক্টগুলো তার নিজস্ব _target_ ডিরেক্টরিতে রাখা যায়। একটি _target_ ডিরেক্টরি শেয়ার করার মাধ্যমে, ক্রেটগুলো অপ্রয়োজনীয় রি-বিল্ডিং এড়াতে পারে।
 
 ### ওয়ার্কস্পেসে দ্বিতীয় প্যাকেজ তৈরি করা
 
-এরপরে, আসুন ওয়ার্কস্পেসে আরেকটি মেম্বার প্যাকেজ তৈরি করি এবং এটিকে `add_one` নাম দিই। Top-level _Cargo.toml_ পরিবর্তন করে `members` লিস্টে _add_one_ পাথ specify করুন:
-
-<span class="filename">Filename: Cargo.toml</span>
-
-```toml
-{{#include ../listings/ch14-more-about-cargo/no-listing-02-workspace-with-two-crates/add/Cargo.toml}}
-```
-
-তারপর `add_one` নামের একটি নতুন লাইব্রেরি ক্রেট generate করুন:
+এরপরে, আসুন ওয়ার্কস্পেসে আরেকটি মেম্বার প্যাকেজ তৈরি করি এবং এর নাম দিই `add_one`। `add_one` নামে একটি নতুন লাইব্রেরি ক্রেট তৈরি করুন:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/output-only-02-add-one/add
@@ -77,8 +69,16 @@ copy output below
 
 ```console
 $ cargo new add_one --lib
-    Creating library `add_one` package
+     Created library `add_one` package
       Adding `add_one` as member of workspace at `file:///projects/add`
+```
+
+টপ-লেভেল _Cargo.toml_ ফাইলটি এখন `members` তালিকায় _add_one_ পাথ অন্তর্ভুক্ত করবে:
+
+<span class="filename">ফাইলের নাম: Cargo.toml</span>
+
+```toml
+{{#include ../listings/ch14-more-about-cargo/no-listing-02-workspace-with-two-crates/add/Cargo.toml}}
 ```
 
 আপনার _add_ ডিরেক্টরিতে এখন এই ডিরেক্টরি এবং ফাইলগুলো থাকা উচিত:
@@ -97,38 +97,38 @@ $ cargo new add_one --lib
 └── target
 ```
 
-_Add_one/src/lib.rs_ ফাইলে, আসুন একটি `add_one` ফাংশন যোগ করি:
+_add_one/src/lib.rs_ ফাইলে, আসুন একটি `add_one` ফাংশন যোগ করি:
 
-<span class="filename">Filename: add_one/src/lib.rs</span>
+<span class="filename">ফাইলের নাম: add_one/src/lib.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch14-more-about-cargo/no-listing-02-workspace-with-two-crates/add/add_one/src/lib.rs}}
 ```
 
-এখন আমরা আমাদের বাইনারি সহ `adder` প্যাকেজটিকে `add_one` প্যাকেজের উপর নির্ভর করাতে পারি যেটিতে আমাদের লাইব্রেরি রয়েছে। প্রথমে, আমাদের _adder/Cargo.toml_-এ `add_one`-এর উপর একটি পাথ নির্ভরতা যোগ করতে হবে।
+এখন আমরা আমাদের বাইনারি সহ `adder` প্যাকেজটিকে আমাদের লাইব্রেরি সহ `add_one` প্যাকেজের উপর নির্ভর করাতে পারি। প্রথমে, আমাদের _adder/Cargo.toml_-এ `add_one`-এর জন্য একটি পাথ ডিপেন্ডেন্সি যোগ করতে হবে।
 
-<span class="filename">Filename: adder/Cargo.toml</span>
+<span class="filename">ফাইলের নাম: adder/Cargo.toml</span>
 
 ```toml
 {{#include ../listings/ch14-more-about-cargo/no-listing-02-workspace-with-two-crates/add/adder/Cargo.toml:6:7}}
 ```
 
-Cargo ধরে নেয় না যে একটি ওয়ার্কস্পেসের crate গুলো একে অপরের উপর নির্ভর করবে, তাই আমাদের dependency relationship গুলো সম্পর্কে explicit হতে হবে।
+কার্গো ধরে নেয় না যে একটি ওয়ার্কস্পেসের ক্রেটগুলো একে অপরের উপর নির্ভর করবে, তাই আমাদের ডিপেন্ডেন্সি সম্পর্কগুলো স্পষ্টভাবে উল্লেখ করতে হবে।
 
-এরপরে, আসুন `adder` ক্রেটে `add_one` ক্রেট থেকে `add_one` ফাংশনটি ব্যবহার করি। _Adder/src/main.rs_ ফাইলটি খুলুন এবং `main` ফাংশন পরিবর্তন করে `add_one` ফাংশনটিকে কল করুন, যেমনটি Listing 14-7-এ রয়েছে।
+এরপর, আসুন `adder` ক্রেটে (`add_one` ক্রেট থেকে) `add_one` ফাংশনটি ব্যবহার করি। _adder/src/main.rs_ ফাইলটি খুলুন এবং `main` ফাংশনটিকে `add_one` ফাংশন কল করার জন্য পরিবর্তন করুন, যেমনটি তালিকা ১৪-৭ এ দেখানো হয়েছে।
 
-<Listing number="14-7" file-name="adder/src/main.rs" caption="`adder` ক্রেটে `add_one` লাইব্রেরি ক্রেট ব্যবহার করা">
+<Listing number="14-7" file-name="adder/src/main.rs" caption="`adder` ক্রেট থেকে `add_one` লাইব্রেরি ক্রেট ব্যবহার করা">
 
 ```rust,ignore
-{{#rustdoc_include ../listings/ch14-more-about-cargo/listing-14-7/add/adder/src/main.rs}}
+{{#rustdoc_include ../listings/ch14-more-about-cargo/listing-14-07/add/adder/src/main.rs}}
 ```
 
 </Listing>
 
-Top-level _add_ ডিরেক্টরিতে `cargo build` চালিয়ে ওয়ার্কস্পেস build করি!
+আসুন টপ-লেভেল _add_ ডিরেক্টরিতে `cargo build` চালিয়ে ওয়ার্কস্পেসটি বিল্ড করি!
 
 <!-- manual-regeneration
-cd listings/ch14-more-about-cargo/listing-14-7/add
+cd listings/ch14-more-about-cargo/listing-14-07/add
 cargo build
 copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
@@ -140,7 +140,7 @@ $ cargo build
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
 ```
 
-_Add_ ডিরেক্টরি থেকে বাইনারি ক্রেট চালানোর জন্য, আমরা `-p` আর্গুমেন্ট এবং প্যাকেজের নাম `cargo run`-এর সাথে ব্যবহার করে ওয়ার্কস্পেসের কোন প্যাকেজটি চালাতে চাই তা specify করতে পারি:
+_add_ ডিরেক্টরি থেকে বাইনারি ক্রেটটি চালানোর জন্য, আমরা `-p` আর্গুমেন্ট এবং `cargo run` এর সাথে প্যাকেজের নাম ব্যবহার করে ওয়ার্কস্পেসের কোন প্যাকেজটি চালাতে চাই তা নির্দিষ্ট করতে পারি:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/listing-14-07/add
@@ -155,11 +155,11 @@ $ cargo run -p adder
 Hello, world! 10 plus one is 11!
 ```
 
-এটি _adder/src/main.rs_-এর কোড চালায়, যেটি `add_one` ক্রেটের উপর নির্ভর করে।
+এটি _adder/src/main.rs_ এর কোডটি চালায়, যা `add_one` ক্রেটের উপর নির্ভর করে।
 
-#### ওয়ার্কস্পেসে একটি External Package-এর উপর নির্ভর করা
+#### একটি ওয়ার্কস্পেসে একটি এক্সটার্নাল প্যাকেজের উপর নির্ভর করা
 
-লক্ষ্য করুন যে ওয়ার্কস্পেসের top level-এ শুধুমাত্র একটি _Cargo.lock_ ফাইল রয়েছে, প্রতিটি crate-এর ডিরেক্টরিতে _Cargo.lock_ থাকার পরিবর্তে। এটি নিশ্চিত করে যে সমস্ত crate সমস্ত dependency-এর একই version ব্যবহার করছে। যদি আমরা _adder/Cargo.toml_ এবং _add_one/Cargo.toml_ ফাইলগুলোতে `rand` প্যাকেজ যোগ করি, তাহলে Cargo সেগুলোর উভয়কেই `rand`-এর একটি version-এ resolve করবে এবং সেটিকে একটি _Cargo.lock_-এ record করবে। ওয়ার্কস্পেসের সমস্ত crate-কে একই dependency ব্যবহার করা মানে হল crate গুলো সব সময় একে অপরের সাথে compatible হবে। আসুন _add_one/Cargo.toml_ ফাইলের `[dependencies]` section-এ `rand` crate যোগ করি যাতে আমরা `add_one` crate-এ `rand` crate ব্যবহার করতে পারি:
+লক্ষ্য করুন যে ওয়ার্কস্পেসের টপ লেভেলে শুধুমাত্র একটি _Cargo.lock_ ফাইল আছে, প্রতিটি ক্রেটের ডিরেক্টরিতে একটি করে _Cargo.lock_ না থাকার পরিবর্তে। এটি নিশ্চিত করে যে সমস্ত ক্রেট সমস্ত ডিপেন্ডেন্সির একই সংস্করণ ব্যবহার করছে। যদি আমরা _adder/Cargo.toml_ এবং _add_one/Cargo.toml_ ফাইলে `rand` প্যাকেজ যোগ করি, কার্গো উভয়কেই `rand`-এর একটি সংস্করণে রিজলভ করবে এবং তা একটি _Cargo.lock_-এ রেকর্ড করবে। ওয়ার্কস্পেসের সমস্ত ক্রেটকে একই ডিপেন্ডেন্সি ব্যবহার করতে বাধ্য করার মানে হলো ক্রেটগুলো সবসময় একে অপরের সাথে কম্প্যাটিবল থাকবে। আসুন `add_one/Cargo.toml_ ফাইলের `[dependencies]` সেকশনে `rand` ক্রেট যোগ করি যাতে আমরা `add_one` ক্রেটে `rand` ক্রেট ব্যবহার করতে পারি:
 
 <!-- When updating the version of `rand` used, also update the version of
 `rand` used in these files so they all match:
@@ -167,13 +167,13 @@ Hello, world! 10 plus one is 11!
 * ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
 -->
 
-<span class="filename">Filename: add_one/Cargo.toml</span>
+<span class="filename">ফাইলের নাম: add_one/Cargo.toml</span>
 
 ```toml
 {{#include ../listings/ch14-more-about-cargo/no-listing-03-workspace-with-external-dependency/add/add_one/Cargo.toml:6:7}}
 ```
 
-আমরা এখন _add_one/src/lib.rs_ ফাইলে `use rand;` যোগ করতে পারি, এবং _add_ ডিরেক্টরিতে `cargo build` চালিয়ে সম্পূর্ণ ওয়ার্কস্পেস build করলে `rand` crate টি আসবে এবং compile হবে। আমরা একটি warning পাব কারণ আমরা scope-এ আনা `rand`-কে refer করছি না:
+আমরা এখন _add_one/src/lib.rs_ ফাইলে `use rand;` যোগ করতে পারি, এবং _add_ ডিরেক্টরিতে `cargo build` চালিয়ে পুরো ওয়ার্কস্পেস বিল্ড করলে `rand` ক্রেটটি নিয়ে আসা হবে এবং কম্পাইল করা হবে। আমরা একটি ওয়ার্নিং পাব কারণ আমরা স্কোপে আনা `rand`-কে রেফারেন্স করছি না:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/no-listing-03-workspace-with-external-dependency/add
@@ -201,7 +201,7 @@ warning: `add_one` (lib) generated 1 warning (run `cargo fix --lib -p add_one` t
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.95s
 ```
 
-Top-level _Cargo.lock_-এ এখন `add_one`-এর `rand`-এর উপর dependency সম্পর্কে তথ্য রয়েছে। যাইহোক, যদিও `rand` ওয়ার্কস্পেসের কোথাও ব্যবহার করা হয়েছে, তবুও আমরা ওয়ার্কস্পেসের অন্যান্য crate-গুলোতে এটি ব্যবহার করতে পারব না যতক্ষণ না আমরা তাদের _Cargo.toml_ ফাইলগুলোতেও `rand` যোগ করি। উদাহরণস্বরূপ, যদি আমরা `adder` প্যাকেজের জন্য _adder/src/main.rs_ ফাইলে `use rand;` যোগ করি, তাহলে আমরা একটি error পাব:
+টপ-লেভেল _Cargo.lock_-এ এখন `add_one`-এর `rand`-এর উপর নির্ভরতার তথ্য রয়েছে। যাইহোক, যদিও `rand` ওয়ার্কস্পেসের কোথাও ব্যবহৃত হচ্ছে, আমরা ওয়ার্কস্পেসের অন্য ক্রেটগুলিতে এটি ব্যবহার করতে পারব না যতক্ষণ না আমরা তাদের _Cargo.toml_ ফাইলে `rand` যোগ করি। উদাহরণস্বরূপ, যদি আমরা `adder` প্যাকেজের জন্য _adder/src/main.rs_ ফাইলে `use rand;` যোগ করি, আমরা একটি এরর পাব:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/output-only-03-use-rand/add
@@ -220,21 +220,20 @@ error[E0432]: unresolved import `rand`
   |     ^^^^ no external crate `rand`
 ```
 
-এটি ঠিক করতে, `adder` প্যাকেজের জন্য _Cargo.toml_ ফাইলটি edit করুন এবং indicate করুন যে `rand` এটির জন্যও একটি dependency। `Adder` প্যাকেজ build করলে _Cargo.lock_-এ `adder`-এর জন্য dependency-এর list-এ `rand` যোগ হবে, কিন্তু `rand`-এর কোনো additional copy ডাউনলোড হবে না। Cargo নিশ্চিত করবে যে ওয়ার্কস্পেসের প্রতিটি প্যাকেজের প্রতিটি crate `rand` প্যাকেজ ব্যবহার করে একই version ব্যবহার করবে যতক্ষণ না তারা `rand`-এর compatible version specify করে, আমাদের জায়গা বাঁচাবে এবং নিশ্চিত করবে যে ওয়ার্কস্পেসের crate গুলো একে অপরের সাথে compatible হবে।
+এটি ঠিক করার জন্য, `adder` প্যাকেজের জন্য _Cargo.toml_ ফাইলটি এডিট করুন এবং নির্দেশ করুন যে `rand` এটির জন্যও একটি ডিপেন্ডেন্সি। `adder` প্যাকেজ বিল্ড করলে _Cargo.lock_-এ `adder`-এর ডিপেন্ডেন্সি তালিকায় `rand` যোগ হবে, কিন্তু `rand`-এর কোনো অতিরিক্ত কপি ডাউনলোড করা হবে না। কার্গো নিশ্চিত করবে যে ওয়ার্কস্পেসের প্রতিটি প্যাকেজের প্রতিটি ক্রেট, যারা `rand` প্যাকেজ ব্যবহার করছে, তারা একই সংস্করণ ব্যবহার করবে যতক্ষণ তারা `rand`-এর কম্প্যাটিবল সংস্করণ নির্দিষ্ট করে, যা আমাদের স্পেস বাঁচায় এবং নিশ্চিত করে যে ওয়ার্কস্পেসের ক্রেটগুলো একে অপরের সাথে কম্প্যাটিবল হবে।
 
-যদি ওয়ার্কস্পেসের crate গুলো একই dependency-এর incompatible version specify করে, তাহলে Cargo সেগুলোর প্রত্যেকটিকে resolve করবে, কিন্তু তবুও যতটা সম্ভব কম version resolve করার চেষ্টা করবে।
+যদি ওয়ার্কস্পেসের ক্রেটগুলো একই ডিপেন্ডেন্সির ইনকম্প্যাটিবল সংস্করণ নির্দিষ্ট করে, কার্গো সেগুলোর প্রত্যেকটিকে রিজলভ করবে, কিন্তু তারপরও যত কম সম্ভব সংস্করণ রিজলভ করার চেষ্টা করবে।
 
-#### ওয়ার্কস্পেসে একটি টেস্ট যোগ করা
+#### একটি ওয়ার্কস্পেসে একটি টেস্ট যোগ করা
 
-আরেকটি enhancement-এর জন্য, আসুন `add_one` crate-এর মধ্যে `add_one::add_one` ফাংশনের একটি test যোগ করি:
+আরেকটি উন্নতির জন্য, আসুন `add_one` ক্রেটের মধ্যে `add_one::add_one` ফাংশনের একটি টেস্ট যোগ করি:
 
-<span class="filename">Filename: add_one/src/lib.rs</span>
+<span class="filename">ফাইলের নাম: add_one/src/lib.rs</span>
 
 ```rust,noplayground
-{{#rustdoc_include ../listings/ch14-more-about-cargo/no-listing-04-workspace-with-tests/add/add_one/src/lib.rs}}
-```
+{{#rustdoc_include ../listings/ch14-more-about-cargo/no-listing-04-workspace-with-tests/add/add_one/src/lib.rs}}```
 
-এখন top-level _add_ ডিরেক্টরিতে `cargo test` চালান। এইরকম structure করা একটি ওয়ার্কস্পেসে `cargo test` চালালে ওয়ার্কস্পেসের সমস্ত crate-এর জন্য test গুলো চলবে:
+এখন টপ-লেভেল _add_ ডিরেক্টরিতে `cargo test` চালান। এই ধরনের গঠনযুক্ত একটি ওয়ার্কস্পেসে `cargo test` চালালে ওয়ার্কস্পেসের সমস্ত ক্রেটের জন্য টেস্টগুলো চলবে:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/no-listing-04-workspace-with-tests/add
@@ -268,9 +267,9 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-আউটপুটের প্রথম section টি দেখায় যে `add_one` ক্রেটের `it_works` test টি pass করেছে। পরবর্তী section টি দেখায় যে `adder` ক্রেটে zero test পাওয়া গেছে, এবং তারপর শেষ section টি দেখায় `add_one` ক্রেটে zero ডকুমেন্টেশন test পাওয়া গেছে।
+আউটপুটের প্রথম সেকশনটি দেখায় যে `add_one` ক্রেটের `it_works` টেস্টটি পাস করেছে। পরবর্তী সেকশনটি দেখায় যে `adder` ক্রেটে শূন্যটি টেস্ট পাওয়া গেছে, এবং তারপর শেষ সেকশনটি দেখায় যে `add_one` ক্রেটে শূন্যটি ডকুমেন্টেশন টেস্ট পাওয়া গেছে।
 
-আমরা top-level ডিরেক্টরি থেকে `-p` flag ব্যবহার করে এবং যে crate-টি test করতে চাই তার নাম specify করে একটি ওয়ার্কস্পেসের একটি particular crate-এর জন্য test চালাতে পারি:
+আমরা টপ-লেভেল ডিরেক্টরি থেকে একটি ওয়ার্কস্পেসের একটি নির্দিষ্ট ক্রেটের জন্য টেস্টও চালাতে পারি `-p` ফ্ল্যাগ ব্যবহার করে এবং যে ক্রেটটি আমরা টেস্ট করতে চাই তার নাম উল্লেখ করে:
 
 <!-- manual-regeneration
 cd listings/ch14-more-about-cargo/no-listing-04-workspace-with-tests/add
@@ -295,10 +294,10 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-এই আউটপুটটি দেখায় `cargo test` শুধুমাত্র `add_one` ক্রেটের জন্য test গুলো চালিয়েছে এবং `adder` ক্রেটের test গুলো চালায়নি।
+এই আউটপুটটি দেখায় যে `cargo test` শুধুমাত্র `add_one` ক্রেটের জন্য টেস্ট চালিয়েছে এবং `adder` ক্রেটের টেস্ট চালায়নি।
 
-আপনি যদি ওয়ার্কস্পেসের crate গুলোকে [crates.io](https://crates.io/)-তে publish করেন, তাহলে ওয়ার্কস্পেসের প্রতিটি crate-কে আলাদাভাবে publish করতে হবে। `Cargo test`-এর মতোই, আমরা `-p` flag ব্যবহার করে এবং যে crate-টি publish করতে চাই তার নাম specify করে আমাদের ওয়ার্কস্পেসের একটি particular crate publish করতে পারি।
+আপনি যদি ওয়ার্কস্পেসের ক্রেটগুলো [crates.io](https://crates.io/)-তে পাবলিশ করেন, ওয়ার্কস্পেসের প্রতিটি ক্রেটকে আলাদাভাবে পাবলিশ করতে হবে। `cargo test`-এর মতো, আমরা `-p` ফ্ল্যাগ ব্যবহার করে এবং যে ক্রেটটি আমরা পাবলিশ করতে চাই তার নাম উল্লেখ করে আমাদের ওয়ার্কস্পেসের একটি নির্দিষ্ট ক্রেট পাবলিশ করতে পারি।
 
-অতিরিক্ত practice-এর জন্য, `add_one` crate-এর মতোই এই ওয়ার্কস্পেসে একটি `add_two` crate যোগ করুন!
+অতিরিক্ত অনুশীলনের জন্য, `add_one` ক্রেটের মতোই এই ওয়ার্কস্পেসে একটি `add_two` ক্রেট যোগ করুন!
 
-আপনার প্রোজেক্ট যত বাড়বে, ওয়ার্কস্পেস ব্যবহার করার কথা বিবেচনা করুন: কোডের একটি বড় অংশের চেয়ে ছোট, individual component গুলো বোঝা সহজ। উপরন্তু, crate গুলোকে একটি ওয়ার্কস্পেসে রাখলে crate-গুলোর মধ্যে coordination সহজতর হতে পারে যদি সেগুলো প্রায়শই একই সময়ে পরিবর্তন করা হয়।
+আপনার প্রজেক্ট বড় হওয়ার সাথে সাথে, একটি ওয়ার্কস্পেস ব্যবহার করার কথা বিবেচনা করুন: এটি আপনাকে একটি বড় কোডের ব্লবের চেয়ে ছোট, সহজে বোঝা যায় এমন কম্পোনেন্ট নিয়ে কাজ করতে সক্ষম করে। উপরন্তু, ক্রেটগুলোকে একটি ওয়ার্কস্পেসে রাখা ক্রেটগুলোর মধ্যে সমন্বয় সহজ করতে পারে যদি সেগুলো প্রায়শই একই সময়ে পরিবর্তন করা হয়।
