@@ -1,0 +1,597 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>একটি সিঙ্গেল-থ্রেডেড ওয়েব সার্ভার তৈরি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="একটি-সিঙগেল-থরেডেড-ওযেব-সারভার-তৈরি"><a class="header" href="#একটি-সিঙগেল-থরেডেড-ওযেব-সারভার-তৈরি">একটি সিঙ্গেল-থ্রেডেড ওয়েব সার্ভার তৈরি</a></h2>
+<p>আমরা একটি সিঙ্গেল-থ্রেডেড ওয়েব সার্ভার চালু করার মাধ্যমে কাজ শুরু করব। তবে তার আগে, ওয়েব সার্ভার তৈরির সাথে জড়িত প্রোটোকলগুলো সম্পর্কে সংক্ষেপে জেনে নেওয়া যাক। এই প্রোটোকলগুলোর বিস্তারিত বিবরণ এই বইয়ের আওতার বাইরে, কিন্তু একটি সংক্ষিপ্ত ধারণা আপনাকে প্রয়োজনীয় তথ্য দেবে।</p>
+<p>ওয়েব সার্ভারের সাথে প্রধানত দুটি প্রোটোকল জড়িত: <em>Hypertext Transfer Protocol</em> <em>(HTTP)</em> এবং <em>Transmission Control Protocol</em> <em>(TCP)</em>। উভয় প্রোটোকলই <em>request-response</em> প্রোটোকল, যার অর্থ হলো একটি <em>client</em> রিকোয়েস্ট পাঠায় এবং একটি <em>server</em> সেই রিকোয়েস্ট শোনে এবং client-কে একটি রেসপন্স প্রদান করে। এই রিকোয়েস্ট এবং রেসপন্সগুলোর বিষয়বস্তু প্রোটোকল দ্বারা সংজ্ঞায়িত করা হয়।</p>
+<p>TCP হলো একটি নিম্ন-স্তরের প্রোটোকল যা বর্ণনা করে কীভাবে তথ্য এক সার্ভার থেকে অন্য সার্ভারে যায়, কিন্তু সেই তথ্যটি কী, তা নির্দিষ্ট করে না। HTTP, TCP-এর উপরে তৈরি করা হয়েছে এবং এটি রিকোয়েস্ট ও রেসপন্সের বিষয়বস্তু নির্ধারণ করে। প্রযুক্তিগতভাবে HTTP অন্য প্রোটোকলের সাথেও ব্যবহার করা সম্ভব, তবে বেশিরভাগ ক্ষেত্রেই HTTP তার ডেটা TCP-এর মাধ্যমে পাঠায়। আমরা TCP এবং HTTP রিকোয়েস্ট ও রেসপন্সের raw বাইট নিয়ে কাজ করব।</p>
+<h3 id="tcp-কানেকশনে-লিসেন-করা"><a class="header" href="#tcp-কানেকশনে-লিসেন-করা">TCP কানেকশনে লিসেন করা</a></h3>
+<p>আমাদের ওয়েব সার্ভারকে একটি TCP connection শোনার প্রয়োজন, তাই আমরা প্রথমে এই অংশটি নিয়ে কাজ করব। স্ট্যান্ডার্ড লাইব্রেরির <code>std::net</code> মডিউলটি আমাদের এই কাজটি করতে সাহায্য করে। চলুন, স্বাভাবিক পদ্ধতিতে একটি নতুন প্রজেক্ট তৈরি করি:</p>
+<pre><code class="language-console">$ cargo new hello
+     Created binary (application) `hello` project
+$ cd hello
+</code></pre>
+<p>এখন <em>src/main.rs</em> ফাইলে লিস্টিং ২১-১ এর কোডটি লিখুন। এই কোডটি স্থানীয় <code>127.0.0.1:7878</code> অ্যাড্রেসে আসা TCP stream-এর জন্য লিসেন করবে। যখন এটি একটি ইনকামিং স্ট্রিম পাবে, তখন <code>Connection established!</code> প্রিন্ট করবে।</p>
+<Listing number="21-1" file-name="src/main.rs" caption="ইনকামিং স্ট্রিমের জন্য লিসেন করা এবং স্ট্রিম পেলে একটি বার্তা প্রিন্ট করা">
+<pre><pre class="playground"><code class="language-rust no_run edition2024">use std::net::TcpListener;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        println!("Connection established!");
+    }
+}</code></pre></pre>
+</Listing>
+<p><code>TcpListener</code> ব্যবহার করে আমরা <code>127.0.0.1:7878</code> অ্যাড্রেসে TCP connection-এর জন্য লিসেন করতে পারি। এই অ্যাড্রেসে, কোলনের আগের অংশটি হলো আপনার কম্পিউটারকে প্রতিনিধিত্বকারী একটি IP address (এটি প্রতিটি কম্পিউটারে একই এবং নির্দিষ্টভাবে লেখকের কম্পিউটারকে বোঝায় না), এবং <code>7878</code> হলো পোর্ট। আমরা এই পোর্টটি দুটি কারণে বেছে নিয়েছি: সাধারণত এই পোর্টে HTTP গ্রহণ করা হয় না, তাই আমাদের সার্ভারটি আপনার মেশিনে চলমান অন্য কোনো ওয়েব সার্ভারের সাথে冲突 করার সম্ভাবনা কম, এবং 7878 একটি টেলিফোনে <em>rust</em> টাইপ করলে যা হয়, তাই।</p>
+<p>এক্ষেত্রে <code>bind</code> ফাংশনটি <code>new</code> ফাংশনের মতোই কাজ করে, কারণ এটি একটি নতুন <code>TcpListener</code> ইনস্ট্যান্স রিটার্ন করে। ফাংশনটিকে <code>bind</code> বলা হয় কারণ নেটওয়ার্কিং-এর পরিভাষায়, শোনার জন্য একটি পোর্টের সাথে সংযোগ করাকে "বাইন্ডিং টু এ পোর্ট" বলা হয়।</p>
+<p><code>bind</code> ফাংশনটি একটি <code>Result&lt;T, E&gt;</code> রিটার্ন করে, যা নির্দেশ করে যে বাইন্ডিং ব্যর্থ হতে পারে। উদাহরণস্বরূপ, যদি আমরা আমাদের প্রোগ্রামের দুটি ইনস্ট্যান্স চালাই এবং দুটি প্রোগ্রাম একই পোর্টে লিসেন করে। যেহেতু আমরা শুধুমাত্র শেখার উদ্দেশ্যে একটি বেসিক সার্ভার লিখছি, তাই আমরা এই ধরনের এরর হ্যান্ডলিং নিয়ে চিন্তা করব না; এর পরিবর্তে, যদি কোনো এরর ঘটে, তাহলে প্রোগ্রাম বন্ধ করতে আমরা <code>unwrap</code> ব্যবহার করব।</p>
+<p><code>TcpListener</code>-এর <code>incoming</code> মেথড একটি iterator রিটার্ন করে যা আমাদের একাধিক stream দেয় (আরও নির্দিষ্টভাবে বললে, <code>TcpStream</code> টাইপের স্ট্রিম)। একটি সিঙ্গেল <em>stream</em> ক্লায়েন্ট এবং সার্ভারের মধ্যে একটি খোলা সংযোগের প্রতিনিধিত্ব করে। একটি <em>connection</em> হলো সম্পূর্ণ রিকোয়েস্ট এবং রেসপন্স প্রক্রিয়ার নাম, যেখানে একটি ক্লায়েন্ট সার্ভারের সাথে সংযোগ করে, সার্ভার একটি রেসপন্স তৈরি করে এবং সংযোগটি বন্ধ করে দেয়। সুতরাং, ক্লায়েন্ট কী পাঠিয়েছে তা দেখার জন্য আমরা <code>TcpStream</code> থেকে ডেটা রিড করব এবং ক্লায়েন্টকে ডেটা ফেরত পাঠানোর জন্য আমাদের রেসপন্সটি স্ট্রিমে লিখব। মোটের উপর, এই <code>for</code> লুপটি প্রতিটি কানেকশন একে একে প্রসেস করবে এবং আমাদের হ্যান্ডেল করার জন্য একাধিক স্ট্রিম তৈরি করবে।</p>
+<p>আপাতত, স্ট্রিম হ্যান্ডেল করার জন্য আমরা <code>unwrap</code> কল করছি, যাতে স্ট্রিমের কোনো এরর থাকলে আমাদের প্রোগ্রাম বন্ধ হয়ে যায়; যদি কোনো এরর না থাকে, প্রোগ্রাম একটি বার্তা প্রিন্ট করে। পরবর্তী লিস্টিংয়ে আমরা সফলতার ক্ষেত্রে আরও কার্যকারিতা যোগ করব। <code>incoming</code> মেথড থেকে এরর পাওয়ার কারণ হলো, আমরা আসলে কানেকশনগুলোর উপর ইটারেট করছি না, বরং <em>কানেকশন প্রচেষ্টার</em> উপর ইটারেট করছি। কানেকশন বিভিন্ন কারণে সফল নাও হতে পারে, যার মধ্যে অনেকগুলোই অপারেটিং সিস্টেম-নির্দিষ্ট। উদাহরণস্বরূপ, অনেক অপারেটিং সিস্টেমে একই সাথে খোলা কানেকশনের সংখ্যার একটি সীমা থাকে; সেই সংখ্যার বাইরে নতুন কানেকশন প্রচেষ্টা করলে কিছু খোলা কানেকশন বন্ধ না হওয়া পর্যন্ত এরর দেখা দেবে।</p>
+<p>চলুন এই কোডটি রান করি! টার্মিনালে <code>cargo run</code> কমান্ডটি চালান এবং তারপর একটি ওয়েব ব্রাউজারে <em>127.0.0.1:7878</em> লোড করুন। ব্রাউজারে "Connection reset"-এর মতো একটি এরর মেসেজ দেখানো উচিত, কারণ সার্ভারটি বর্তমানে কোনো ডেটা ফেরত পাঠাচ্ছে না। কিন্তু আপনি যখন আপনার টার্মিনাল দেখবেন, তখন ব্রাউজার সার্ভারের সাথে সংযোগ করার সময় প্রিন্ট হওয়া বেশ কয়েকটি বার্তা দেখতে পাবেন!</p>
+<pre><code class="language-text">     Running `target/debug/hello`
+Connection established!
+Connection established!
+Connection established!
+</code></pre>
+<p>কখনও কখনও আপনি একটি ব্রাউজার রিকোয়েস্টের জন্য একাধিক প্রিন্ট করা বার্তা দেখতে পাবেন; এর কারণ হতে পারে ব্রাউজারটি পেজের জন্য একটি রিকোয়েস্ট করছে এবং সেই সাথে অন্যান্য রিসোর্সের জন্যও রিকোয়েস্ট করছে, যেমন ব্রাউজার ট্যাবে প্রদর্শিত <em>favicon.ico</em> আইকন।</p>
+<p>এমনও হতে পারে যে সার্ভারটি কোনো ডেটা দিয়ে রেসপন্স না করায় ব্রাউজার একাধিকবার সার্ভারের সাথে সংযোগ করার চেষ্টা করছে। যখন লুপের শেষে <code>stream</code> স্কোপের বাইরে চলে যায় এবং ড্রপ হয়ে যায়, তখন <code>drop</code> ইমপ্লিমেন্টেশনের অংশ হিসেবে সংযোগটি বন্ধ হয়ে যায়। ব্রাউজারগুলো কখনও কখনও বন্ধ হয়ে যাওয়া সংযোগ পুনরায় চেষ্টা করে মোকাবেলা করে, কারণ সমস্যাটি অস্থায়ী হতে পারে।</p>
+<p>ব্রাউজারগুলো কোনো রিকোয়েস্ট না পাঠিয়েও সার্ভারে একাধিক কানেকশন খুলতে পারে, যাতে পরে যদি তারা রিকোয়েস্ট পাঠায়, তবে সেই রিকোয়েস্টগুলো দ্রুত সম্পন্ন হতে পারে। যখন এমনটা হয়, আমাদের সার্ভার প্রতিটি কানেকশন দেখতে পায়, সেই কানেকশনে কোনো রিকোয়েস্ট থাকুক বা না থাকুক। উদাহরণস্বরূপ, ক্রোম-ভিত্তিক ব্রাউজারগুলোর অনেক সংস্করণেই এমনটা করে থাকে; আপনি প্রাইভেট ব্রাউজিং মোড ব্যবহার করে বা অন্য কোনো ব্রাউজার ব্যবহার করে এই অপটিমাইজেশনটি নিষ্ক্রিয় করতে পারেন।</p>
+<p>গুরুত্বপূর্ণ বিষয় হলো আমরা সফলভাবে একটি TCP connection-এর একটি হ্যান্ডেল পেয়েছি!</p>
+<p>মনে রাখবেন, কোডের একটি নির্দিষ্ট সংস্করণ চালানো শেষ হলে <kbd>ctrl</kbd>-<kbd>C</kbd> চেপে প্রোগ্রামটি বন্ধ করতে হবে। এরপর কোডে প্রতিটি পরিবর্তনের পর <code>cargo run</code> কমান্ড দিয়ে প্রোগ্রামটি পুনরায় চালু করুন, যাতে আপনি নতুন কোডটি চালাচ্ছেন তা নিশ্চিত হয়।</p>
+<h3 id="রিকোযেসট-পডা"><a class="header" href="#রিকোযেসট-পডা">রিকোয়েস্ট পড়া</a></h3>
+<p>চলুন, ব্রাউজার থেকে রিকোয়েস্ট পড়ার কার্যকারিতা ইমপ্লিমেন্ট করি! প্রথমে একটি কানেকশন পাওয়া এবং তারপর সেই কানেকশন নিয়ে কোনো কাজ করার উদ্বেগগুলো আলাদা করতে, আমরা কানেকশন প্রসেস করার জন্য একটি নতুন ফাংশন শুরু করব। এই নতুন <code>handle_connection</code> ফাংশনে, আমরা TCP স্ট্রিম থেকে ডেটা পড়ব এবং এটি প্রিন্ট করব যাতে আমরা ব্রাউজার থেকে পাঠানো ডেটা দেখতে পারি। কোডটি পরিবর্তন করে লিস্টিং ২১-২ এর মতো করুন।</p>
+<Listing number="21-2" file-name="src/main.rs" caption="`TcpStream` থেকে পড়া এবং ডেটা প্রিন্ট করা">
+<pre><pre class="playground"><code class="language-rust no_run edition2024">use std::{
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        handle_connection(stream);
+    }
+}
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    println!("Request: {http_request:#?}");
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>std::io::prelude</code> এবং <code>std::io::BufReader</code> স্কোপের মধ্যে নিয়ে এসেছি যাতে আমরা স্ট্রিম থেকে ডেটা পড়া এবং লেখার জন্য প্রয়োজনীয় trait এবং type-গুলিতে অ্যাক্সেস পেতে পারি। <code>main</code> ফাংশনের <code>for</code> লুপে, আমরা কানেকশন তৈরির বার্তা প্রিন্ট করার পরিবর্তে, এখন নতুন <code>handle_connection</code> ফাংশনটি কল করি এবং এতে <code>stream</code> পাস করি।</p>
+<p><code>handle_connection</code> ফাংশনে, আমরা একটি নতুন <code>BufReader</code> ইনস্ট্যান্স তৈরি করি যা <code>stream</code>-এর একটি রেফারেন্সকে wrap করে। <code>BufReader</code> আমাদের জন্য <code>std::io::Read</code> trait মেথড কলগুলো পরিচালনা করে বাফারিং যুক্ত করে।</p>
+<p>আমরা <code>http_request</code> নামে একটি ভেরিয়েবল তৈরি করেছি ব্রাউজার থেকে আমাদের সার্ভারে পাঠানো রিকোয়েস্টের লাইনগুলো সংগ্রহ করার জন্য। আমরা <code>Vec&lt;_&gt;</code> টাইপ অ্যানোটেশন যোগ করে নির্দেশ করছি যে আমরা এই লাইনগুলো একটি ভেক্টরে সংগ্রহ করতে চাই।</p>
+<p><code>BufReader</code>, <code>std::io::BufRead</code> ট্রেইটটি ইমপ্লিমেন্ট করে, যা <code>lines</code> মেথড প্রদান করে। <code>lines</code> মেথডটি ডেটা স্ট্রিমকে যখনই একটি নিউলাইন বাইট দেখে, তখনই বিভক্ত করে <code>Result&lt;String, std::io::Error&gt;</code> এর একটি ইটারেটর রিটার্ন করে। প্রতিটি <code>String</code> পাওয়ার জন্য, আমরা প্রতিটি <code>Result</code> কে <code>map</code> এবং <code>unwrap</code> করি। যদি ডেটা বৈধ UTF-8 না হয় বা স্ট্রিম থেকে পড়তে কোনো সমস্যা হয়, তাহলে <code>Result</code> একটি এরর হতে পারে। আবারও বলছি, একটি প্রোডাকশন-লেভেলের প্রোগ্রামে এই এররগুলো আরও ভালোভাবে পরিচালনা করা উচিত, কিন্তু আমরা সরলতার জন্য এরর হলে প্রোগ্রামটি বন্ধ করে দিচ্ছি।</p>
+<p>ব্রাউজার একটি HTTP রিকোয়েস্টের শেষ বোঝাতে পরপর দুটি নিউলাইন ক্যারেক্টার পাঠায়, তাই স্ট্রিম থেকে একটি রিকোয়েস্ট পেতে, আমরা লাইন নিতে থাকি যতক্ষণ না একটি খালি স্ট্রিংয়ের লাইন পাই। একবার ভেক্টরে লাইনগুলো সংগ্রহ করার পরে, আমরা সেগুলোকে প্রিটি ডিবাগ ফরম্যাটিং ব্যবহার করে প্রিন্ট করছি যাতে ওয়েব ব্রাউজার আমাদের সার্ভারকে কী নির্দেশ পাঠাচ্ছে তা দেখতে পারি।</p>
+<p>চলুন এই কোডটি চেষ্টা করি! প্রোগ্রামটি শুরু করুন এবং একটি ওয়েব ব্রাউজারে আবার একটি রিকোয়েস্ট করুন। মনে রাখবেন যে আমরা এখনও ব্রাউজারে একটি এরর পেজ পাবো, কিন্তু টার্মিনালে আমাদের প্রোগ্রামের আউটপুট এখন এইরকম দেখাবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling hello v0.1.0 (file:///projects/hello)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.42s
+     Running `target/debug/hello`
+Request: [
+    "GET / HTTP/1.1",
+    "Host: 127.0.0.1:7878",
+    "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:99.0) Gecko/20100101 Firefox/99.0",
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language: en-US,en;q=0.5",
+    "Accept-Encoding: gzip, deflate, br",
+    "DNT: 1",
+    "Connection: keep-alive",
+    "Upgrade-Insecure-Requests: 1",
+    "Sec-Fetch-Dest: document",
+    "Sec-Fetch-Mode: navigate",
+    "Sec-Fetch-Site: none",
+    "Sec-Fetch-User: ?1",
+    "Cache-Control: max-age=0",
+]
+</code></pre>
+<p>আপনার ব্রাউজারের উপর নির্ভর করে, আপনি কিছুটা ভিন্ন আউটপুট পেতে পারেন। এখন যেহেতু আমরা রিকোয়েস্ট ডেটা প্রিন্ট করছি, আমরা রিকোয়েস্টের প্রথম লাইনে <code>GET</code> এর পরে পাথটি দেখে বুঝতে পারি কেন আমরা একটি ব্রাউজার রিকোয়েস্ট থেকে একাধিক কানেকশন পাই। যদি বারবার আসা কানেকশনগুলো সবই <em>/</em> রিকোয়েস্ট করে, আমরা জানি ব্রাউজারটি বারবার <em>/</em> আনার চেষ্টা করছে কারণ এটি আমাদের প্রোগ্রাম থেকে কোনো রেসপন্স পাচ্ছে না।</p>
+<p>চলুন ব্রাউজার আমাদের প্রোগ্রাম থেকে কী চাইছে তা বুঝতে এই রিকোয়েস্ট ডেটাটি ভেঙে দেখি।</p>
+<h3 id="একটি-http-রিকোযেসটের-দিকে-আরেকটু-গভীর-দৃষটি"><a class="header" href="#একটি-http-রিকোযেসটের-দিকে-আরেকটু-গভীর-দৃষটি">একটি HTTP রিকোয়েস্টের দিকে আরেকটু গভীর দৃষ্টি</a></h3>
+<p>HTTP একটি টেক্সট-ভিত্তিক প্রোটোকল, এবং একটি রিকোয়েস্ট এই ফরম্যাটে থাকে:</p>
+<pre><code class="language-text">Method Request-URI HTTP-Version CRLF
+headers CRLF
+message-body
+</code></pre>
+<p>প্রথম লাইনটি হলো <em>request line</em> যা ক্লায়েন্ট কী রিকোয়েস্ট করছে সে সম্পর্কে তথ্য ধারণ করে। রিকোয়েস্ট লাইনের প্রথম অংশটি ব্যবহৃত <em>method</em> নির্দেশ করে, যেমন <code>GET</code> বা <code>POST</code>, যা বর্ণনা করে ক্লায়েন্ট কীভাবে এই রিকোয়েস্টটি করছে। আমাদের ক্লায়েন্ট একটি <code>GET</code> রিকোয়েস্ট ব্যবহার করেছে, যার মানে এটি তথ্য চাইছে।</p>
+<p>রিকোয়েস্ট লাইনের পরবর্তী অংশ হলো <em>/</em> , যা ক্লায়েন্ট কোন <em>uniform resource identifier</em> <em>(URI)</em> রিকোয়েস্ট করছে তা নির্দেশ করে: একটি URI প্রায়, কিন্তু ঠিক পুরোপুরি, একটি <em>uniform resource locator</em> <em>(URL)</em> এর মতো নয়। এই অধ্যায়ে আমাদের উদ্দেশ্যে URI এবং URL-এর মধ্যে পার্থক্য গুরুত্বপূর্ণ নয়, তবে HTTP স্পেসিফিকেশন <em>URI</em> শব্দটি ব্যবহার করে, তাই আমরা এখানে মানসিকভাবে <em>URI</em>-এর জন্য <em>URL</em> প্রতিস্থাপন করতে পারি।</p>
+<p>শেষ অংশটি হলো ক্লায়েন্টের ব্যবহৃত HTTP ভার্সন, এবং তারপর রিকোয়েস্ট লাইনটি একটি CRLF সিকোয়েন্সে শেষ হয়। (CRLF মানে হলো <em>carriage return</em> এবং <em>line feed</em>, যা টাইপরাইটারের দিনের পরিভাষা!) CRLF সিকোয়েন্সটিকে <code>\r\n</code> হিসেবেও লেখা যেতে পারে, যেখানে <code>\r</code> একটি carriage return এবং <code>\n</code> একটি line feed। <em>CRLF sequence</em> রিকোয়েস্ট লাইনটিকে বাকি রিকোয়েস্ট ডেটা থেকে আলাদা করে। লক্ষ্য করুন যে যখন CRLF প্রিন্ট হয়, তখন আমরা <code>\r\n</code> না দেখে একটি নতুন লাইন শুরু হতে দেখি।</p>
+<p>আমাদের প্রোগ্রাম চালিয়ে প্রাপ্ত রিকোয়েস্ট লাইন ডেটা দেখলে, আমরা দেখি যে <code>GET</code> হলো মেথড, <em>/</em> হলো রিকোয়েস্ট URI, এবং <code>HTTP/1.1</code> হলো ভার্সন।</p>
+<p>রিকোয়েস্ট লাইনের পরে, <code>Host:</code> থেকে শুরু করে বাকি লাইনগুলো হলো হেডার। <code>GET</code> রিকোয়েস্টে কোনো বডি থাকে না।</p>
+<p>অন্য একটি ব্রাউজার থেকে রিকোয়েস্ট করার চেষ্টা করুন বা একটি ভিন্ন অ্যাড্রেস, যেমন <em>127.0.0.1:7878/test</em> চেয়ে দেখুন, রিকোয়েস্ট ডেটা কীভাবে পরিবর্তিত হয়।</p>
+<p>এখন যেহেতু আমরা জানি ব্রাউজার কী চাইছে, চলুন কিছু ডেটা ফেরত পাঠাই!</p>
+<h3 id="একটি-রেসপনস-লেখা"><a class="header" href="#একটি-রেসপনস-লেখা">একটি রেসপন্স লেখা</a></h3>
+<p>আমরা এখন ক্লায়েন্টের রিকোয়েস্টের জবাবে ডেটা পাঠানোর কার্যকারিতা ইমপ্লিমেন্ট করব। রেসপন্সগুলোর ফরম্যাট নিচে দেওয়া হলো:</p>
+<pre><code class="language-text">HTTP-Version Status-Code Reason-Phrase CRLF
+headers CRLF
+message-body
+</code></pre>
+<p>প্রথম লাইনটি একটি <em>status line</em> যা রেসপন্সে ব্যবহৃত HTTP ভার্সন, একটি সংখ্যাসূচক স্ট্যাটাস কোড যা রিকোয়েস্টের ফলাফল সংক্ষিপ্তভাবে জানায়, এবং একটি কারণ-বাক্যাংশ যা স্ট্যাটাস কোডের একটি টেক্সট বর্ণনা প্রদান করে। CRLF সিকোয়েন্সের পরে যেকোনো হেডার, আরেকটি CRLF সিকোয়েন্স এবং রেসপন্সের বডি থাকে।</p>
+<p>এখানে একটি উদাহরণ রেসপন্স রয়েছে যা HTTP ভার্সন 1.1 ব্যবহার করে, যার স্ট্যাটাস কোড 200, একটি OK কারণ-বাক্যাংশ, কোনো হেডার নেই এবং কোনো বডি নেই:</p>
+<pre><code class="language-text">HTTP/1.1 200 OK\r\n\r\n
+</code></pre>
+<p>স্ট্যাটাস কোড 200 হলো স্ট্যান্ডার্ড সফল রেসপন্স। টেক্সটটি একটি ক্ষুদ্র সফল HTTP রেসপন্স। চলুন, একটি সফল রিকোয়েস্টের জবাবে এটিকে স্ট্রিমে লিখি! <code>handle_connection</code> ফাংশন থেকে <code>println!</code> যা রিকোয়েস্ট ডেটা প্রিন্ট করছিল তা সরিয়ে দিন এবং লিস্টিং ২১-৩ এর কোড দিয়ে প্রতিস্থাপন করুন।</p>
+<Listing number="21-3" file-name="src/main.rs" caption="স্ট্রিমে একটি ক্ষুদ্র সফল HTTP রেসপন্স লেখা">
+<pre><pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">use std::{
+</span><span class="boring">    io::{BufReader, prelude::*},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let response = "HTTP/1.1 200 OK\r\n\r\n";
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+</Listing>
+<p>প্রথম নতুন লাইনটি <code>response</code> ভেরিয়েবলকে সংজ্ঞায়িত করে যা সফল বার্তার ডেটা ধারণ করে। তারপর আমরা আমাদের <code>response</code>-এর উপর <code>as_bytes</code> কল করে স্ট্রিং ডেটাকে বাইটে রূপান্তর করি। <code>stream</code>-এর <code>write_all</code> মেথডটি একটি <code>&amp;[u8]</code> নেয় এবং সেই বাইটগুলো সরাসরি কানেকশনে পাঠিয়ে দেয়। যেহেতু <code>write_all</code> অপারেশন ব্যর্থ হতে পারে, তাই আমরা আগের মতোই যেকোনো এরর ফলাফলের উপর <code>unwrap</code> ব্যবহার করি। আবারও, একটি বাস্তব অ্যাপ্লিকেশনে আপনার এখানে এরর হ্যান্ডলিং যোগ করা উচিত।</p>
+<p>এই পরিবর্তনগুলোর সাথে, চলুন আমাদের কোড চালাই এবং একটি রিকোয়েস্ট করি। আমরা আর টার্মিনালে কোনো ডেটা প্রিন্ট করছি না, তাই আমরা কার্গোর আউটপুট ছাড়া আর কিছুই দেখতে পাব না। যখন আপনি একটি ওয়েব ব্রাউজারে <em>127.0.0.1:7878</em> লোড করবেন, তখন আপনি একটি এররের পরিবর্তে একটি খালি পেজ দেখতে পাবেন। আপনি এইমাত্র হাতে-কলমে একটি HTTP রিকোয়েস্ট গ্রহণ এবং একটি রেসপন্স পাঠানো কোড করেছেন!</p>
+<h3 id="আসল-html-ফেরত-পাঠানো"><a class="header" href="#আসল-html-ফেরত-পাঠানো">আসল HTML ফেরত পাঠানো</a></h3>
+<p>চলুন একটি খালি পেজের চেয়ে বেশি কিছু ফেরত পাঠানোর কার্যকারিতা ইমপ্লিমেন্ট করি। আপনার প্রজেক্ট ডিরেক্টরির রুটে একটি নতুন ফাইল <em>hello.html</em> তৈরি করুন, <em>src</em> ডিরেক্টরিতে নয়। আপনি যেকোনো HTML ইনপুট করতে পারেন; লিস্টিং ২১-৪ একটি সম্ভাব্য উদাহরণ দেখায়।</p>
+<Listing number="21-4" file-name="hello.html" caption="একটি রেসপন্সে ফেরত পাঠানোর জন্য একটি নমুনা HTML ফাইল">
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello!&lt;/h1&gt;
+    &lt;p&gt;Hi from Rust&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</Listing>
+<p>এটি একটি শিরোনাম এবং কিছু টেক্সটসহ একটি ন্যূনতম HTML5 ডকুমেন্ট। একটি রিকোয়েস্ট পেলে সার্ভার থেকে এটি ফেরত পাঠানোর জন্য, আমরা লিস্টিং ২১-৫ এ দেখানো <code>handle_connection</code> পরিবর্তন করব যাতে এটি HTML ফাইলটি পড়ে, এটিকে একটি বডি হিসাবে রেসপন্সে যোগ করে এবং পাঠায়।</p>
+<Listing number="21-5" file-name="src/main.rs" caption="*hello.html*-এর বিষয়বস্তু রেসপন্সের বডি হিসাবে পাঠানো">
+<pre><pre class="playground"><code class="language-rust no_run edition2024">use std::{
+    fs,
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+};
+// --snip--
+
+<span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let http_request: Vec&lt;_&gt; = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+
+    let status_line = "HTTP/1.1 200 OK";
+    let contents = fs::read_to_string("hello.html").unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>use</code> স্টেটমেন্টে <code>fs</code> যোগ করেছি যাতে স্ট্যান্ডার্ড লাইব্রেরির ফাইল সিস্টেম মডিউলটি স্কোপে আসে। একটি ফাইলের বিষয়বস্তু একটি স্ট্রিংয়ে পড়ার কোডটি পরিচিত মনে হওয়া উচিত; আমরা আমাদের I/O প্রজেক্টে লিস্টিং ১২-৪ এ একটি ফাইলের বিষয়বস্তু পড়ার সময় এটি ব্যবহার করেছি।</p>
+<p>এরপরে, আমরা ফাইলের বিষয়বস্তু সফল রেসপন্সের বডি হিসেবে যোগ করতে <code>format!</code> ব্যবহার করি। একটি বৈধ HTTP রেসপন্স নিশ্চিত করার জন্য, আমরা <code>Content-Length</code> হেডার যোগ করি যা আমাদের রেসপন্স বডির আকারের সমান সেট করা হয়, এক্ষেত্রে <code>hello.html</code>-এর আকারের সমান।</p>
+<p><code>cargo run</code> দিয়ে এই কোডটি চালান এবং আপনার ব্রাউজারে <em>127.0.0.1:7878</em> লোড করুন; আপনার HTML রেন্ডার হওয়া উচিত!</p>
+<p>বর্তমানে, আমরা <code>http_request</code>-এর রিকোয়েস্ট ডেটা উপেক্ষা করছি এবং শর্তহীনভাবে HTML ফাইলের বিষয়বস্তু ফেরত পাঠাচ্ছি। এর মানে হলো যদি আপনি আপনার ব্রাউজারে <em>127.0.0.1:7878/something-else</em> রিকোয়েস্ট করার চেষ্টা করেন, তাহলেও আপনি এই একই HTML রেসপন্স ফিরে পাবেন। এই মুহূর্তে, আমাদের সার্ভারটি খুব সীমিত এবং বেশিরভাগ ওয়েব সার্ভার যা করে তা করে না। আমরা রিকোয়েস্টের উপর নির্ভর করে আমাদের রেসপন্স কাস্টমাইজ করতে চাই এবং শুধুমাত্র <em>/</em> এর জন্য একটি সুগঠিত রিকোয়েস্টের জন্য HTML ফাইলটি ফেরত পাঠাতে চাই।</p>
+<h3 id="রিকোযেসট-যাচাই-এবং-বেছে-বেছে-রেসপনস-করা"><a class="header" href="#রিকোযেসট-যাচাই-এবং-বেছে-বেছে-রেসপনস-করা">রিকোয়েস্ট যাচাই এবং বেছে বেছে রেসপন্স করা</a></h3>
+<p>এখন, আমাদের ওয়েব সার্ভার ক্লায়েন্টের রিকোয়েস্ট যাই হোক না কেন, ফাইলের HTML ফেরত দেবে। চলুন, ব্রাউজার <em>/</em> রিকোয়েস্ট করছে কিনা তা পরীক্ষা করার জন্য কার্যকারিতা যোগ করি এবং যদি ব্রাউজার অন্য কিছু রিকোয়েস্ট করে তবে একটি এরর ফেরত দিই। এর জন্য আমাদের <code>handle_connection</code> পরিবর্তন করতে হবে, যেমনটি লিস্টিং ২১-৬ এ দেখানো হয়েছে। এই নতুন কোডটি প্রাপ্ত রিকোয়েস্টের বিষয়বস্তু <em>/</em> রিকোয়েস্টের সাথে তুলনা করে এবং রিকোয়েস্টগুলো ভিন্নভাবে ট্রিট করার জন্য <code>if</code> এবং <code>else</code> ব্লক যোগ করে।</p>
+<Listing number="21-6" file-name="src/main.rs" caption="*/* রিকোয়েস্টগুলোকে অন্যান্য রিকোয়েস্ট থেকে ভিন্নভাবে হ্যান্ডেল করা">
+<pre><pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{BufReader, prelude::*},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span>// --snip--
+
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&amp;stream);
+    let request_line = buf_reader.lines().next().unwrap().unwrap();
+
+    if request_line == "GET / HTTP/1.1" {
+        let status_line = "HTTP/1.1 200 OK";
+        let contents = fs::read_to_string("hello.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    } else {
+        // some other request
+    }
+}</code></pre></pre>
+</Listing>
+<p>আমরা শুধুমাত্র HTTP রিকোয়েস্টের প্রথম লাইনটি দেখব, তাই পুরো রিকোয়েস্টটি একটি ভেক্টরে পড়ার পরিবর্তে, আমরা ইটারেটর থেকে প্রথম আইটেমটি পেতে <code>next</code> কল করছি। প্রথম <code>unwrap</code> টি <code>Option</code>-এর যত্ন নেয় এবং ইটারেটরে কোনো আইটেম না থাকলে প্রোগ্রামটি বন্ধ করে দেয়। দ্বিতীয় <code>unwrap</code> টি <code>Result</code> হ্যান্ডেল করে এবং লিস্টিং ২১-২-এ যোগ করা <code>map</code>-এর <code>unwrap</code>-এর মতোই কাজ করে।</p>
+<p>এরপরে, আমরা <code>request_line</code> পরীক্ষা করি যে এটি <em>/</em> পাথের একটি GET রিকোয়েস্টের রিকোয়েস্ট লাইনের সমান কিনা। যদি তাই হয়, <code>if</code> ব্লকটি আমাদের HTML ফাইলের বিষয়বস্তু ফেরত দেয়।</p>
+<p>যদি <code>request_line</code> টি <em>/</em> পাথের GET রিকোয়েস্টের সমান <em>না</em> হয়, তার মানে আমরা অন্য কোনো রিকোয়েস্ট পেয়েছি। আমরা কিছুক্ষণের মধ্যে <code>else</code> ব্লকে কোড যোগ করব অন্যান্য সব রিকোয়েস্টের জবাব দেওয়ার জন্য।</p>
+<p>এখন এই কোডটি চালান এবং <em>127.0.0.1:7878</em> রিকোয়েস্ট করুন; আপনার <em>hello.html</em>-এর HTML পাওয়া উচিত। আপনি যদি অন্য কোনো রিকোয়েস্ট করেন, যেমন <em>127.0.0.1:7878/something-else</em>, আপনি একটি কানেকশন এরর পাবেন যেমনটি আপনি লিস্টিং ২১-১ এবং লিস্টিং ২১-২ চালানোর সময় দেখেছিলেন।</p>
+<p>এখন চলুন লিস্টিং ২১-৭ এর কোডটি <code>else</code> ব্লকে যোগ করি যা স্ট্যাটাস কোড 404 সহ একটি রেসপন্স ফেরত দেবে, যা নির্দেশ করে যে রিকোয়েস্টের জন্য কন্টেন্ট পাওয়া যায়নি। আমরা এন্ড-ইউজারকে রেসপন্সটি দেখানোর জন্য ব্রাউজারে রেন্ডার করার জন্য একটি পেজের জন্য কিছু HTML-ও ফেরত দেব।</p>
+<Listing number="21-7" file-name="src/main.rs" caption="*/* ছাড়া অন্য কিছু রিকোয়েস্ট করা হলে স্ট্যাটাস কোড 404 এবং একটি এরর পেজ দিয়ে রেসপন্স করা">
+<pre><pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{BufReader, prelude::*},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn handle_connection(mut stream: TcpStream) {
+</span><span class="boring">    let buf_reader = BufReader::new(&amp;stream);
+</span><span class="boring">    let request_line = buf_reader.lines().next().unwrap().unwrap();
+</span><span class="boring">
+</span><span class="boring">    if request_line == "GET / HTTP/1.1" {
+</span><span class="boring">        let status_line = "HTTP/1.1 200 OK";
+</span><span class="boring">        let contents = fs::read_to_string("hello.html").unwrap();
+</span><span class="boring">        let length = contents.len();
+</span><span class="boring">
+</span><span class="boring">        let response = format!(
+</span><span class="boring">            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+</span><span class="boring">        );
+</span><span class="boring">
+</span><span class="boring">        stream.write_all(response.as_bytes()).unwrap();
+</span>    // --snip--
+    } else {
+        let status_line = "HTTP/1.1 404 NOT FOUND";
+        let contents = fs::read_to_string("404.html").unwrap();
+        let length = contents.len();
+
+        let response = format!(
+            "{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}"
+        );
+
+        stream.write_all(response.as_bytes()).unwrap();
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এখানে, আমাদের রেসপন্সের একটি স্ট্যাটাস লাইন রয়েছে যার স্ট্যাটাস কোড 404 এবং কারণ-বাক্যাংশ <code>NOT FOUND</code>। রেসপন্সের বডি হবে <em>404.html</em> ফাইলের HTML। এরর পেজের জন্য আপনাকে <em>hello.html</em>-এর পাশে একটি <em>404.html</em> ফাইল তৈরি করতে হবে; আবারও আপনার ইচ্ছামত যেকোনো HTML ব্যবহার করতে পারেন, অথবা লিস্টিং ২১-৮-এর উদাহরণ HTML ব্যবহার করতে পারেন।</p>
+<Listing number="21-8" file-name="404.html" caption="যেকোনো 404 রেসপন্সের সাথে ফেরত পাঠানোর জন্য পেজের নমুনা কন্টেন্ট">
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Hello!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Oops!&lt;/h1&gt;
+    &lt;p&gt;Sorry, I don't know what you're asking for.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</Listing>
+<p>এই পরিবর্তনগুলোর সাথে, আপনার সার্ভার আবার চালান। <em>127.0.0.1:7878</em> রিকোয়েস্ট করলে <em>hello.html</em>-এর বিষয়বস্তু ফেরত আসা উচিত, এবং অন্য যেকোনো রিকোয়েস্ট, যেমন <em>127.0.0.1:7878/foo</em>, <em>404.html</em> থেকে এরর HTML ফেরত দেওয়া উচিত।</p>
+<h3 id="একটু-রিফযাকটরিং"><a class="header" href="#একটু-রিফযাকটরিং">একটু রিফ্যাক্টরিং</a></h3>
+<p>এই মুহূর্তে, <code>if</code> এবং <code>else</code> ব্লকগুলিতে অনেক পুনরাবৃত্তি রয়েছে: তারা উভয়ই ফাইল পড়ছে এবং ফাইলগুলির বিষয়বস্তু স্ট্রিমে লিখছে। একমাত্র পার্থক্য হলো স্ট্যাটাস লাইন এবং ফাইলের নাম। চলুন, কোডটিকে আরও সংক্ষিপ্ত করি এই পার্থক্যগুলোকে আলাদা <code>if</code> এবং <code>else</code> লাইনে নিয়ে এসে, যা স্ট্যাটাস লাইন এবং ফাইলের নামের মানগুলিকে ভেরিয়েবলে অ্যাসাইন করবে; তারপর আমরা ফাইল পড়া এবং রেসপন্স লেখার জন্য সেই ভেরিয়েবলগুলিকে শর্তহীনভাবে ব্যবহার করতে পারি। লিস্টিং ২১-৯ বড় <code>if</code> এবং <code>else</code> ব্লকগুলি প্রতিস্থাপন করার পরের কোডটি দেখায়।</p>
+<Listing number="21-9" file-name="src/main.rs" caption="`if` এবং `else` ব্লকগুলোকে রিফ্যাক্টর করে শুধুমাত্র সেই কোড রাখা যা দুটি ক্ষেত্রে ভিন্ন">
+<pre><pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">use std::{
+</span><span class="boring">    fs,
+</span><span class="boring">    io::{BufReader, prelude::*},
+</span><span class="boring">    net::{TcpListener, TcpStream},
+</span><span class="boring">};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+</span><span class="boring">
+</span><span class="boring">    for stream in listener.incoming() {
+</span><span class="boring">        let stream = stream.unwrap();
+</span><span class="boring">
+</span><span class="boring">        handle_connection(stream);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span>// --snip--
+
+fn handle_connection(mut stream: TcpStream) {
+    // --snip--
+<span class="boring">    let buf_reader = BufReader::new(&amp;stream);
+</span><span class="boring">    let request_line = buf_reader.lines().next().unwrap().unwrap();
+</span>
+    let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
+        ("HTTP/1.1 200 OK", "hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "404.html")
+    };
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+}</code></pre></pre>
+</Listing>
+<p>এখন <code>if</code> এবং <code>else</code> ব্লকগুলো শুধুমাত্র স্ট্যাটাস লাইন এবং ফাইলের নামের জন্য উপযুক্ত মান একটি টাপল-এ রিটার্ন করে; এরপর আমরা <code>let</code> স্টেটমেন্টে একটি প্যাটার্ন ব্যবহার করে <code>status_line</code> এবং <code>filename</code>-এ এই দুটি মান অ্যাসাইন করতে destructuring ব্যবহার করি, যা অধ্যায় ১৯-এ আলোচনা করা হয়েছে।</p>
+<p>পূর্বে ডুপ্লিকেট করা কোডটি এখন <code>if</code> এবং <code>else</code> ব্লকের বাইরে এবং <code>status_line</code> ও <code>filename</code> ভেরিয়েবল ব্যবহার করে। এটি দুটি ক্ষেত্রের মধ্যে পার্থক্য দেখতে সহজ করে তোলে, এবং এর মানে হলো যদি আমরা ফাইল পড়া এবং রেসপন্স লেখার কাজ পরিবর্তন করতে চাই তবে আমাদের শুধুমাত্র একটি জায়গায় কোড আপডেট করতে হবে। লিস্টিং ২১-৯ এর কোডের আচরণ লিস্টিং ২১-৭ এর মতোই হবে।</p>
+<p>অসাধারণ! আমাদের কাছে এখন প্রায় ৪০ লাইনের রাস্ট কোডে একটি সাধারণ ওয়েব সার্ভার রয়েছে যা একটি রিকোয়েস্টে একটি কন্টেন্ট পেজ দিয়ে সাড়া দেয় এবং অন্য সব রিকোয়েস্টে একটি 404 রেসপন্স দিয়ে সাড়া দেয়।</p>
+<p>বর্তমানে, আমাদের সার্ভার একটি একক থ্রেডে চলে, যার মানে এটি একবারে শুধুমাত্র একটি রিকোয়েস্ট পরিবেশন করতে পারে। চলুন কিছু ধীরগতির রিকোয়েস্ট সিমুলেট করে দেখি কীভাবে এটি একটি সমস্যা হতে পারে। তারপর আমরা এটি ঠিক করব যাতে আমাদের সার্ভার একবারে একাধিক রিকোয়েস্ট পরিচালনা করতে পারে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch21-00-final-project-a-web-server.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch21-02-multithreaded.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch21-00-final-project-a-web-server.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch21-02-multithreaded.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

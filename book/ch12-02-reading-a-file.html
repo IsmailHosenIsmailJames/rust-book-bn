@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>একটি ফাইল পড়া - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="ফাইল-পড়া-reading-a-file"><a class="header" href="#ফাইল-পড়া-reading-a-file">ফাইল পড়া (Reading a File)</a></h2>
+<p>এখন আমরা <code>file_path</code> আর্গুমেন্টে নির্দিষ্ট করা ফাইলটি পড়ার জন্য ফাংশনালিটি যোগ করব। প্রথমে, এটি পরীক্ষা করার জন্য আমাদের একটি স্যাম্পল ফাইল দরকার: আমরা একাধিক লাইনে কিছু টেক্সট এবং কিছু পুনরাবৃত্তিমূলক শব্দসহ একটি ফাইল ব্যবহার করব। লিস্টিং ১২-৩-এ এমিলি ডিকিনসনের একটি কবিতা রয়েছে যা এই কাজের জন্য বেশ উপযুক্ত হবে! আপনার প্রজেক্টের রুট লেভেলে <em>poem.txt</em> নামে একটি ফাইল তৈরি করুন এবং "I’m Nobody! Who are you?" কবিতাটি লিখুন।</p>
+<Listing number="12-3" file-name="poem.txt" caption="এমিলি ডিকিনসনের একটি কবিতা একটি ভালো টেস্ট কেস হতে পারে।">
+<pre><code class="language-text">I'm nobody! Who are you?
+Are you nobody, too?
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
+
+How dreary to be somebody!
+How public, like a frog
+To tell your name the livelong day
+To an admiring bog!
+</code></pre>
+</Listing>
+<p>টেক্সট প্রস্তুত হয়ে গেলে, <em>src/main.rs</em> ফাইলটি এডিট করুন এবং ফাইলটি পড়ার জন্য কোড যোগ করুন, যেমনটি লিস্টিং ১২-৪-এ দেখানো হয়েছে।</p>
+<Listing number="12-4" file-name="src/main.rs" caption="দ্বিতীয় আর্গুমেন্টে নির্দিষ্ট করা ফাইলের কন্টেন্ট পড়া">
+<pre><code class="language-rust should_panic noplayground">use std::env;
+use std::fs;
+
+fn main() {
+    // --snip--
+<span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let query = &amp;args[1];
+</span><span class="boring">    let file_path = &amp;args[2];
+</span><span class="boring">
+</span><span class="boring">    println!("Searching for {query}");
+</span>    println!("In file {file_path}");
+
+    let contents = fs::read_to_string(file_path)
+        .expect("Should have been able to read the file");
+
+    println!("With text:\n{contents}");
+}</code></pre>
+</Listing>
+<p>প্রথমে আমরা <code>use</code> স্টেটমেন্টের মাধ্যমে standard library-র একটি প্রাসঙ্গিক অংশ নিয়ে আসি: ফাইল হ্যান্ডেল করার জন্য আমাদের <code>std::fs</code> প্রয়োজন।</p>
+<p><code>main</code> ফাংশনের নতুন স্টেটমেন্ট <code>fs::read_to_string</code> <code>file_path</code> আর্গুমেন্টটি গ্রহণ করে, সেই ফাইলটি খোলে এবং ফাইলের কন্টেন্ট সহ একটি <code>std::io::Result&lt;String&gt;</code> টাইপের ভ্যালু রিটার্ন করে।</p>
+<p>এর পরে, আমরা আবার একটি অস্থায়ী <code>println!</code> স্টেটমেন্ট যোগ করেছি যা ফাইল পড়ার পরে <code>contents</code>-এর ভ্যালু প্রিন্ট করে, যাতে আমরা পরীক্ষা করতে পারি যে প্রোগ্রামটি এখন পর্যন্ত ঠিকভাবে কাজ করছে কিনা।</p>
+<p>চলুন এই কোডটি প্রথম কমান্ড লাইন আর্গুমেন্ট হিসেবে যেকোনো স্ট্রিং (কারণ আমরা এখনও সার্চিং অংশটি তৈরি করিনি) এবং দ্বিতীয় আর্গুমেন্ট হিসেবে <em>poem.txt</em> ফাইলটি দিয়ে চালাই:</p>
+<pre><code class="language-console">$ cargo run -- the poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep the poem.txt`
+Searching for the
+In file poem.txt
+With text:
+I'm nobody! Who are you?
+Are you nobody, too?
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
+
+How dreary to be somebody!
+How public, like a frog
+To tell your name the livelong day
+To an admiring bog!
+
+</code></pre>
+<p>চমৎকার! কোডটি ফাইলের বিষয়বস্তু পড়েছে এবং তারপর প্রিন্ট করেছে। কিন্তু কোডটিতে কয়েকটি ত্রুটি রয়েছে। এই মুহূর্তে, <code>main</code> ফাংশনের একাধিক দায়িত্ব রয়েছে: সাধারণত, প্রতিটি ফাংশন যদি কেবল একটি কাজের জন্য দায়ী থাকে তবে ফাংশনগুলো আরও পরিষ্কার এবং রক্ষণাবেক্ষণ করা সহজ হয়। অন্য সমস্যাটি হলো আমরা যেভাবে এরর হ্যান্ডলিং করতে পারতাম, সেভাবে করছি না। প্রোগ্রামটি এখনও ছোট, তাই এই ত্রুটিগুলো বড় কোনো সমস্যা নয়, কিন্তু প্রোগ্রাম বড় হওয়ার সাথে সাথে এগুলোকে পরিষ্কারভাবে ঠিক করা আরও কঠিন হয়ে উঠবে। একটি প্রোগ্রাম তৈরির সময় প্রথম দিকেই রিফ্যাক্টরিং (refactoring) শুরু করা একটি ভালো অভ্যাস, কারণ অল্প পরিমাণ কোড রিফ্যাক্টর করা অনেক সহজ। আমরা এর পরেই তা করব।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch12-01-accepting-command-line-arguments.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch12-03-improving-error-handling-and-modularity.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch12-01-accepting-command-line-arguments.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch12-03-improving-error-handling-and-modularity.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

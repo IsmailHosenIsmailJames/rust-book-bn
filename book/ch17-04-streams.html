@@ -1,0 +1,819 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>স্ট্রিম: ক্রমানুসারে ফিউচার - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="সটরীম-পরযাযকরমিক-ফিউচার-futures-in-sequence"><a class="header" href="#সটরীম-পরযাযকরমিক-ফিউচার-futures-in-sequence">স্ট্রীম: পর্যায়ক্রমিক ফিউচার (Futures in Sequence)</a></h2>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="streams"></a></p>
+<p>এই অধ্যায়ে এখন পর্যন্ত আমরা মূলত স্বতন্ত্র ফিউচার (individual futures) নিয়ে কাজ করেছি। এর একটি বড় ব্যতিক্রম ছিল আমরা যে অ্যাসিঙ্ক্রোনাস চ্যানেলটি ব্যবহার করেছি। মনে করুন, এই অধ্যায়ের শুরুতে ["Message Passing"][17-02-messages]<!-- ignore --> বিভাগে আমরা আমাদের অ্যাসিঙ্ক্রোনাস চ্যানেলের রিসিভারটি কীভাবে ব্যবহার করেছি। অ্যাসিঙ্ক্রোনাস <code>recv</code> মেথড সময়ের সাথে সাথে আইটেমের একটি ক্রম তৈরি করে। এটি একটি অনেক বেশি সাধারণ প্যাটার্নের উদাহরণ যা <em>স্ট্রীম</em> (stream) নামে পরিচিত।</p>
+<p>আমরা চ্যাপ্টার ১৩-এ আইটেমের একটি ক্রম দেখেছিলাম, যখন আমরা [The Iterator Trait and the <code>next</code> Method][iterator-trait]<!-- ignore --> বিভাগে <code>Iterator</code> ট্রেইট নিয়ে আলোচনা করেছিলাম, কিন্তু ইটারেটর এবং অ্যাসিঙ্ক্রোনাস চ্যানেল রিসিভারের মধ্যে দুটি পার্থক্য রয়েছে। প্রথম পার্থক্য হলো সময়: ইটারেটরগুলি সিঙ্ক্রোনাস, যেখানে চ্যানেল রিসিভার অ্যাসিঙ্ক্রোনাস। দ্বিতীয়টি হলো API। সরাসরি <code>Iterator</code>-এর সাথে কাজ করার সময়, আমরা এর সিঙ্ক্রোনাস <code>next</code> মেথড কল করি। বিশেষ করে <code>trpl::Receiver</code> স্ট্রীমের সাথে, আমরা এর পরিবর্তে একটি অ্যাসিঙ্ক্রোনাস <code>recv</code> মেথড কল করেছি। অন্যথায়, এই API-গুলি খুব অনুরূপ মনে হয়, এবং এই সাদৃশ্যটি কোনো কাকতালীয় ঘটনা নয়। একটি স্ট্রীম হলো ইটারেশনের একটি অ্যাসিঙ্ক্রোনাস রূপ। যেখানে <code>trpl::Receiver</code> বিশেষভাবে বার্তা পাওয়ার জন্য অপেক্ষা করে, সেখানে সাধারণ-উদ্দেশ্যমূলক স্ট্রীম API অনেক বেশি বিস্তৃত: এটি <code>Iterator</code>-এর মতো পরবর্তী আইটেম সরবরাহ করে, কিন্তু অ্যাসিঙ্ক্রোনাসভাবে।</p>
+<p>রাস্টে ইটারেটর এবং স্ট্রীমের মধ্যে সাদৃশ্য থাকার মানে হলো আমরা আসলে যেকোনো ইটারেটর থেকে একটি স্ট্রীম তৈরি করতে পারি। একটি ইটারেটরের মতো, আমরা একটি স্ট্রীমের <code>next</code> মেথড কল করে এবং তারপর আউটপুট await করে এর সাথে কাজ করতে পারি, যেমনটি লিস্টিং 17-30-এ দেখানো হয়েছে।</p>
+<Listing number="17-30" caption="একটি ইটারেটর থেকে একটি স্ট্রীম তৈরি করা এবং এর মানগুলি প্রিন্ট করা" file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span>        let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let iter = values.iter().map(|n| n * 2);
+        let mut stream = trpl::stream_from_iter(iter);
+
+        while let Some(value) = stream.next().await {
+            println!("The value was: {value}");
+        }
+<span class="boring">    });
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা সংখ্যার একটি অ্যারে দিয়ে শুরু করি, যেটিকে আমরা একটি ইটারেটরে রূপান্তর করি এবং তারপর সমস্ত মান দ্বিগুণ করার জন্য <code>map</code> কল করি। তারপর আমরা <code>trpl::stream_from_iter</code> ফাংশন ব্যবহার করে ইটারেটরটিকে একটি স্ট্রীমে রূপান্তর করি। এরপর, আমরা <code>while let</code> লুপ দিয়ে স্ট্রীমের আইটেমগুলির উপর লুপ করি যখন সেগুলি আসে।</p>
+<p>দুর্ভাগ্যবশত, যখন আমরা কোডটি চালানোর চেষ্টা করি, এটি কম্পাইল হয় না, বরং এটি রিপোর্ট করে যে কোনো <code>next</code> মেথড উপলব্ধ নেই:</p>
+<!-- manual-regeneration
+cd listings/ch17-async-await/listing-17-30
+cargo build
+copy only the error output
+-->
+<pre><code class="language-console">error[E0599]: no method named `next` found for struct `Iter` in the current scope
+  --&gt; src/main.rs:10:40
+   |
+10 |         while let Some(value) = stream.next().await {
+   |                                        ^^^^
+   |
+   = note: the full type name has been written to 'file:///projects/async-await/target/debug/deps/async_await-575db3dd3197d257.long-type-14490787947592691573.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+   = help: items from traits can only be used if the trait is in scope
+help: the following traits which provide `next` are implemented but not in scope; perhaps you want to import one of them
+   |
+1  + use crate::trpl::StreamExt;
+   |
+1  + use futures_util::stream::stream::StreamExt;
+   |
+1  + use std::iter::Iterator;
+   |
+1  + use std::str::pattern::Searcher;
+   |
+help: there is a method `try_next` with a similar name
+   |
+10 |         while let Some(value) = stream.try_next().await {
+   |                                        ~~~~~~~~
+</code></pre>
+<p>এই আউটপুট যেমন ব্যাখ্যা করে, কম্পাইলার ত্রুটির কারণ হলো <code>next</code> মেথড ব্যবহার করতে সক্ষম হওয়ার জন্য আমাদের সঠিক ট্রেইটটি স্কোপে (scope) প্রয়োজন। আমাদের এখন পর্যন্ত আলোচনার ভিত্তিতে, আপনি যুক্তিসঙ্গতভাবে আশা করতে পারেন যে সেই ট্রেইটটি হবে <code>Stream</code>, কিন্তু এটি আসলে <code>StreamExt</code>। <em>এক্সটেনশন</em> (extension)-এর সংক্ষিপ্ত রূপ, <code>Ext</code> হলো রাস্ট কমিউনিটিতে একটি সাধারণ প্যাটার্ন একটি ট্রেইটকে অন্য একটি দিয়ে প্রসারিত করার জন্য।</p>
+<p>আমরা অধ্যায়ের শেষে <code>Stream</code> এবং <code>StreamExt</code> ট্রেইটগুলি সম্পর্কে আরও কিছু বিস্তারিত ব্যাখ্যা করব, কিন্তু আপাতত আপনার যা জানা দরকার তা হলো <code>Stream</code> ট্রেইট একটি নিম্ন-স্তরের ইন্টারফেস সংজ্ঞায়িত করে যা কার্যকরভাবে <code>Iterator</code> এবং <code>Future</code> ট্রেইটগুলিকে একত্রিত করে। <code>StreamExt</code> <code>Stream</code>-এর উপরে একটি উচ্চ-স্তরের API সেট সরবরাহ করে, যার মধ্যে <code>next</code> মেথড এবং <code>Iterator</code> ট্রেইট দ্বারা প্রদত্ত অন্যান্য ইউটিলিটি মেথডগুলির মতো অন্যান্য মেথডও রয়েছে। <code>Stream</code> এবং <code>StreamExt</code> এখনও রাস্টের স্ট্যান্ডার্ড লাইব্রেরির অংশ নয়, তবে বেশিরভাগ ইকোসিস্টেম ক্রেট একই সংজ্ঞা ব্যবহার করে।</p>
+<p>কম্পাইলার ত্রুটির সমাধান হলো <code>trpl::StreamExt</code>-এর জন্য একটি <code>use</code> স্টেটমেন্ট যোগ করা, যেমনটি লিস্টিং 17-31-এ দেখানো হয়েছে।</p>
+<Listing number="17-31" caption="সফলভাবে একটি ইটারেটরকে একটি স্ট্রীমের ভিত্তি হিসাবে ব্যবহার করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span>use trpl::StreamExt;
+
+fn main() {
+    trpl::run(async {
+        let values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let iter = values.iter().map(|n| n * 2);
+        let mut stream = trpl::stream_from_iter(iter);
+
+        while let Some(value) = stream.next().await {
+            println!("The value was: {value}");
+        }
+    });
+}</code></pre></pre>
+</Listing>
+<p>এই সমস্ত অংশগুলি একসাথে রাখলে, এই কোডটি আমাদের ইচ্ছামতো কাজ করে! আরও কী, এখন যেহেতু আমাদের স্কোপে <code>StreamExt</code> আছে, আমরা এর সমস্ত ইউটিলিটি মেথড ব্যবহার করতে পারি, ঠিক ইটারেটরের মতোই। উদাহরণস্বরূপ, লিস্টিং 17-32-এ, আমরা তিন এবং পাঁচের গুণিতক ছাড়া বাকি সবকিছু ফিল্টার করতে <code>filter</code> মেথড ব্যবহার করি।</p>
+<Listing number="17-32" caption="`StreamExt::filter` মেথড দিয়ে একটি স্ট্রীম ফিল্টার করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span>use trpl::StreamExt;
+
+fn main() {
+    trpl::run(async {
+        let values = 1..101;
+        let iter = values.map(|n| n * 2);
+        let stream = trpl::stream_from_iter(iter);
+
+        let mut filtered =
+            stream.filter(|value| value % 3 == 0 || value % 5 == 0);
+
+        while let Some(value) = filtered.next().await {
+            println!("The value was: {value}");
+        }
+    });
+}</code></pre></pre>
+</Listing>
+<p>অবশ্যই, এটি খুব আকর্ষণীয় নয়, যেহেতু আমরা সাধারণ ইটারেটর দিয়ে এবং কোনো async ছাড়াই একই কাজ করতে পারতাম। আসুন দেখি স্ট্রীমের জন্য <em>অনন্য</em> কী করা যায়।</p>
+<h3 id="সটরীম-কমপোজ-করা-composing-streams"><a class="header" href="#সটরীম-কমপোজ-করা-composing-streams">স্ট্রীম কম্পোজ করা (Composing Streams)</a></h3>
+<p>অনেক ধারণা স্বাভাবিকভাবেই স্ট্রীম হিসাবে উপস্থাপিত হয়: একটি কিউ (queue)-তে আইটেম উপলব্ধ হওয়া, ফাইলসিস্টেম থেকে ডেটার খণ্ডাংশ ধীরে ধীরে আনা যখন পুরো ডেটা সেট কম্পিউটারের মেমরির জন্য খুব বড় হয়, অথবা সময়ের সাথে সাথে নেটওয়ার্কের মাধ্যমে ডেটা আসা। যেহেতু স্ট্রীমগুলি ফিউচার, আমরা সেগুলিকে অন্য যেকোনো ধরনের ফিউচারের সাথে ব্যবহার করতে পারি এবং সেগুলিকে আকর্ষণীয় উপায়ে একত্রিত করতে পারি। উদাহরণস্বরূপ, আমরা খুব বেশি নেটওয়ার্ক কল ট্রিগার করা এড়াতে ইভেন্টগুলিকে ব্যাচ করতে পারি, দীর্ঘ সময় ধরে চলা অপারেশনগুলির সিকোয়েন্সে টাইমআউট সেট করতে পারি, অথবা অপ্রয়োজনীয় কাজ করা এড়াতে ইউজার ইন্টারফেস ইভেন্টগুলিকে থ্রটল করতে পারি।</p>
+<p>আসুন আমরা একটি ছোট বার্তা স্ট্রীম তৈরি করে শুরু করি যা ওয়েবসকেট বা অন্য কোনো রিয়েল-টাইম কমিউনিকেশন প্রোটোকল থেকে আমরা যে ডেটা স্ট্রীম দেখতে পারি তার একটি বিকল্প হিসাবে কাজ করবে, যেমনটি লিস্টিং 17-33-এ দেখানো হয়েছে।</p>
+<Listing number="17-33" caption="`rx` রিসিভারকে একটি `ReceiverStream` হিসাবে ব্যবহার করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span>use trpl::{ReceiverStream, Stream, StreamExt};
+
+fn main() {
+    trpl::run(async {
+        let mut messages = get_messages();
+
+        while let Some(message) = messages.next().await {
+            println!("{message}");
+        }
+    });
+}
+
+fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+    let (tx, rx) = trpl::channel();
+
+    let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+    for message in messages {
+        tx.send(format!("Message: '{message}'")).unwrap();
+    }
+
+    ReceiverStream::new(rx)
+}</code></pre></pre>
+</Listing>
+<p>প্রথমে, আমরা <code>get_messages</code> নামে একটি ফাংশন তৈরি করি যা <code>impl Stream&lt;Item = String&gt;</code> রিটার্ন করে। এর ইমপ্লিমেন্টেশনের জন্য, আমরা একটি async চ্যানেল তৈরি করি, ইংরেজি বর্ণমালার প্রথম ১০টি অক্ষরের উপর লুপ করি, এবং সেগুলি চ্যানেলের মাধ্যমে পাঠাই।</p>
+<p>আমরা একটি নতুন টাইপও ব্যবহার করি: <code>ReceiverStream</code>, যা <code>trpl::channel</code> থেকে <code>rx</code> রিসিভারকে <code>next</code> মেথড সহ একটি <code>Stream</code>-এ রূপান্তরিত করে। <code>main</code>-এ ফিরে, আমরা স্ট্রীম থেকে সমস্ত বার্তা প্রিন্ট করতে একটি <code>while let</code> লুপ ব্যবহার করি।</p>
+<p>যখন আমরা এই কোডটি চালাই, আমরা ঠিক সেই ফলাফল পাই যা আমরা আশা করেছিলাম:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Message: 'a'
+Message: 'b'
+Message: 'c'
+Message: 'd'
+Message: 'e'
+Message: 'f'
+Message: 'g'
+Message: 'h'
+Message: 'i'
+Message: 'j'
+</code></pre>
+<p>আবারও, আমরা এটি নিয়মিত <code>Receiver</code> API বা এমনকি নিয়মিত <code>Iterator</code> API দিয়েও করতে পারতাম, তাই আসুন এমন একটি ফিচার যোগ করি যার জন্য স্ট্রীম প্রয়োজন: স্ট্রীমের প্রতিটি আইটেমের জন্য একটি টাইমআউট যোগ করা, এবং আমরা যে আইটেমগুলি নির্গত করি সেগুলিতে একটি বিলম্ব যোগ করা, যেমনটি লিস্টিং 17-34-এ দেখানো হয়েছে।</p>
+<Listing number="17-34" caption="`StreamExt::timeout` মেথড ব্যবহার করে একটি স্ট্রীমের আইটেমগুলিতে একটি সময়সীমা নির্ধারণ করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span>use std::{pin::pin, time::Duration};
+use trpl::{ReceiverStream, Stream, StreamExt};
+
+fn main() {
+    trpl::run(async {
+        let mut messages =
+            pin!(get_messages().timeout(Duration::from_millis(200)));
+
+        while let Some(result) = messages.next().await {
+            match result {
+                Ok(message) =&gt; println!("{message}"),
+                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+            }
+        }
+    })
+}
+<span class="boring">
+</span><span class="boring">fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+</span><span class="boring">    for message in messages {
+</span><span class="boring">        tx.send(format!("Message: '{message}'")).unwrap();
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা <code>timeout</code> মেথড দিয়ে স্ট্রীমে একটি টাইমআউট যোগ করে শুরু করি, যা <code>StreamExt</code> ট্রেইট থেকে আসে। তারপর আমরা <code>while let</code> লুপের বডি আপডেট করি, কারণ স্ট্রীমটি এখন একটি <code>Result</code> রিটার্ন করে। <code>Ok</code> ভ্যারিয়েন্টটি নির্দেশ করে যে একটি বার্তা সময়মতো এসেছে; <code>Err</code> ভ্যারিয়েন্টটি নির্দেশ করে যে কোনো বার্তা আসার আগে টাইমআউট শেষ হয়ে গেছে। আমরা সেই ফলাফলের উপর <code>match</code> করি এবং হয় সফলভাবে বার্তা পেলে সেটি প্রিন্ট করি অথবা টাইমআউট সম্পর্কে একটি বিজ্ঞপ্তি প্রিন্ট করি। অবশেষে, লক্ষ্য করুন যে আমরা টাইমআউট প্রয়োগ করার পরে বার্তাগুলি পিন করি, কারণ টাইমআউট হেল্পার একটি স্ট্রীম তৈরি করে যা পোল করার জন্য পিন করা প্রয়োজন।</p>
+<p>তবে, বার্তাগুলির মধ্যে কোনো বিলম্ব না থাকায়, এই টাইমআউটটি প্রোগ্রামের আচরণ পরিবর্তন করে না। আসুন আমরা যে বার্তাগুলি পাঠাই সেগুলিতে একটি পরিবর্তনশীল বিলম্ব যোগ করি, যেমনটি লিস্টিং 17-35-এ দেখানো হয়েছে।</p>
+<Listing number="17-35" caption="`get_messages`-কে একটি async ফাংশন না করেই একটি async বিলম্ব সহ `tx`-এর মাধ্যমে বার্তা পাঠানো" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span><span class="boring">        let mut messages =
+</span><span class="boring">            pin!(get_messages().timeout(Duration::from_millis(200)));
+</span><span class="boring">
+</span><span class="boring">        while let Some(result) = messages.next().await {
+</span><span class="boring">            match result {
+</span><span class="boring">                Ok(message) =&gt; println!("{message}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    })
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+    let (tx, rx) = trpl::channel();
+
+    trpl::spawn_task(async move {
+        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+        for (index, message) in messages.into_iter().enumerate() {
+            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+
+            tx.send(format!("Message: '{message}'")).unwrap();
+        }
+    });
+
+    ReceiverStream::new(rx)
+}</code></pre></pre>
+</Listing>
+<p><code>get_messages</code>-এ, আমরা <code>messages</code> অ্যারের সাথে <code>enumerate</code> ইটারেটর মেথড ব্যবহার করি যাতে আমরা আইটেমটির সাথে আমরা যে প্রতিটি আইটেম পাঠাচ্ছি তার ইনডেক্স পেতে পারি। তারপর আমরা জোড়-ইনডেক্স আইটেমগুলিতে ১০০-মিলিসেকেন্ড বিলম্ব এবং বিজোড়-ইনডেক্স আইটেমগুলিতে ৩০০-মিলিসেকেন্ড বিলম্ব প্রয়োগ করি যাতে বাস্তব জগতে আমরা একটি বার্তা স্ট্রীম থেকে যে বিভিন্ন বিলম্ব দেখতে পারি তা অনুকরণ করা যায়। যেহেতু আমাদের টাইমআউট ২০০ মিলিসেকেন্ডের জন্য, এটি অর্ধেক বার্তাগুলিকে প্রভাবিত করা উচিত।</p>
+<p><code>get_messages</code> ফাংশনে বার্তাগুলির মধ্যে স্লিপ করার জন্য ব্লকিং ছাড়াই, আমাদের async ব্যবহার করতে হবে। যাইহোক, আমরা <code>get_messages</code> নিজেই একটি async ফাংশন করতে পারি না, কারণ তাহলে আমরা <code>Stream&lt;Item = String&gt;&gt;</code>-এর পরিবর্তে একটি <code>Future&lt;Output = Stream&lt;Item = String&gt;&gt;</code> রিটার্ন করতাম। কলারকে স্ট্রীমে অ্যাক্সেস পেতে <code>get_messages</code> নিজেই await করতে হতো। কিন্তু মনে রাখবেন: একটি নির্দিষ্ট ফিউচারের মধ্যে সবকিছু রৈখিকভাবে ঘটে; কনকারেন্সি <em>ফিউচারগুলির মধ্যে</em> ঘটে। <code>get_messages</code> await করার জন্য রিসিভার স্ট্রীম রিটার্ন করার আগে প্রতিটি বার্তার মধ্যে স্লিপ বিলম্ব সহ সমস্ত বার্তা পাঠাতে হতো। ফলস্বরূপ, টাইমআউটটি অকেজো হয়ে যেত। স্ট্রীমে নিজেই কোনো বিলম্ব থাকত না; স্ট্রীমটি উপলব্ধ হওয়ার আগেই সেগুলি ঘটত।</p>
+<p>পরিবর্তে, আমরা <code>get_messages</code>-কে একটি নিয়মিত ফাংশন হিসাবে রেখে দিই যা একটি স্ট্রীম রিটার্ন করে, এবং আমরা async <code>sleep</code> কলগুলি পরিচালনা করার জন্য একটি টাস্ক তৈরি করি।</p>
+<blockquote>
+<p>দ্রষ্টব্য: এইভাবে <code>spawn_task</code> কল করা কাজ করে কারণ আমরা ইতিমধ্যে আমাদের রানটাইম সেট আপ করেছি; যদি আমরা না করতাম, এটি একটি প্যানিক (panic) সৃষ্টি করত। অন্যান্য ইমপ্লিমেন্টেশনগুলি বিভিন্ন ট্রেড-অফ বেছে নেয়: তারা একটি নতুন রানটাইম তৈরি করতে পারে এবং প্যানিক এড়াতে পারে কিন্তু সামান্য অতিরিক্ত ওভারহেডের সাথে শেষ হতে পারে, অথবা তারা রানটাইমের রেফারেন্স ছাড়াই টাস্ক তৈরি করার জন্য একটি স্বতন্ত্র উপায় সরবরাহ নাও করতে পারে। নিশ্চিত করুন যে আপনি জানেন আপনার রানটাইম কোন ট্রেড-অফ বেছে নিয়েছে এবং সেই অনুযায়ী আপনার কোড লিখুন!</p>
+</blockquote>
+<p>এখন আমাদের কোডের একটি অনেক বেশি আকর্ষণীয় ফলাফল রয়েছে। প্রতি দুটি বার্তার মধ্যে, একটি <code>Problem: Elapsed(())</code> ত্রুটি দেখা যায়।</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Message: 'a'
+Problem: Elapsed(())
+Message: 'b'
+Message: 'c'
+Problem: Elapsed(())
+Message: 'd'
+Message: 'e'
+Problem: Elapsed(())
+Message: 'f'
+Message: 'g'
+Problem: Elapsed(())
+Message: 'h'
+Message: 'i'
+Problem: Elapsed(())
+Message: 'j'
+</code></pre>
+<p>টাইমআউটটি শেষ পর্যন্ত বার্তাগুলিকে আসতে বাধা দেয় না। আমরা এখনও সমস্ত মূল বার্তা পাই, কারণ আমাদের চ্যানেলটি <em>আনবাউন্ডেড</em> (unbounded): এটি মেমরিতে যতগুলি বার্তা ফিট করতে পারে ততগুলি ধরে রাখতে পারে। যদি বার্তাটি টাইমআউটের আগে না আসে, আমাদের স্ট্রীম হ্যান্ডলার সেটির হিসাব রাখবে, কিন্তু যখন এটি আবার স্ট্রীমটি পোল করবে, তখন বার্তাটি এখন এসে থাকতে পারে।</p>
+<p>প্রয়োজনে আপনি অন্যান্য ধরনের চ্যানেল বা সাধারণভাবে অন্যান্য ধরনের স্ট্রীম ব্যবহার করে ভিন্ন আচরণ পেতে পারেন। আসুন সেগুলির মধ্যে একটি বাস্তবে দেখি সময় ব্যবধানের একটি স্ট্রীমকে এই বার্তাগুলির স্ট্রীমের সাথে একত্রিত করে।</p>
+<h3 id="সটরীম-মারজ-করা-merging-streams"><a class="header" href="#সটরীম-মারজ-করা-merging-streams">স্ট্রীম মার্জ করা (Merging Streams)</a></h3>
+<p>প্রথমে, আসুন আরেকটি স্ট্রীম তৈরি করি, যা সরাসরি চালালে প্রতি মিলিসেকেন্ডে একটি আইটেম নির্গত করবে। সরলতার জন্য, আমরা একটি বিলম্ব সহ একটি বার্তা পাঠাতে <code>sleep</code> ফাংশন ব্যবহার করতে পারি এবং এটিকে <code>get_messages</code>-এ ব্যবহৃত একই পদ্ধতির সাথে একত্রিত করতে পারি যেখানে একটি চ্যানেল থেকে একটি স্ট্রীম তৈরি করা হয়েছিল। পার্থক্য হলো এইবার, আমরা অতিবাহিত ব্যবধানের সংখ্যা ফেরত পাঠাতে যাচ্ছি, তাই রিটার্ন টাইপ হবে <code>impl Stream&lt;Item = u32&gt;</code>, এবং আমরা ফাংশনটিকে <code>get_intervals</code> বলতে পারি (দেখুন লিস্টিং 17-36)।</p>
+<Listing number="17-36" caption="প্রতি মিলিসেকেন্ডে একবার নির্গত হবে এমন একটি কাউন্টার সহ একটি স্ট্রীম তৈরি করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span><span class="boring">        let mut messages =
+</span><span class="boring">            pin!(get_messages().timeout(Duration::from_millis(200)));
+</span><span class="boring">
+</span><span class="boring">        while let Some(result) = messages.next().await {
+</span><span class="boring">            match result {
+</span><span class="boring">                Ok(message) =&gt; println!("{message}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    })
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+</span><span class="boring">        for (index, message) in messages.into_iter().enumerate() {
+</span><span class="boring">            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+</span><span class="boring">            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+</span><span class="boring">
+</span><span class="boring">            tx.send(format!("Message: '{message}'")).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn get_intervals() -&gt; impl Stream&lt;Item = u32&gt; {
+    let (tx, rx) = trpl::channel();
+
+    trpl::spawn_task(async move {
+        let mut count = 0;
+        loop {
+            trpl::sleep(Duration::from_millis(1)).await;
+            count += 1;
+            tx.send(count).unwrap();
+        }
+    });
+
+    ReceiverStream::new(rx)
+}</code></pre></pre>
+</Listing>
+<p>আমরা টাস্কের মধ্যে একটি <code>count</code> সংজ্ঞায়িত করে শুরু করি। (আমরা এটিকে টাস্কের বাইরেও সংজ্ঞায়িত করতে পারতাম, তবে যেকোনো প্রদত্ত ভেরিয়েবলের স্কোপ সীমিত রাখা পরিষ্কার।) তারপর আমরা একটি অসীম লুপ তৈরি করি। লুপের প্রতিটি ইটারেশন অ্যাসিঙ্ক্রোনাসভাবে এক মিলিসেকেন্ড ঘুমায়, কাউন্ট বৃদ্ধি করে, এবং তারপর এটি চ্যানেলের মাধ্যমে পাঠায়। যেহেতু এই সবকিছুই <code>spawn_task</code> দ্বারা তৈরি করা টাস্কের মধ্যে মোড়ানো, তাই এর সবকিছু—অসীম লুপ সহ—রানটাইমের সাথে পরিষ্কার হয়ে যাবে।</p>
+<p>এই ধরনের অসীম লুপ, যা কেবল তখনই শেষ হয় যখন পুরো রানটাইমটি ভেঙে যায়, async রাস্টে বেশ সাধারণ: অনেক প্রোগ্রামের অনির্দিষ্টকালের জন্য চলতে থাকতে হয়। async-এর সাথে, এটি অন্য কিছু ব্লক করে না, যতক্ষণ না লুপের প্রতিটি ইটারেশনে অন্তত একটি await পয়েন্ট থাকে।</p>
+<p>এখন, আমাদের মূল ফাংশনের async ব্লকে ফিরে, আমরা <code>messages</code> এবং <code>intervals</code> স্ট্রীমগুলিকে মার্জ করার চেষ্টা করতে পারি, যেমনটি লিস্টিং 17-37-এ দেখানো হয়েছে।</p>
+<Listing number="17-37" caption="`messages` এবং `intervals` স্ট্রীমগুলিকে মার্জ করার চেষ্টা" file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span>        let messages = get_messages().timeout(Duration::from_millis(200));
+        let intervals = get_intervals();
+        let merged = messages.merge(intervals);
+
+        while let Some(result) = merged.next().await {
+<span class="boring">            match result {
+</span><span class="boring">                Ok(message) =&gt; println!("{message}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    })
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+</span><span class="boring">        for (index, message) in messages.into_iter().enumerate() {
+</span><span class="boring">            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+</span><span class="boring">            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+</span><span class="boring">
+</span><span class="boring">            tx.send(format!("Message: '{message}'")).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_intervals() -&gt; impl Stream&lt;Item = u32&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let mut count = 0;
+</span><span class="boring">        loop {
+</span><span class="boring">            trpl::sleep(Duration::from_millis(1)).await;
+</span><span class="boring">            count += 1;
+</span><span class="boring">            tx.send(count).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা <code>get_intervals</code> কল করে শুরু করি। তারপর আমরা <code>messages</code> এবং <code>intervals</code> স্ট্রীমগুলিকে <code>merge</code> মেথড দিয়ে মার্জ করি, যা একাধিক স্ট্রীমকে একটি স্ট্রীমে একত্রিত করে যা যেকোনো সোর্স স্ট্রীম থেকে আইটেমগুলি উপলব্ধ হওয়ার সাথে সাথেই তৈরি করে, কোনো নির্দিষ্ট ক্রম আরোপ না করে। অবশেষে, আমরা <code>messages</code>-এর পরিবর্তে সেই একত্রিত স্ট্রীমের উপর লুপ করি।</p>
+<p>এই মুহুর্তে, <code>messages</code> বা <code>intervals</code> কোনোটিকেই পিন বা মিউটেবল (mutable) করার প্রয়োজন নেই, কারণ উভয়ই একক <code>merged</code> স্ট্রীমে একত্রিত হবে। যাইহোক, <code>merge</code>-এর এই কলটি কম্পাইল হয় না! (<code>while let</code> লুপে <code>next</code> কলটিও হয় না, তবে আমরা সেটিতে পরে ফিরে আসব।) এর কারণ হলো দুটি স্ট্রীমের বিভিন্ন টাইপ রয়েছে। <code>messages</code> স্ট্রীমটির টাইপ <code>Timeout&lt;impl Stream&lt;Item = String&gt;&gt;</code>, যেখানে <code>Timeout</code> হলো সেই টাইপ যা একটি <code>timeout</code> কলের জন্য <code>Stream</code> ইমপ্লিমেন্ট করে। <code>intervals</code> স্ট্রীমটির টাইপ <code>impl Stream&lt;Item = u32&gt;</code>। এই দুটি স্ট্রীমকে মার্জ করতে, আমাদের একটিকে অন্যটির সাথে মেলানোর জন্য রূপান্তর করতে হবে। আমরা <code>intervals</code> স্ট্রীমটি পুনরায় কাজ করব, কারণ <code>messages</code> ইতিমধ্যে আমাদের কাঙ্ক্ষিত মৌলিক বিন্যাসে রয়েছে এবং টাইমআউট ত্রুটিগুলি পরিচালনা করতে হবে (দেখুন লিস্টিং 17-38)।</p>
+<!-- We cannot directly test this one, because it never stops. -->
+<Listing number="17-38" caption="`intervals` স্ট্রীমের টাইপকে `messages` স্ট্রীমের টাইপের সাথে সারিবদ্ধ করা" file-name="src/main.rs">
+<pre><code class="language-rust ignore"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span>        let messages = get_messages().timeout(Duration::from_millis(200));
+        let intervals = get_intervals()
+            .map(|count| format!("Interval: {count}"))
+            .timeout(Duration::from_secs(10));
+        let merged = messages.merge(intervals);
+        let mut stream = pin!(merged);
+
+        while let Some(result) = stream.next().await {
+<span class="boring">            match result {
+</span><span class="boring">                Ok(message) =&gt; println!("{message}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    })
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+</span><span class="boring">        for (index, message) in messages.into_iter().enumerate() {
+</span><span class="boring">            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+</span><span class="boring">            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+</span><span class="boring">
+</span><span class="boring">            tx.send(format!("Message: '{message}'")).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_intervals() -&gt; impl Stream&lt;Item = u32&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let mut count = 0;
+</span><span class="boring">        loop {
+</span><span class="boring">            trpl::sleep(Duration::from_millis(1)).await;
+</span><span class="boring">            count += 1;
+</span><span class="boring">            tx.send(count).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>প্রথমত, আমরা <code>intervals</code>-কে একটি স্ট্রিং-এ রূপান্তর করতে <code>map</code> হেল্পার মেথড ব্যবহার করতে পারি। দ্বিতীয়ত, আমাদের <code>messages</code> থেকে <code>Timeout</code>-এর সাথে মেলাতে হবে। যেহেতু আমরা আসলে <code>intervals</code>-এর জন্য কোনো টাইমআউট <em>চাই না</em>, তাই আমরা কেবল একটি টাইমআউট তৈরি করতে পারি যা আমাদের ব্যবহার করা অন্যান্য সময়কালের চেয়ে দীর্ঘ। এখানে, আমরা <code>Duration::from_secs(10)</code> দিয়ে একটি ১০-সেকেন্ডের টাইমআউট তৈরি করি। অবশেষে, আমাদের <code>stream</code>-কে মিউটেবল করতে হবে, যাতে <code>while let</code> লুপের <code>next</code> কলগুলি স্ট্রীমের মধ্য দিয়ে ইটারেট করতে পারে, এবং এটিকে পিন করতে হবে যাতে এটি করা নিরাপদ হয়। এটি আমাদের প্রায় যেখানে পৌঁছানো দরকার সেখানে নিয়ে যায়। সবকিছু টাইপ চেক করে। তবে আপনি যদি এটি চালান, দুটি সমস্যা হবে। প্রথমত, এটি কখনই থামবে না! আপনাকে <span class="keystroke">ctrl-c</span> দিয়ে এটি থামাতে হবে। দ্বিতীয়ত, ইংরেজি বর্ণমালার বার্তাগুলি সমস্ত ব্যবধান কাউন্টার বার্তাগুলির মধ্যে চাপা পড়ে যাবে:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the tasks running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">--snip--
+Interval: 38
+Interval: 39
+Interval: 40
+Message: 'a'
+Interval: 41
+Interval: 42
+Interval: 43
+--snip--
+</code></pre>
+<p>লিস্টিং 17-39 এই শেষ দুটি সমস্যার সমাধান করার একটি উপায় দেখায়।</p>
+<Listing number="17-39" caption="মার্জ করা স্ট্রীমগুলি পরিচালনা করতে `throttle` এবং `take` ব্যবহার করা" file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span>        let messages = get_messages().timeout(Duration::from_millis(200));
+        let intervals = get_intervals()
+            .map(|count| format!("Interval: {count}"))
+            .throttle(Duration::from_millis(100))
+            .timeout(Duration::from_secs(10));
+        let merged = messages.merge(intervals).take(20);
+        let mut stream = pin!(merged);
+<span class="boring">
+</span><span class="boring">        while let Some(result) = stream.next().await {
+</span><span class="boring">            match result {
+</span><span class="boring">                Ok(message) =&gt; println!("{message}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    })
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+</span><span class="boring">        for (index, message) in messages.into_iter().enumerate() {
+</span><span class="boring">            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+</span><span class="boring">            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+</span><span class="boring">
+</span><span class="boring">            tx.send(format!("Message: '{message}'")).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn get_intervals() -&gt; impl Stream&lt;Item = u32&gt; {
+</span><span class="boring">    let (tx, rx) = trpl::channel();
+</span><span class="boring">
+</span><span class="boring">    trpl::spawn_task(async move {
+</span><span class="boring">        let mut count = 0;
+</span><span class="boring">        loop {
+</span><span class="boring">            trpl::sleep(Duration::from_millis(1)).await;
+</span><span class="boring">            count += 1;
+</span><span class="boring">            tx.send(count).unwrap();
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    ReceiverStream::new(rx)
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>প্রথমে, আমরা <code>intervals</code> স্ট্রীমে <code>throttle</code> মেথড ব্যবহার করি যাতে এটি <code>messages</code> স্ট্রীমকে অভিভূত না করে। <em>থ্রটলিং</em> (throttling) হলো একটি ফাংশন কত ঘন ঘন কল করা হবে—অথবা, এই ক্ষেত্রে, স্ট্রীমটি কত ঘন ঘন পোল করা হবে—তা সীমিত করার একটি উপায়। প্রতি ১০০ মিলিসেকেন্ডে একবার করলেই হবে, কারণ আমাদের বার্তাগুলি প্রায় তত ঘন ঘনই আসে।</p>
+<p>আমরা একটি স্ট্রীম থেকে কতগুলি আইটেম গ্রহণ করব তা সীমিত করতে, আমরা <code>merged</code> স্ট্রীমে <code>take</code> মেথড প্রয়োগ করি, কারণ আমরা কেবল একটি স্ট্রীম বা অন্যটিকে নয়, চূড়ান্ত আউটপুট সীমিত করতে চাই।</p>
+<p>এখন যখন আমরা প্রোগ্রামটি চালাই, এটি স্ট্রীম থেকে ২০টি আইটেম নেওয়ার পরে থেমে যায়, এবং ব্যবধানগুলি বার্তাগুলিকে অভিভূত করে না। আমরা <code>Interval: 100</code> বা <code>Interval: 200</code> ইত্যাদিও পাই না, বরং <code>Interval: 1</code>, <code>Interval: 2</code>, ইত্যাদি পাই—যদিও আমাদের কাছে একটি সোর্স স্ট্রীম আছে যা প্রতি মিলিসেকেন্ডে একটি ইভেন্ট তৈরি করতে <em>পারে</em>। এর কারণ হলো <code>throttle</code> কল একটি নতুন স্ট্রীম তৈরি করে যা মূল স্ট্রীমটিকে র‍্যাপ করে যাতে মূল স্ট্রীমটি কেবল থ্রটল হারে পোল করা হয়, তার নিজস্ব "নেটিভ" হারে নয়। আমাদের কাছে একগুচ্ছ অব্যবহৃত ব্যবধান বার্তা নেই যা আমরা উপেক্ষা করার সিদ্ধান্ত নিচ্ছি। পরিবর্তে, আমরা প্রথম স্থানে সেই ব্যবধান বার্তাগুলি তৈরিই করি না! এটি রাস্টের ফিউচারের অন্তর্নিহিত "অলসতা" আবার কাজে লাগছে, যা আমাদের পারফরম্যান্স বৈশিষ্ট্যগুলি বেছে নেওয়ার সুযোগ দেয়।</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Interval: 1
+Message: 'a'
+Interval: 2
+Interval: 3
+Problem: Elapsed(())
+Interval: 4
+Message: 'b'
+Interval: 5
+Message: 'c'
+Interval: 6
+Interval: 7
+Problem: Elapsed(())
+Interval: 8
+Message: 'd'
+Interval: 9
+Message: 'e'
+Interval: 10
+Interval: 11
+Problem: Elapsed(())
+Interval: 12
+</code></pre>
+<p>আমাদের শেষ একটি জিনিস সামলাতে হবে: ত্রুটি! এই দুটি চ্যানেল-ভিত্তিক স্ট্রীমের সাথে, চ্যানেলের অন্য দিকটি বন্ধ হয়ে গেলে <code>send</code> কলগুলি ব্যর্থ হতে পারে—এবং এটি কেবল রানটাইম কীভাবে স্ট্রীম গঠনকারী ফিউচারগুলি চালায় তার উপর নির্ভর করে। এখন পর্যন্ত, আমরা <code>unwrap</code> কল করে এই সম্ভাবনাটি উপেক্ষা করেছি, কিন্তু একটি সুশৃঙ্খল অ্যাপে, আমাদের স্পষ্টভাবে ত্রুটিটি পরিচালনা করা উচিত, ন্যূনতমভাবে লুপটি শেষ করে যাতে আমরা আর কোনো বার্তা পাঠানোর চেষ্টা না করি। লিস্টিং 17-40 একটি সাধারণ ত্রুটি কৌশল দেখায়: সমস্যাটি প্রিন্ট করা এবং তারপর লুপগুলি থেকে <code>break</code> করা।</p>
+<Listing number="17-40" caption="ত্রুটি পরিচালনা করা এবং লুপগুলি বন্ধ করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
+</span><span class="boring">
+</span><span class="boring">use std::{pin::pin, time::Duration};
+</span><span class="boring">
+</span><span class="boring">use trpl::{ReceiverStream, Stream, StreamExt};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    trpl::run(async {
+</span><span class="boring">        let messages = get_messages().timeout(Duration::from_millis(200));
+</span><span class="boring">        let intervals = get_intervals()
+</span><span class="boring">            .map(|count| format!("Interval #{count}"))
+</span><span class="boring">            .throttle(Duration::from_millis(500))
+</span><span class="boring">            .timeout(Duration::from_secs(10));
+</span><span class="boring">        let merged = messages.merge(intervals).take(20);
+</span><span class="boring">        let mut stream = pin!(merged);
+</span><span class="boring">
+</span><span class="boring">        while let Some(result) = stream.next().await {
+</span><span class="boring">            match result {
+</span><span class="boring">                Ok(item) =&gt; println!("{item}"),
+</span><span class="boring">                Err(reason) =&gt; eprintln!("Problem: {reason:?}"),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    });
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn get_messages() -&gt; impl Stream&lt;Item = String&gt; {
+    let (tx, rx) = trpl::channel();
+
+    trpl::spawn_task(async move {
+        let messages = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+
+        for (index, message) in messages.into_iter().enumerate() {
+            let time_to_sleep = if index % 2 == 0 { 100 } else { 300 };
+            trpl::sleep(Duration::from_millis(time_to_sleep)).await;
+
+            if let Err(send_error) = tx.send(format!("Message: '{message}'")) {
+                eprintln!("Cannot send message '{message}': {send_error}");
+                break;
+            }
+        }
+    });
+
+    ReceiverStream::new(rx)
+}
+
+fn get_intervals() -&gt; impl Stream&lt;Item = u32&gt; {
+    let (tx, rx) = trpl::channel();
+
+    trpl::spawn_task(async move {
+        let mut count = 0;
+        loop {
+            trpl::sleep(Duration::from_millis(1)).await;
+            count += 1;
+
+            if let Err(send_error) = tx.send(count) {
+                eprintln!("Could not send interval {count}: {send_error}");
+                break;
+            };
+        }
+    });
+
+    ReceiverStream::new(rx)
+}```
+
+&lt;/Listing&gt;
+
+যথারীতি, একটি বার্তা পাঠানোর ত্রুটি পরিচালনা করার সঠিক উপায় পরিবর্তিত হবে; শুধু নিশ্চিত করুন যে আপনার একটি কৌশল আছে।
+
+এখন যেহেতু আমরা বাস্তবে অনেক async দেখেছি, আসুন এক ধাপ পিছিয়ে গিয়ে `Future`, `Stream`, এবং রাস্ট async কাজ করানোর জন্য যে অন্যান্য মূল ট্রেইটগুলি ব্যবহার করে সেগুলির কিছু বিশদ বিবরণে যাই।
+
+[17-02-messages]: ch17-02-concurrency-with-async.html#message-passing
+[iterator-trait]: ch13-02-iterators.html#the-iterator-trait-and-the-next-method</code></pre></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch17-03-more-futures.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch17-05-traits-for-async.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch17-03-more-futures.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch17-05-traits-for-async.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

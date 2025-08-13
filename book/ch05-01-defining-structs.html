@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Structs ডিফাইন এবং ইনস্ট্যানশিয়েট করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="struct-ডিফাইন-এবং-ইনসটযানশিয়েট-করা-defining-and-instantiating-structs"><a class="header" href="#struct-ডিফাইন-এবং-ইনসটযানশিয়েট-করা-defining-and-instantiating-structs"><code>struct</code> ডিফাইন এবং ইনস্ট্যানশিয়েট করা (Defining and Instantiating Structs)</a></h2>
+<p><code>struct</code> অনেকটা টাপলের (tuple) মতোই, যা <a href="ch03-02-data-types.html#the-tuple-type">"টাপল টাইপ"</a><!-- ignore --> বিভাগে আলোচনা করা হয়েছে, কারণ উভয়ই একাধিক সম্পর্কিত মান ধারণ করে। টাপলের মতো, <code>struct</code>-এর অংশগুলো বিভিন্ন টাইপের হতে পারে। তবে টাপলের সাথে এর পার্থক্য হলো, <code>struct</code>-এ আপনি প্রতিটি ডেটার একটি নাম দেবেন যাতে মানগুলোর অর্থ স্পষ্ট হয়। এই নামগুলো যোগ করার ফলে <code>struct</code> টাপলের চেয়ে বেশি নমনীয় হয়: আপনাকে কোনো ইনস্ট্যান্সের মান নির্দিষ্ট বা অ্যাক্সেস করার জন্য ডেটার ক্রমের উপর নির্ভর করতে হয় না।</p>
+<p>একটি <code>struct</code> ডিফাইন করার জন্য, আমরা <code>struct</code> কীওয়ার্ডটি লিখি এবং পুরো <code>struct</code>-টির একটি নাম দিই। একটি <code>struct</code>-এর নাম এমন হওয়া উচিত যা একসাথে গ্রুপ করা ডেটার গুরুত্ব বর্ণনা করে। তারপর, কার্লি ব্র্যাকেটের ভিতরে, আমরা ডেটার অংশগুলোর নাম এবং টাইপ ডিফাইন করি, যেগুলোকে আমরা <em>ফিল্ড</em> (fields) বলি। উদাহরণস্বরূপ, তালিকা ৫-১ একটি <code>struct</code> দেখাচ্ছে যা একটি ব্যবহারকারীর অ্যাকাউন্ট সম্পর্কে তথ্য সংরক্ষণ করে।</p>
+<Listing number="5-1" file-name="src/main.rs" caption="একটি `User` struct-এর সংজ্ঞা">
+<pre><pre class="playground"><code class="language-rust edition2024">struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>একটি <code>struct</code> ডিফাইন করার পর এটি ব্যবহার করার জন্য, আমরা প্রতিটি ফিল্ডের জন্য সুনির্দিষ্ট মান নির্দিষ্ট করে সেই <code>struct</code>-এর একটি <em>ইনস্ট্যান্স</em> (instance) তৈরি করি। আমরা <code>struct</code>-এর নাম উল্লেখ করে একটি ইনস্ট্যান্স তৈরি করি এবং তারপর কার্লি ব্র্যাকেটের মধ্যে <em><code>key: value</code></em> জোড়া যোগ করি, যেখানে কী-গুলো (keys) হলো ফিল্ডগুলোর নাম এবং ভ্যালুগুলো (values) হলো সেই ডেটা যা আমরা সেই ফিল্ডগুলোতে সংরক্ষণ করতে চাই। আমাদের ফিল্ডগুলোকে <code>struct</code>-এ যে ক্রমে ঘোষণা করা হয়েছে সেই একই ক্রমে নির্দিষ্ট করতে হবে না। অন্য কথায়, <code>struct</code>-এর সংজ্ঞাটি টাইপের জন্য একটি সাধারণ টেমপ্লেটের মতো, এবং ইনস্ট্যান্সগুলো সেই টেমপ্লেটটি নির্দিষ্ট ডেটা দিয়ে পূরণ করে টাইপের মান তৈরি করে। উদাহরণস্বরূপ, আমরা তালিকা ৫-২-এ দেখানো উপায়ে একটি নির্দিষ্ট ব্যবহারকারী ঘোষণা করতে পারি।</p>
+<Listing number="5-2" file-name="src/main.rs" caption="`User` struct-এর একটি ইনস্ট্যান্স তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+}</code></pre></pre>
+</Listing>
+<p>একটি <code>struct</code> থেকে একটি নির্দিষ্ট মান পেতে, আমরা ডট নোটেশন (dot notation) ব্যবহার করি। উদাহরণস্বরূপ, এই ব্যবহারকারীর ইমেল ঠিকানা অ্যাক্সেস করতে, আমরা <code>user1.email</code> ব্যবহার করি। যদি ইনস্ট্যান্সটি পরিবর্তনযোগ্য (mutable) হয়, আমরা ডট নোটেশন ব্যবহার করে এবং একটি নির্দিষ্ট ফিল্ডে মান অ্যাসাইন করে একটি মান পরিবর্তন করতে পারি। তালিকা ৫-৩ দেখাচ্ছে কীভাবে একটি পরিবর্তনযোগ্য <code>User</code> ইনস্ট্যান্সের <code>email</code> ফিল্ডের মান পরিবর্তন করতে হয়।</p>
+<Listing number="5-3" file-name="src/main.rs" caption="একটি `User` ইনস্ট্যান্সের `email` ফিল্ডের মান পরিবর্তন করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let mut user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com");
+}</code></pre></pre>
+</Listing>
+<p>মনে রাখবেন যে পুরো ইনস্ট্যান্সটি অবশ্যই পরিবর্তনযোগ্য হতে হবে; রাস্ট আমাদের শুধুমাত্র নির্দিষ্ট কিছু ফিল্ডকে পরিবর্তনযোগ্য হিসাবে চিহ্নিত করার অনুমতি দেয় না। যেকোনো এক্সপ্রেশনের মতো, আমরা ফাংশন বডির শেষ এক্সপ্রেশন হিসাবে <code>struct</code>-এর একটি নতুন ইনস্ট্যান্স তৈরি করে সেই নতুন ইনস্ট্যান্সটি উহ্যভাবে (implicitly) রিটার্ন করতে পারি।</p>
+<p>তালিকা ৫-৪ একটি <code>build_user</code> ফাংশন দেখাচ্ছে যা প্রদত্ত ইমেল এবং ব্যবহারকারীর নাম সহ একটি <code>User</code> ইনস্ট্যান্স রিটার্ন করে। <code>active</code> ফিল্ডটি <code>true</code> মান পায়, এবং <code>sign_in_count</code> একটি মান <code>1</code> পায়।</p>
+<Listing number="5-4" file-name="src/main.rs" caption="একটি `build_user` ফাংশন যা একটি ইমেল এবং ব্যবহারকারীর নাম নেয় এবং একটি `User` ইনস্ট্যান্স রিটার্ন করে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn build_user(email: String, username: String) -&gt; User {
+    User {
+        active: true,
+        username: username,
+        email: email,
+        sign_in_count: 1,
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let user1 = build_user(
+</span><span class="boring">        String::from("someone@example.com"),
+</span><span class="boring">        String::from("someusername123"),
+</span><span class="boring">    );
+</span><span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+ফাংশন প্যারামিটারগুলোকে `struct` ফিল্ডগুলোর একই নামে নামকরণ করা যুক্তিযুক্ত, কিন্তু `email` এবং `username` ফিল্ডের নাম এবং ভ্যারিয়েবলগুলো পুনরাবৃত্তি করা কিছুটা ক্লান্তিকর। যদি `struct`-এ আরও ফিল্ড থাকত, তবে প্রতিটি নামের পুনরাবৃত্তি আরও বিরক্তিকর হয়ে উঠত। ভাগ্যক্রমে, একটি সুবিধাজনক সংক্ষিপ্ত উপায় আছে!
+
+&lt;!-- Old heading. Do not remove or links may break. --&gt;
+
+&lt;a id="using-the-field-init-shorthand-when-variables-and-fields-have-the-same-name"&gt;&lt;/a&gt;
+
+## ফিল্ড ইনিশিয়ালাইজেশন শর্টহ্যান্ড ব্যবহার (Using the Field Init Shorthand)
+
+যেহেতু তালিকা ৫-৪-এ প্যারামিটারের নাম এবং `struct` ফিল্ডের নাম ঠিক একই, তাই আমরা `build_user` ফাংশনটিকে পুনরায় লেখার জন্য _ফিল্ড ইনিশিয়ালাইজেশন শর্টহ্যান্ড_ (field init shorthand) সিনট্যাক্স ব্যবহার করতে পারি যাতে এটি ঠিক একইভাবে আচরণ করে কিন্তু `username` এবং `email`-এর পুনরাবৃত্তি না থাকে, যেমনটি তালিকা ৫-৫-এ দেখানো হয়েছে।
+
+&lt;Listing number="5-5" file-name="src/main.rs" caption="একটি `build_user` ফাংশন যা ফিল্ড ইনিশিয়ালাইজেশন শর্টহ্যান্ড ব্যবহার করে কারণ `username` এবং `email` প্যারামিটারগুলোর নাম `struct` ফিল্ডগুলোর নামের সমান"&gt;
+
+```rust
+<span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn build_user(email: String, username: String) -&gt; User {
+    User {
+        active: true,
+        username,
+        email,
+        sign_in_count: 1,
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let user1 = build_user(
+</span><span class="boring">        String::from("someone@example.com"),
+</span><span class="boring">        String::from("someusername123"),
+</span><span class="boring">    );
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এখানে, আমরা <code>User</code> <code>struct</code>-এর একটি নতুন ইনস্ট্যান্স তৈরি করছি, যার <code>email</code> নামে একটি ফিল্ড রয়েছে। আমরা <code>email</code> ফিল্ডের মান <code>build_user</code> ফাংশনের <code>email</code> প্যারামিটারের মানে সেট করতে চাই। যেহেতু <code>email</code> ফিল্ড এবং <code>email</code> প্যারামিটারের নাম একই, আমাদের কেবল <code>email</code> লিখতে হবে, <code>email: email</code> লেখার পরিবর্তে।</p>
+<h3 id="সটরাকট-আপডেট-সিনটযাকস-দিয়ে-অনয-ইনসটযানস-থেকে-ইনসটযানস-তৈরি"><a class="header" href="#সটরাকট-আপডেট-সিনটযাকস-দিয়ে-অনয-ইনসটযানস-থেকে-ইনসটযানস-তৈরি">স্ট্রাকট আপডেট সিনট্যাক্স দিয়ে অন্য ইনস্ট্যান্স থেকে ইনস্ট্যান্স তৈরি</a></h3>
+<p>প্রায়শই একই ধরনের অন্য একটি ইনস্ট্যান্সের বেশিরভাগ মান ব্যবহার করে একটি <code>struct</code>-এর নতুন ইনস্ট্যান্স তৈরি করা দরকারী হয়, কিন্তু কিছু মান পরিবর্তন করতে হয়। আপনি এটি <em>স্ট্রাকট আপডেট সিনট্যাক্স</em> (struct update syntax) ব্যবহার করে করতে পারেন।</p>
+<p>প্রথমে, তালিকা ৫-৬-এ আমরা আপডেট সিনট্যাক্স ছাড়া নিয়মিতভাবে <code>user2</code>-তে একটি নতুন <code>User</code> ইনস্ট্যান্স কীভাবে তৈরি করতে হয় তা দেখাই। আমরা <code>email</code>-এর জন্য একটি নতুন মান সেট করি কিন্তু অন্যথায় তালিকা ৫-২-এ তৈরি করা <code>user1</code>-এর একই মান ব্যবহার করি।</p>
+<Listing number="5-6" file-name="src/main.rs" caption="`user1`-এর একটি মান ছাড়া বাকি সব মান ব্যবহার করে একটি নতুন `User` ইনস্ট্যান্স তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    // --snip--
+<span class="boring">
+</span><span class="boring">    let user1 = User {
+</span><span class="boring">        email: String::from("someone@example.com"),
+</span><span class="boring">        username: String::from("someusername123"),
+</span><span class="boring">        active: true,
+</span><span class="boring">        sign_in_count: 1,
+</span><span class="boring">    };
+</span>
+    let user2 = User {
+        active: user1.active,
+        username: user1.username,
+        email: String::from("another@example.com"),
+        sign_in_count: user1.sign_in_count,
+    };
+}</code></pre></pre>
+</Listing>
+<p>স্ট্রাকট আপডেট সিনট্যাক্স ব্যবহার করে, আমরা কম কোডে একই ফলাফল অর্জন করতে পারি, যেমনটি তালিকা ৫-৭-এ দেখানো হয়েছে। <code>..</code> সিনট্যাক্সটি নির্দিষ্ট করে যে বাকি ফিল্ডগুলো যা স্পষ্টভাবে সেট করা হয়নি সেগুলোর মান প্রদত্ত ইনস্ট্যান্সের ফিল্ডগুলোর মতোই হবে।</p>
+<Listing number="5-7" file-name="src/main.rs" caption="স্ট্রাকট আপডেট সিনট্যাক্স ব্যবহার করে একটি `User` ইনস্ট্যান্সের জন্য একটি নতুন `email` মান সেট করা কিন্তু বাকি মানগুলো `user1` থেকে ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
+</span><span class="boring">    active: bool,
+</span><span class="boring">    username: String,
+</span><span class="boring">    email: String,
+</span><span class="boring">    sign_in_count: u64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    // --snip--
+<span class="boring">
+</span><span class="boring">    let user1 = User {
+</span><span class="boring">        email: String::from("someone@example.com"),
+</span><span class="boring">        username: String::from("someusername123"),
+</span><span class="boring">        active: true,
+</span><span class="boring">        sign_in_count: 1,
+</span><span class="boring">    };
+</span>
+    let user2 = User {
+        email: String::from("another@example.com"),
+        ..user1
+    };
+}</code></pre></pre>
+</Listing>
+<p>তালিকা ৫-৭-এর কোডটি <code>user2</code>-তে একটি ইনস্ট্যান্স তৈরি করে যার <code>email</code>-এর জন্য একটি ভিন্ন মান রয়েছে কিন্তু <code>user1</code>-এর <code>username</code>, <code>active</code> এবং <code>sign_in_count</code> ফিল্ডগুলোর মান একই। <code>..user1</code> অবশ্যই শেষে আসতে হবে যাতে নির্দিষ্ট করা যায় যে কোনো বাকি ফিল্ড তাদের মান <code>user1</code>-এর সংশ্লিষ্ট ফিল্ড থেকে পাবে, কিন্তু আমরা <code>struct</code>-এর সংজ্ঞায় ফিল্ডগুলোর ক্রম নির্বিশেষে যেকোনো ক্রমে যতগুলো ফিল্ডের জন্য মান নির্দিষ্ট করতে পারি।</p>
+<p>মনে রাখবেন যে স্ট্রাকট আপডেট সিনট্যাক্স একটি অ্যাসাইনমেন্টের মতো <code>=</code> ব্যবহার করে; এর কারণ এটি ডেটা মুভ (moves) করে, যেমনটি আমরা <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move">"Move এর মাধ্যমে ভ্যারিয়েবল এবং ডেটার মিথস্ক্রিয়া"</a><!-- ignore --> বিভাগে দেখেছি। এই উদাহরণে, <code>user2</code> তৈরি করার পরে আমরা আর <code>user1</code> ব্যবহার করতে পারি না কারণ <code>user1</code>-এর <code>username</code> ফিল্ডের <code>String</code> <code>user2</code>-তে মুভ করা হয়েছে। যদি আমরা <code>user2</code>-কে <code>email</code> এবং <code>username</code> উভয়ের জন্য নতুন <code>String</code> মান দিতাম, এবং এইভাবে <code>user1</code> থেকে শুধুমাত্র <code>active</code> এবং <code>sign_in_count</code> মান ব্যবহার করতাম, তাহলে <code>user2</code> তৈরি করার পরেও <code>user1</code> বৈধ থাকত। <code>active</code> এবং <code>sign_in_count</code> উভয়ই এমন টাইপ যা <code>Copy</code> ট্রেইট ইমপ্লিমেন্ট করে, তাই <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">"শুধুমাত্র-স্ট্যাক ডেটা: কপি"</a><!-- ignore --> বিভাগে আলোচনা করা আচরণ প্রযোজ্য হবে। আমরা এই উদাহরণে এখনও <code>user1.email</code> ব্যবহার করতে পারি, কারণ এর মান <code>user1</code> থেকে মুভ করা হয়নি।</p>
+<h3 id="বিভিনন-টাইপ-তৈরি-করতে-নামবিহীন-ফিলড-সহ-টাপল-সটরাকট-বযবহার"><a class="header" href="#বিভিনন-টাইপ-তৈরি-করতে-নামবিহীন-ফিলড-সহ-টাপল-সটরাকট-বযবহার">বিভিন্ন টাইপ তৈরি করতে নামবিহীন ফিল্ড সহ টাপল স্ট্রাকট ব্যবহার</a></h3>
+<p>রাস্ট টাপলের মতো দেখতে <code>struct</code> সমর্থন করে, যাকে <em>টাপল স্ট্রাকট</em> (tuple structs) বলা হয়। টাপল স্ট্রাকটগুলোতে <code>struct</code> নামের অতিরিক্ত অর্থ থাকে তবে তাদের ফিল্ডগুলোর সাথে কোনো নাম যুক্ত থাকে না; বরং, তাদের কেবল ফিল্ডগুলোর টাইপ থাকে। টাপল স্ট্রাকটগুলো দরকারী যখন আপনি পুরো টাপলটিকে একটি নাম দিতে চান এবং টাপলটিকে অন্য টাপল থেকে একটি ভিন্ন টাইপ করতে চান, এবং যখন একটি নিয়মিত <code>struct</code>-এর মতো প্রতিটি ফিল্ডের নামকরণ করা ভার্বোস (verbose) বা অপ্রয়োজনীয় (redundant) হবে।</p>
+<p>একটি টাপল স্ট্রাকট ডিফাইন করতে, <code>struct</code> কীওয়ার্ড এবং <code>struct</code>-এর নাম দিয়ে শুরু করুন এবং তারপরে টাপলের টাইপগুলো দিন। উদাহরণস্বরূপ, এখানে আমরা <code>Color</code> এবং <code>Point</code> নামে দুটি টাপল স্ট্রাকট ডিফাইন এবং ব্যবহার করি:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+fn main() {
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+}</code></pre></pre>
+</Listing>
+<p>মনে রাখবেন যে <code>black</code> এবং <code>origin</code> মানগুলো ভিন্ন টাইপের কারণ সেগুলো ভিন্ন টাপল স্ট্রাকটের ইনস্ট্যান্স। আপনি যে প্রতিটি <code>struct</code> ডিফাইন করেন তা তার নিজস্ব টাইপ, যদিও <code>struct</code>-এর ভিতরের ফিল্ডগুলোর টাইপ একই হতে পারে। উদাহরণস্বরূপ, একটি ফাংশন যা <code>Color</code> টাইপের একটি প্যারামিটার নেয় তা আর্গুমেন্ট হিসাবে একটি <code>Point</code> নিতে পারে না, যদিও উভয় টাইপই তিনটি <code>i32</code> মান দিয়ে তৈরি। অন্যথায়, টাপল স্ট্রাকট ইনস্ট্যান্সগুলো টাপলের মতোই যে আপনি সেগুলোকে তাদের পৃথক অংশে ডিস্ট্রাকচার করতে পারেন, এবং আপনি একটি <code>.</code> এবং তারপরে ইনডেক্স ব্যবহার করে একটি পৃথক মান অ্যাক্সেস করতে পারেন। টাপলের মতো নয়, টাপল স্ট্রাকটগুলোর ক্ষেত্রে আপনাকে <code>struct</code>-এর টাইপের নাম দিতে হবে যখন আপনি সেগুলোকে ডিস্ট্রাকচার করবেন। উদাহরণস্বরূপ, <code>origin</code> পয়েন্টের মানগুলোকে <code>x</code>, <code>y</code>, এবং <code>z</code> নামের ভ্যারিয়েবলে ডিস্ট্রাকচার করতে আমরা <code>let Point(x, y, z) = origin;</code> লিখব।</p>
+<h3 id="কোনো-ফিলড-ছাডা-ইউনিট-লাইক-সটরাকট"><a class="header" href="#কোনো-ফিলড-ছাডা-ইউনিট-লাইক-সটরাকট">কোনো ফিল্ড ছাড়া ইউনিট-লাইক স্ট্রাকট</a></h3>
+<p>আপনি এমন <code>struct</code>ও ডিফাইন করতে পারেন যার কোনো ফিল্ড নেই! এগুলোকে <em>ইউনিট-লাইক স্ট্রাকট</em> (unit-like structs) বলা হয় কারণ তারা <code>()</code>-এর মতো আচরণ করে, যা আমরা <a href="ch03-02-data-types.html#the-tuple-type">"টাপল টাইপ"</a><!-- ignore --> বিভাগে উল্লেখ করেছি। ইউনিট-লাইক স্ট্রাকটগুলো দরকারী হতে পারে যখন আপনার কোনো টাইপের উপর একটি ট্রেইট ইমপ্লিমেন্ট করতে হবে কিন্তু আপনার কাছে এমন কোনো ডেটা নেই যা আপনি টাইপের মধ্যে সংরক্ষণ করতে চান। আমরা অধ্যায় ১০-এ ট্রেইট নিয়ে আলোচনা করব। এখানে <code>AlwaysEqual</code> নামে একটি ইউনিট স্ট্রাকট ঘোষণা এবং ইনস্ট্যানশিয়েট করার একটি উদাহরণ দেওয়া হলো:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">struct AlwaysEqual;
+
+fn main() {
+    let subject = AlwaysEqual;
+}</code></pre></pre>
+</Listing>
+<p><code>AlwaysEqual</code> ডিফাইন করতে, আমরা <code>struct</code> কীওয়ার্ড, যে নামটি আমরা চাই, এবং তারপর একটি সেমিকোলন ব্যবহার করি। কার্লি ব্র্যাকেট বা প্যারেন্থেসিসের প্রয়োজন নেই! তারপর আমরা <code>subject</code> ভ্যারিয়েবলে <code>AlwaysEqual</code>-এর একটি ইনস্ট্যান্স পেতে পারি একই ভাবে: আমরা যে নামটি ডিফাইন করেছি তা ব্যবহার করে, কোনো কার্লি ব্র্যাকেট বা প্যারেন্থেসিস ছাড়াই। কল্পনা করুন যে পরে আমরা এই টাইপের জন্য এমন আচরণ ইমপ্লিমেন্ট করব যাতে <code>AlwaysEqual</code>-এর প্রতিটি ইনস্ট্যান্স সবসময় অন্য যেকোনো টাইপের প্রতিটি ইনস্ট্যান্সের সমান হয়, সম্ভবত পরীক্ষার উদ্দেশ্যে একটি পরিচিত ফলাফল পাওয়ার জন্য। সেই আচরণ ইমপ্লিমেন্ট করার জন্য আমাদের কোনো ডেটার প্রয়োজন হবে না! আপনি অধ্যায় ১০-এ দেখবেন কীভাবে ট্রেইট ডিফাইন করতে হয় এবং সেগুলোকে যেকোনো টাইপের উপর ইমপ্লিমেন্ট করতে হয়, যার মধ্যে ইউনিট-লাইক স্ট্রাকটও রয়েছে।</p>
+<blockquote>
+<h3 id="সটরাকট-ডেটার-মালিকানা-ownership-of-struct-data"><a class="header" href="#সটরাকট-ডেটার-মালিকানা-ownership-of-struct-data">স্ট্রাকট ডেটার মালিকানা (Ownership of Struct Data)</a></h3>
+<p>তালিকা ৫-১ এর <code>User</code> <code>struct</code> সংজ্ঞায়, আমরা <code>&amp;str</code> স্ট্রিং স্লাইস টাইপের পরিবর্তে ওনড (owned) <code>String</code> টাইপ ব্যবহার করেছি। এটি একটি ইচ্ছাকৃত পছন্দ কারণ আমরা চাই এই <code>struct</code>-এর প্রতিটি ইনস্ট্যান্স তার সমস্ত ডেটার মালিক হোক এবং সেই ডেটা পুরো <code>struct</code>-টি বৈধ থাকা পর্যন্ত বৈধ থাকুক।</p>
+<p><code>struct</code>-এর পক্ষে অন্য কারো মালিকানাধীন ডেটার রেফারেন্স সংরক্ষণ করাও সম্ভব, কিন্তু তা করার জন্য <em>লাইফটাইম</em> (lifetimes) ব্যবহার করতে হয়, যা রাস্টের একটি বৈশিষ্ট্য এবং আমরা অধ্যায় ১০-এ আলোচনা করব। লাইফটাইম নিশ্চিত করে যে একটি <code>struct</code> দ্বারা রেফারেন্স করা ডেটা <code>struct</code>-টি বৈধ থাকা পর্যন্ত বৈধ থাকবে। ধরুন আপনি লাইফটাইম নির্দিষ্ট না করে একটি <code>struct</code>-এ একটি রেফারেন্স সংরক্ষণ করার চেষ্টা করছেন, যেমনটি নিচে দেখানো হলো; এটি কাজ করবে না:</p>
+<Listing file-name="src/main.rs">
+<!-- CAN'T EXTRACT SEE https://github.com/rust-lang/mdBook/issues/1127 -->
+<pre><code class="language-rust ignore does_not_compile">struct User {
+    active: bool,
+    username: &amp;str,
+    email: &amp;str,
+    sign_in_count: u64,
+}
+
+fn main() {
+    let user1 = User {
+        active: true,
+        username: "someusername123",
+        email: "someone@example.com",
+        sign_in_count: 1,
+    };
+}</code></pre>
+</Listing>
+<p>কম্পাইলার অভিযোগ করবে যে তার লাইফটাইম স্পেসিফায়ার প্রয়োজন:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling structs v0.1.0 (file:///projects/structs)
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:3:15
+  |
+3 |     username: &amp;str,
+  |               ^ expected named lifetime parameter
+  |
+help: consider introducing a named lifetime parameter
+  |
+1 ~ struct User&lt;'a&gt; {
+2 |     active: bool,
+3 ~     username: &amp;'a str,
+  |
+
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:4:12
+  |
+4 |     email: &amp;str,
+  |            ^ expected named lifetime parameter
+  |
+help: consider introducing a named lifetime parameter
+  |
+1 ~ struct User&lt;'a&gt; {
+2 |     active: bool,
+3 |     username: &amp;str,
+4 ~     email: &amp;'a str,
+  |
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `structs` (bin "structs") due to 2 previous errors
+</code></pre>
+<p>অধ্যায় ১০-এ, আমরা আলোচনা করব কীভাবে এই এররগুলো ঠিক করতে হয় যাতে আপনি <code>struct</code>-এ রেফারেন্স সংরক্ষণ করতে পারেন, কিন্তু আপাতত, আমরা এই ধরনের এররগুলো <code>&amp;str</code>-এর মতো রেফারেন্সের পরিবর্তে <code>String</code>-এর মতো ওনড টাইপ ব্যবহার করে ঠিক করব।</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch05-00-structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch05-02-example-structs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch05-00-structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch05-02-example-structs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

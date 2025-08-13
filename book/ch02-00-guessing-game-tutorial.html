@@ -1,0 +1,1003 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>একটি অনুমান করার গেম প্রোগ্রামিং - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="অনুমান-করার-গেম-পরোগরামিং"><a class="header" href="#অনুমান-করার-গেম-পরোগরামিং">অনুমান করার গেম প্রোগ্রামিং</a></h1>
+<p>চলুন, একটি বাস্তব প্রজেক্টের মাধ্যমে রাস্টের জগতে ঝাঁপিয়ে পড়া যাক! এই অধ্যায়ে আমরা কিছু সাধারণ রাস্ট কনসেপ্টের সাথে পরিচিত হব এবং দেখব কীভাবে একটি বাস্তব প্রোগ্রামে সেগুলো ব্যবহার করা যায়। আপনি <code>let</code>, <code>match</code>, মেথড, অ্যাসোসিয়েটেড ফাংশন, এক্সটার্নাল ক্রেইট এবং আরও অনেক কিছু সম্পর্কে জানতে পারবেন! পরবর্তী অধ্যায়গুলোতে আমরা এই ধারণাগুলো আরও বিস্তারিতভাবে আলোচনা করব। এই অধ্যায়ে, আপনি শুধু মৌলিক বিষয়গুলো অনুশীলন করবেন।</p>
+<p>আমরা একটি ক্লাসিক প্রোগ্রামিং সমস্যা—অনুমান করার গেম (guessing game)—তৈরি করব। এটি যেভাবে কাজ করবে তা হলো: প্রোগ্রামটি ১ থেকে ১০০ এর মধ্যে একটি র‍্যান্ডম পূর্ণসংখ্যা (integer) তৈরি করবে। এরপর এটি প্লেয়ারকে একটি অনুমান প্রবেশ করানোর জন্য বলবে। একটি অনুমান প্রবেশ করানোর পর, প্রোগ্রামটি জানাবে যে অনুমানটি খুব কম নাকি খুব বেশি। যদি অনুমান সঠিক হয়, গেমটি একটি অভিনন্দন বার্তা প্রিন্ট করে খেলা শেষ করে দেবে।</p>
+<h2 id="নতুন-পরজেকট-সেটআপ-করা"><a class="header" href="#নতুন-পরজেকট-সেটআপ-করা">নতুন প্রজেক্ট সেটআপ করা</a></h2>
+<p>একটি নতুন প্রজেক্ট সেটআপ করতে, আপনি অধ্যায় ১-এ যে <em>projects</em> ডিরেক্টরি তৈরি করেছিলেন সেখানে যান এবং কার্গো ব্যবহার করে একটি নতুন প্রজেক্ট তৈরি করুন, যেমন:</p>
+<pre><code class="language-console">$ cargo new guessing_game
+$ cd guessing_game
+</code></pre>
+<p>প্রথম কমান্ড, <code>cargo new</code>, প্রজেক্টের নাম (<code>guessing_game</code>) প্রথম আর্গুমেন্ট হিসেবে নেয়। দ্বিতীয় কমান্ডটি নতুন প্রজেক্টের ডিরেক্টরিতে পরিবর্তন করে।</p>
+<p>তৈরি হওয়া <em>Cargo.toml</em> ফাইলটি দেখুন:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial
+rm -rf no-listing-01-cargo-new
+cargo new no-listing-01-cargo-new --name guessing_game
+cd no-listing-01-cargo-new
+cargo run > output.txt 2>&1
+cd ../../..
+-->
+<p><span class="filename">ফাইলের নাম: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = "guessing_game"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+</code></pre>
+<p>যেমনটি আপনি অধ্যায় ১-এ দেখেছেন, <code>cargo new</code> আপনার জন্য একটি "Hello, world!" প্রোগ্রাম তৈরি করে। <em>src/main.rs</em> ফাইলটি দেখুন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    println!("Hello, world!");
+}</code></pre></pre>
+<p>এখন চলুন এই "Hello, world!" প্রোগ্রামটি কম্পাইল করি এবং <code>cargo run</code> কমান্ড ব্যবহার করে একই সাথে রান করি:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `target/debug/guessing_game`
+Hello, world!
+</code></pre>
+<p>যখন কোনো প্রজেক্টে দ্রুত পরিবর্তন ও পরীক্ষা করার প্রয়োজন হয়, তখন <code>run</code> কমান্ডটি খুব কাজে আসে, যেমনটা আমরা এই গেমে করব—প্রতিটি ধাপ দ্রুত পরীক্ষা করে পরবর্তী ধাপে এগিয়ে যাব।</p>
+<p><em>src/main.rs</em> ফাইলটি আবার খুলুন। আপনি সমস্ত কোড এই ফাইলেই লিখবেন।</p>
+<h2 id="একটি-অনুমান-পরসেস-করা"><a class="header" href="#একটি-অনুমান-পরসেস-করা">একটি অনুমান প্রসেস করা</a></h2>
+<p>অনুমান করার গেম প্রোগ্রামের প্রথম অংশে ব্যবহারকারীর কাছ থেকে ইনপুট চাওয়া হবে, সেই ইনপুট প্রসেস করা হবে এবং ইনপুটটি প্রত্যাশিত বিন্যাসে আছে কিনা তা পরীক্ষা করা হবে। শুরু করার জন্য, আমরা প্লেয়ারকে একটি অনুমান ইনপুট করার সুযোগ দেব। লিস্টিং ২-১ এর কোডটি <em>src/main.rs</em> ফাইলে লিখুন।</p>
+<Listing number="2-1" file-name="src/main.rs" caption="ব্যবহারকারীর কাছ থেকে একটি অনুমান নিয়ে তা প্রিন্ট করার কোড">
+<pre><code class="language-rust ignore">use std::io;
+
+fn main() {
+    println!("Guess the number!");
+
+    println!("Please input your guess.");
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&amp;mut guess)
+        .expect("Failed to read line");
+
+    println!("You guessed: {guess}");
+}</code></pre>
+</Listing>
+<p>এই কোডে অনেক তথ্য রয়েছে, তাই চলুন লাইন বাই লাইন আলোচনা করা যাক। ব্যবহারকারীর ইনপুট পেতে এবং তারপর ফলাফল আউটপুট হিসেবে প্রিন্ট করতে, আমাদের <code>io</code> ইনপুট/আউটপুট লাইব্রেরিটি স্কোপের মধ্যে আনতে হবে। <code>io</code> লাইব্রেরিটি স্ট্যান্ডার্ড লাইব্রেরি থেকে আসে, যা <code>std</code> নামে পরিচিত:</p>
+<pre><code class="language-rust ignore">use std::io;
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p>ডিফল্টরূপে, রাস্ট স্ট্যান্ডার্ড লাইব্রেরিতে কিছু আইটেম সংজ্ঞায়িত করে রাখে যা প্রতিটি প্রোগ্রামের স্কোপে নিয়ে আসা হয়। এই সেটটিকে <em>prelude</em> বলা হয়, এবং আপনি স্ট্যান্ডার্ড লাইব্রেরি ডকুমেন্টেশনে এর সবকিছু দেখতে পারেন।</p>
+<p>আপনি যদি এমন কোনো টাইপ ব্যবহার করতে চান যা prelude-এ নেই, তবে আপনাকে <code>use</code> স্টেটমেন্ট দিয়ে সেই টাইপটি স্পষ্টভাবে স্কোপে আনতে হবে। <code>std::io</code> লাইব্রেরি ব্যবহার করলে আপনি ব্যবহারকারীর ইনপুট গ্রহণ করার মতো অনেক দরকারি ফিচার পাবেন।</p>
+<p>যেমনটি আপনি অধ্যায় ১-এ দেখেছেন, <code>main</code> ফাংশন হল প্রোগ্রামের প্রবেশ বিন্দু:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span>fn main() {
+<span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p><code>fn</code> সিনট্যাক্স একটি নতুন ফাংশন ঘোষণা করে; <code>()</code> চিহ্ন দিয়ে বোঝানো হয় যে এর কোনো প্যারামিটার নেই; এবং <code>{</code> চিহ্নটি ফাংশনের বডি শুরু করে।</p>
+<p>আপনি অধ্যায় ১-এ এটাও শিখেছেন যে, <code>println!</code> একটি ম্যাক্রো যা স্ক্রিনে একটি স্ট্রিং প্রিন্ট করে:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>    println!("Guess the number!");
+
+    println!("Please input your guess.");
+<span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p>এই কোডটি একটি প্রম্পট প্রিন্ট করছে যা গেমটি কী তা জানাচ্ছে এবং ব্যবহারকারীর কাছ থেকে ইনপুট চাইছে।</p>
+<h3 id="ভযারিয়েবলের-মাধযমে-মান-সংরকষণ-করা"><a class="header" href="#ভযারিয়েবলের-মাধযমে-মান-সংরকষণ-করা">ভ্যারিয়েবলের মাধ্যমে মান সংরক্ষণ করা</a></h3>
+<p>এরপর, আমরা ব্যবহারকারীর ইনপুট সংরক্ষণের জন্য একটি <em>variable</em> তৈরি করব, এভাবে:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span>    let mut guess = String::new();
+<span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p>এখন প্রোগ্রামটি আকর্ষণীয় হয়ে উঠছে! এই ছোট লাইনে অনেক কিছু ঘটছে। আমরা ভ্যারিয়েবল তৈরি করতে <code>let</code> স্টেটমেন্ট ব্যবহার করি। এখানে আরেকটি উদাহরণ:</p>
+<pre><code class="language-rust ignore">let apples = 5;</code></pre>
+<p>এই লাইনটি <code>apples</code> নামে একটি নতুন ভ্যারিয়েবল তৈরি করে এবং এটিকে 5 মানের সাথে বাইন্ড করে। রাস্ট-এ, ভ্যারিয়েবলগুলো ডিফল্টরূপে অপরিবর্তনীয় (immutable), যার মানে একবার আমরা ভ্যারিয়েবলে একটি মান দিলে, সেই মান আর পরিবর্তন হবে না। আমরা এই ধারণাটি অধ্যায় ৩-এর <a href="ch03-01-variables-and-mutability.html#variables-and-mutability">"Variables and Mutability"</a> বিভাগে বিস্তারিতভাবে আলোচনা করব। একটি ভ্যারিয়েবলকে পরিবর্তনযোগ্য (mutable) করতে, আমরা ভ্যারিয়েবলের নামের আগে <code>mut</code> যোগ করি:</p>
+<pre><code class="language-rust ignore">let apples = 5; // immutable
+let mut bananas = 5; // mutable</code></pre>
+<blockquote>
+<p>দ্রষ্টব্য: <code>//</code> সিনট্যাক্স একটি কমেন্ট শুরু করে যা লাইনের শেষ পর্যন্ত চলে। রাস্ট কমেন্টের মধ্যে থাকা সবকিছু উপেক্ষা করে। আমরা অধ্যায় ৩-এ কমেন্ট সম্পর্কে আরও বিস্তারিত আলোচনা করব।</p>
+</blockquote>
+<p>guessing game প্রোগ্রামে ফিরে আসা যাক, আপনি এখন জানেন যে <code>let mut guess</code> একটি পরিবর্তনযোগ্য ভ্যারিয়েবল <code>guess</code> তৈরি করবে। সমান চিহ্ন (<code>=</code>) রাস্টকে বলে যে আমরা এখন ভ্যারিয়েবলের সাথে কিছু একটা বাইন্ড করতে চাই। সমান চিহ্নের ডানদিকে <code>guess</code>-এর মান রয়েছে, যা <code>String::new</code> কল করার ফলাফল, এটি একটি ফাংশন যা <code>String</code>-এর একটি নতুন ইনস্ট্যান্স প্রদান করে। <a href="../std/string/struct.String.html"><code>String</code></a> হল একটি স্ট্রিং টাইপ যা স্ট্যান্ডার্ড লাইব্রেরি দ্বারা সরবরাহ করা হয় এবং এটি একটি প্রসারণযোগ্য, UTF-8 এনকোডেড টেক্সট।</p>
+<p><code>::new</code> লাইনে <code>::</code> সিনট্যাক্সটি নির্দেশ করে যে <code>new</code> হল <code>String</code> টাইপের একটি associated function। একটি <em>associated function</em> হলো এমন একটি ফাংশন যা একটি টাইপের উপর ইমপ্লিমেন্ট করা হয়, এই ক্ষেত্রে <code>String</code>। এই <code>new</code> ফাংশনটি একটি নতুন, খালি স্ট্রিং তৈরি করে। আপনি অনেক টাইপের উপরেই একটি <code>new</code> ফাংশন খুঁজে পাবেন কারণ এটি কোনো কিছুর নতুন মান তৈরি করার জন্য একটি সাধারণ নাম।</p>
+<p>পুরো কথায়, <code>let mut guess = String::new();</code> লাইনটি একটি পরিবর্তনযোগ্য ভ্যারিয়েবল তৈরি করেছে যা বর্তমানে একটি <code>String</code>-এর নতুন, খালি ইনস্ট্যান্সের সাথে বাইন্ড করা আছে। যাক!</p>
+<h3 id="বযবহারকারীর-ইনপুট-গরহণ-করা"><a class="header" href="#বযবহারকারীর-ইনপুট-গরহণ-করা">ব্যবহারকারীর ইনপুট গ্রহণ করা</a></h3>
+<p>স্মরণ করুন যে আমরা প্রোগ্রামের প্রথম লাইনে <code>use std::io;</code> দিয়ে স্ট্যান্ডার্ড লাইব্রেরি থেকে ইনপুট/আউটপুট কার্যকারিতা অন্তর্ভুক্ত করেছিলাম। এখন আমরা <code>io</code> মডিউল থেকে <code>stdin</code> ফাংশনটি কল করব, যা আমাদের ব্যবহারকারীর ইনপুট পরিচালনা করতে দেবে:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span>    io::stdin()
+        .read_line(&amp;mut guess)
+<span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p>যদি আমরা প্রোগ্রামের শুরুতে <code>use std::io;</code> দিয়ে <code>io</code> মডিউল ইম্পোর্ট না করতাম, আমরা এখনও ফাংশনটি <code>std::io::stdin</code> হিসেবে লিখে ব্যবহার করতে পারতাম। <code>stdin</code> ফাংশনটি <a href="../std/io/struct.Stdin.html"><code>std::io::Stdin</code></a> এর একটি ইনস্ট্যান্স প্রদান করে, যা আপনার টার্মিনালের স্ট্যান্ডার্ড ইনপুটের একটি হ্যান্ডেলকে প্রতিনিধিত্ব করে।</p>
+<p>এরপর, <code>.read_line(&amp;mut guess)</code> লাইনটি ব্যবহারকারীর কাছ থেকে ইনপুট পাওয়ার জন্য স্ট্যান্ডার্ড ইনপুট হ্যান্ডেলের উপর <a href="../std/io/struct.Stdin.html#method.read_line"><code>read_line</code></a> মেথড কল করে। আমরা <code>&amp;mut guess</code> কে <code>read_line</code> এর আর্গুমেন্ট হিসেবে পাস করছি, যাতে এটি জানতে পারে ব্যবহারকারীর ইনপুট কোন স্ট্রিং-এ সংরক্ষণ করতে হবে। <code>read_line</code>-এর পুরো কাজটি হলো ব্যবহারকারী স্ট্যান্ডার্ড ইনপুটে যা টাইপ করে তা একটি স্ট্রিং-এ যুক্ত করা (এর বিষয়বস্তু ওভাররাইট না করে), তাই আমরা সেই স্ট্রিংটিকে একটি আর্গুমেন্ট হিসাবে পাস করি। স্ট্রিং আর্গুমেন্টটি পরিবর্তনযোগ্য হতে হবে যাতে মেথডটি স্ট্রিং এর বিষয়বস্তু পরিবর্তন করতে পারে।</p>
+<p><code>&amp;</code> চিহ্নটি নির্দেশ করে যে এই আর্গুমেন্টটি একটি <em>reference</em>, যা আপনার কোডের একাধিক অংশকে মেমরিতে একাধিকবার ডেটা কপি না করে একই ডেটা অ্যাক্সেস করার একটি উপায় দেয়। Reference একটি জটিল বৈশিষ্ট্য, এবং রাস্টের অন্যতম প্রধান সুবিধা হল reference ব্যবহার করা কতটা নিরাপদ এবং সহজ। এই প্রোগ্রামটি শেষ করার জন্য আপনাকে সেই সব বিস্তারিত জানতে হবে না। আপাতত, আপনাকে শুধু জানতে হবে যে, ভ্যারিয়েবলের মতো, reference-ও ডিফল্টরূপে অপরিবর্তনীয়। তাই, এটিকে পরিবর্তনযোগ্য করার জন্য আপনাকে <code>&amp;guess</code> এর পরিবর্তে <code>&amp;mut guess</code> লিখতে হবে। (অধ্যায় ৪ reference সম্পর্কে আরও বিস্তারিত ব্যাখ্যা করবে।)</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="handling-potential-failure-with-the-result-type"></a></p>
+<h3 id="result-দিযে-সমভাবয-বযরথতা-সামলানো"><a class="header" href="#result-দিযে-সমভাবয-বযরথতা-সামলানো"><code>Result</code> দিয়ে সম্ভাব্য ব্যর্থতা সামলানো</a></h3>
+<p>আমরা এখনও এই কোড লাইনের উপর কাজ করছি। আমরা এখন তৃতীয় একটি টেক্সট লাইন নিয়ে আলোচনা করছি, কিন্তু লক্ষ্য করুন যে এটি এখনও একটি একক যৌক্তিক কোড লাইনের অংশ। পরবর্তী অংশটি হল এই মেথড:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span>        .expect("Failed to read line");
+<span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">}</span></code></pre>
+<p>আমরা এই কোডটি এভাবেও লিখতে পারতাম:</p>
+<pre><code class="language-rust ignore">io::stdin().read_line(&amp;mut guess).expect("Failed to read line");</code></pre>
+<p>তবে, একটি দীর্ঘ লাইন পড়া কঠিন, তাই এটিকে ভাগ করা ভালো। যখন আপনি <code>.method_name()</code> সিনট্যাক্স দিয়ে একটি মেথড কল করেন, তখন দীর্ঘ লাইনগুলো ভাঙতে একটি নতুন লাইন এবং অন্যান্য হোয়াইটস্পেস ব্যবহার করা প্রায়শই বুদ্ধিমানের কাজ। এখন চলুন আলোচনা করি এই লাইনটি কী করে।</p>
+<p>যেমন আগে উল্লেখ করা হয়েছে, <code>read_line</code> ব্যবহারকারীর প্রবেশ করানো সবকিছুকে আমরা যে স্ট্রিংটি পাস করি তাতে রাখে, কিন্তু এটি একটি <code>Result</code> মানও প্রদান করে। <a href="../std/result/enum.Result.html"><code>Result</code></a> হল একটি <a href="ch06-00-enums.html"><em>enumeration</em></a>, যাকে প্রায়ই <em>enum</em> বলা হয়, যা এমন একটি টাইপ যা একাধিক সম্ভাব্য অবস্থায় থাকতে পারে। আমরা প্রতিটি সম্ভাব্য অবস্থাকে একটি <em>variant</em> বলি।</p>
+<p><a href="ch06-00-enums.html">অধ্যায় ৬</a> এ enum সম্পর্কে আরও বিস্তারিত আলোচনা করা হবে। এই <code>Result</code> টাইপগুলোর উদ্দেশ্য হল ত্রুটি-হ্যান্ডলিং তথ্য এনকোড করা।</p>
+<p><code>Result</code>-এর variant-গুলো হল <code>Ok</code> এবং <code>Err</code>। <code>Ok</code> variant নির্দেশ করে যে অপারেশনটি সফল হয়েছে, এবং এতে সফলভাবে তৈরি হওয়া মানটি থাকে। <code>Err</code> variant মানে অপারেশনটি ব্যর্থ হয়েছে, এবং এতে অপারেশনটি কীভাবে বা কেন ব্যর্থ হয়েছে সে সম্পর্কে তথ্য থাকে।</p>
+<p>যেকোনো টাইপের মানের মতোই, <code>Result</code> টাইপের মানের উপর মেথড সংজ্ঞায়িত থাকে। <code>Result</code> এর একটি ইনস্ট্যান্সের একটি <a href="../std/result/enum.Result.html#method.expect"><code>expect</code> মেথড</a> রয়েছে যা আপনি কল করতে পারেন। যদি <code>Result</code> এর এই ইনস্ট্যান্সটি একটি <code>Err</code> মান হয়, <code>expect</code> প্রোগ্রামটি ক্র্যাশ করাবে এবং আপনি <code>expect</code>-এর আর্গুমেন্ট হিসেবে যে বার্তাটি পাস করেছেন তা প্রদর্শন করবে। যদি <code>read_line</code> মেথড একটি <code>Err</code> প্রদান করে, তবে এটি সম্ভবত অন্তর্নিহিত অপারেটিং সিস্টেম থেকে আসা একটি ত্রুটির ফল। যদি <code>Result</code> এর এই ইনস্ট্যান্সটি একটি <code>Ok</code> মান হয়, <code>expect</code> <code>Ok</code> যে রিটার্ন মানটি ধারণ করছে তা নেবে এবং শুধুমাত্র সেই মানটি আপনাকে ফেরত দেবে যাতে আপনি এটি ব্যবহার করতে পারেন। এই ক্ষেত্রে, সেই মানটি হল ব্যবহারকারীর ইনপুটের বাইটের সংখ্যা।</p>
+<p>আপনি যদি <code>expect</code> কল না করেন, প্রোগ্রামটি কম্পাইল হবে, কিন্তু আপনি একটি সতর্কবার্তা পাবেন:</p>
+<pre><code class="language-console">$ cargo build
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+warning: unused `Result` that must be used
+  --&gt; src/main.rs:10:5
+   |
+10 |     io::stdin().read_line(&amp;mut guess);
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+10 |     let _ = io::stdin().read_line(&amp;mut guess);
+   |     +++++++
+
+warning: `guessing_game` (bin "guessing_game") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.59s
+</code></pre>
+<p>রাস্ট সতর্ক করে যে আপনি <code>read_line</code> থেকে প্রাপ্ত <code>Result</code> মানটি ব্যবহার করেননি, যা নির্দেশ করে যে প্রোগ্রামটি একটি সম্ভাব্য ত্রুটি পরিচালনা করেনি।</p>
+<p>সতর্কবার্তাটি দূর করার সঠিক উপায় হলো আসলে ত্রুটি-হ্যান্ডলিং কোড লেখা, কিন্তু আমাদের ক্ষেত্রে আমরা শুধু চাই যে কোনো সমস্যা হলে প্রোগ্রামটি ক্র্যাশ করুক, তাই আমরা <code>expect</code> ব্যবহার করতে পারি। আপনি ত্রুটি থেকে পুনরুদ্ধার সম্পর্কে <a href="ch09-02-recoverable-errors-with-result.html">অধ্যায় ৯</a> এ শিখবেন।</p>
+<h3 id="println-পলেসহোলডার-দিযে-মান-পরিনট-করা"><a class="header" href="#println-পলেসহোলডার-দিযে-মান-পরিনট-করা"><code>println!</code> প্লেসহোল্ডার দিয়ে মান প্রিন্ট করা</a></h3>
+<p>শেষের কার্লি ব্র্যাকেট বাদে, এখন পর্যন্ত কোডে আলোচনার জন্য আর মাত্র একটি লাইন বাকি আছে:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span>    println!("You guessed: {guess}");
+<span class="boring">}</span></code></pre>
+<p>এই লাইনটি সেই স্ট্রিংটি প্রিন্ট করে যা এখন ব্যবহারকারীর ইনপুট ধারণ করে। <code>{}</code> কার্লি ব্র্যাকেটের সেট একটি প্লেসহোল্ডার: <code>{}</code>-কে ছোট কাঁকড়ার চিমটার মতো ভাবুন যা একটি মানকে ধরে রাখে। একটি ভ্যারিয়েবলের মান প্রিন্ট করার সময়, ভ্যারিয়েবলের নামটি কার্লি ব্র্যাকেটের ভিতরে যেতে পারে। একটি এক্সপ্রেশন মূল্যায়ন করার ফলাফল প্রিন্ট করার সময়, ফরম্যাট স্ট্রিং-এ খালি কার্লি ব্র্যাকেট রাখুন, তারপর ফরম্যাট স্ট্রিং এর পরে একটি কমা-বিভক্ত এক্সপ্রেশনের তালিকা দিন যা প্রতিটি খালি কার্লি ব্র্যাকেট প্লেসহোল্ডারে একই ক্রমে প্রিন্ট হবে। একটি <code>println!</code> কলে একটি ভ্যারিয়েবল এবং একটি এক্সপ্রেশনের ফলাফল প্রিন্ট করাটা এমন দেখাবে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5;
+let y = 10;
+
+println!("x = {x} and y + 2 = {}", y + 2);
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি <code>x = 5 and y + 2 = 12</code> প্রিন্ট করবে।</p>
+<h3 id="পরথম-অংশ-পরীকষা-করা"><a class="header" href="#পরথম-অংশ-পরীকষা-করা">প্রথম অংশ পরীক্ষা করা</a></h3>
+<p>চলুন guessing game-এর প্রথম অংশটি পরীক্ষা করি। এটি <code>cargo run</code> ব্যবহার করে চালান:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-01/
+cargo clean
+cargo run
+input 6 -->
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.44s
+     Running `target/debug/guessing_game`
+Guess the number!
+Please input your guess.
+6
+You guessed: 6
+</code></pre>
+<p>এই মুহূর্তে, গেমের প্রথম অংশটি সম্পন্ন হয়েছে: আমরা কীবোর্ড থেকে ইনপুট পাচ্ছি এবং তারপর তা প্রিন্ট করছি।</p>
+<h2 id="একটি-গোপন-সংখযা-তৈরি-করা"><a class="header" href="#একটি-গোপন-সংখযা-তৈরি-করা">একটি গোপন সংখ্যা তৈরি করা</a></h2>
+<p>এরপর, আমাদের একটি গোপন সংখ্যা তৈরি করতে হবে যা ব্যবহারকারী অনুমান করার চেষ্টা করবে। গোপন সংখ্যাটি প্রতিবার ভিন্ন হওয়া উচিত যাতে গেমটি একাধিকবার খেলতে মজা লাগে। আমরা ১ থেকে ১০০ এর মধ্যে একটি র‍্যান্ডম সংখ্যা ব্যবহার করব যাতে গেমটি খুব বেশি কঠিন না হয়। রাস্ট এখনও তার স্ট্যান্ডার্ড লাইব্রেরিতে র‍্যান্ডম সংখ্যা তৈরির কার্যকারিতা অন্তর্ভুক্ত করেনি। তবে, রাস্ট টিম একটি <a href="https://crates.io/crates/rand"><code>rand</code> crate</a> সরবরাহ করে যেখানে এই কার্যকারিতা রয়েছে।</p>
+<h3 id="আরও-কারযকারিতা-পেতে-একটি-crate-বযবহার-করা"><a class="header" href="#আরও-কারযকারিতা-পেতে-একটি-crate-বযবহার-করা">আরও কার্যকারিতা পেতে একটি Crate ব্যবহার করা</a></h3>
+<p>মনে রাখবেন যে একটি crate হলো রাস্ট সোর্স কোড ফাইলের একটি সংগ্রহ। আমরা যে প্রজেক্টটি তৈরি করছি তা একটি <em>binary crate</em>, যা একটি এক্সিকিউটেবল। <code>rand</code> crate একটি <em>library crate</em>, যা এমন কোড ধারণ করে যা অন্য প্রোগ্রামে ব্যবহারের উদ্দেশ্যে তৈরি এবং এটি নিজে থেকে এক্সিকিউট করা যায় না।</p>
+<p>কার্গোর এক্সটার্নাল crate সমন্বয় করার ক্ষমতা এখানেই কার্গোর আসল শক্তি প্রকাশ পায়। <code>rand</code> ব্যবহার করে কোড লেখার আগে, আমাদের <em>Cargo.toml</em> ফাইলটি পরিবর্তন করে <code>rand</code> crate-কে একটি ডিপেন্ডেন্সি হিসেবে অন্তর্ভুক্ত করতে হবে। ফাইলটি এখন খুলুন এবং <code>[dependencies]</code> সেকশন হেডারের নিচে নিম্নলিখিত লাইনটি যোগ করুন যা কার্গো আপনার জন্য তৈরি করেছে। নিশ্চিত করুন যে আপনি <code>rand</code>-কে ঠিক যেমনভাবে আমরা এখানে দিয়েছি, এই ভার্সন নম্বর সহ নির্দিষ্ট করেছেন, অন্যথায় এই টিউটোরিয়ালের কোড উদাহরণগুলো কাজ নাও করতে পারে:</p>
+<!-- When updating the version of `rand` used, also update the version of
+`rand` used in these files so they all match:
+* ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
+* ch14-03-cargo-workspaces.md
+-->
+<p><span class="filename">ফাইলের নাম: Cargo.toml</span></p>
+<pre><code class="language-toml">[dependencies]
+rand = "0.8.5"
+</code></pre>
+<p><em>Cargo.toml</em> ফাইলে, একটি হেডারের পরে যা কিছু থাকে তা সেই সেকশনের অংশ যতক্ষণ না অন্য একটি সেকশন শুরু হয়। <code>[dependencies]</code>-তে আপনি কার্গোকে বলেন আপনার প্রজেক্ট কোন এক্সটার্নাল crate-গুলির উপর নির্ভর করে এবং সেই crate-গুলির কোন ভার্সন আপনার প্রয়োজন। এক্ষেত্রে, আমরা <code>rand</code> crate-কে সেমান্টিক ভার্সন স্পেসিফায়ার <code>0.8.5</code> দিয়ে নির্দিষ্ট করছি। কার্গো <a href="http://semver.org">Semantic Versioning</a> (কখনও কখনও <em>SemVer</em> বলা হয়) বোঝে, যা ভার্সন নম্বর লেখার একটি স্ট্যান্ডার্ড। <code>0.8.5</code> স্পেসিফায়ারটি আসলে <code>^0.8.5</code>-এর একটি সংক্ষিপ্ত রূপ, যার মানে হল এমন যেকোনো ভার্সন যা অন্তত 0.8.5 কিন্তু 0.9.0 এর নিচে।</p>
+<p>কার্গো এই ভার্সনগুলোকে 0.8.5 ভার্সনের সাথে সামঞ্জস্যপূর্ণ পাবলিক API আছে বলে মনে করে, এবং এই স্পেসিফিকেশন নিশ্চিত করে যে আপনি সর্বশেষ প্যাচ রিলিজ পাবেন যা এখনও এই অধ্যায়ের কোডের সাথে কম্পাইল হবে। 0.9.0 বা তার বেশি যেকোনো ভার্সনের একই API থাকবে এমন কোনো নিশ্চয়তা নেই যা নিম্নলিখিত উদাহরণগুলিতে ব্যবহৃত হয়েছে।</p>
+<p>এখন, কোডের কোনো পরিবর্তন না করে, চলুন প্রজেক্টটি বিল্ড করি, যেমনটি লিস্টিং ২-২-এ দেখানো হয়েছে।</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-02/
+rm Cargo.lock
+cargo clean
+cargo build -->
+<Listing number="2-2" caption="rand crate-কে ডিপেন্ডেন্সি হিসেবে যোগ করার পর `cargo build` চালানোর আউটপুট">
+<pre><code class="language-console">$ cargo build
+  Updating crates.io index
+   Locking 15 packages to latest Rust 1.85.0 compatible versions
+    Adding rand v0.8.5 (available: v0.9.0)
+ Compiling proc-macro2 v1.0.93
+ Compiling unicode-ident v1.0.17
+ Compiling libc v0.2.170
+ Compiling cfg-if v1.0.0
+ Compiling byteorder v1.5.0
+ Compiling getrandom v0.2.15
+ Compiling rand_core v0.6.4
+ Compiling quote v1.0.38
+ Compiling syn v2.0.98
+ Compiling zerocopy-derive v0.7.35
+ Compiling zerocopy v0.7.35
+ Compiling ppv-lite86 v0.2.20
+ Compiling rand_chacha v0.3.1
+ Compiling rand v0.8.5
+ Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+  Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.48s```
+
+&lt;/Listing&gt;
+
+আপনি ভিন্ন ভার্সন নম্বর দেখতে পারেন (কিন্তু SemVer-এর কারণে সেগুলি সব কোডের সাথে সামঞ্জস্যপূর্ণ হবে) এবং ভিন্ন লাইন দেখতে পারেন (অপারেটিং সিস্টেমের উপর নির্ভর করে), এবং লাইনগুলি ভিন্ন ক্রমে থাকতে পারে।
+
+যখন আমরা একটি এক্সটার্নাল ডিপেন্ডেন্সি অন্তর্ভুক্ত করি, কার্গো সেই ডিপেন্ডেন্সির জন্য প্রয়োজনীয় সমস্ত কিছুর সর্বশেষ ভার্সন _registry_ থেকে নিয়ে আসে, যা [Crates.io][cratesio] থেকে ডেটার একটি কপি। Crates.io হল সেই জায়গা যেখানে রাস্ট ইকোসিস্টেমের মানুষজন তাদের ওপেন সোর্স রাস্ট প্রজেক্টগুলো অন্যদের ব্যবহারের জন্য পোস্ট করে।
+
+রেজিস্ট্রি আপডেট করার পরে, কার্গো `[dependencies]` সেকশন পরীক্ষা করে এবং তালিকাভুক্ত যেকোনো crate যা এখনও ডাউনলোড করা হয়নি তা ডাউনলোড করে। এই ক্ষেত্রে, যদিও আমরা কেবল `rand`-কে একটি ডিপেন্ডেন্সি হিসেবে তালিকাভুক্ত করেছি, কার্গো `rand`-এর কাজ করার জন্য প্রয়োজনীয় অন্যান্য crate-গুলিও নিয়ে এসেছে। crate-গুলি ডাউনলোড করার পরে, রাস্ট সেগুলি কম্পাইল করে এবং তারপর ডিপেন্ডেন্সি সহ প্রজেক্টটি কম্পাইল করে।
+
+আপনি যদি কোনো পরিবর্তন না করে অবিলম্বে আবার `cargo build` চালান, আপনি `Finished` লাইন ছাড়া আর কোনো আউটপুট পাবেন না। কার্গো জানে যে এটি ইতিমধ্যে ডিপেন্ডেন্সিগুলি ডাউনলোড এবং কম্পাইল করেছে, এবং আপনি আপনার _Cargo.toml_ ফাইলে সেগুলি সম্পর্কে কিছু পরিবর্তন করেননি। কার্গো এটাও জানে যে আপনি আপনার কোড সম্পর্কে কিছু পরিবর্তন করেননি, তাই এটি সেটাও পুনরায় কম্পাইল করে না। করার মতো কিছু না থাকায়, এটি কেবল প্রস্থান করে।
+
+আপনি যদি _src/main.rs_ ফাইলটি খোলেন, একটি তুচ্ছ পরিবর্তন করেন, এবং তারপর এটি সংরক্ষণ করে আবার বিল্ড করেন, আপনি কেবল দুটি আউটপুট লাইন দেখতে পাবেন:
+
+&lt;!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-02/
+touch src/main.rs
+cargo build --&gt;
+
+```console
+$ cargo build
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
+</code></pre>
+<p>এই লাইনগুলি দেখায় যে কার্গো কেবল আপনার <em>src/main.rs</em> ফাইলের ক্ষুদ্র পরিবর্তনের সাথে বিল্ড আপডেট করে। আপনার ডিপেন্ডেন্সিগুলি পরিবর্তিত হয়নি, তাই কার্গো জানে যে এটি সেগুলির জন্য যা ইতিমধ্যে ডাউনলোড এবং কম্পাইল করেছে তা পুনরায় ব্যবহার করতে পারে।</p>
+<h4 id="cargolock-ফাইলের-মাধযমে-পুনরুৎপাদনযোগয-বিলড-নিশচিত-করা"><a class="header" href="#cargolock-ফাইলের-মাধযমে-পুনরুৎপাদনযোগয-বিলড-নিশচিত-করা"><em>Cargo.lock</em> ফাইলের মাধ্যমে পুনরুৎপাদনযোগ্য বিল্ড নিশ্চিত করা</a></h4>
+<p>কার্গোর একটি মেকানিজম রয়েছে যা নিশ্চিত করে যে আপনি বা অন্য কেউ আপনার কোড বিল্ড করার সময় প্রতিবার একই আর্টিফ্যাক্ট পুনর্নির্মাণ করতে পারবেন: কার্গো কেবল আপনার নির্দিষ্ট করা ডিপেন্ডেন্সিগুলির ভার্সন ব্যবহার করবে যতক্ষণ না আপনি অন্যথায় নির্দেশ দেন। উদাহরণস্বরূপ, ধরা যাক আগামী সপ্তাহে <code>rand</code> crate-এর 0.8.6 ভার্সন আসে, এবং সেই ভার্সনে একটি গুরুত্বপূর্ণ বাগ ফিক্স রয়েছে, কিন্তু এতে একটি রিগ্রেশনও রয়েছে যা আপনার কোড ভেঙে দেবে। এটি সামলাতে, রাস্ট প্রথমবার <code>cargo build</code> চালানোর সময় <em>Cargo.lock</em> ফাইল তৈরি করে, তাই এখন আমাদের <em>guessing_game</em> ডিরেক্টরিতে এটি রয়েছে।</p>
+<p>যখন আপনি প্রথমবার একটি প্রজেক্ট বিল্ড করেন, কার্গো ডিপেন্ডেন্সিগুলির সমস্ত ভার্সন বের করে যা মানদণ্ড পূরণ করে এবং তারপরে সেগুলি <em>Cargo.lock</em> ফাইলে লেখে। ভবিষ্যতে যখন আপনি আপনার প্রজেক্ট বিল্ড করবেন, কার্গো দেখবে যে <em>Cargo.lock</em> ফাইলটি বিদ্যমান এবং সেখানে নির্দিষ্ট ভার্সনগুলি ব্যবহার করবে, আবার ভার্সন বের করার সমস্ত কাজ না করে। এটি আপনাকে স্বয়ংক্রিয়ভাবে একটি পুনরুৎপাদনযোগ্য বিল্ড পেতে দেয়। অন্য কথায়, আপনার প্রজেক্ট 0.8.5-এ থাকবে যতক্ষণ না আপনি স্পষ্টভাবে আপগ্রেড করেন, <em>Cargo.lock</em> ফাইলের কারণে। যেহেতু <em>Cargo.lock</em> ফাইলটি পুনরুৎপাদনযোগ্য বিল্ডের জন্য গুরুত্বপূর্ণ, তাই এটি প্রায়শই আপনার প্রজেক্টের বাকি কোডের সাথে সোর্স কন্ট্রোলে চেক ইন করা হয়।</p>
+<h4 id="একটি-নতুন-ভারসন-পেতে-একটি-crate-আপডেট-করা"><a class="header" href="#একটি-নতুন-ভারসন-পেতে-একটি-crate-আপডেট-করা">একটি নতুন ভার্সন পেতে একটি Crate আপডেট করা</a></h4>
+<p>যখন আপনি একটি crate আপডেট করতে <em>চান</em>, কার্গো <code>update</code> কমান্ড সরবরাহ করে, যা <em>Cargo.lock</em> ফাইলটিকে উপেক্ষা করবে এবং <em>Cargo.toml</em>-এ আপনার স্পেসিফিকেশনগুলির সাথে মানানসই সমস্ত সর্বশেষ ভার্সন খুঁজে বের করবে। কার্গো তারপর সেই ভার্সনগুলি <em>Cargo.lock</em> ফাইলে লিখবে। এই ক্ষেত্রে, কার্গো কেবল 0.8.5 এর চেয়ে বড় এবং 0.9.0 এর চেয়ে কম ভার্সন খুঁজবে। যদি <code>rand</code> crate-টি 0.8.6 এবং 0.9.0 এই দুটি নতুন ভার্সন প্রকাশ করে থাকে, তবে আপনি <code>cargo update</code> চালালে নিম্নলিখিতটি দেখতে পাবেন:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-02/
+cargo update
+assuming there is a new 0.8.x version of rand; otherwise use another update
+as a guide to creating the hypothetical output shown here -->
+<pre><code class="language-console">$ cargo update
+    Updating crates.io index
+     Locking 1 package to latest Rust 1.85.0 compatible version
+    Updating rand v0.8.5 -&gt; v0.8.6 (available: v0.9.0)
+</code></pre>
+<p>কার্গো 0.9.0 রিলিজটি উপেক্ষা করে। এই মুহূর্তে, আপনি আপনার <em>Cargo.lock</em> ফাইলে একটি পরিবর্তনও লক্ষ্য করবেন যা উল্লেখ করে যে আপনি এখন <code>rand</code> crate-এর যে ভার্সনটি ব্যবহার করছেন তা হল 0.8.6। <code>rand</code> ভার্সন 0.9.0 বা 0.9.<em>x</em> সিরিজের যেকোনো ভার্সন ব্যবহার করতে, আপনাকে <em>Cargo.toml</em> ফাইলটি আপডেট করে এমন দেখতে হবে:</p>
+<pre><code class="language-toml">[dependencies]
+rand = "0.9.0"
+</code></pre>
+<p>পরবর্তীবার যখন আপনি <code>cargo build</code> চালাবেন, কার্গো উপলব্ধ crate-গুলির রেজিস্ট্রি আপডেট করবে এবং আপনার নির্দিষ্ট করা নতুন ভার্সন অনুযায়ী আপনার <code>rand</code> প্রয়োজনীয়তা পুনরায় মূল্যায়ন করবে।</p>
+<p><a href="https://doc.rust-lang.org/cargo/">কার্গো</a> এবং <a href="https://doc.rust-lang.org/cargo/reference/publishing.html">এর ইকোসিস্টেম</a> সম্পর্কে আরও অনেক কিছু বলার আছে, যা আমরা অধ্যায় ১৪-তে আলোচনা করব, কিন্তু আপাতত, আপনার এটুকুই জানা দরকার। কার্গো লাইব্রেরি পুনঃব্যবহার করা খুব সহজ করে তোলে, তাই রাস্টেশিয়ানরা ছোট ছোট প্রজেক্ট লিখতে পারে যা বিভিন্ন প্যাকেজ থেকে একত্রিত হয়।</p>
+<h3 id="একটি-রযানডম-সংখযা-তৈরি-করা"><a class="header" href="#একটি-রযানডম-সংখযা-তৈরি-করা">একটি র‍্যান্ডম সংখ্যা তৈরি করা</a></h3>
+<p>চলুন অনুমান করার জন্য একটি সংখ্যা তৈরি করতে <code>rand</code> ব্যবহার করা শুরু করি। পরবর্তী ধাপ হল <em>src/main.rs</em> আপডেট করা, যেমনটি লিস্টিং ২-৩-এ দেখানো হয়েছে।</p>
+<Listing number="2-3" file-name="src/main.rs" caption="একটি র‍্যান্ডম সংখ্যা তৈরি করার জন্য কোড যোগ করা">
+<pre><code class="language-rust ignore">use std::io;
+
+use rand::Rng;
+
+fn main() {
+    println!("Guess the number!");
+
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+
+    println!("The secret number is: {secret_number}");
+
+    println!("Please input your guess.");
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&amp;mut guess)
+        .expect("Failed to read line");
+
+    println!("You guessed: {guess}");
+}</code></pre>
+</Listing>
+<p>প্রথমে আমরা <code>use rand::Rng;</code> লাইনটি যোগ করি। <code>Rng</code> ট্রেইটটি র‍্যান্ডম নম্বর জেনারেটর দ্বারা প্রয়োগ করা মেথডগুলিকে সংজ্ঞায়িত করে, এবং এই ট্রেইটটি আমাদের সেই মেথডগুলি ব্যবহার করার জন্য স্কোপে থাকতে হবে। অধ্যায় ১০-এ ট্রেইটগুলি বিস্তারিতভাবে আলোচনা করা হবে।</p>
+<p>এরপরে, আমরা মাঝখানে দুটি লাইন যোগ করছি। প্রথম লাইনে, আমরা <code>rand::thread_rng</code> ফাংশনটি কল করি যা আমাদের নির্দিষ্ট র‍্যান্ডম নম্বর জেনারেটর দেয় যা আমরা ব্যবহার করতে যাচ্ছি: এটি বর্তমান এক্সিকিউশন থ্রেডের জন্য স্থানীয় এবং অপারেটিং সিস্টেম দ্বারা সিড করা হয়। তারপরে আমরা র‍্যান্ডম নম্বর জেনারেটরে <code>gen_range</code> মেথডটি কল করি। এই মেথডটি <code>Rng</code> ট্রেইট দ্বারা সংজ্ঞায়িত যা আমরা <code>use rand::Rng;</code> স্টেটমেন্ট দিয়ে স্কোপে এনেছিলাম। <code>gen_range</code> মেথডটি একটি রেঞ্জ এক্সপ্রেশনকে আর্গুমেন্ট হিসেবে নেয় এবং সেই রেঞ্জের মধ্যে একটি র‍্যান্ডম নম্বর তৈরি করে। আমরা এখানে যে ধরনের রেঞ্জ এক্সপ্রেশন ব্যবহার করছি তা <code>start..=end</code> আকারে থাকে এবং এটি নিম্ন এবং উচ্চ উভয় সীমার জন্যই অন্তর্ভুক্ত, তাই ১ থেকে ১০০ এর মধ্যে একটি সংখ্যা অনুরোধ করার জন্য আমাদের <code>1..=100</code> নির্দিষ্ট করতে হবে।</p>
+<blockquote>
+<p>দ্রষ্টব্য: আপনি কেবল জেনেই যাবেন না কোন ট্রেইট ব্যবহার করতে হবে এবং কোন মেথড এবং ফাংশনগুলি একটি crate থেকে কল করতে হবে, তাই প্রতিটি crate-এর ডকুমেন্টেশনে এটি ব্যবহারের জন্য নির্দেশাবলী থাকে। কার্গোর আরেকটি চমৎকার বৈশিষ্ট্য হল <code>cargo doc --open</code> কমান্ডটি চালালে এটি আপনার সমস্ত ডিপেন্ডেন্সি দ্বারা সরবরাহ করা ডকুমেন্টেশন স্থানীয়ভাবে তৈরি করবে এবং আপনার ব্রাউজারে খুলবে। আপনি যদি <code>rand</code> crate-এর অন্যান্য কার্যকারিতা সম্পর্কে আগ্রহী হন, উদাহরণস্বরূপ, <code>cargo doc --open</code> চালান এবং বামদিকের সাইডবারে <code>rand</code>-এ ক্লিক করুন।</p>
+</blockquote>
+<p>দ্বিতীয় নতুন লাইনটি গোপন সংখ্যাটি প্রিন্ট করে। এটি প্রোগ্রাম ডেভেলপ করার সময় পরীক্ষা করার জন্য দরকারী, কিন্তু আমরা চূড়ান্ত সংস্করণ থেকে এটি মুছে ফেলব। প্রোগ্রাম শুরু হওয়ার সাথে সাথেই যদি উত্তরটি প্রিন্ট করে দেয় তবে এটি আর তেমন কোনো গেম থাকে না!</p>
+<p>প্রোগ্রামটি কয়েকবার চালানোর চেষ্টা করুন:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-03/
+cargo run
+4
+cargo run
+5
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/guessing_game`
+Guess the number!
+The secret number is: 7
+Please input your guess.
+4
+You guessed: 4
+
+$ cargo run
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/guessing_game`
+Guess the number!
+The secret number is: 83
+Please input your guess.
+5
+You guessed: 5
+</code></pre>
+<p>আপনার বিভিন্ন র‍্যান্ডম সংখ্যা পাওয়া উচিত, এবং সেগুলি সবই ১ থেকে ১০০ এর মধ্যে সংখ্যা হওয়া উচিত। দারুণ কাজ!</p>
+<h2 id="অনুমানের-সাথে-গোপন-সংখযার-তুলনা"><a class="header" href="#অনুমানের-সাথে-গোপন-সংখযার-তুলনা">অনুমানের সাথে গোপন সংখ্যার তুলনা</a></h2>
+<p>এখন আমাদের কাছে ব্যবহারকারীর ইনপুট এবং একটি র‍্যান্ডম সংখ্যা আছে, আমরা তাদের তুলনা করতে পারি। সেই ধাপটি লিস্টিং ২-৪-এ দেখানো হয়েছে। মনে রাখবেন যে এই কোডটি এখনই কম্পাইল হবে না, যেমনটি আমরা ব্যাখ্যা করব।</p>
+<Listing number="2-4" file-name="src/main.rs" caption="দুটি সংখ্যার তুলনা করার সম্ভাব্য রিটার্ন মানগুলি পরিচালনা করা">
+<pre><code class="language-rust ignore does_not_compile">use std::cmp::Ordering;
+use std::io;
+
+use rand::Rng;
+
+fn main() {
+    // --snip--
+<span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span>
+    println!("You guessed: {guess}");
+
+    match guess.cmp(&amp;secret_number) {
+        Ordering::Less =&gt; println!("Too small!"),
+        Ordering::Greater =&gt; println!("Too big!"),
+        Ordering::Equal =&gt; println!("You win!"),
+    }
+}</code></pre>
+</Listing>
+<p>প্রথমে আমরা আরেকটি <code>use</code> স্টেটমেন্ট যোগ করি, যা স্ট্যান্ডার্ড লাইব্রেরি থেকে <code>std::cmp::Ordering</code> নামে একটি টাইপ স্কোপে নিয়ে আসে। <code>Ordering</code> টাইপটি আরেকটি enum এবং এর ভ্যারিয়েন্টগুলি হল <code>Less</code>, <code>Greater</code>, এবং <code>Equal</code>। এগুলি হল তিনটি সম্ভাব্য ফলাফল যা আপনি দুটি মান তুলনা করার সময় পেতে পারেন।</p>
+<p>তারপর আমরা নীচে পাঁচটি নতুন লাইন যোগ করি যা <code>Ordering</code> টাইপ ব্যবহার করে। <code>cmp</code> মেথড দুটি মান তুলনা করে এবং যা কিছু তুলনা করা যায় তার উপর কল করা যেতে পারে। এটি আপনি যার সাথে তুলনা করতে চান তার একটি রেফারেন্স নেয়: এখানে এটি <code>guess</code>-কে <code>secret_number</code>-এর সাথে তুলনা করছে। তারপর এটি <code>Ordering</code> enum-এর একটি ভ্যারিয়েন্ট প্রদান করে যা আমরা <code>use</code> স্টেটমেন্ট দিয়ে স্কোপে এনেছিলাম। আমরা একটি <a href="ch06-02-match.html"><code>match</code></a> এক্সপ্রেশন ব্যবহার করি <code>guess</code> এবং <code>secret_number</code>-এর মানগুলির সাথে <code>cmp</code>-কে কল করার ফলে <code>Ordering</code>-এর কোন ভ্যারিয়েন্টটি ফেরত এসেছে তার উপর ভিত্তি করে পরবর্তী কী করতে হবে তা সিদ্ধান্ত নিতে।</p>
+<p>একটি <code>match</code> এক্সপ্রেশন <em>arms</em> (শাখা) দিয়ে গঠিত। একটি arm-এ একটি <em>pattern</em> (প্যাটার্ন) থাকে যার সাথে মেলানো হয়, এবং যে কোডটি চালানো উচিত যদি <code>match</code>-কে দেওয়া মানটি সেই arm-এর প্যাটার্নের সাথে মিলে যায়। রাস্ট <code>match</code>-কে দেওয়া মানটি নেয় এবং প্রতিটি arm-এর প্যাটার্ন একের পর এক পরীক্ষা করে। প্যাটার্ন এবং <code>match</code> কনস্ট্রাক্ট হল শক্তিশালী রাস্ট বৈশিষ্ট্য: এগুলি আপনাকে আপনার কোড সম্মুখীন হতে পারে এমন বিভিন্ন পরিস্থিতি প্রকাশ করতে দেয় এবং তারা নিশ্চিত করে যে আপনি সেগুলি সবই পরিচালনা করেছেন। এই বৈশিষ্ট্যগুলি যথাক্রমে অধ্যায় ৬ এবং অধ্যায় ১৯-এ বিস্তারিতভাবে আলোচনা করা হবে।</p>
+<p>চলুন আমরা এখানে যে <code>match</code> এক্সপ্রেশনটি ব্যবহার করছি তার একটি উদাহরণ দিয়ে হেঁটে যাই। ধরা যাক ব্যবহারকারী ৫০ অনুমান করেছে এবং এইবার র‍্যান্ডমভাবে তৈরি গোপন সংখ্যাটি হল ৩৮।</p>
+<p>যখন কোডটি ৫০ কে ৩৮ এর সাথে তুলনা করে, <code>cmp</code> মেথডটি <code>Ordering::Greater</code> প্রদান করবে কারণ ৫০, ৩৮ এর চেয়ে বড়। <code>match</code> এক্সপ্রেশনটি <code>Ordering::Greater</code> মানটি পায় এবং প্রতিটি arm-এর প্যাটার্ন পরীক্ষা করা শুরু করে। এটি প্রথম arm-এর প্যাটার্ন, <code>Ordering::Less</code>-এর দিকে তাকায় এবং দেখে যে <code>Ordering::Greater</code> মানটি <code>Ordering::Less</code>-এর সাথে মেলে না, তাই এটি সেই arm-এর কোডটি উপেক্ষা করে এবং পরবর্তী arm-এ চলে যায়। পরবর্তী arm-এর প্যাটার্ন হল <code>Ordering::Greater</code>, যা <code>Ordering::Greater</code>-এর সাথে <em>মিলে যায়</em>! সেই arm-এর সংশ্লিষ্ট কোডটি কার্যকর হবে এবং স্ক্রিনে <code>Too big!</code> প্রিন্ট করবে। <code>match</code> এক্সপ্রেশনটি প্রথম সফল ম্যাচের পরে শেষ হয়ে যায়, তাই এটি এই পরিস্থিতিতে শেষ arm-টি দেখবে না।</p>
+<p>তবে, লিস্টিং ২-৪-এর কোডটি এখনও কম্পাইল হবে না। চলুন চেষ্টা করি:</p>
+<!--
+The error numbers in this output should be that of the code **WITHOUT** the
+anchor or snip comments
+-->
+<pre><code class="language-console">$ cargo build
+   Compiling libc v0.2.86
+   Compiling getrandom v0.2.2
+   Compiling cfg-if v1.0.0
+   Compiling ppv-lite86 v0.2.10
+   Compiling rand_core v0.6.2
+   Compiling rand_chacha v0.3.0
+   Compiling rand v0.8.5
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+error[E0308]: mismatched types
+  --&gt; src/main.rs:23:21
+   |
+23 |     match guess.cmp(&amp;secret_number) {
+   |                 --- ^^^^^^^^^^^^^^ expected `&amp;String`, found `&amp;{integer}`
+   |                 |
+   |                 arguments to this method are incorrect
+   |
+   = note: expected reference `&amp;String`
+              found reference `&amp;{integer}`
+note: method defined here
+  --&gt; /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/core/src/cmp.rs:964:8
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `guessing_game` (bin "guessing_game") due to 1 previous error
+</code></pre>
+<p>ত্রুটির মূল কথা হল <em>mismatched types</em> (বেমানান টাইপ)। রাস্টের একটি শক্তিশালী, স্ট্যাটিক টাইপ সিস্টেম আছে। তবে, এর টাইপ ইনফারেন্সও আছে। যখন আমরা <code>let mut guess = String::new()</code> লিখেছিলাম, রাস্ট অনুমান করতে পেরেছিল যে <code>guess</code> একটি <code>String</code> হওয়া উচিত এবং আমাদের টাইপ লিখতে বাধ্য করেনি। অন্যদিকে, <code>secret_number</code> একটি সংখ্যা টাইপ। রাস্টের কয়েকটি সংখ্যা টাইপের মান ১ থেকে ১০০ এর মধ্যে থাকতে পারে: <code>i32</code>, একটি ৩২-বিট সংখ্যা; <code>u32</code>, একটি আনসাইন্ড ৩২-বিট সংখ্যা; <code>i64</code>, একটি ৬৪-বিট সংখ্যা; এবং আরও অন্যান্য। অন্যথায় নির্দিষ্ট না করা হলে, রাস্ট ডিফল্ট হিসেবে <code>i32</code> ব্যবহার করে, যা <code>secret_number</code>-এর টাইপ, যদি না আপনি অন্য কোথাও টাইপ তথ্য যোগ করেন যা রাস্টকে একটি ভিন্ন সংখ্যাসূচক টাইপ অনুমান করতে বাধ্য করবে। ত্রুটির কারণ হল রাস্ট একটি স্ট্রিং এবং একটি সংখ্যা টাইপের তুলনা করতে পারে না।</p>
+<p>শেষ পর্যন্ত, আমরা প্রোগ্রামটি ইনপুট হিসাবে যে <code>String</code> পড়ে তা একটি সংখ্যা টাইপে রূপান্তর করতে চাই যাতে আমরা এটিকে গোপন সংখ্যার সাথে সংখ্যাগতভাবে তুলনা করতে পারি। আমরা <code>main</code> ফাংশনের বডিতে এই লাইনটি যোগ করে তা করি:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span>    // --snip--
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&amp;mut guess)
+        .expect("Failed to read line");
+
+    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+    println!("You guessed: {guess}");
+
+    match guess.cmp(&amp;secret_number) {
+        Ordering::Less =&gt; println!("Too small!"),
+        Ordering::Greater =&gt; println!("Too big!"),
+        Ordering::Equal =&gt; println!("You win!"),
+    }
+<span class="boring">}</span></code></pre>
+<p>লাইনটি হল:</p>
+<pre><code class="language-rust ignore">let guess: u32 = guess.trim().parse().expect("Please type a number!");</code></pre>
+<p>আমরা <code>guess</code> নামে একটি ভ্যারিয়েবল তৈরি করি। কিন্তু অপেক্ষা করুন, প্রোগ্রামে কি ইতিমধ্যে <code>guess</code> নামে একটি ভ্যারিয়েবল নেই? আছে, কিন্তু সহায়কভাবে রাস্ট আমাদের <code>guess</code>-এর পূর্ববর্তী মানটিকে একটি নতুন মান দিয়ে শ্যাডো (shadow) করার অনুমতি দেয়। <em>Shadowing</em> আমাদের <code>guess</code> ভ্যারিয়েবলের নামটি পুনরায় ব্যবহার করতে দেয়, যেমন <code>guess_str</code> এবং <code>guess</code> নামে দুটি অনন্য ভ্যারিয়েবল তৈরি করতে বাধ্য করার পরিবর্তে। আমরা এটি অধ্যায় ৩-এ আরও বিস্তারিতভাবে আলোচনা করব, কিন্তু আপাতত, জেনে রাখুন যে এই বৈশিষ্ট্যটি প্রায়শই ব্যবহৃত হয় যখন আপনি একটি মানকে এক টাইপ থেকে অন্য টাইপে রূপান্তর করতে চান।</p>
+<p>আমরা এই নতুন ভ্যারিয়েবলটিকে <code>guess.trim().parse()</code> এক্সপ্রেশনের সাথে বাইন্ড করি। এক্সপ্রেশনের <code>guess</code> মূল <code>guess</code> ভ্যারিয়েবলটিকে বোঝায় যা ইনপুটটিকে একটি স্ট্রিং হিসাবে ধারণ করেছিল। একটি <code>String</code> ইনস্ট্যান্সের <code>trim</code> মেথড শুরু এবং শেষের যেকোনো হোয়াইটস্পেস দূর করে দেবে, যা আমাদের স্ট্রিংটিকে একটি <code>u32</code>-তে রূপান্তর করার আগে করতে হবে, যা কেবল সংখ্যাসূচক ডেটা ধারণ করতে পারে। ব্যবহারকারীকে <code>read_line</code> সন্তুষ্ট করতে এবং তাদের অনুমান ইনপুট করতে <kbd>enter</kbd> চাপতে হবে, যা স্ট্রিংটিতে একটি নিউলাইন ক্যারেক্টার যোগ করে। উদাহরণস্বরূপ, যদি ব্যবহারকারী <kbd>5</kbd> টাইপ করে এবং <kbd>enter</kbd> চাপে, <code>guess</code> দেখতে এমন হয়: <code>5\n</code>। <code>\n</code> "নিউলাইন" প্রতিনিধিত্ব করে। (উইন্ডোজে, <kbd>enter</kbd> চাপলে একটি ক্যারেজ রিটার্ন এবং একটি নিউলাইন হয়, <code>\r\n</code>।) <code>trim</code> মেথড <code>\n</code> বা <code>\r\n</code> দূর করে, যার ফলে কেবল <code>5</code> থাকে।</p>
+<p>স্ট্রিং-এর উপর <a href="../std/primitive.str.html#method.parse"><code>parse</code> মেথড</a> একটি স্ট্রিংকে অন্য টাইপে রূপান্তর করে। এখানে, আমরা এটিকে একটি স্ট্রিং থেকে একটি সংখ্যায় রূপান্তর করতে ব্যবহার করি। আমাদের রাস্টকে <code>let guess: u32</code> ব্যবহার করে ঠিক কোন সংখ্যা টাইপ আমরা চাই তা বলতে হবে। <code>guess</code>-এর পরে কোলন (<code>:</code>) রাস্টকে বলে যে আমরা ভ্যারিয়েবলের টাইপ অ্যানোটেট করব। রাস্টের কয়েকটি অন্তর্নির্মিত সংখ্যা টাইপ আছে; এখানে দেখা <code>u32</code> একটি আনসাইন্ড, ৩২-বিট ইন্টিজার। এটি একটি ছোট ধনাত্মক সংখ্যার জন্য একটি ভাল ডিফল্ট পছন্দ। আপনি অধ্যায় ৩-এ অন্যান্য সংখ্যা টাইপ সম্পর্কে শিখবেন।</p>
+<p>উপরন্তু, এই উদাহরণ প্রোগ্রামে <code>u32</code> অ্যানোটেশন এবং <code>secret_number</code>-এর সাথে তুলনা করার মানে হল রাস্ট অনুমান করবে যে <code>secret_number</code>-ও একটি <code>u32</code> হওয়া উচিত। তাই এখন তুলনাটি একই টাইপের দুটি মানের মধ্যে হবে!</p>
+<p><code>parse</code> মেথডটি কেবল সেই অক্ষরগুলির উপর কাজ করবে যেগুলিকে যৌক্তিকভাবে সংখ্যায় রূপান্তর করা যায় এবং তাই সহজেই ত্রুটি ঘটাতে পারে। উদাহরণস্বরূপ, যদি স্ট্রিংটিতে <code>A👍%</code> থাকে, তবে সেটিকে সংখ্যায় রূপান্তর করার কোনো উপায় থাকবে না। কারণ এটি ব্যর্থ হতে পারে, <code>parse</code> মেথডটি একটি <code>Result</code> টাইপ প্রদান করে, যেমনটি <code>read_line</code> মেথড করে (আগে “Handling Potential Failure with <code>Result</code>” বিভাগে আলোচনা করা হয়েছে)। আমরা এই <code>Result</code>-কে আবার <code>expect</code> মেথড ব্যবহার করে একইভাবে ব্যবহার করব। যদি <code>parse</code> একটি <code>Err</code> <code>Result</code> ভ্যারিয়েন্ট প্রদান করে কারণ এটি স্ট্রিং থেকে একটি সংখ্যা তৈরি করতে পারেনি, <code>expect</code> কলটি গেমটি ক্র্যাশ করাবে এবং আমরা যে বার্তাটি দিই তা প্রিন্ট করবে। যদি <code>parse</code> সফলভাবে স্ট্রিংটিকে একটি সংখ্যায় রূপান্তর করতে পারে, তবে এটি <code>Result</code>-এর <code>Ok</code> ভ্যারিয়েন্ট প্রদান করবে, এবং <code>expect</code> <code>Ok</code> মান থেকে আমরা যে সংখ্যাটি চাই তা প্রদান করবে।</p>
+<p>চলুন এখন প্রোগ্রামটি চালাই:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/
+touch src/main.rs
+cargo run
+  76
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running `target/debug/guessing_game`
+Guess the number!
+The secret number is: 58
+Please input your guess.
+  76
+You guessed: 76
+Too big!
+</code></pre>
+<p>সুন্দর! অনুমানের আগে স্পেস যোগ করা সত্ত্বেও, প্রোগ্রামটি এখনও বুঝতে পেরেছে যে ব্যবহারকারী ৭৬ অনুমান করেছে। বিভিন্ন ধরণের ইনপুটের সাথে বিভিন্ন আচরণ যাচাই করার জন্য প্রোগ্রামটি কয়েকবার চালান: সংখ্যাটি সঠিকভাবে অনুমান করুন, খুব বেশি একটি সংখ্যা অনুমান করুন, এবং খুব কম একটি সংখ্যা অনুমান করুন।</p>
+<p>আমাদের গেমের বেশিরভাগই এখন কাজ করছে, কিন্তু ব্যবহারকারী কেবল একটি অনুমান করতে পারে। চলুন একটি লুপ যোগ করে এটি পরিবর্তন করি!</p>
+<h2 id="লুপিংযের-মাধযমে-একাধিক-অনুমানের-অনুমতি-দেওযা"><a class="header" href="#লুপিংযের-মাধযমে-একাধিক-অনুমানের-অনুমতি-দেওযা">লুপিংয়ের মাধ্যমে একাধিক অনুমানের অনুমতি দেওয়া</a></h2>
+<p><code>loop</code> কীওয়ার্ড একটি অসীম লুপ তৈরি করে। আমরা ব্যবহারকারীদের সংখ্যাটি অনুমান করার আরও সুযোগ দিতে একটি লুপ যোগ করব:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span>    // --snip--
+
+    println!("The secret number is: {secret_number}");
+
+    loop {
+        println!("Please input your guess.");
+
+        // --snip--
+
+<span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">        let guess: u32 = guess.trim().parse().expect("Please type a number!");
+</span><span class="boring">
+</span><span class="boring">        println!("You guessed: {guess}");
+</span><span class="boring">
+</span>        match guess.cmp(&amp;secret_number) {
+            Ordering::Less =&gt; println!("Too small!"),
+            Ordering::Greater =&gt; println!("Too big!"),
+            Ordering::Equal =&gt; println!("You win!"),
+        }
+    }
+}</code></pre>
+<p>যেমন আপনি দেখতে পাচ্ছেন, আমরা অনুমান ইনপুট প্রম্পট থেকে শুরু করে সবকিছু একটি লুপের মধ্যে নিয়ে গেছি। লুপের ভিতরের লাইনগুলিকে আরও চারটি স্পেস করে ইনডেন্ট করতে ভুলবেন না এবং প্রোগ্রামটি আবার চালান। প্রোগ্রামটি এখন চিরকালের জন্য আরেকটি অনুমান চাইবে, যা আসলে একটি নতুন সমস্যা তৈরি করে। মনে হচ্ছে ব্যবহারকারী বের হতে পারছে না!</p>
+<p>ব্যবহারকারী সর্বদা কীবোর্ড শর্টকাট <kbd>ctrl</kbd>-<kbd>c</kbd> ব্যবহার করে প্রোগ্রামটি বাধা দিতে পারে। কিন্তু এই অতৃপ্ত দৈত্য থেকে বাঁচার আরেকটি উপায় আছে, যেমনটি "Comparing the Guess to the Secret Number" বিভাগে <code>parse</code> আলোচনায় উল্লেখ করা হয়েছে: যদি ব্যবহারকারী একটি অ-সংখ্যা উত্তর প্রবেশ করায়, প্রোগ্রামটি ক্র্যাশ করবে। আমরা ব্যবহারকারীকে বের হওয়ার অনুমতি দিতে এর সুবিধা নিতে পারি, যেমনটি এখানে দেখানো হয়েছে:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/no-listing-04-looping/
+touch src/main.rs
+cargo run
+(too small guess)
+(too big guess)
+(correct guess)
+quit
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.23s
+     Running `target/debug/guessing_game`
+Guess the number!
+The secret number is: 59
+Please input your guess.
+45
+You guessed: 45
+Too small!
+Please input your guess.
+60
+You guessed: 60
+Too big!
+Please input your guess.
+59
+You guessed: 59
+You win!
+Please input your guess.
+quit
+
+thread 'main' panicked at src/main.rs:28:47:
+Please type a number!: ParseIntError { kind: InvalidDigit }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p><code>quit</code> টাইপ করলে গেমটি থেকে বের হয়ে যাবে, কিন্তু আপনি যেমন লক্ষ্য করবেন, অন্য যেকোনো অ-সংখ্যা ইনপুট প্রবেশ করালেও তাই হবে। এটি সর্বোত্তম থেকে অনেক দূরে; আমরা চাই যে সঠিক সংখ্যা অনুমান করা হলে গেমটি বন্ধ হয়ে যাক।</p>
+<h3 id="সঠিক-অনুমানের-পর-খেলা-শেষ-করা"><a class="header" href="#সঠিক-অনুমানের-পর-খেলা-শেষ-করা">সঠিক অনুমানের পর খেলা শেষ করা</a></h3>
+<p>চলুন একটি <code>break</code> স্টেটমেন্ট যোগ করে গেমটি এমনভাবে প্রোগ্রাম করি যাতে ব্যবহারকারী জিতলে খেলাটি শেষ হয়ে যায়:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    loop {
+</span><span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">        let guess: u32 = guess.trim().parse().expect("Please type a number!");
+</span><span class="boring">
+</span><span class="boring">        println!("You guessed: {guess}");
+</span><span class="boring">
+</span>        // --snip--
+
+        match guess.cmp(&amp;secret_number) {
+            Ordering::Less =&gt; println!("Too small!"),
+            Ordering::Greater =&gt; println!("Too big!"),
+            Ordering::Equal =&gt; {
+                println!("You win!");
+                break;
+            }
+        }
+    }
+}</code></pre>
+<p><code>You win!</code> এর পরে <code>break</code> লাইনটি যোগ করলে ব্যবহারকারী যখন গোপন সংখ্যাটি সঠিকভাবে অনুমান করে তখন প্রোগ্রামটি লুপ থেকে বেরিয়ে যায়। লুপ থেকে বেরিয়ে যাওয়ার মানে হল প্রোগ্রাম থেকে বেরিয়ে যাওয়া, কারণ লুপটি <code>main</code>-এর শেষ অংশ।</p>
+<h3 id="অবৈধ-ইনপুট-পরিচালনা-করা"><a class="header" href="#অবৈধ-ইনপুট-পরিচালনা-করা">অবৈধ ইনপুট পরিচালনা করা</a></h3>
+<p>গেমের আচরণ আরও পরিমার্জিত করার জন্য, ব্যবহারকারী যখন একটি অ-সংখ্যা ইনপুট করে তখন প্রোগ্রামটি ক্র্যাশ করার পরিবর্তে, চলুন গেমটিকে একটি অ-সংখ্যা উপেক্ষা করতে বাধ্য করি যাতে ব্যবহারকারী অনুমান চালিয়ে যেতে পারে। আমরা এটি সেই লাইনটি পরিবর্তন করে করতে পারি যেখানে <code>guess</code> একটি <code>String</code> থেকে একটি <code>u32</code>-তে রূপান্তরিত হয়, যেমনটি লিস্টিং ২-৫-এ দেখানো হয়েছে।</p>
+<Listing number="2-5" file-name="src/main.rs" caption="একটি অ-সংখ্যা অনুমান উপেক্ষা করা এবং প্রোগ্রাম ক্র্যাশ না করে আরেকটি অনুমানের জন্য জিজ্ঞাসা করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    loop {
+</span><span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span>        // --snip--
+
+        io::stdin()
+            .read_line(&amp;mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+
+        println!("You guessed: {guess}");
+
+        // --snip--
+<span class="boring">
+</span><span class="boring">        match guess.cmp(&amp;secret_number) {
+</span><span class="boring">            Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">            Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">            Ordering::Equal =&gt; {
+</span><span class="boring">                println!("You win!");
+</span><span class="boring">                break;
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা একটি <code>expect</code> কল থেকে একটি <code>match</code> এক্সপ্রেশনে স্যুইচ করি যাতে একটি ত্রুটিতে ক্র্যাশ করার পরিবর্তে ত্রুটিটি পরিচালনা করা যায়। মনে রাখবেন যে <code>parse</code> একটি <code>Result</code> টাইপ প্রদান করে এবং <code>Result</code> একটি enum যার <code>Ok</code> এবং <code>Err</code> ভ্যারিয়েন্ট রয়েছে। আমরা এখানে একটি <code>match</code> এক্সপ্রেশন ব্যবহার করছি, যেমনটি আমরা <code>cmp</code> মেথডের <code>Ordering</code> ফলাফলের সাথে করেছিলাম।</p>
+<p>যদি <code>parse</code> সফলভাবে স্ট্রিংটিকে একটি সংখ্যায় পরিণত করতে পারে, তবে এটি একটি <code>Ok</code> মান প্রদান করবে যা ফলস্বরূপ সংখ্যাটি ধারণ করে। সেই <code>Ok</code> মানটি প্রথম arm-এর প্যাটার্নের সাথে মিলবে, এবং <code>match</code> এক্সপ্রেশনটি কেবল <code>parse</code> দ্বারা উৎপাদিত এবং <code>Ok</code> মানের ভিতরে রাখা <code>num</code> মানটি প্রদান করবে। সেই সংখ্যাটি আমরা যে নতুন <code>guess</code> ভ্যারিয়েবলটি তৈরি করছি সেখানে ঠিক যেখানে আমরা চাই সেখানেই শেষ হবে।</p>
+<p>যদি <code>parse</code> স্ট্রিংটিকে একটি সংখ্যায় পরিণত করতে <em>না</em> পারে, তবে এটি একটি <code>Err</code> মান প্রদান করবে যা ত্রুটি সম্পর্কে আরও তথ্য ধারণ করে। <code>Err</code> মানটি প্রথম <code>match</code> arm-এর <code>Ok(num)</code> প্যাটার্নের সাথে মেলে না, তবে এটি দ্বিতীয় arm-এর <code>Err(_)</code> প্যাটার্নের সাথে মেলে। আন্ডারস্কোর, <code>_</code>, একটি ক্যাচ-অল মান; এই উদাহরণে, আমরা বলছি যে আমরা সমস্ত <code>Err</code> মান মেলাতে চাই, তাদের ভিতরে যাই তথ্য থাকুক না কেন। তাই প্রোগ্রামটি দ্বিতীয় arm-এর কোড, <code>continue</code>, কার্যকর করবে, যা প্রোগ্রামকে <code>loop</code>-এর পরবর্তী পুনরাবৃত্তিতে যেতে এবং আরেকটি অনুমানের জন্য জিজ্ঞাসা করতে বলে। তাই, কার্যকরভাবে, প্রোগ্রামটি <code>parse</code>-এর সম্মুখীন হতে পারে এমন সমস্ত ত্রুটি উপেক্ষা করে!</p>
+<p>এখন প্রোগ্রামের সবকিছু প্রত্যাশিতভাবে কাজ করা উচিত। চলুন চেষ্টা করি:</p>
+<!-- manual-regeneration
+cd listings/ch02-guessing-game-tutorial/listing-02-05/
+cargo run
+(too small guess)
+(too big guess)
+foo
+(correct guess)
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running `target/debug/guessing_game`
+Guess the number!
+The secret number is: 61
+Please input your guess.
+10
+You guessed: 10
+Too small!
+Please input your guess.
+99
+You guessed: 99
+Too big!
+Please input your guess.
+foo
+Please input your guess.
+61
+You guessed: 61
+You win!
+</code></pre>
+<p>অসাধারণ! একটি ছোট চূড়ান্ত পরিবর্তনের মাধ্যমে, আমরা guessing game শেষ করব। মনে রাখবেন যে প্রোগ্রামটি এখনও গোপন সংখ্যাটি প্রিন্ট করছে। এটি পরীক্ষার জন্য ভাল কাজ করেছে, কিন্তু এটি গেমটি নষ্ট করে দেয়। চলুন গোপন সংখ্যাটি আউটপুট করে এমন <code>println!</code> টি মুছে ফেলি। লিস্টিং ২-৬ চূড়ান্ত কোডটি দেখায়।</p>
+<Listing number="2-6" file-name="src/main.rs" caption="সম্পূর্ণ guessing game কোড">
+<pre><code class="language-rust ignore">use std::cmp::Ordering;
+use std::io;
+
+use rand::Rng;
+
+fn main() {
+    println!("Guess the number!");
+
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+
+    loop {
+        println!("Please input your guess.");
+
+        let mut guess = String::new();
+
+        io::stdin()
+            .read_line(&amp;mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+
+        println!("You guessed: {guess}");
+
+        match guess.cmp(&amp;secret_number) {
+            Ordering::Less =&gt; println!("Too small!"),
+            Ordering::Greater =&gt; println!("Too big!"),
+            Ordering::Equal =&gt; {
+                println!("You win!");
+                break;
+            }
+        }
+    }
+}</code></pre>
+</Listing>
+<p>এই মুহূর্তে, আপনি সফলভাবে guessing game তৈরি করেছেন। অভিনন্দন!</p>
+<h2 id="সারাংশ"><a class="header" href="#সারাংশ">সারাংশ</a></h2>
+<p>এই প্রজেক্টটি আপনাকে অনেক নতুন রাস্ট কনসেপ্টের সাথে পরিচিত করার একটি বাস্তবসম্মত উপায় ছিল: <code>let</code>, <code>match</code>, ফাংশন, এক্সটার্নাল crate-এর ব্যবহার, এবং আরও অনেক কিছু। পরবর্তী কয়েকটি অধ্যায়ে, আপনি এই ধারণাগুলি সম্পর্কে আরও বিস্তারিতভাবে শিখবেন। অধ্যায় ৩ এমন ধারণাগুলি কভার করে যা বেশিরভাগ প্রোগ্রামিং ভাষাতেই আছে, যেমন ভ্যারিয়েবল, ডেটা টাইপ, এবং ফাংশন, এবং দেখায় কিভাবে রাস্ট-এ সেগুলি ব্যবহার করতে হয়। অধ্যায় ৪ ওনারশিপ অন্বেষণ করে, একটি বৈশিষ্ট্য যা রাস্টকে অন্যান্য ভাষা থেকে আলাদা করে। অধ্যায় ৫ struct এবং মেথড সিনট্যাক্স নিয়ে আলোচনা করে, এবং অধ্যায় ৬ ব্যাখ্যা করে কিভাবে enum কাজ করে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-03-hello-cargo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-00-common-programming-concepts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-03-hello-cargo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-00-common-programming-concepts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

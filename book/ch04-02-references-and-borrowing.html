@@ -1,0 +1,506 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>রেফারেন্স এবং বরোয়িং - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="রেফারেনস-এবং-ধার-করা-references-and-borrowing"><a class="header" href="#রেফারেনস-এবং-ধার-করা-references-and-borrowing">রেফারেন্স এবং ধার করা (References and Borrowing)</a></h2>
+<p>তালিকা ৪-৫ এর টাপল (tuple) কোডের সমস্যাটি হলো, <code>calculate_length</code> ফাংশনে <code>String</code> পাস করার পর সেটির মালিকানা চলে যায়, তাই ফাংশন কলের পরেও <code>String</code> ব্যবহার করতে হলে আমাদের আবার সেটি কলিং ফাংশনে ফেরত পাঠাতে হয়। এর পরিবর্তে, আমরা <code>String</code> মানটির একটি রেফারেন্স (reference) পাস করতে পারি। একটি <em>রেফারেন্স</em> অনেকটা পয়েন্টারের মতো, কারণ এটি একটি ঠিকানা যা অনুসরণ করে আমরা সেই ঠিকানায় থাকা ডেটা অ্যাক্সেস করতে পারি; সেই ডেটার মালিক অন্য কোনো ভ্যারিয়েবল। পয়েন্টারের সাথে এর পার্থক্য হলো, একটি রেফারেন্স তার জীবনকাল পর্যন্ত একটি নির্দিষ্ট টাইপের বৈধ মানের দিকে নির্দেশ করার নিশ্চয়তা দেয়।</p>
+<p>এখানে দেখানো হলো কীভাবে আপনি একটি <code>calculate_length</code> ফাংশন তৈরি ও ব্যবহার করতে পারেন যা মানের মালিকানা না নিয়ে বরং একটি অবজেক্টের রেফারেন্স প্যারামিটার হিসেবে গ্রহণ করে:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&amp;s1);
+
+    println!("The length of '{s1}' is {len}.");
+}
+
+fn calculate_length(s: &amp;String) -&gt; usize {
+    s.len()
+}</code></pre></pre>
+</Listing>
+<p>প্রথমত, লক্ষ্য করুন যে ভ্যারিয়েবল ঘোষণা এবং ফাংশনের রিটার্ন ভ্যালু থেকে সমস্ত টাপল কোড চলে গেছে। দ্বিতীয়ত, লক্ষ্য করুন যে আমরা <code>calculate_length</code> ফাংশনে <code>&amp;s1</code> পাস করেছি এবং ফাংশনের সংজ্ঞায় <code>String</code>-এর পরিবর্তে <code>&amp;String</code> নিয়েছি। এই অ্যামপারস্যান্ড (<code>&amp;</code>) চিহ্নগুলো <em>রেফারেন্স</em> বোঝায়, এবং এগুলো আপনাকে কোনো মানের মালিকানা না নিয়েই সেটিকে নির্দেশ করতে দেয়। চিত্র ৪-৬ এই ধারণাটি চিত্রিত করে।</p>
+<img alt="তিনটি টেবিল: s-এর টেবিলটিতে শুধুমাত্র s1-এর টেবিলের একটি পয়েন্টার রয়েছে। s1-এর টেবিলটিতে s1-এর জন্য স্ট্যাক ডেটা রয়েছে এবং এটি হীপের স্ট্রিং ডেটার দিকে নির্দেশ করে।" src="img/trpl04-06.svg" class="center" />
+<p><span class="caption">চিত্র ৪-৬: <code>&amp;String s</code> যেভাবে <code>String s1</code>-কে নির্দেশ করে তার একটি চিত্র</span></p>
+<blockquote>
+<p>দ্রষ্টব্য: <code>&amp;</code> ব্যবহার করে রেফারেন্সিং করার বিপরীতটি হলো <em>ডি-রেফারেন্সিং</em> (dereferencing), যা ডি-রেফারেন্স অপারেটর, <code>*</code> দিয়ে করা হয়। আমরা অধ্যায় ৮-এ ডি-রেফারেন্স অপারেটরের কিছু ব্যবহার দেখব এবং অধ্যায় ১৫-এ ডি-রেফারেন্সিংয়ের বিস্তারিত আলোচনা করব।</p>
+</blockquote>
+<p>আসুন এখানকার ফাংশন কলটি আরও ঘনিষ্ঠভাবে দেখি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("hello");
+
+    let len = calculate_length(&amp;s1);
+<span class="boring">
+</span><span class="boring">    println!("The length of '{s1}' is {len}.");
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn calculate_length(s: &amp;String) -&gt; usize {
+</span><span class="boring">    s.len()
+</span><span class="boring">}</span></code></pre></pre>
+<p><code>&amp;s1</code> সিনট্যাক্সটি আমাদের একটি রেফারেন্স তৈরি করতে দেয় যা <code>s1</code>-এর মানকে <em>নির্দেশ</em> (refers) করে কিন্তু এর মালিকানা নেয় না। যেহেতু রেফারেন্সটির মালিকানা নেই, তাই রেফারেন্সটি ব্যবহার শেষ হয়ে গেলে এটি যে মানটিকে নির্দেশ করে তা ড্রপ (dropped) করা হবে না।</p>
+<p>একইভাবে, ফাংশনের সিগনেচার <code>&amp;</code> ব্যবহার করে নির্দেশ করে যে প্যারামিটার <code>s</code>-এর টাইপ একটি রেফারেন্স। আসুন কিছু ব্যাখ্যামূলক টীকা যোগ করি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let s1 = String::from("hello");
+</span><span class="boring">
+</span><span class="boring">    let len = calculate_length(&amp;s1);
+</span><span class="boring">
+</span><span class="boring">    println!("The length of '{s1}' is {len}.");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn calculate_length(s: &amp;String) -&gt; usize { // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope. But because s does not have ownership of what
+  // it refers to, the String is not dropped.</code></pre></pre>
+<p>যে স্কোপে <code>s</code> ভ্যারিয়েবলটি বৈধ, তা যেকোনো ফাংশন প্যারামিটারের স্কোপের মতোই, কিন্তু <code>s</code>-এর ব্যবহার শেষ হলে রেফারেন্স দ্বারা নির্দেশিত মানটি ড্রপ করা হয় না, কারণ <code>s</code>-এর মালিকানা নেই। যখন ফাংশনগুলো আসল মানের পরিবর্তে রেফারেন্সকে প্যারামিটার হিসাবে ব্যবহার করে, তখন মালিকানা ফিরিয়ে দেওয়ার জন্য আমাদের মানগুলো ফেরত পাঠাতে হবে না, কারণ আমাদের কখনোই মালিকানা ছিল না।</p>
+<p>একটি রেফারেন্স তৈরি করার এই প্রক্রিয়াকে আমরা <em>ধার করা</em> (borrowing) বলি। বাস্তব জীবনের মতোই, যদি কোনো ব্যক্তির কোনো কিছুর মালিকানা থাকে, আপনি তাদের কাছ থেকে তা ধার নিতে পারেন। আপনার কাজ শেষ হলে, আপনাকে তা ফিরিয়ে দিতে হবে। আপনি সেটির মালিক নন।</p>
+<p>তাহলে, আমরা যদি ধার করা কোনো কিছু পরিবর্তন করার চেষ্টা করি তাহলে কী হবে? তালিকা ৪-৬-এর কোডটি চেষ্টা করুন। স্পয়লার অ্যালার্ট: এটি কাজ করবে না!</p>
+<Listing number="4-6" file-name="src/main.rs" caption="ধার করা মান পরিবর্তন করার একটি প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let s = String::from("hello");
+
+    change(&amp;s);
+}
+
+fn change(some_string: &amp;String) {
+    some_string.push_str(", world");
+}</code></pre>
+</Listing>
+<p>এখানে এররটি হলো:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&amp;` reference
+ --&gt; src/main.rs:8:5
+  |
+8 |     some_string.push_str(", world");
+  |     ^^^^^^^^^^^ `some_string` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable
+  |
+help: consider changing this to be a mutable reference
+  |
+7 | fn change(some_string: &amp;mut String) {
+  |                         +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+<p>ভ্যারিয়েবলগুলো যেমন ডিফল্টভাবে অপরিবর্তনীয় (immutable), রেফারেন্সও তেমনি। আমাদের কাছে কোনো কিছুর রেফারেন্স থাকলে আমরা তা পরিবর্তন করার অনুমতি পাই না।</p>
+<h3 id="পরিবরতনযোগয-রেফারেনস-mutable-references"><a class="header" href="#পরিবরতনযোগয-রেফারেনস-mutable-references">পরিবর্তনযোগ্য রেফারেন্স (Mutable References)</a></h3>
+<p>আমরা তালিকা ৪-৬ এর কোডটিকে কয়েকটি ছোট পরিবর্তনের মাধ্যমে ঠিক করতে পারি, যাতে আমরা একটি ধার করা মান পরিবর্তন করতে পারি। এর জন্য আমরা একটি <em>পরিবর্তনযোগ্য রেফারেন্স</em> (mutable reference) ব্যবহার করব:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut s = String::from("hello");
+
+    change(&amp;mut s);
+}
+
+fn change(some_string: &amp;mut String) {
+    some_string.push_str(", world");
+}</code></pre></pre>
+</Listing>
+<p>প্রথমে আমরা <code>s</code>-কে <code>mut</code> করি। তারপর আমরা <code>change</code> ফাংশন কল করার সময় <code>&amp;mut s</code> দিয়ে একটি পরিবর্তনযোগ্য রেফারেন্স তৈরি করি, এবং ফাংশন সিগনেচার আপডেট করে <code>some_string: &amp;mut String</code> দিয়ে একটি পরিবর্তনযোগ্য রেফারেন্স গ্রহণ করি। এটি খুব স্পষ্ট করে দেয় যে <code>change</code> ফাংশনটি তার ধার করা মানটিকে পরিবর্তন করবে।</p>
+<p>পরিবর্তনযোগ্য রেফারেন্সের একটি বড় সীমাবদ্ধতা আছে: যদি আপনার কাছে একটি মানের একটি পরিবর্তনযোগ্য রেফারেন্স থাকে, তবে সেই মানের অন্য কোনো রেফারেন্স আপনার কাছে থাকতে পারবে না। <code>s</code>-এর জন্য দুটি পরিবর্তনযোগ্য রেফারেন্স তৈরি করার এই কোডটি ব্যর্থ হবে:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+
+    let r1 = &amp;mut s;
+    let r2 = &amp;mut s;
+
+    println!("{r1}, {r2}");
+<span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+এখানে এররটি হলো:
+
+```console
+$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --&gt; src/main.rs:5:14
+  |
+4 |     let r1 = &amp;mut s;
+  |              ------ first mutable borrow occurs here
+5 |     let r2 = &amp;mut s;
+  |              ^^^^^^ second mutable borrow occurs here
+6 |
+7 |     println!("{r1}, {r2}");
+  |               ---- first borrow later used here
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error</code></pre>
+<p>এই এরর বলছে যে এই কোডটি অবৈধ কারণ আমরা একবারে একাধিকবার <code>s</code>-কে পরিবর্তনযোগ্য হিসাবে ধার করতে পারি না। প্রথম পরিবর্তনযোগ্য ধার <code>r1</code>-এ রয়েছে এবং এটি <code>println!</code>-এ ব্যবহৃত না হওয়া পর্যন্ত স্থায়ী হতে হবে, কিন্তু সেই পরিবর্তনযোগ্য রেফারেন্স তৈরির এবং তার ব্যবহারের মধ্যে, আমরা <code>r2</code>-তে আরেকটি পরিবর্তনযোগ্য রেফারেন্স তৈরি করার চেষ্টা করেছি যা <code>r1</code>-এর মতো একই ডেটা ধার করে।</p>
+<p>একই ডেটার একাধিক পরিবর্তনযোগ্য রেফারেন্স থাকার সীমাবদ্ধতাটি পরিবর্তন করার সুযোগ দেয় কিন্তু খুব নিয়ন্ত্রিত উপায়ে। নতুন রাস্টেশিয়ানদের (Rustaceans) জন্য এটি একটি সমস্যা কারণ বেশিরভাগ ভাষা আপনাকে যখন ইচ্ছা পরিবর্তন করতে দেয়। এই সীমাবদ্ধতার সুবিধা হলো রাস্ট কম্পাইলের সময় ডেটা রেস (data races) প্রতিরোধ করতে পারে। একটি <em>ডেটা রেস</em> রেস কন্ডিশনের মতোই এবং এটি ঘটে যখন এই তিনটি আচরণ ঘটে:</p>
+<ul>
+<li>দুই বা ততোধিক পয়েন্টার একই সময়ে একই ডেটা অ্যাক্সেস করে।</li>
+<li>অন্তত একটি পয়েন্টার ডেটাতে লেখার জন্য ব্যবহৃত হচ্ছে।</li>
+<li>ডেটা অ্যাক্সেস সিঙ্ক্রোনাইজ করার জন্য কোনো ব্যবস্থা ব্যবহার করা হচ্ছে না।</li>
+</ul>
+<p>ডেটা রেসগুলো অনির্ধারিত আচরণের (undefined behavior) কারণ হয় এবং রানটাইমে এগুলো খুঁজে বের করার চেষ্টা করার সময় নির্ণয় এবং ঠিক করা কঠিন হতে পারে; রাস্ট ডেটা রেসসহ কোড কম্পাইল করতে অস্বীকার করে এই সমস্যাটি প্রতিরোধ করে!</p>
+<p>বরাবরের মতোই, আমরা কার্লি ব্র্যাকেট ব্যবহার করে একটি নতুন স্কোপ তৈরি করতে পারি, যা একাধিক পরিবর্তনযোগ্য রেফারেন্সের অনুমতি দেয়, শুধু <em>একই সাথে</em> নয়:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+
+    {
+        let r1 = &amp;mut s;
+    } // r1 goes out of scope here, so we can make a new reference with no problems.
+
+    let r2 = &amp;mut s;
+<span class="boring">}</span></code></pre></pre>
+<p>রাস্ট পরিবর্তনযোগ্য এবং অপরিবর্তনীয় রেফারেন্স একত্রিত করার জন্যও একটি অনুরূপ নিয়ম প্রয়োগ করে। এই কোডটি একটি এরর তৈরি করে:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+
+    let r1 = &amp;s; // no problem
+    let r2 = &amp;s; // no problem
+    let r3 = &amp;mut s; // BIG PROBLEM
+
+    println!("{r1}, {r2}, and {r3}");
+<span class="boring">}</span></code></pre>
+<p>এখানে এররটি হলো:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+ --&gt; src/main.rs:6:14
+  |
+4 |     let r1 = &amp;s; // no problem
+  |              -- immutable borrow occurs here
+5 |     let r2 = &amp;s; // no problem
+6 |     let r3 = &amp;mut s; // BIG PROBLEM
+  |              ^^^^^^ mutable borrow occurs here
+7 |
+8 |     println!("{r1}, {r2}, and {r3}");
+  |               ---- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+<p>আমরা যখন একটি মানের একটি অপরিবর্তনীয় রেফারেন্স রাখি, তখন আমরা একটি পরিবর্তনযোগ্য রেফারেন্সও রাখতে পারি না।</p>
+<p>অপরিবর্তনীয় রেফারেন্সের ব্যবহারকারীরা আশা করেন না যে মানটি হঠাৎ করে তাদের অজান্তেই পরিবর্তিত হয়ে যাবে! তবে, একাধিক অপরিবর্তনীয় রেফারেন্স অনুমোদিত কারণ যারা কেবল ডেটা পড়ছে তাদের কেউই অন্য কারো ডেটা পড়াকে প্রভাবিত করতে পারে না।</p>
+<p>লক্ষ্য করুন যে একটি রেফারেন্সের স্কোপ যেখানে এটি তৈরি হয় সেখান থেকে শুরু হয় এবং সেই রেফারেন্সটি শেষবার ব্যবহৃত হওয়া পর্যন্ত চলতে থাকে। উদাহরণস্বরূপ, এই কোডটি কম্পাইল হবে কারণ অপরিবর্তনীয় রেফারেন্সগুলোর শেষ ব্যবহার হয় <code>println!</code>-এ, পরিবর্তনযোগ্য রেফারেন্সটি চালু করার আগে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+
+    let r1 = &amp;s; // no problem
+    let r2 = &amp;s; // no problem
+    println!("{r1} and {r2}");
+    // Variables r1 and r2 will not be used after this point.
+
+    let r3 = &amp;mut s; // no problem
+    println!("{r3}");
+<span class="boring">}</span></code></pre></pre>
+<p>অপরিবর্তনীয় রেফারেন্স <code>r1</code> এবং <code>r2</code>-এর স্কোপ <code>println!</code>-এর পরে শেষ হয়, যেখানে সেগুলি শেষবার ব্যবহৃত হয়, যা পরিবর্তনযোগ্য রেফারেন্স <code>r3</code> তৈরি হওয়ার আগে। এই স্কোপগুলো ওভারল্যাপ করে না, তাই এই কোডটি অনুমোদিত: কম্পাইলার বলতে পারে যে স্কোপ শেষ হওয়ার আগেই রেফারেন্সটি আর ব্যবহৃত হচ্ছে না।</p>
+<p>যদিও ধার করার এররগুলো কখনও কখনও হতাশাজনক হতে পারে, মনে রাখবেন যে এটি রাস্ট কম্পাইলার যা একটি সম্ভাব্য বাগ প্রথম দিকেই (রানটাইমের পরিবর্তে কম্পাইল টাইমে) নির্দেশ করছে এবং আপনাকে ঠিক কোথায় সমস্যাটি তা দেখাচ্ছে। তাহলে আপনাকে আর খুঁজে বের করতে হবে না কেন আপনার ডেটা আপনি যা ভেবেছিলেন তা নয়।</p>
+<h3 id="ডযাংলিং-রেফারেনস-dangling-references"><a class="header" href="#ডযাংলিং-রেফারেনস-dangling-references">ড্যাংলিং রেফারেন্স (Dangling References)</a></h3>
+<p>পয়েন্টারসহ ভাষাগুলোতে, ভুলবশত একটি <em>ড্যাংলিং পয়েন্টার</em> (dangling pointer)—এমন একটি পয়েন্টার যা মেমরির এমন একটি অবস্থানকে নির্দেশ করে যা হয়তো অন্য কাউকে দেওয়া হয়েছে—তৈরি করা সহজ, কোনো মেমরি মুক্ত করার সময় সেই মেমরির একটি পয়েন্টার সংরক্ষণ করে। এর বিপরীতে, রাস্টে, কম্পাইলার গ্যারান্টি দেয় যে রেফারেন্সগুলো কখনই ড্যাংলিং রেফারেন্স হবে না: যদি আপনার কাছে কিছু ডেটার একটি রেফারেন্স থাকে, কম্পাইলার নিশ্চিত করবে যে ডেটার রেফারেন্সের আগে ডেটা স্কোপের বাইরে যাবে না।</p>
+<p>আসুন একটি ড্যাংলিং রেফারেন্স তৈরি করার চেষ্টা করি যাতে দেখা যায় রাস্ট কীভাবে একটি কম্পাইল-টাইম এরর দিয়ে এগুলো প্রতিরোধ করে:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let reference_to_nothing = dangle();
+}
+
+fn dangle() -&gt; &amp;String {
+    let s = String::from("hello");
+
+    &amp;s
+}</code></pre>
+</Listing>
+<p>এখানে এররটি হলো:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:5:16
+  |
+5 | fn dangle() -&gt; &amp;String {
+  |                ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
+help: consider using the `'static` lifetime, but this is uncommon unless you're returning a borrowed value from a `const` or a `static`
+  |
+5 | fn dangle() -&gt; &amp;'static String {
+  |                 +++++++
+help: instead, you are more likely to want to return an owned value
+  |
+5 - fn dangle() -&gt; &amp;String {
+5 + fn dangle() -&gt; String {
+  |
+
+error[E0515]: cannot return reference to local variable `s`
+ --&gt; src/main.rs:8:5
+  |
+8 |     &amp;s
+  |     ^^ returns a reference to data owned by the current function
+
+Some errors have detailed explanations: E0106, E0515.
+For more information about an error, try `rustc --explain E0106`.
+error: could not compile `ownership` (bin "ownership") due to 2 previous errors
+</code></pre>
+<p>এই এরর বার্তাটি এমন একটি বৈশিষ্ট্য উল্লেখ করে যা আমরা এখনও আলোচনা করিনি: লাইফটাইম (lifetimes)। আমরা অধ্যায় ১০-এ লাইফটাইম নিয়ে বিস্তারিত আলোচনা করব। কিন্তু, আপনি যদি লাইফটাইম সম্পর্কিত অংশগুলো উপেক্ষা করেন, বার্তাটিতে এই কোডটি কেন একটি সমস্যা তার মূল চাবিকাঠি রয়েছে:</p>
+<pre><code class="language-text">this function's return type contains a borrowed value, but there is no value
+for it to be borrowed from
+</code></pre>
+<p>আসুন আমাদের <code>dangle</code> কোডের প্রতিটি পর্যায়ে ঠিক কী ঘটছে তা আরও ঘনিষ্ঠভাবে দেখি:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let reference_to_nothing = dangle();
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn dangle() -&gt; &amp;String { // dangle returns a reference to a String
+
+    let s = String::from("hello"); // s is a new String
+
+    &amp;s // we return a reference to the String, s
+} // Here, s goes out of scope and is dropped, so its memory goes away.
+  // Danger!</code></pre>
+</Listing>
+<p>যেহেতু <code>s</code> <code>dangle</code> এর ভিতরে তৈরি করা হয়েছে, তাই <code>dangle</code>-এর কোড শেষ হয়ে গেলে, <code>s</code> ডিঅ্যালোকেট (deallocated) করা হবে। কিন্তু আমরা এটির একটি রেফারেন্স ফেরত দেওয়ার চেষ্টা করেছি। এর মানে এই রেফারেন্সটি একটি অবৈধ <code>String</code>-কে নির্দেশ করবে। এটা মোটেও ভালো না! রাস্ট আমাদের এটা করতে দেবে না।</p>
+<p>এখানের সমাধান হলো <code>String</code> সরাসরি ফেরত দেওয়া:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string = no_dangle();
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn no_dangle() -&gt; String {
+    let s = String::from("hello");
+
+    s
+}</code></pre></pre>
+<p>এটি কোনো সমস্যা ছাড়াই কাজ করে। মালিকানা মুভ (moved out) হয়ে যায়, এবং কিছুই ডিঅ্যালোকেট করা হয় না।</p>
+<h3 id="রেফারেনসের-নিযমাবলী-the-rules-of-references"><a class="header" href="#রেফারেনসের-নিযমাবলী-the-rules-of-references">রেফারেন্সের নিয়মাবলী (The Rules of References)</a></h3>
+<p>আসুন আমরা রেফারেন্স সম্পর্কে যা আলোচনা করেছি তা সংক্ষেপে দেখে নিই:</p>
+<ul>
+<li>যেকোনো নির্দিষ্ট সময়ে, আপনার কাছে <em>হয়</em> একটি পরিবর্তনযোগ্য রেফারেন্স <em>অথবা</em> যেকোনো সংখ্যক অপরিবর্তনীয় রেফারেন্স থাকতে পারে।</li>
+<li>রেফারেন্স অবশ্যই সবসময় বৈধ হতে হবে।</li>
+</ul>
+<p>এর পরে, আমরা একটি ভিন্ন ধরনের রেফারেন্স দেখব: স্লাইস (slices)।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-01-what-is-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-03-slices.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-01-what-is-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-03-slices.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

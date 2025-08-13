@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>অ্যাসিঙ্ক্রোনাস প্রোগ্রামিংয়ের মৌলিক বিষয়: Async, Await, Futures, এবং Streams - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="অযাসিঙকরোনাস-পরোগরামিংয়ের-মূলনীতি-async-await-futures-এবং-streams"><a class="header" href="#অযাসিঙকরোনাস-পরোগরামিংয়ের-মূলনীতি-async-await-futures-এবং-streams">অ্যাসিঙ্ক্রোনাস প্রোগ্রামিংয়ের মূলনীতি: Async, Await, Futures, এবং Streams</a></h1>
+<p>আমরা কম্পিউটারকে এমন অনেক কাজ করতে বলি যা শেষ হতে বেশ কিছুটা সময় নিতে পারে। এই দীর্ঘ সময় ধরে চলা প্রসেসগুলো শেষ হওয়ার জন্য অপেক্ষা করার সময় যদি আমরা অন্য কিছু করতে পারতাম, তাহলে খুব ভালো হতো। আধুনিক কম্পিউটারগুলো একই সময়ে একাধিক অপারেশন নিয়ে কাজ করার জন্য দুটি কৌশল প্রদান করে: প্যারালালিসম (parallelism) এবং কনকারেন্সি (concurrency)। যখন আমরা এমন প্রোগ্রাম লিখতে শুরু করি যেখানে প্যারালাল বা কনকারেন্ট অপারেশন জড়িত থাকে, তখন আমরা দ্রুতই অ্যাসিঙ্ক্রোনাস প্রোগ্রামিংয়ের কিছু নতুন চ্যালেঞ্জের মুখোমুখি হই, যেখানে অপারেশনগুলো যে ক্রমে শুরু হয়েছিল সেই ক্রমে শেষ নাও হতে পারে। এই অধ্যায়টি চ্যাপ্টার ১৬-তে প্যারালালিসম এবং কনকারেন্সির জন্য থ্রেডের ব্যবহারের উপর ভিত্তি করে তৈরি হয়েছে এবং অ্যাসিঙ্ক্রোনাস প্রোগ্রামিংয়ের জন্য একটি বিকল্প পদ্ধতির সাথে পরিচয় করিয়ে দেবে: রাস্টের Futures, Streams, তাদের সমর্থনকারী <code>async</code> এবং <code>await</code> সিনট্যাক্স, এবং অ্যাসিঙ্ক্রোনাস অপারেশনগুলো পরিচালনা ও সমন্বয় করার টুলস।</p>
+<p>আসুন একটি উদাহরণ বিবেচনা করা যাক। ধরুন আপনি একটি পারিবারিক অনুষ্ঠানের ভিডিও এক্সপোর্ট করছেন, এই কাজটি শেষ হতে মিনিট থেকে ঘণ্টা পর্যন্ত সময় লাগতে পারে। ভিডিও এক্সপোর্টটি তার সাধ্যমতো CPU এবং GPU পাওয়ার ব্যবহার করবে। যদি আপনার কেবল একটি CPU কোর থাকত এবং আপনার অপারেটিং সিস্টেম এক্সপোর্টটি শেষ না হওয়া পর্যন্ত থামিয়ে না রাখত—অর্থাৎ, যদি এটি এক্সপোর্টটি <em>সিঙ্ক্রোনাসভাবে</em> (synchronously) চালাত—তাহলে ঐ টাস্ক চলাকালীন আপনি আপনার কম্পিউটারে অন্য কিছুই করতে পারতেন না। এটি একটি বেশ হতাশাজনক অভিজ্ঞতা হতো। ভাগ্যক্রমে, আপনার কম্পিউটারের অপারেটিং সিস্টেম এক্সপোর্টটিকে প্রায়শই অদৃশ্যভাবে বাধাগ্রস্ত করতে পারে যাতে আপনি একই সাথে অন্যান্য কাজ করতে পারেন।</p>
+<p>এখন ধরুন আপনি অন্য কারো শেয়ার করা একটি ভিডিও ডাউনলোড করছেন, যা শেষ হতেও বেশ সময় লাগতে পারে কিন্তু এটি ততটা CPU সময় নেয় না। এক্ষেত্রে, নেটওয়ার্ক থেকে ডেটা আসার জন্য CPU-কে অপেক্ষা করতে হয়। ডেটা আসা শুরু হলে আপনি ডেটা পড়া শুরু করতে পারলেও, সব ডেটা আসতে কিছুটা সময় লাগতে পারে। এমনকি সব ডেটা উপস্থিত থাকলেও, যদি ভিডিওটি বেশ বড় হয়, তবে এটি লোড করতে অন্তত এক বা দুই সেকেন্ড সময় লাগতে পারে। এটি হয়তো খুব বেশি সময় মনে নাও হতে পারে, কিন্তু একটি আধুনিক প্রসেসরের জন্য এটি অনেক দীর্ঘ সময়, যা প্রতি সেকেন্ডে বিলিয়ন অপারেশন করতে পারে। আবারও, আপনার অপারেটিং সিস্টেম আপনার প্রোগ্রামকে অদৃশ্যভাবে বাধাগ্রস্ত করবে যাতে নেটওয়ার্ক কল শেষ হওয়ার জন্য অপেক্ষা করার সময় CPU অন্য কাজ করতে পারে।</p>
+<p>ভিডিও এক্সপোর্ট হলো একটি <em>CPU-বাউন্ড</em> বা <em>কম্পিউট-বাউন্ড</em> অপারেশনের উদাহরণ। এটি কম্পিউটারের CPU বা GPU-এর ডেটা প্রসেসিং স্পিডের উপর সীমাবদ্ধ, এবং সেই স্পিডের কতটা অংশ এটি অপারেশনে উৎসর্গ করতে পারে তার উপর নির্ভরশীল। ভিডিও ডাউনলোড হলো একটি <em>IO-বাউন্ড</em> অপারেশনের উদাহরণ, কারণ এটি কম্পিউটারের <em>ইনপুট এবং আউটপুট</em> এর গতির দ্বারা সীমাবদ্ধ; এটি কেবল তত দ্রুত চলতে পারে যত দ্রুত নেটওয়ার্কের মাধ্যমে ডেটা পাঠানো যায়।</p>
+<p>এই উভয় উদাহরণে, অপারেটিং সিস্টেমের অদৃশ্য ইন্টারাপ্টগুলো এক ধরনের কনকারেন্সি প্রদান করে। তবে এই কনকারেন্সি কেবল পুরো প্রোগ্রামের স্তরে ঘটে: অপারেটিং সিস্টেম একটি প্রোগ্রামকে বাধাগ্রস্ত করে অন্য প্রোগ্রামগুলোকে কাজ করার সুযোগ দেয়। অনেক ক্ষেত্রে, যেহেতু আমরা আমাদের প্রোগ্রামগুলোকে অপারেটিং সিস্টেমের চেয়ে অনেক বেশি বিস্তারিত স্তরে বুঝি, তাই আমরা কনকারেন্সির এমন সুযোগগুলো চিহ্নিত করতে পারি যা অপারেটিং সিস্টেম দেখতে পায় না।</p>
+<p>উদাহরণস্বরূপ, যদি আমরা ফাইল ডাউনলোড পরিচালনা করার জন্য একটি টুল তৈরি করি, আমাদের প্রোগ্রামটি এমনভাবে লেখা উচিত যাতে একটি ডাউনলোড শুরু করলে UI লক হয়ে না যায়, এবং ব্যবহারকারীরা একই সাথে একাধিক ডাউনলোড শুরু করতে পারেন। নেটওয়ার্কের সাথে ইন্টারঅ্যাক্ট করার জন্য অনেক অপারেটিং সিস্টেম এপিআই (API) <em>ব্লকিং</em> (blocking) হয়ে থাকে; অর্থাৎ, তারা যে ডেটা প্রসেস করছে তা সম্পূর্ণ প্রস্তুত না হওয়া পর্যন্ত প্রোগ্রামের অগ্রগতি আটকে রাখে।</p>
+<blockquote>
+<p>দ্রষ্টব্য: আপনি যদি ভেবে দেখেন, তবে বেশিরভাগ ফাংশন কল এভাবেই কাজ করে। তবে, <em>ব্লকিং</em> শব্দটি সাধারণত সেই ফাংশন কলগুলোর জন্য সংরক্ষিত যা ফাইল, নেটওয়ার্ক বা কম্পিউটারের অন্যান্য রিসোর্সের সাথে ইন্টারঅ্যাক্ট করে, কারণ এই ক্ষেত্রগুলিতে একটি স্বতন্ত্র প্রোগ্রাম অপারেশনটি <em>নন</em>-ব্লকিং (non-blocking) হলে উপকৃত হবে।</p>
+</blockquote>
+<p>আমরা প্রতিটি ফাইল ডাউনলোড করার জন্য একটি ডেডিকেটেড থ্রেড তৈরি করে আমাদের প্রধান থ্রেডকে ব্লক করা এড়াতে পারতাম। তবে, সেই থ্রেডগুলোর ওভারহেড অবশেষে একটি সমস্যা হয়ে দাঁড়াবে। বরং ভালো হতো যদি কলটি প্রথম স্থানেই ব্লক না করত। আরও ভালো হতো যদি আমরা ব্লকিং কোডের মতো একই সরাসরি স্টাইলে লিখতে পারতাম, যেমনটা নিচে দেখানো হয়েছে:</p>
+<pre><code class="language-rust ignore does_not_compile">let data = fetch_data_from(url).await;
+println!("{data}");</code></pre>
+<p>রাস্টের <em>async</em> (যা <em>asynchronous</em> এর সংক্ষিপ্ত রূপ) অ্যাবস্ট্র্যাকশন ঠিক এটাই আমাদের দেয়। এই অধ্যায়ে, আপনি async সম্পর্কে সবকিছু শিখবেন যখন আমরা নিম্নলিখিত বিষয়গুলি নিয়ে আলোচনা করব:</p>
+<ul>
+<li>রাস্টের <code>async</code> এবং <code>await</code> সিনট্যাক্স কীভাবে ব্যবহার করবেন</li>
+<li>চ্যাপ্টার ১৬-তে আমরা যে চ্যালেঞ্জগুলো দেখেছিলাম তার কিছু সমাধান করতে async মডেল কীভাবে ব্যবহার করবেন</li>
+<li>কীভাবে মাল্টিথ্রেডিং এবং async পরিপূরক সমাধান প্রদান করে, যা আপনি অনেক ক্ষেত্রে একত্রিত করতে পারেন</li>
+</ul>
+<p>তবে async বাস্তবে কীভাবে কাজ করে তা দেখার আগে, আমাদের প্যারালালিসম এবং কনকারেন্সির মধ্যে পার্থক্য নিয়ে আলোচনা করার জন্য একটি সংক্ষিপ্ত পথ পাড়ি দিতে হবে।</p>
+<h3 id="পযারালালিসম-এবং-কনকারেনসি-parallelism-and-concurrency"><a class="header" href="#পযারালালিসম-এবং-কনকারেনসি-parallelism-and-concurrency">প্যারালালিসম এবং কনকারেন্সি (Parallelism and Concurrency)</a></h3>
+<p>এখন পর্যন্ত আমরা প্যারালালিসম এবং কনকারেন্সিকে মূলত একই জিনিস হিসেবে গণ্য করেছি। এখন আমাদের এদের মধ্যে আরও স্পষ্টভাবে পার্থক্য করতে হবে, কারণ আমরা কাজ শুরু করার সাথে সাথে এই পার্থক্যগুলো প্রকাশ পাবে।</p>
+<p>একটি সফটওয়্যার প্রকল্পে একটি দল কীভাবে কাজ ভাগ করে নিতে পারে তার বিভিন্ন উপায় বিবেচনা করুন। আপনি একজন সদস্যকে একাধিক কাজ দিতে পারেন, প্রতিটি সদস্যকে একটি করে কাজ দিতে পারেন, অথবা দুটি পদ্ধতির মিশ্রণ ব্যবহার করতে পারেন।</p>
+<p>যখন একজন ব্যক্তি একাধিক ভিন্ন কাজ সম্পন্ন করার আগে সেগুলোর উপর কাজ করে, তখন এটি হলো <em>কনকারেন্সি</em> (concurrency)। হয়তো আপনার কম্পিউটারে দুটি ভিন্ন প্রজেক্ট চেক আউট করা আছে, এবং যখন আপনি একটি প্রকল্পে বিরক্ত বা আটকে যান, তখন আপনি অন্যটিতে চলে যান। আপনি কেবল একজন ব্যক্তি, তাই আপনি একই সময়ে উভয় কাজে অগ্রগতি করতে পারবেন না, কিন্তু আপনি মাল্টি-টাস্ক করতে পারেন, একটি থেকে অন্যটিতে সুইচ করে একবারে একটিতে অগ্রগতি করতে পারেন (চিত্র ১৭-১ দেখুন)।</p>
+<figure>
+<img src="img/trpl17-01.svg" class="center" alt="A diagram with boxes labeled Task A and Task B, with diamonds in them representing subtasks. There are arrows pointing from A1 to B1, B1 to A2, A2 to B2, B2 to A3, A3 to A4, and A4 to B3. The arrows between the subtasks cross the boxes between Task A and Task B." />
+<figcaption>চিত্র ১৭-১: একটি কনকারেন্ট ওয়ার্কফ্লো, যেখানে টাস্ক A এবং টাস্ক B এর মধ্যে সুইচ করা হচ্ছে</figcaption>
+</figure>
+<p>যখন দলটি প্রতিটি সদস্যকে একটি করে কাজ দিয়ে এবং একা একা কাজ করতে বলে কাজের একটি গ্রুপ ভাগ করে নেয়, তখন এটি হলো <em>প্যারালালিসম</em> (parallelism)। দলের প্রত্যেক ব্যক্তি একই সময়ে অগ্রগতি করতে পারে (চিত্র ১৭-২ দেখুন)।</p>
+<figure>
+<img src="img/trpl17-02.svg" class="center" alt="A diagram with boxes labeled Task A and Task B, with diamonds in them representing subtasks. There are arrows pointing from A1 to A2, A2 to A3, A3 to A4, B1 to B2, and B2 to B3. No arrows cross between the boxes for Task A and Task B." />
+<figcaption>চিত্র ১৭-২: একটি প্যারালাল ওয়ার্কফ্লো, যেখানে টাস্ক A এবং টাস্ক B স্বাধীনভাবে কাজ করে</figcaption>
+</figure>
+<p>এই উভয় ওয়ার্কফ্লোতে, আপনাকে বিভিন্ন কাজের মধ্যে সমন্বয় করতে হতে পারে। হয়তো আপনি <em>ভেবেছিলেন</em> যে একজন ব্যক্তিকে দেওয়া কাজটি অন্যদের কাজ থেকে সম্পূর্ণ স্বাধীন, কিন্তু আসলে এটি দলের অন্য একজন ব্যক্তির কাজ শেষ করার উপর নির্ভরশীল। কিছু কাজ প্যারালালি করা যেত, কিন্তু কিছু কাজ আসলে <em>সিরিয়াল</em> (serial) ছিল: এটি কেবল একটি সিরিজের মতো, একের পর এক টাস্ক হিসেবে হতে পারত, যেমনটি চিত্র ১৭-৩ এ দেখানো হয়েছে।</p>
+<figure>
+<img src="img/trpl17-03.svg" class="center" alt="A diagram with boxes labeled Task A and Task B, with diamonds in them representing subtasks. There are arrows pointing from A1 to A2, A2 to a pair of thick vertical lines like a “pause” symbol, from that symbol to A3, B1 to B2, B2 to B3, which is below that symbol, B3 to A3, and B3 to B4." />
+<figcaption>চিত্র ১৭-৩: একটি আংশিকভাবে প্যারালাল ওয়ার্কফ্লো, যেখানে টাস্ক A এবং টাস্ক B স্বাধীনভাবে কাজ করে যতক্ষণ না টাস্ক A3, টাস্ক B3 এর ফলাফলের জন্য ব্লক হয়ে যায়।</figcaption>
+</figure>
+<p>একইভাবে, আপনি হয়তো বুঝতে পারেন যে আপনার নিজের একটি কাজ আপনার অন্য একটি কাজের উপর নির্ভরশীল। এখন আপনার কনকারেন্ট কাজও সিরিয়াল হয়ে গেছে।</p>
+<p>প্যারালালিসম এবং কনকারেন্সি একে অপরের সাথে ছেদ করতে পারে। যদি আপনি জানতে পারেন যে একজন সহকর্মী আপনার একটি কাজ শেষ না করা পর্যন্ত আটকে আছেন, তাহলে আপনি সম্ভবত আপনার সহকর্মীকে "আনব্লক" করার জন্য সেই কাজের উপর আপনার সমস্ত প্রচেষ্টা কেন্দ্রীভূত করবেন। আপনি এবং আপনার সহকর্মী আর প্যারালালি কাজ করতে পারছেন না, এবং আপনি আর আপনার নিজের কাজগুলিতে কনকারেন্টলি কাজ করতে পারছেন না।</p>
+<p>একই মৌলিক গতিবিদ্যা সফটওয়্যার এবং হার্ডওয়্যারের ক্ষেত্রেও প্রযোজ্য। একটি একক CPU কোর সহ একটি মেশিনে, CPU একবারে কেবল একটি অপারেশন করতে পারে, কিন্তু এটি এখনও কনকারেন্টলি কাজ করতে পারে। থ্রেড, প্রসেস এবং async-এর মতো টুল ব্যবহার করে, কম্পিউটার একটি কার্যকলাপকে থামিয়ে অন্যগুলিতে সুইচ করতে পারে এবং অবশেষে সেই প্রথম কার্যকলাপে আবার ফিরে আসতে পারে। একাধিক CPU কোর সহ একটি মেশিনে, এটি প্যারালালিও কাজ করতে পারে। একটি কোর একটি কাজ করতে পারে যখন অন্য একটি কোর একটি সম্পূর্ণ সম্পর্কহীন কাজ করে, এবং সেই অপারেশনগুলি আসলে একই সময়ে ঘটে।</p>
+<p>রাস্টে async নিয়ে কাজ করার সময়, আমরা সবসময় কনকারেন্সি নিয়ে কাজ করি। হার্ডওয়্যার, অপারেটিং সিস্টেম এবং আমরা যে async রানটাইম ব্যবহার করছি তার উপর নির্ভর করে (async রানটাইম সম্পর্কে শীঘ্রই আরও আলোচনা করা হবে), সেই কনকারেন্সি পর্দার আড়ালে প্যারালালিসমও ব্যবহার করতে পারে।</p>
+<p>এখন, চলুন রাস্টের অ্যাসিঙ্ক্রোনাস প্রোগ্রামিং আসলে কীভাবে কাজ করে তা নিয়ে আলোচনা করা যাক।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch16-04-extensible-concurrency-sync-and-send.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch17-01-futures-and-syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch16-04-extensible-concurrency-sync-and-send.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch17-01-futures-and-syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

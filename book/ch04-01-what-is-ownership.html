@@ -1,0 +1,514 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>মালিকানা (Ownership) কী? - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="মালিকানা-ownership-কী"><a class="header" href="#মালিকানা-ownership-কী">মালিকানা (Ownership) কী?</a></h2>
+<p><em>Ownership</em> হলো নিয়মের একটি সেট যা একটি রাস্ট প্রোগ্রাম কীভাবে মেমরি পরিচালনা (manage) করে তা নিয়ন্ত্রণ করে। সমস্ত প্রোগ্রামকে চলার সময় কম্পিউটারের মেমরি ব্যবহারের পদ্ধতি পরিচালনা করতে হয়। কিছু ভাষায় গার্বেজ কালেকশন (garbage collection) থাকে যা প্রোগ্রাম চলার সময় নিয়মিতভাবে অব্যবহৃত মেমরি খুঁজে বের করে; অন্য ভাষাগুলোতে, প্রোগ্রামারকে অবশ্যই স্পষ্টভাবে মেমরি বরাদ্দ (allocate) এবং মুক্ত (free) করতে হয়। রাস্ট তৃতীয় একটি পদ্ধতি ব্যবহার করে: মেমরি একটি মালিকানা সিস্টেমের (system of ownership) মাধ্যমে পরিচালিত হয়, যেখানে কম্পাইলার কিছু নিয়ম পরীক্ষা করে। যদি কোনো নিয়ম লঙ্ঘন করা হয়, প্রোগ্রামটি কম্পাইল হবে না। মালিকানার কোনো বৈশিষ্ট্যই আপনার প্রোগ্রাম চলার সময় এটিকে ধীর করবে না।</p>
+<p>যেহেতু অনেক প্রোগ্রামারের জন্য মালিকানা একটি নতুন ধারণা, তাই এতে অভ্যস্ত হতে কিছুটা সময় লাগে। ভালো খবর হলো, আপনি রাস্ট এবং মালিকানা সিস্টেমের নিয়মগুলোর সাথে যত বেশি অভিজ্ঞ হবেন, তত সহজে আপনি স্বাভাবিকভাবেই নিরাপদ এবং কার্যকর কোড তৈরি করতে পারবেন। চেষ্টা চালিয়ে যান!</p>
+<p>যখন আপনি মালিকানা বুঝতে পারবেন, তখন রাস্টকে স্বতন্ত্র করে তোলা বৈশিষ্ট্যগুলো বোঝার জন্য আপনার একটি শক্ত ভিত্তি তৈরি হবে। এই অধ্যায়ে, আপনি একটি খুব সাধারণ ডেটা স্ট্রাকচার—স্ট্রিং—এর উপর ভিত্তি করে কিছু উদাহরণের মাধ্যমে মালিকানা শিখবেন।</p>
+<blockquote>
+<h3 id="সটযাক-stack-এবং-হীপ-heap"><a class="header" href="#সটযাক-stack-এবং-হীপ-heap">স্ট্যাক (Stack) এবং হীপ (Heap)</a></h3>
+<p>অনেক প্রোগ্রামিং ভাষায় আপনাকে স্ট্যাক এবং হীপ নিয়ে খুব বেশি ভাবতে হয় না। কিন্তু রাস্টের মতো একটি সিস্টেমস প্রোগ্রামিং ভাষায়, কোনো মান (value) স্ট্যাকে নাকি হীপে আছে, তা ভাষার আচরণকে প্রভাবিত করে এবং আপনাকে কেন নির্দিষ্ট সিদ্ধান্ত নিতে হবে তা নির্ধারণ করে। এই অধ্যায়ের পরে মালিকানার কিছু অংশ স্ট্যাক এবং হীপের সাথে সম্পর্কিত করে বর্ণনা করা হবে, তাই প্রস্তুতির জন্য এখানে একটি সংক্ষিপ্ত ব্যাখ্যা দেওয়া হলো।</p>
+<p>স্ট্যাক এবং হীপ উভয়ই মেমরির অংশ যা আপনার কোড রানটাইমে ব্যবহার করতে পারে, তবে তাদের গঠন ভিন্ন। স্ট্যাক মানগুলোকে যে ক্রমে পায় সেই ক্রমে সংরক্ষণ করে এবং ঠিক তার বিপরীত ক্রমে মানগুলো সরিয়ে দেয়। একে <em>লাস্ট ইন, ফার্স্ট আউট</em> (last in, first out) বলা হয়। একটি প্লেটের স্ট্যাকের কথা ভাবুন: যখন আপনি আরও প্লেট যোগ করেন, তখন আপনি সেগুলোকে গাদার উপরে রাখেন, এবং যখন আপনার একটি প্লেট দরকার হয়, তখন আপনি উপর থেকে একটি তুলে নেন। মাঝখান থেকে বা নিচ থেকে প্লেট যোগ করা বা সরানো ঠিকভাবে কাজ করবে না! ডেটা যোগ করাকে বলা হয় <em>পুশিং অনটু দ্য স্ট্যাক</em> (pushing onto the stack), এবং ডেটা সরানোকে বলা হয় <em>পপিং অফ দ্য স্ট্যাক</em> (popping off the stack)। স্ট্যাকে সংরক্ষিত সমস্ত ডেটার একটি পরিচিত, নির্দিষ্ট আকার (known, fixed size) থাকতে হবে। কম্পাইলের সময় অজানা আকারের ডেটা বা যে ডেটার আকার পরিবর্তন হতে পারে, তা অবশ্যই হীপে সংরক্ষণ করতে হবে।</p>
+<p>হীপ কম গোছানো: যখন আপনি হীপে ডেটা রাখেন, তখন আপনি নির্দিষ্ট পরিমাণ জায়গা চান। মেমরি অ্যালোকেটর (memory allocator) হীপে একটি যথেষ্ট বড় খালি জায়গা খুঁজে বের করে, এটিকে ব্যবহৃত হিসেবে চিহ্নিত করে এবং একটি <em>পয়েন্টার</em> (pointer) ফেরত দেয়, যা সেই অবস্থানের ঠিকানা। এই প্রক্রিয়াটিকে <em>অ্যালোকেটিং অন দ্য হীপ</em> (allocating on the heap) বলা হয় এবং কখনও কখনও সংক্ষেপে শুধু <em>অ্যালোকেটিং</em> (allocating) বলা হয় (স্ট্যাকে মান push করাকে allocating হিসাবে বিবেচনা করা হয় না)। যেহেতু হীপের পয়েন্টারটির একটি পরিচিত, নির্দিষ্ট আকার রয়েছে, তাই আপনি পয়েন্টারটি স্ট্যাকে সংরক্ষণ করতে পারেন, কিন্তু যখন আপনার আসল ডেটা প্রয়োজন হবে, তখন আপনাকে সেই পয়েন্টারটি অনুসরণ করতে হবে। একটি রেস্তোরাঁয় বসার কথা ভাবুন। যখন আপনি প্রবেশ করেন, আপনি আপনার দলের সদস্য সংখ্যা বলেন, এবং হোস্ট এমন একটি খালি টেবিল খুঁজে বের করে যেখানে সবাই বসতে পারে এবং আপনাকে সেখানে নিয়ে যায়। যদি আপনার দলের কেউ দেরিতে আসে, তবে সে আপনাকে খুঁজে বের করার জন্য জিজ্ঞাসা করতে পারে যে আপনাকে কোথায় বসানো হয়েছে।</p>
+<p>স্ট্যাকে push করা হীপে allocate করার চেয়ে দ্রুত, কারণ অ্যালোকেটরকে নতুন ডেটা সংরক্ষণের জন্য জায়গা খুঁজতে হয় না; সেই অবস্থানটি সবসময় স্ট্যাকের শীর্ষে থাকে। তুলনামূলকভাবে, হীপে জায়গা allocate করতে বেশি কাজ করতে হয় কারণ অ্যালোকেটরকে প্রথমে ডেটা রাখার জন্য যথেষ্ট বড় একটি জায়গা খুঁজে বের করতে হবে এবং তারপরে পরবর্তী allocation-এর জন্য হিসাব রাখতে হবে।</p>
+<p>হীপে ডেটা অ্যাক্সেস করা সাধারণত স্ট্যাকের ডেটা অ্যাক্সেস করার চেয়ে ধীর, কারণ সেখানে পৌঁছানোর জন্য আপনাকে একটি পয়েন্টার অনুসরণ করতে হয়। আধুনিক প্রসেসরগুলো দ্রুত কাজ করে যদি তারা মেমরিতে কম লাফালাফি করে। উপমাটি চালিয়ে গেলে, একটি রেস্তোরাঁর সার্ভারের কথা ভাবুন जो অনেক টেবিল থেকে অর্ডার নিচ্ছে। পরবর্তী টেবিলে যাওয়ার আগে একটি টেবিলের সমস্ত অর্ডার নেওয়া সবচেয়ে কার্যকর। টেবিল A থেকে একটি অর্ডার নেওয়া, তারপর টেবিল B থেকে একটি অর্ডার, তারপর আবার A থেকে একটি, এবং তারপর আবার B থেকে একটি নেওয়া অনেক ধীর প্রক্রিয়া হবে। একইভাবে, একটি প্রসেসর সাধারণত তার কাজ ভালোভাবে করতে পারে যদি এটি কাছাকাছি থাকা ডেটার উপর কাজ করে (যেমনটি স্ট্যাকে থাকে) বরং দূরে থাকা ডেটার (যেমনটি হীপে থাকতে পারে) চেয়ে।</p>
+<p>যখন আপনার কোড একটি ফাংশন কল করে, তখন ফাংশনে পাস করা মানগুলো (সম্ভাব্যভাবে, হীপের ডেটার পয়েন্টার সহ) এবং ফাংশনের লোকাল ভ্যারিয়েবলগুলো স্ট্যাকে push করা হয়। ফাংশন শেষ হয়ে গেলে, সেই মানগুলো স্ট্যাক থেকে pop করা হয়।</p>
+<p>কোডের কোন অংশ হীপের কোন ডেটা ব্যবহার করছে তার হিসাব রাখা, হীপের ডুপ্লিকেট ডেটার পরিমাণ কমানো, এবং অব্যবহৃত ডেটা পরিষ্কার করা যাতে আপনার জায়গার অভাব না হয়—এই সমস্ত সমস্যার সমাধান মালিকানা করে। একবার আপনি মালিকানা বুঝে গেলে, আপনাকে স্ট্যাক এবং হীপ নিয়ে খুব বেশি ভাবতে হবে না, তবে মালিকানার মূল উদ্দেশ্য যে হীপের ডেটা পরিচালনা করা, তা জানলে এটি কেন এভাবে কাজ করে তা বুঝতে সাহায্য করতে পারে।</p>
+</blockquote>
+<h3 id="মালিকানার-নিযম-ownership-rules"><a class="header" href="#মালিকানার-নিযম-ownership-rules">মালিকানার নিয়ম (Ownership Rules)</a></h3>
+<p>প্রথমে, আসুন মালিকানার নিয়মগুলো দেখে নেওয়া যাক। উদাহরণগুলো নিয়ে কাজ করার সময় এই নিয়মগুলো মনে রাখবেন:</p>
+<ul>
+<li>রাস্টে প্রতিটি মানের (value) একজন <em>মালিক</em> (owner) থাকে।</li>
+<li>একবারে কেবল একজনই মালিক থাকতে পারে।</li>
+<li>যখন মালিক স্কোপের (scope) বাইরে চলে যায়, তখন মানটি ড্রপ (dropped) হয়ে যাবে।</li>
+</ul>
+<h3 id="ভযারিয়েবলের-সকোপ-variable-scope"><a class="header" href="#ভযারিয়েবলের-সকোপ-variable-scope">ভ্যারিয়েবলের স্কোপ (Variable Scope)</a></h3>
+<p>এখন যেহেতু আমরা রাস্টের প্রাথমিক সিনট্যাক্স পার করে এসেছি, আমরা উদাহরণগুলোতে আর সম্পূর্ণ <code>fn main() {</code> কোড অন্তর্ভুক্ত করব না। তাই, আপনি যদি অনুসরণ করেন, তবে নিশ্চিত করুন যে আপনি নিম্নলিখিত উদাহরণগুলো একটি <code>main</code> ফাংশনের ভিতরে নিজে থেকেই রেখেছেন। ফলস্বরূপ, আমাদের উদাহরণগুলো আরও সংক্ষিপ্ত হবে, যা আমাদের মূল বিবরণের উপর মনোযোগ দিতে সাহায্য করবে।</p>
+<p>মালিকানার প্রথম উদাহরণ হিসেবে, আমরা কিছু ভ্যারিয়েবলের <em>স্কোপ</em> (scope) দেখব। একটি স্কোপ হলো প্রোগ্রামের সেই পরিসর যার মধ্যে একটি আইটেম বৈধ (valid) থাকে। নিচের ভ্যারিয়েবলটি বিবেচনা করুন:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = "hello";
+<span class="boring">}</span></code></pre></pre>
+<p><code>s</code> ভ্যারিয়েবলটি একটি স্ট্রিং লিটারেলকে (string literal) নির্দেশ করে, যেখানে স্ট্রিংয়ের মানটি আমাদের প্রোগ্রামের টেক্সটে হার্ডকোড করা আছে। ভ্যারিয়েবলটি যে মুহূর্তে ঘোষণা করা হয়, সেই মুহূর্ত থেকে বর্তমান <em>স্কোপের</em> শেষ পর্যন্ত বৈধ থাকে। তালিকা ৪-১ এমন একটি প্রোগ্রাম দেখাচ্ছে যেখানে কমেন্টের মাধ্যমে <code>s</code> ভ্যারিয়েবলটি কোথায় বৈধ থাকবে তা চিহ্নিত করা হয়েছে।</p>
+<Listing number="4-1" caption="একটি ভ্যারিয়েবল এবং যে স্কোপে এটি বৈধ">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    {                      // s is not valid here, since it's not yet declared
+        let s = "hello";   // s is valid from this point forward
+
+        // do stuff with s
+    }                      // this scope is now over, and s is no longer valid
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>অন্য কথায়, এখানে দুটি গুরুত্বপূর্ণ সময় রয়েছে:</p>
+<ul>
+<li>যখন <code>s</code> স্কোপের <em>মধ্যে</em> আসে, তখন এটি বৈধ।</li>
+<li>এটি স্কোপের <em>বাইরে</em> না যাওয়া পর্যন্ত বৈধ থাকে।</li>
+</ul>
+<p>এই মুহূর্তে, স্কোপ এবং ভ্যারিয়েবল কখন বৈধ থাকে, তার মধ্যে সম্পর্কটি অন্যান্য প্রোগ্রামিং ভাষার মতোই। এখন আমরা <code>String</code> টাইপটি প্রবর্তন করে এই ধারণার উপর ভিত্তি করে আরও কিছু তৈরি করব।</p>
+<h3 id="string-টাইপ"><a class="header" href="#string-টাইপ"><code>String</code> টাইপ</a></h3>
+<p>মালিকানার নিয়মগুলো ব্যাখ্যা করার জন্য, আমাদের এমন একটি ডেটা টাইপ প্রয়োজন যা অধ্যায় ৩-এর "ডেটা টাইপস" বিভাগে আলোচনা করা টাইপগুলোর চেয়ে বেশি জটিল। পূর্বে আলোচনা করা টাইপগুলোর আকার নির্দিষ্ট থাকে, এগুলো স্ট্যাকে সংরক্ষণ করা যায় এবং স্কোপ শেষ হলে স্ট্যাক থেকে পপ করা যায়, এবং কোডের অন্য কোনো অংশে একই মান ভিন্ন স্কোপে ব্যবহার করার প্রয়োজন হলে দ্রুত ও সহজভাবে একটি নতুন, স্বাধীন ইনস্ট্যান্স তৈরি করা যায়। কিন্তু আমরা এমন ডেটা দেখতে চাই যা হীপে সংরক্ষিত হয় এবং রাস্ট কীভাবে সেই ডেটা পরিষ্কার করার সময় জানে তা অন্বেষণ করতে চাই, এবং <code>String</code> টাইপটি এর একটি চমৎকার উদাহরণ।</p>
+<p>আমরা <code>String</code>-এর সেই অংশগুলোর উপর মনোযোগ দেব যা মালিকানার সাথে সম্পর্কিত। এই দিকগুলো অন্যান্য জটিল ডেটা টাইপের ক্ষেত্রেও প্রযোজ্য, তা স্ট্যান্ডার্ড লাইব্রেরি দ্বারা সরবরাহ করা হোক বা আপনার নিজের তৈরি করা হোক। আমরা অধ্যায় ৮-এ <code>String</code> নিয়ে আরও গভীরভাবে আলোচনা করব।</p>
+<p>আমরা ইতিমধ্যে স্ট্রিং লিটারেল দেখেছি, যেখানে একটি স্ট্রিং মান আমাদের প্রোগ্রামে হার্ডকোড করা থাকে। স্ট্রিং লিটারেলগুলো সুবিধাজনক, কিন্তু আমরা যে সমস্ত পরিস্থিতিতে টেক্সট ব্যবহার করতে চাই তার জন্য উপযুক্ত নয়। একটি কারণ হলো সেগুলো অপরিবর্তনীয় (immutable)। আরেকটি কারণ হলো, কোড লেখার সময় প্রতিটি স্ট্রিংয়ের মান জানা সম্ভব নাও হতে পারে: উদাহরণস্বরূপ, যদি আমরা ব্যবহারকারীর ইনপুট নিয়ে তা সংরক্ষণ করতে চাই? এই ধরনের পরিস্থিতির জন্য, রাস্টের দ্বিতীয় একটি স্ট্রিং টাইপ আছে, <code>String</code>। এই টাইপটি হীপে বরাদ্দ করা ডেটা পরিচালনা করে এবং তাই কম্পাইলের সময় অজানা পরিমাণ টেক্সট সংরক্ষণ করতে সক্ষম। আপনি <code>from</code> ফাংশন ব্যবহার করে একটি স্ট্রিং লিটারেল থেকে <code>String</code> তৈরি করতে পারেন, যেমন:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = String::from("hello");
+<span class="boring">}</span></code></pre></pre>
+<p>ডাবল কোলন <code>::</code> অপারেটরটি আমাদের এই নির্দিষ্ট <code>from</code> ফাংশনটিকে <code>String</code> টাইপের অধীনে নেমস্পেস করতে দেয়, <code>string_from</code>-এর মতো কোনো নাম ব্যবহার করার পরিবর্তে। আমরা এই সিনট্যাক্স সম্পর্কে অধ্যায় ৫-এর "মেথড সিনট্যাক্স" বিভাগে এবং অধ্যায় ৭-এর "মডিউল ট্রি-তে একটি আইটেম রেফার করার জন্য পাথ" বিভাগে মডিউলসহ নেমস্পেসিং নিয়ে আলোচনা করার সময় আরও জানব।</p>
+<p>এই ধরনের স্ট্রিং পরিবর্তন (mutated) করা <em>যেতে পারে</em>:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+
+    s.push_str(", world!"); // push_str() appends a literal to a String
+
+    println!("{s}"); // this will print `hello, world!`
+<span class="boring">}</span></code></pre></pre>
+<p>তাহলে, এখানে পার্থক্যটা কী? কেন <code>String</code> পরিবর্তন করা যায় কিন্তু লিটারেলগুলো যায় না? পার্থক্যটি হলো এই দুটি টাইপ কীভাবে মেমরি নিয়ে কাজ করে।</p>
+<h3 id="মেমরি-এবং-অযালোকেশন-memory-and-allocation"><a class="header" href="#মেমরি-এবং-অযালোকেশন-memory-and-allocation">মেমরি এবং অ্যালোকেশন (Memory and Allocation)</a></h3>
+<p>একটি স্ট্রিং লিটারেলের ক্ষেত্রে, আমরা কম্পাইলের সময় বিষয়বস্তু জানি, তাই টেক্সটটি সরাসরি চূড়ান্ত এক্সিকিউটেবলে হার্ডকোড করা থাকে। এই কারণেই স্ট্রিং লিটারেলগুলো দ্রুত এবং কার্যকর। কিন্তু এই বৈশিষ্ট্যগুলো শুধুমাত্র স্ট্রিং লিটারেলের অপরিবর্তনীয়তা (immutability) থেকে আসে। দুর্ভাগ্যবশত, আমরা প্রতিটি টেক্সট, যার আকার কম্পাইলের সময় অজানা এবং প্রোগ্রাম চলার সময় আকার পরিবর্তন হতে পারে, তার জন্য বাইনারিতে মেমরির একটি অংশ রাখতে পারি না।</p>
+<p><code>String</code> টাইপের সাথে, একটি পরিবর্তনযোগ্য (mutable), প্রসারণযোগ্য (growable) টেক্সট সমর্থন করার জন্য, আমাদের হীপে একটি পরিমাণ মেমরি allocate করতে হবে, যা কম্পাইলের সময় অজানা, বিষয়বস্তু ধারণ করার জন্য। এর মানে হলো:</p>
+<ul>
+<li>রানটাইমে মেমরি অ্যালোকেটরের কাছ থেকে মেমরির জন্য অনুরোধ করতে হবে।</li>
+<li>আমাদের <code>String</code> নিয়ে কাজ শেষ হলে এই মেমরিটি অ্যালোকেটরকে ফেরত দেওয়ার একটি উপায় প্রয়োজন।</li>
+</ul>
+<p>প্রথম অংশটি আমরা করি: যখন আমরা <code>String::from</code> কল করি, তখন এর ইমপ্লিমেন্টেশন প্রয়োজনীয় মেমরির জন্য অনুরোধ করে। এটি প্রোগ্রামিং ভাষাগুলোতে প্রায় সর্বজনীন।</p>
+<p>তবে, দ্বিতীয় অংশটি ভিন্ন। <em>গার্বেজ কালেক্টর (GC)</em> সহ ভাষাগুলোতে, GC সেই মেমরির ট্র্যাক রাখে এবং পরিষ্কার করে যা আর ব্যবহৃত হচ্ছে না, এবং আমাদের এটি নিয়ে ভাবতে হবে না। GC ছাড়া বেশিরভাগ ভাষায়, কখন মেমরি আর ব্যবহৃত হচ্ছে না তা চিহ্নিত করা এবং এটি স্পষ্টভাবে মুক্ত (free) করার জন্য কোড কল করা আমাদের দায়িত্ব, ঠিক যেমনটি আমরা এটি অনুরোধ করার জন্য করেছিলাম। ঐতিহাসিকভাবে এটি সঠিকভাবে করা একটি কঠিন প্রোগ্রামিং সমস্যা। যদি আমরা ভুলে যাই, আমরা মেমরি নষ্ট করব। যদি আমরা এটি খুব তাড়াতাড়ি করি, আমাদের একটি অবৈধ ভ্যারিয়েবল থাকবে। যদি আমরা এটি দুবার করি, সেটাও একটি বাগ। আমাদের ঠিক একটি <code>allocate</code>-এর সাথে ঠিক একটি <code>free</code> যুক্ত করতে হবে।</p>
+<p>রাস্ট একটি ভিন্ন পথ নেয়: যে ভ্যারিয়েবলটির মালিকানায় মেমরিটি থাকে, সেটি স্কোপের বাইরে চলে গেলে মেমরি স্বয়ংক্রিয়ভাবে ফেরত দেওয়া হয়। এখানে তালিকা ৪-১ থেকে আমাদের স্কোপের উদাহরণের একটি সংস্করণ রয়েছে যা স্ট্রিং লিটারেলের পরিবর্তে একটি <code>String</code> ব্যবহার করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    {
+        let s = String::from("hello"); // s is valid from this point forward
+
+        // do stuff with s
+    }                                  // this scope is now over, and s is no
+                                       // longer valid
+<span class="boring">}</span></code></pre></pre>
+<p>আমাদের <code>String</code>-এর প্রয়োজনীয় মেমরি অ্যালোকেটরকে ফেরত দেওয়ার একটি স্বাভাবিক মুহূর্ত আছে: যখন <code>s</code> স্কোপের বাইরে চলে যায়। যখন একটি ভ্যারিয়েবল স্কোপের বাইরে যায়, রাস্ট আমাদের জন্য একটি বিশেষ ফাংশন কল করে। এই ফাংশনটিকে বলা হয় <a href="../std/ops/trait.Drop.html#tymethod.drop"><code>drop</code></a><!-- ignore -->, এবং এখানেই <code>String</code>-এর লেখক মেমরি ফেরত দেওয়ার কোড রাখতে পারেন। রাস্ট স্বয়ংক্রিয়ভাবে কার্লি ব্র্যাকেট বন্ধ করার সময় <code>drop</code> কল করে।</p>
+<blockquote>
+<p>দ্রষ্টব্য: C++ এ, একটি আইটেমের জীবনকালের শেষে রিসোর্স ডিঅ্যালোকেট করার এই প্যাটার্নটিকে কখনও কখনও <em>রিসোর্স অ্যাকুইজিশন ইজ ইনিশিয়ালাইজেশন (RAII)</em> বলা হয়। আপনি যদি RAII প্যাটার্ন ব্যবহার করে থাকেন তবে রাস্টের <code>drop</code> ফাংশনটি আপনার কাছে পরিচিত মনে হবে।</p>
+</blockquote>
+<p>এই প্যাটার্নটি রাস্ট কোড লেখার পদ্ধতিতে গভীর প্রভাব ফেলে। এটি এখন সহজ মনে হতে পারে, কিন্তু যখন আমরা হীপে বরাদ্দ করা ডেটা একাধিক ভ্যারিয়েবল ব্যবহার করতে চাই, তখন আরও জটিল পরিস্থিতিতে কোডের আচরণ অপ্রত্যাশিত হতে পারে। আসুন এখন সেই পরিস্থিতিগুলোর কয়েকটি অন্বেষণ করি।</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="ways-variables-and-data-interact-move"></a></p>
+<h4 id="move-এর-মাধযমে-ভযারিয়েবল-এবং-ডেটার-মিথসকরিযা"><a class="header" href="#move-এর-মাধযমে-ভযারিয়েবল-এবং-ডেটার-মিথসকরিযা">Move এর মাধ্যমে ভ্যারিয়েবল এবং ডেটার মিথস্ক্রিয়া</a></h4>
+<p>রাস্টে একাধিক ভ্যারিয়েবল একই ডেটার সাথে বিভিন্ন উপায়ে মিথস্ক্রিয়া করতে পারে। আসুন তালিকা ৪-২-এ একটি পূর্ণসংখ্যা (integer) ব্যবহার করে একটি উদাহরণ দেখি।</p>
+<Listing number="4-2" caption="`x` ভ্যারিয়েবলের পূর্ণসংখ্যার মান `y`-কে অ্যাসাইন করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 5;
+    let y = x;
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা সম্ভবত অনুমান করতে পারি এটি কী করছে: "<code>x</code>-এ <code>5</code> মানটি বাইন্ড কর; তারপর <code>x</code>-এর মানের একটি কপি তৈরি কর এবং এটি <code>y</code>-কে বাইন্ড কর।" এখন আমাদের দুটি ভ্যারিয়েবল আছে, <code>x</code> এবং <code>y</code>, এবং উভয়ই <code>5</code>-এর সমান। এটি আসলেই ঘটছে, কারণ পূর্ণসংখ্যাগুলো একটি জানা, নির্দিষ্ট আকারের সরল মান, এবং এই দুটি <code>5</code> মান স্ট্যাকে পুশ করা হয়।</p>
+<p>এখন <code>String</code> সংস্করণটি দেখা যাক:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("hello");
+    let s2 = s1;
+<span class="boring">}</span></code></pre></pre>
+<p>এটি দেখতে খুব একই রকম, তাই আমরা ধরে নিতে পারি যে এটি কাজ করার পদ্ধতিও একই হবে: অর্থাৎ, দ্বিতীয় লাইনটি <code>s1</code>-এর মানের একটি কপি তৈরি করবে এবং এটিকে <code>s2</code>-তে বাইন্ড করবে। কিন্তু এটি ঠিক যা ঘটে তা নয়।</p>
+<p><code>String</code>-এর আড়ালে কী ঘটছে তা দেখতে চিত্র ৪-১ দেখুন। একটি <code>String</code> তিনটি অংশ নিয়ে গঠিত, যা বাম দিকে দেখানো হয়েছে: স্ট্রিংয়ের বিষয়বস্তু ধারণকারী মেমরির একটি পয়েন্টার, একটি দৈর্ঘ্য (length) এবং একটি ধারণক্ষমতা (capacity)। এই ডেটার গ্রুপটি স্ট্যাকে সংরক্ষণ করা হয়। ডানদিকে হীপে থাকা মেমরি রয়েছে যা বিষয়বস্তু ধারণ করে।</p>
+<img alt="দুটি টেবিল: প্রথম টেবিলটি স্ট্যাকে s1 এর প্রতিনিধিত্ব করে, যা এর দৈর্ঘ্য (5), ধারণক্ষমতা (5), এবং দ্বিতীয় টেবিলের প্রথম মানের একটি পয়েন্টার নিয়ে গঠিত। দ্বিতীয় টেবিলটি হীপে স্ট্রিং ডেটার প্রতিনিধিত্ব করে, বাইট বাই বাইট।" src="img/trpl04-01.svg" class="center" style="width: 50%;" />
+<p><span class="caption">চিত্র ৪-১: <code>s1</code>-এ বাইন্ড করা <code>"hello"</code> মান ধারণকারী একটি <code>String</code>-এর মেমরিতে উপস্থাপনা</span></p>
+<p>দৈর্ঘ্য হলো <code>String</code>-এর বিষয়বস্তু বর্তমানে কত বাইট মেমরি ব্যবহার করছে। ধারণক্ষমতা হলো <code>String</code> অ্যালোকেটরের কাছ থেকে মোট কত বাইট মেমরি পেয়েছে। দৈর্ঘ্য এবং ধারণক্ষমতার মধ্যে পার্থক্য গুরুত্বপূর্ণ, কিন্তু এই প্রসঙ্গে নয়, তাই আপাতত, ধারণক্ষমতা উপেক্ষা করা ঠিক আছে।</p>
+<p>যখন আমরা <code>s1</code>-কে <code>s2</code>-তে অ্যাসাইন করি, তখন <code>String</code> ডেটা কপি করা হয়, যার অর্থ আমরা স্ট্যাকে থাকা পয়েন্টার, দৈর্ঘ্য এবং ধারণক্ষমতা কপি করি। আমরা পয়েন্টারটি যে হীপের ডেটাকে নির্দেশ করে তা কপি করি না। অন্য কথায়, মেমরিতে ডেটার উপস্থাপনা চিত্র ৪-২-এর মতো দেখায়।</p>
+<img alt="তিনটি টেবিল: s1 এবং s2 টেবিল স্ট্যাকে সেই স্ট্রিংগুলোকে প্রতিনিধিত্ব করছে, এবং উভয়ই হীপে একই স্ট্রিং ডেটাকে নির্দেশ করছে।" src="img/trpl04-02.svg" class="center" style="width: 50%;" />
+<p><span class="caption">চিত্র ৪-২: <code>s2</code> ভ্যারিয়েবলের মেমরিতে উপস্থাপনা যা <code>s1</code>-এর পয়েন্টার, দৈর্ঘ্য এবং ধারণক্ষমতার একটি কপি ধারণ করে</span></p>
+<p>উপস্থাপনাটি চিত্র ৪-৩ এর মতো দেখায় <em>না</em>, যা মেমরির চিত্র হতো যদি রাস্ট হীপের ডেটাও কপি করত। যদি রাস্ট এটি করত, তবে <code>s2 = s1</code> অপারেশনটি রানটাইম পারফরম্যান্সের দিক থেকে খুব ব্যয়বহুল হতে পারত যদি হীপের ডেটা বড় হতো।</p>
+<img alt="চারটি টেবিল: s1 এবং s2 এর জন্য স্ট্যাক ডেটা প্রতিনিধিত্বকারী দুটি টেবিল, এবং প্রতিটি হীপে তার নিজস্ব স্ট্রিং ডেটার কপিতে নির্দেশ করছে।" src="img/trpl04-03.svg" class="center" style="width: 50%;" />
+<p><span class="caption">চিত্র ৪-৩: <code>s2 = s1</code> কী করতে পারে তার আরেকটি সম্ভাবনা যদি রাস্ট হীপের ডেটাও কপি করত</span></p>
+<p>আগে, আমরা বলেছিলাম যে যখন একটি ভ্যারিয়েবল স্কোপের বাইরে চলে যায়, তখন রাস্ট স্বয়ংক্রিয়ভাবে <code>drop</code> ফাংশন কল করে এবং সেই ভ্যারিয়েবলের জন্য হীপ মেমরি পরিষ্কার করে। কিন্তু চিত্র ৪-২ দেখাচ্ছে যে উভয় ডেটা পয়েন্টার একই অবস্থানে নির্দেশ করছে। এটি একটি সমস্যা: যখন <code>s2</code> এবং <code>s1</code> স্কোপের বাইরে চলে যাবে, তারা উভয়ই একই মেমরি মুক্ত করার চেষ্টা করবে। এটি একটি <em>ডাবল ফ্রি</em> (double free) ত্রুটি হিসাবে পরিচিত এবং এটি আমরা আগে উল্লেখ করা মেমরি সুরক্ষা বাগগুলোর মধ্যে একটি। দুবার মেমরি মুক্ত করা মেমরি করাপশনের কারণ হতে পারে, যা সম্ভাব্যভাবে নিরাপত্তা দুর্বলতার কারণ হতে পারে।</p>
+<p>মেমরি সুরক্ষা নিশ্চিত করার জন্য, <code>let s2 = s1;</code> লাইনের পরে, রাস্ট <code>s1</code>-কে আর বৈধ বলে মনে করে না। অতএব, <code>s1</code> স্কোপের বাইরে চলে গেলে রাস্টকে কিছুই মুক্ত করতে হবে না। <code>s2</code> তৈরি হওয়ার পরে <code>s1</code> ব্যবহার করার চেষ্টা করলে কী হয় তা দেখুন; এটি কাজ করবে না:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1 = String::from("hello");
+    let s2 = s1;
+
+    println!("{s1}, world!");
+<span class="boring">}```
+</span>
+আপনি এই ধরনের একটি ত্রুটি পাবেন কারণ রাস্ট আপনাকে অবৈধ রেফারেন্স ব্যবহার করতে বাধা দেয়:
+
+```console
+$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0382]: borrow of moved value: `s1`
+ --&gt; src/main.rs:5:15
+  |
+2 |     let s1 = String::from("hello");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+3 |     let s2 = s1;
+  |              -- value moved here
+4 |
+5 |     println!("{s1}, world!");
+  |               ^^^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider cloning the value if the performance cost is acceptable
+  |
+3 |     let s2 = s1.clone();
+  |                ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error</code></pre>
+<p>আপনি যদি অন্য ভাষায় কাজ করার সময় <em>শ্যালো কপি</em> (shallow copy) এবং <em>ডিপ কপি</em> (deep copy) শব্দগুলো শুনে থাকেন, তবে ডেটা কপি না করে পয়েন্টার, দৈর্ঘ্য এবং ধারণক্ষমতা কপি করার ধারণাটি সম্ভবত একটি শ্যালো কপির মতো শোনাচ্ছে। কিন্তু যেহেতু রাস্ট প্রথম ভ্যারিয়েবলটিকেও অবৈধ করে দেয়, তাই একে শ্যালো কপি না বলে <em>মুভ</em> (move) বলা হয়। এই উদাহরণে, আমরা বলব যে <code>s1</code> কে <code>s2</code> তে <em>মুভ</em> করা হয়েছে। সুতরাং, যা আসলে ঘটে তা চিত্র ৪-৪-এ দেখানো হয়েছে।</p>
+<img alt="তিনটি টেবিল: s1 এবং s2 টেবিল স্ট্যাকে সেই স্ট্রিংগুলোকে প্রতিনিধিত্ব করছে, এবং উভয়ই হীপে একই স্ট্রিং ডেটাকে নির্দেশ করছে। টেবিল s1 ধূসর রঙের কারণ s1 আর বৈধ নয়; শুধুমাত্র s2 হীপ ডেটা অ্যাক্সেস করতে ব্যবহার করা যেতে পারে।" src="img/trpl04-04.svg" class="center" style="width: 50%;" />
+<p><span class="caption">চিত্র ৪-৪: <code>s1</code> অবৈধ হওয়ার পর মেমরিতে উপস্থাপনা</span></p>
+<p>এটি আমাদের সমস্যার সমাধান করে! শুধুমাত্র <code>s2</code> বৈধ হওয়ায়, যখন এটি স্কোপের বাইরে চলে যাবে তখন এটি একাই মেমরি মুক্ত করবে, এবং আমাদের কাজ শেষ।</p>
+<p>এছাড়াও, এর মধ্যে একটি ডিজাইন পছন্দ নিহিত রয়েছে: রাস্ট কখনও স্বয়ংক্রিয়ভাবে আপনার ডেটার "ডিপ" কপি তৈরি করবে না। অতএব, যেকোনো <em>স্বয়ংক্রিয়</em> কপি করাকে রানটাইম পারফরম্যান্সের দিক থেকে সাশ্রয়ী বলে ধরে নেওয়া যেতে পারে।</p>
+<h4 id="সকোপ-এবং-অযাসাইনমেনট-scope-and-assignment"><a class="header" href="#সকোপ-এবং-অযাসাইনমেনট-scope-and-assignment">স্কোপ এবং অ্যাসাইনমেন্ট (Scope and Assignment)</a></h4>
+<p>এর বিপরীতটিও স্কোপিং, মালিকানা এবং <code>drop</code> ফাংশনের মাধ্যমে মেমরি মুক্ত হওয়ার সম্পর্কের জন্য সত্য। যখন আপনি একটি বিদ্যমান ভ্যারিয়েবলে একটি সম্পূর্ণ নতুন মান অ্যাসাইন করেন, তখন রাস্ট <code>drop</code> কল করবে এবং মূল মানের মেমরি অবিলম্বে মুক্ত করবে। উদাহরণস্বরূপ, এই কোডটি বিবেচনা করুন:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut s = String::from("hello");
+    s = String::from("ahoy");
+
+    println!("{s}, world!");
+<span class="boring">}</span></code></pre></pre>
+<p>আমরা প্রথমে একটি ভ্যারিয়েবল <code>s</code> ঘোষণা করি এবং এটিকে <code>"hello"</code> মান সহ একটি <code>String</code>-এ বাইন্ড করি। তারপরে আমরা অবিলম্বে <code>"ahoy"</code> মান সহ একটি নতুন <code>String</code> তৈরি করি এবং এটিকে <code>s</code>-এ অ্যাসাইন করি। এই মুহূর্তে, হীপের মূল মানটিকে কিছুই নির্দেশ করছে না।</p>
+<img alt="একটি টেবিল s স্ট্যাকে স্ট্রিং মান প্রতিনিধিত্ব করছে, হীপে দ্বিতীয় স্ট্রিং ডেটার (ahoy) দিকে নির্দেশ করছে, যেখানে মূল স্ট্রিং ডেটা (hello) ধূসর রঙের কারণ এটি আর অ্যাক্সেস করা যায় না।" src="img/trpl04-05.svg" class="center" style="width: 50%;" />
+<p><span class="caption">চিত্র ৪-৫: মূল মানটি সম্পূর্ণরূপে প্রতিস্থাপিত হওয়ার পরে মেমরিতে উপস্থাপনা।</span></p>
+<p>মূল স্ট্রিংটি তাই অবিলম্বে স্কোপের বাইরে চলে যায়। রাস্ট এটির উপর <code>drop</code> ফাংশন চালাবে এবং এর মেমরি সঙ্গে সঙ্গে মুক্ত হয়ে যাবে। যখন আমরা শেষে মানটি প্রিন্ট করব, তখন এটি <code>"ahoy, world!"</code> হবে।</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="ways-variables-and-data-interact-clone"></a></p>
+<h4 id="clone-এর-মাধযমে-ভযারিয়েবল-এবং-ডেটার-মিথসকরিযা"><a class="header" href="#clone-এর-মাধযমে-ভযারিয়েবল-এবং-ডেটার-মিথসকরিযা">Clone এর মাধ্যমে ভ্যারিয়েবল এবং ডেটার মিথস্ক্রিয়া</a></h4>
+<p>যদি আমরা <code>String</code>-এর হীপ ডেটা গভীরভাবে কপি করতে <em>চাই</em>, শুধু স্ট্যাক ডেটা নয়, আমরা <code>clone</code> নামে একটি সাধারণ মেথড ব্যবহার করতে পারি। আমরা অধ্যায় ৫-এ মেথড সিনট্যাক্স নিয়ে আলোচনা করব, কিন্তু যেহেতু মেথডগুলো অনেক প্রোগ্রামিং ভাষায় একটি সাধারণ বৈশিষ্ট্য, আপনি সম্ভবত সেগুলি আগে দেখেছেন।</p>
+<p>এখানে <code>clone</code> মেথডের একটি উদাহরণ দেওয়া হল:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s1 = String::from("hello");
+    let s2 = s1.clone();
+
+    println!("s1 = {s1}, s2 = {s2}");
+<span class="boring">}</span></code></pre></pre>
+<p>এটি ঠিকঠাক কাজ করে এবং স্পষ্টভাবে চিত্র ৪-৩-এ দেখানো আচরণ তৈরি করে, যেখানে হীপ ডেটা <em>সত্যিই</em> কপি করা হয়।</p>
+<p>যখন আপনি <code>clone</code>-এর একটি কল দেখেন, আপনি জানেন যে কিছু নির্বিচারে কোড কার্যকর করা হচ্ছে এবং সেই কোড ব্যয়বহুল হতে পারে। এটি একটি চাক্ষুষ সূচক যে কিছু ভিন্ন ঘটছে।</p>
+<h4 id="শুধুমাতর-সটযাক-ডেটা-কপি-copy"><a class="header" href="#শুধুমাতর-সটযাক-ডেটা-কপি-copy">শুধুমাত্র-স্ট্যাক ডেটা: কপি (Copy)</a></h4>
+<p>আরেকটি জটিলতা আছে যা আমরা এখনো আলোচনা করিনি। পূর্ণসংখ্যা ব্যবহার করা এই কোডটি—যার একটি অংশ তালিকা ৪-২-এ দেখানো হয়েছিল—কাজ করে এবং বৈধ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 5;
+    let y = x;
+
+    println!("x = {x}, y = {y}");
+<span class="boring">}</span></code></pre></pre>
+<p>কিন্তু এই কোডটি আমরা যা শিখেছি তার সাথে সাংঘর্ষিক বলে মনে হচ্ছে: আমাদের <code>clone</code>-এর কোনো কল নেই, কিন্তু <code>x</code> এখনও বৈধ এবং <code>y</code>-তে মুভ করা হয়নি।</p>
+<p>এর কারণ হলো, পূর্ণসংখ্যার মতো টাইপগুলো যাদের কম্পাইলের সময় একটি নির্দিষ্ট আকার থাকে, সেগুলো সম্পূর্ণরূপে স্ট্যাকে সংরক্ষিত হয়, তাই আসল মানগুলোর কপি তৈরি করা দ্রুত হয়। এর মানে হলো, <code>y</code> ভ্যারিয়েবল তৈরি করার পরে <code>x</code>-কে বৈধ থাকা থেকে বিরত রাখার কোনো কারণ নেই। অন্য কথায়, এখানে ডিপ এবং শ্যালো কপি করার মধ্যে কোনো পার্থক্য নেই, তাই <code>clone</code> কল করা স্বাভাবিক শ্যালো কপি করার থেকে ভিন্ন কিছু করত না, এবং আমরা এটি বাদ দিতে পারি।</p>
+<p>রাস্টের একটি বিশেষ টীকা আছে যার নাম <code>Copy</code> ট্রেইট (trait) যা আমরা স্ট্যাকে সংরক্ষিত টাইপগুলোর উপর রাখতে পারি, যেমন পূর্ণসংখ্যাগুলো (আমরা অধ্যায় ১০-এ ট্রেইট সম্পর্কে আরও কথা বলব)। যদি একটি টাইপ <code>Copy</code> ট্রেইট ইমপ্লিমেন্ট করে, তবে এটি ব্যবহারকারী ভ্যারিয়েবলগুলো মুভ হয় না, বরং সহজভাবে কপি করা হয়, যা তাদের অন্য ভ্যারিয়েবলে অ্যাসাইনমেন্টের পরেও বৈধ রাখে।</p>
+<p>রাস্ট আমাদের কোনো টাইপকে <code>Copy</code> দিয়ে টীকা দিতে দেবে না যদি সেই টাইপ বা এর কোনো অংশ, <code>Drop</code> ট্রেইট ইমপ্লিমেন্ট করে থাকে। যদি মানটি স্কোপের বাইরে চলে গেলে টাইপটির জন্য বিশেষ কিছু ঘটার প্রয়োজন হয় এবং আমরা সেই টাইপে <code>Copy</code> টীকা যোগ করি, আমরা একটি কম্পাইল-টাইম ত্রুটি পাব। আপনার টাইপে <code>Copy</code> ট্রেইট ইমপ্লিমেন্ট করার জন্য <code>Copy</code> টীকা কীভাবে যোগ করবেন তা জানতে, পরিশিষ্ট C-এর "ডিরাইভেবল ট্রেইটস" দেখুন।</p>
+<p>তাহলে, কোন টাইপগুলো <code>Copy</code> ট্রেইট ইমপ্লিমেন্ট করে? আপনি নিশ্চিত হতে প্রদত্ত টাইপের ডকুমেন্টেশন দেখতে পারেন, কিন্তু একটি সাধারণ নিয়ম হিসাবে, যেকোনো সরল স্কেলার মানের গ্রুপ <code>Copy</code> ইমপ্লিমেন্ট করতে পারে, এবং যা কিছু অ্যালোকেশন প্রয়োজন বা কোনো ধরনের রিসোর্স, তা <code>Copy</code> ইমপ্লিমেন্ট করতে পারে না। এখানে কিছু টাইপ রয়েছে যা <code>Copy</code> ইমপ্লিমেন্ট করে:</p>
+<ul>
+<li>সমস্ত পূর্ণসংখ্যার টাইপ, যেমন <code>u32</code>।</li>
+<li>বুলিয়ান টাইপ, <code>bool</code>, <code>true</code> এবং <code>false</code> মান সহ।</li>
+<li>সমস্ত ফ্লোটিং-পয়েন্ট টাইপ, যেমন <code>f64</code>।</li>
+<li>ক্যারেক্টার টাইপ, <code>char</code>।</li>
+<li>টাপল (Tuples), যদি তারা শুধুমাত্র এমন টাইপ ধারণ করে যা <code>Copy</code> ইমপ্লিমেন্ট করে। উদাহরণস্বরূপ, <code>(i32, i32)</code> <code>Copy</code> ইমপ্লিমেন্ট করে, কিন্তু <code>(i32, String)</code> করে না।</li>
+</ul>
+<h3 id="মালিকানা-এবং-ফাংশন-ownership-and-functions"><a class="header" href="#মালিকানা-এবং-ফাংশন-ownership-and-functions">মালিকানা এবং ফাংশন (Ownership and Functions)</a></h3>
+<p>একটি ফাংশনে মান পাস করার পদ্ধতি একটি ভ্যারিয়েবলে মান অ্যাসাইন করার মতোই। একটি ফাংশনে একটি ভ্যারিয়েবল পাস করা মুভ বা কপি করবে, ঠিক যেমন অ্যাসাইনমেন্ট করে। তালিকা ৪-৩-এ কিছু টীকাসহ একটি উদাহরণ রয়েছে যা দেখায় কোথায় ভ্যারিয়েবলগুলো স্কোপের ভিতরে এবং বাইরে যায়।</p>
+<Listing number="4-3" file-name="src/main.rs" caption="মালিকানা এবং স্কোপসহ ফাংশনের টীকা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s = String::from("hello");  // s comes into scope
+
+    takes_ownership(s);             // s's value moves into the function...
+                                    // ... and so is no longer valid here
+
+    let x = 5;                      // x comes into scope
+
+    makes_copy(x);                  // Because i32 implements the Copy trait,
+                                    // x does NOT move into the function,
+                                    // so it's okay to use x afterward.
+
+} // Here, x goes out of scope, then s. However, because s's value was moved,
+  // nothing special happens.
+
+fn takes_ownership(some_string: String) { // some_string comes into scope
+    println!("{some_string}");
+} // Here, some_string goes out of scope and `drop` is called. The backing
+  // memory is freed.
+
+fn makes_copy(some_integer: i32) { // some_integer comes into scope
+    println!("{some_integer}");
+} // Here, some_integer goes out of scope. Nothing special happens.</code></pre></pre>
+</Listing>
+<p>যদি আমরা <code>takes_ownership</code> কল করার পরে <code>s</code> ব্যবহার করার চেষ্টা করি, রাস্ট একটি কম্পাইল-টাইম ত্রুটি দেবে। এই স্ট্যাটিক চেকগুলো আমাদের ভুল থেকে রক্ষা করে। <code>main</code>-এ কোড যোগ করে <code>s</code> এবং <code>x</code> ব্যবহার করে দেখুন কোথায় আপনি সেগুলি ব্যবহার করতে পারেন এবং কোথায় মালিকানার নিয়ম আপনাকে তা করতে বাধা দেয়।</p>
+<h3 id="রিটারন-ভযালু-এবং-সকোপ-return-values-and-scope"><a class="header" href="#রিটারন-ভযালু-এবং-সকোপ-return-values-and-scope">রিটার্ন ভ্যালু এবং স্কোপ (Return Values and Scope)</a></h3>
+<p>মান ফেরত দেওয়াও মালিকানা হস্তান্তর করতে পারে। তালিকা ৪-৪ এমন একটি ফাংশনের উদাহরণ দেখাচ্ছে যা কিছু মান ফেরত দেয়, তালিকা ৪-৩-এর মতো একই টীকাসহ।</p>
+<Listing number="4-4" file-name="src/main.rs" caption="রিটার্ন ভ্যালুর মালিকানা হস্তান্তর">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s1 = gives_ownership();        // gives_ownership moves its return
+                                       // value into s1
+
+    let s2 = String::from("hello");    // s2 comes into scope
+
+    let s3 = takes_and_gives_back(s2); // s2 is moved into
+                                       // takes_and_gives_back, which also
+                                       // moves its return value into s3
+} // Here, s3 goes out of scope and is dropped. s2 was moved, so nothing
+  // happens. s1 goes out of scope and is dropped.
+
+fn gives_ownership() -&gt; String {       // gives_ownership will move its
+                                       // return value into the function
+                                       // that calls it
+
+    let some_string = String::from("yours"); // some_string comes into scope
+
+    some_string                        // some_string is returned and
+                                       // moves out to the calling
+                                       // function
+}
+
+// This function takes a String and returns a String.
+fn takes_and_gives_back(a_string: String) -&gt; String {
+    // a_string comes into
+    // scope
+
+    a_string  // a_string is returned and moves out to the calling function
+}</code></pre></pre>
+</Listing>
+<p>একটি ভ্যারিয়েবলের মালিকানা প্রতিবার একই প্যাটার্ন অনুসরণ করে: অন্য একটি ভ্যারিয়েবলে একটি মান অ্যাসাইন করা এটিকে মুভ করে। যখন একটি ভ্যারিয়েবল যা হীপে ডেটা অন্তর্ভুক্ত করে স্কোপের বাইরে যায়, তখন মানটি <code>drop</code> দ্বারা পরিষ্কার করা হবে যদি না ডেটার মালিকানা অন্য ভ্যারিয়েবলে মুভ করা হয়ে থাকে।</p>
+<p>যদিও এটি কাজ করে, প্রতিটি ফাংশনের সাথে মালিকানা নেওয়া এবং তারপর মালিকানা ফেরত দেওয়া কিছুটা ক্লান্তিকর। কী হবে যদি আমরা একটি ফাংশনকে একটি মান ব্যবহার করতে দিতে চাই কিন্তু মালিকানা নিতে না চাই? এটা বেশ বিরক্তিকর যে আমরা যা কিছু পাস করি তা আমাদের আবার ফেরত পাঠাতে হবে যদি আমরা এটি আবার ব্যবহার করতে চাই, ফাংশনের বডি থেকে প্রাপ্ত কোনো ডেটা ছাড়াও যা আমরা ফেরত দিতে চাই।</p>
+<p>রাস্ট আমাদের একটি টাপল (tuple) ব্যবহার করে একাধিক মান ফেরত দেওয়ার অনুমতি দেয়, যেমন তালিকা ৪-৫-এ দেখানো হয়েছে।</p>
+<Listing number="4-5" file-name="src/main.rs" caption="প্যারামিটারের মালিকানা ফেরত দেওয়া">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s1 = String::from("hello");
+
+    let (s2, len) = calculate_length(s1);
+
+    println!("The length of '{s2}' is {len}.");
+}
+
+fn calculate_length(s: String) -&gt; (String, usize) {
+    let length = s.len(); // len() returns the length of a String
+
+    (s, length)
+}</code></pre></pre>
+</Listing>
+<p>কিন্তু এটি একটি সাধারণ ধারণার জন্য অনেক বেশি আনুষ্ঠানিকতা এবং অনেক কাজ। ভাগ্যক্রমে, রাস্টের একটি বৈশিষ্ট্য আছে যা মালিকানা হস্তান্তর না করে একটি মান ব্যবহার করার জন্য, যার নাম <em>রেফারেন্স</em> (references)।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-00-understanding-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Structs ব্যবহার করে একটি উদাহরণ প্রোগ্রাম - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="struct-বযবহার-করে-একটি-উদাহরণ-পরোগরাম"><a class="header" href="#struct-বযবহার-করে-একটি-উদাহরণ-পরোগরাম"><code>struct</code> ব্যবহার করে একটি উদাহরণ প্রোগ্রাম</a></h2>
+<p>আমরা কখন <code>struct</code> ব্যবহার করতে চাই তা বোঝার জন্য, আসুন একটি প্রোগ্রাম লিখি যা একটি আয়তক্ষেত্রের ক্ষেত্রফল গণনা করে। আমরা প্রথমে একক ভ্যারিয়েবল ব্যবহার করে শুরু করব, এবং তারপর প্রোগ্রামটিকে রিফ্যাক্টর (refactor) করে <code>struct</code> ব্যবহার করব।</p>
+<p>আসুন কার্গো (Cargo) দিয়ে <em>rectangles</em> নামে একটি নতুন বাইনারি প্রজেক্ট তৈরি করি যা পিক্সেল এককে একটি আয়তক্ষেত্রের প্রস্থ এবং উচ্চতা নিয়ে আয়তক্ষেত্রটির ক্ষেত্রফল গণনা করবে। তালিকা ৫-৮ আমাদের প্রজেক্টের <em>src/main.rs</em> ফাইলে ঠিক এটি করার একটি সংক্ষিপ্ত প্রোগ্রাম দেখাচ্ছে।</p>
+<Listing number="5-8" file-name="src/main.rs" caption="আলাদা প্রস্থ এবং উচ্চতা ভ্যারিয়েবল দ্বারা নির্দিষ্ট একটি আয়তক্ষেত্রের ক্ষেত্রফল গণনা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let width1 = 30;
+    let height1 = 50;
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(width1, height1)
+    );
+}
+
+fn area(width: u32, height: u32) -&gt; u32 {
+    width * height
+}</code></pre></pre>
+</Listing>
+<p>এখন, <code>cargo run</code> ব্যবহার করে এই প্রোগ্রামটি চালান:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.42s
+     Running `target/debug/rectangles`
+The area of the rectangle is 1500 square pixels.
+</code></pre>
+<p>এই কোডটি প্রতিটি ডাইমেনশন (dimension) দিয়ে <code>area</code> ফাংশনটিকে কল করে আয়তক্ষেত্রের ক্ষেত্রফল বের করতে সফল হয়েছে, কিন্তু এই কোডটিকে আরও স্পষ্ট এবং পাঠযোগ্য করার জন্য আমরা আরও অনেক কিছু করতে পারি।</p>
+<p>এই কোডের সমস্যাটি <code>area</code> ফাংশনের সিগনেচারে স্পষ্ট:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span><span class="boring">    let width1 = 30;
+</span><span class="boring">    let height1 = 50;
+</span><span class="boring">
+</span><span class="boring">    println!(
+</span><span class="boring">        "The area of the rectangle is {} square pixels.",
+</span><span class="boring">        area(width1, height1)
+</span><span class="boring">    );
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn area(width: u32, height: u32) -&gt; u32 {
+<span class="boring">    width * height
+</span><span class="boring">}</span></code></pre>
+<p><code>area</code> ফাংশনটির কাজ একটি আয়তক্ষেত্রের ক্ষেত্রফল গণনা করা, কিন্তু আমরা যে ফাংশনটি লিখেছি তার দুটি প্যারামিটার রয়েছে, এবং আমাদের প্রোগ্রামের কোথাও এটা স্পষ্ট নয় যে এই প্যারামিটারগুলো সম্পর্কিত। প্রস্থ এবং উচ্চতাকে একসাথে গ্রুপ করা আরও পাঠযোগ্য এবং পরিচালনাযোগ্য হবে। অধ্যায় ৩ এর <a href="ch03-02-data-types.html#the-tuple-type">"টাপল টাইপ"</a><!-- ignore --> বিভাগে আমরা এটি করার একটি উপায় নিয়ে ইতিমধ্যে আলোচনা করেছি: টাপল (tuples) ব্যবহার করে।</p>
+<h3 id="টাপল-দিযে-রিফযাকটরিং-refactoring-with-tuples"><a class="header" href="#টাপল-দিযে-রিফযাকটরিং-refactoring-with-tuples">টাপল দিয়ে রিফ্যাক্টরিং (Refactoring with Tuples)</a></h3>
+<p>তালিকা ৫-৯ আমাদের প্রোগ্রামের আরেকটি সংস্করণ দেখাচ্ছে যা টাপল ব্যবহার করে।</p>
+<Listing number="5-9" file-name="src/main.rs" caption="একটি টাপল দিয়ে আয়তক্ষেত্রের প্রস্থ এবং উচ্চতা নির্দিষ্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let rect1 = (30, 50);
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(rect1)
+    );
+}
+
+fn area(dimensions: (u32, u32)) -&gt; u32 {
+    dimensions.0 * dimensions.1
+}</code></pre></pre>
+</Listing>
+<p>একদিক থেকে, এই প্রোগ্রামটি ভালো। টাপল আমাদের কিছুটা গঠন যোগ করতে দেয়, এবং আমরা এখন মাত্র একটি আর্গুমেন্ট পাস করছি। কিন্তু অন্যদিক থেকে, এই সংস্করণটি কম স্পষ্ট: টাপল তার উপাদানগুলোর নাম দেয় না, তাই আমাদের টাপলের অংশগুলোতে ইনডেক্স ব্যবহার করতে হয়, যা আমাদের গণনাকে কম স্পষ্ট করে তোলে।</p>
+<p>ক্ষেত্রফল গণনার জন্য প্রস্থ এবং উচ্চতা গুলিয়ে ফেললে কোনো সমস্যা হবে না, কিন্তু যদি আমরা স্ক্রিনে আয়তক্ষেত্রটি আঁকতে চাই, তবে এটি গুরুত্বপূর্ণ হবে! আমাদের মনে রাখতে হবে যে <code>width</code> হলো টাপল ইনডেক্স <code>0</code> এবং <code>height</code> হলো টাপল ইনডেক্স <code>1</code>। অন্য কেউ যদি আমাদের কোড ব্যবহার করে, তবে তার জন্য এটি বোঝা এবং মনে রাখা আরও কঠিন হবে। যেহেতু আমরা আমাদের কোডে ডেটার অর্থ প্রকাশ করিনি, তাই এখন ভুল হওয়ার সম্ভাবনা বেড়ে গেছে।</p>
+<h3 id="struct-দিযে-রিফযাকটরিং-আরও-অরথ-যোগ-করা"><a class="header" href="#struct-দিযে-রিফযাকটরিং-আরও-অরথ-যোগ-করা"><code>struct</code> দিয়ে রিফ্যাক্টরিং: আরও অর্থ যোগ করা</a></h3>
+<p>আমরা ডেটাকে লেবেল দিয়ে অর্থ যোগ করার জন্য <code>struct</code> ব্যবহার করি। আমরা যে টাপলটি ব্যবহার করছি সেটিকে একটি <code>struct</code>-এ রূপান্তর করতে পারি, যেখানে পুরোটার জন্য একটি নাম এবং অংশগুলোর জন্যও নাম থাকবে, যেমনটি তালিকা ৫-১০-এ দেখানো হয়েছে।</p>
+<Listing number="5-10" file-name="src/main.rs" caption="একটি `Rectangle` struct ডিফাইন করা">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(&amp;rect1)
+    );
+}
+
+fn area(rectangle: &amp;Rectangle) -&gt; u32 {
+    rectangle.width * rectangle.height
+}</code></pre></pre>
+</Listing>
+<p>এখানে, আমরা একটি <code>struct</code> ডিফাইন করেছি এবং এর নাম দিয়েছি <code>Rectangle</code>। কার্লি ব্র্যাকেটের ভিতরে, আমরা ফিল্ডগুলোকে <code>width</code> এবং <code>height</code> হিসাবে ডিফাইন করেছি, যার উভয়েরই টাইপ <code>u32</code>। তারপর, <code>main</code> ফাংশনে, আমরা <code>Rectangle</code>-এর একটি নির্দিষ্ট ইনস্ট্যান্স তৈরি করেছি যার প্রস্থ <code>30</code> এবং উচ্চতা <code>50</code>।</p>
+<p>আমাদের <code>area</code> ফাংশনটি এখন একটি প্যারামিটার দিয়ে ডিফাইন করা হয়েছে, যার নাম আমরা দিয়েছি <code>rectangle</code>, এবং এর টাইপ হলো একটি <code>Rectangle</code> <code>struct</code> ইনস্ট্যান্সের একটি অপরিবর্তনীয় ধার (immutable borrow)। অধ্যায় ৪-এ যেমন উল্লেখ করা হয়েছে, আমরা <code>struct</code>-টির মালিকানা নেওয়ার পরিবর্তে এটি ধার করতে চাই। এইভাবে, <code>main</code> তার মালিকানা ধরে রাখে এবং <code>rect1</code> ব্যবহার করা চালিয়ে যেতে পারে, যে কারণে আমরা ফাংশন সিগনেচারে এবং যেখানে ফাংশনটি কল করি সেখানে <code>&amp;</code> ব্যবহার করি।</p>
+<p><code>area</code> ফাংশনটি <code>Rectangle</code> ইনস্ট্যান্সের <code>width</code> এবং <code>height</code> ফিল্ডগুলো অ্যাক্সেস করে (উল্লেখ্য যে একটি ধার করা <code>struct</code> ইনস্ট্যান্সের ফিল্ড অ্যাক্সেস করলে ফিল্ডের মানগুলো মুভ (move) হয় না, যে কারণে আপনি প্রায়শই <code>struct</code>-এর ধার দেখতে পাবেন)। আমাদের <code>area</code>-এর ফাংশন সিগনেচার এখন ঠিক তাই বলছে যা আমরা বলতে চাই: <code>Rectangle</code>-এর ক্ষেত্রফল গণনা করুন, এর <code>width</code> এবং <code>height</code> ফিল্ড ব্যবহার করে। এটি প্রকাশ করে যে প্রস্থ এবং উচ্চতা একে অপরের সাথে সম্পর্কিত, এবং এটি টাপল ইনডেক্স মান <code>0</code> এবং <code>1</code> ব্যবহার করার পরিবর্তে মানগুলোকে বর্ণনামূলক নাম দেয়। এটি স্পষ্টতার দিক থেকে একটি বড় সুবিধা।</p>
+<h3 id="ডিরাইভড-টরেইট-দিযে-দরকারী-কারযকারিতা-যোগ-করা-adding-useful-functionality-with-derived-traits"><a class="header" href="#ডিরাইভড-টরেইট-দিযে-দরকারী-কারযকারিতা-যোগ-করা-adding-useful-functionality-with-derived-traits">ডিরাইভড ট্রেইট দিয়ে দরকারী কার্যকারিতা যোগ করা (Adding Useful Functionality with Derived Traits)</a></h3>
+<p>আমাদের প্রোগ্রাম ডিবাগ করার সময় <code>Rectangle</code>-এর একটি ইনস্ট্যান্স প্রিন্ট করতে পারা এবং এর সমস্ত ফিল্ডের মান দেখতে পারা দরকারী হবে। তালিকা ৫-১১ পূর্ববর্তী অধ্যায়গুলোতে আমরা যেভাবে <a href="../std/macro.println.html"><code>println!</code> ম্যাক্রো</a><!-- ignore --> ব্যবহার করেছি, সেভাবে ব্যবহার করার চেষ্টা করে। তবে এটি কাজ করবে না।</p>
+<Listing number="5-11" file-name="src/main.rs" caption="একটি `Rectangle` ইনস্ট্যান্স প্রিন্ট করার প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {rect1}");
+}</code></pre>
+</Listing>
+<p>যখন আমরা এই কোডটি কম্পাইল করি, আমরা এই মূল বার্তা সহ একটি এরর পাই:</p>
+<pre><code class="language-text">error[E0277]: `Rectangle` doesn't implement `std::fmt::Display`
+</code></pre>
+<p><code>println!</code> ম্যাক্রো অনেক ধরণের ফরম্যাটিং করতে পারে, এবং ডিফল্টভাবে, কার্লি ব্র্যাকেটগুলো <code>println!</code>-কে <code>Display</code> নামে পরিচিত একটি ফরম্যাটিং ব্যবহার করতে বলে: যা সরাসরি এন্ড-ইউজারের ব্যবহারের জন্য আউটপুট। আমরা এখন পর্যন্ত যে প্রিমিটিভ টাইপগুলো দেখেছি সেগুলো ডিফল্টভাবে <code>Display</code> ইমপ্লিমেন্ট করে কারণ একজন ব্যবহারকারীকে <code>1</code> বা অন্য কোনো প্রিমিটিভ টাইপ দেখানোর একটিই উপায় আছে। কিন্তু <code>struct</code>-এর ক্ষেত্রে, <code>println!</code> আউটপুট কীভাবে ফরম্যাট করবে তা কম স্পষ্ট কারণ আরও অনেক প্রদর্শনের সম্ভাবনা রয়েছে: আপনি কি কমা চান কি না? আপনি কি কার্লি ব্র্যাকেট প্রিন্ট করতে চান? সমস্ত ফিল্ড কি দেখানো উচিত? এই অস্পষ্টতার কারণে, রাস্ট অনুমান করার চেষ্টা করে না আমরা কী চাই, এবং <code>struct</code>-এর <code>println!</code> এবং <code>{}</code> প্লেসহোল্ডারের সাথে ব্যবহারের জন্য <code>Display</code>-এর কোনো সরবরাহ করা ইমপ্লিমেন্টেশন নেই।</p>
+<p>যদি আমরা এররগুলো পড়া চালিয়ে যাই, আমরা এই সহায়ক নোটটি খুঁজে পাব:</p>
+<pre><code class="language-text">   = help: the trait `std::fmt::Display` is not implemented for `Rectangle`
+   = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead```
+
+চলুন চেষ্টা করি! `println!` ম্যাক্রো কলটি এখন `println!("rect1 is {rect1:?}");`-এর মতো দেখাবে। কার্লি ব্র্যাকেটের ভিতরে স্পেসিফায়ার `:?` রাখলে `println!`-কে বলা হয় আমরা `Debug` নামে একটি আউটপুট ফরম্যাট ব্যবহার করতে চাই। `Debug` ট্রেইটটি আমাদের `struct`-কে এমনভাবে প্রিন্ট করতে সক্ষম করে যা ডেভেলপারদের জন্য দরকারী যাতে আমরা আমাদের কোড ডিবাগ করার সময় এর মান দেখতে পারি।
+
+এই পরিবর্তন সহ কোডটি কম্পাইল করুন। ধুর! আমরা এখনও একটি এরর পাচ্ছি:
+
+```text
+error[E0277]: `Rectangle` doesn't implement `Debug````
+
+কিন্তু আবারও, কম্পাইলার আমাদের একটি সহায়ক নোট দেয়:
+
+```text
+   = help: the trait `Debug` is not implemented for `Rectangle`
+   = note: add `#[derive(Debug)]` to `Rectangle` or manually `impl Debug for Rectangle`
+</code></pre>
+<p>রাস্ট ডিবাগিং তথ্য প্রিন্ট করার জন্য কার্যকারিতা অন্তর্ভুক্ত করে, কিন্তু আমাদের <code>struct</code>-এর জন্য সেই কার্যকারিতা উপলব্ধ করতে স্পষ্টভাবে অপ্ট-ইন করতে হবে। এটি করার জন্য, আমরা <code>struct</code> সংজ্ঞার ঠিক আগে <code>#[derive(Debug)]</code> অ্যাট্রিবিউটটি যোগ করি, যেমনটি তালিকা ৫-১২-এ দেখানো হয়েছে।</p>
+<Listing number="5-12" file-name="src/main.rs" caption="`Debug` ট্রেইট ডিরাইভ করার জন্য অ্যাট্রিবিউট যোগ করা এবং ডিবাগ ফরম্যাটিং ব্যবহার করে `Rectangle` ইনস্ট্যান্স প্রিন্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {rect1:?}");
+}</code></pre></pre>
+</Listing>
+<p>এখন যখন আমরা প্রোগ্রামটি চালাই, আমরা কোনো এরর পাব না, এবং আমরা নিম্নলিখিত আউটপুটটি দেখব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/rectangles`
+rect1 is Rectangle { width: 30, height: 50 }
+</code></pre>
+<p>সুন্দর! এটি সবচেয়ে সুন্দর আউটপুট নয়, তবে এটি এই ইনস্ট্যান্সের জন্য সমস্ত ফিল্ডের মান দেখায়, যা ডিবাগিংয়ের সময় অবশ্যই সাহায্য করবে। যখন আমাদের বড় <code>struct</code> থাকে, তখন এমন আউটপুট থাকা দরকারী যা পড়া একটু সহজ; সেই ক্ষেত্রে, আমরা <code>println!</code> স্ট্রিং-এ <code>{:?}</code> এর পরিবর্তে <code>{:#?}</code> ব্যবহার করতে পারি। এই উদাহরণে, <code>{:#?}</code> স্টাইল ব্যবহার করলে নিম্নলিখিত আউটপুটটি আসবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/rectangles`
+rect1 is Rectangle {
+    width: 30,
+    height: 50,
+}
+</code></pre>
+<p><code>Debug</code> ফরম্যাট ব্যবহার করে একটি মান প্রিন্ট করার আরেকটি উপায় হলো <a href="../std/macro.dbg.html"><code>dbg!</code> ম্যাক্রো</a><!-- ignore --> ব্যবহার করা, যা একটি এক্সপ্রেশনের মালিকানা নেয় (<code>println!</code>-এর বিপরীতে, যা একটি রেফারেন্স নেয়), আপনার কোডে সেই <code>dbg!</code> ম্যাক্রো কলটি কোথায় ঘটেছে তার ফাইল এবং লাইন নম্বর প্রিন্ট করে এবং সেই এক্সপ্রেশনের ফলস্বরূপ মান সহ, এবং মানের মালিকানা ফেরত দেয়।</p>
+<blockquote>
+<p>দ্রষ্টব্য: <code>dbg!</code> ম্যাক্রো কল করা স্ট্যান্ডার্ড এরর কনসোল স্ট্রিমে (<code>stderr</code>) প্রিন্ট করে, <code>println!</code>-এর বিপরীতে, যা স্ট্যান্ডার্ড আউটপুট কনসোল স্ট্রিমে (<code>stdout</code>) প্রিন্ট করে। আমরা অধ্যায় ১২-এর <a href="ch12-06-writing-to-stderr-instead-of-stdout.html">"স্ট্যান্ডার্ড আউটপুটের পরিবর্তে স্ট্যান্ডার্ড এররে এরর বার্তা লেখা" বিভাগে <code>stderr</code> এবং <code>stdout</code> সম্পর্কে আরও কথা বলব</a><!-- ignore -->।</p>
+</blockquote>
+<p>এখানে একটি উদাহরণ যেখানে আমরা <code>width</code> ফিল্ডে নির্ধারিত মান এবং <code>rect1</code>-এর পুরো <code>struct</code>-এর মানে আগ্রহী:</p>
+<pre><pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let scale = 2;
+    let rect1 = Rectangle {
+        width: dbg!(30 * scale),
+        height: 50,
+    };
+
+    dbg!(&amp;rect1);
+}</code></pre></pre>
+<p>আমরা <code>30 * scale</code> এক্সপ্রেশনের চারপাশে <code>dbg!</code> রাখতে পারি এবং, যেহেতু <code>dbg!</code> এক্সপ্রেশনের মানের মালিকানা ফেরত দেয়, <code>width</code> ফিল্ডটি একই মান পাবে যেন আমাদের সেখানে <code>dbg!</code> কল ছিল না। আমরা চাই না <code>dbg!</code> <code>rect1</code>-এর মালিকানা নিক, তাই আমরা পরবর্তী কলে <code>rect1</code>-এর একটি রেফারেন্স ব্যবহার করি। এই উদাহরণের আউটপুটটি দেখতে এইরকম:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling rectangles v0.1.0 (file:///projects/rectangles)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running `target/debug/rectangles`
+[src/main.rs:10:16] 30 * scale = 60
+[src/main.rs:14:5] &amp;rect1 = Rectangle {
+    width: 60,
+    height: 50,
+}
+</code></pre>
+<p>আমরা দেখতে পাচ্ছি প্রথম আউটপুটটি <em>src/main.rs</em> লাইন ১০ থেকে এসেছে যেখানে আমরা <code>30 * scale</code> এক্সপ্রেশনটি ডিবাগ করছি, এবং এর ফলস্বরূপ মান <code>60</code> (পূর্ণসংখ্যার জন্য ইমপ্লিমেন্ট করা <code>Debug</code> ফরম্যাটিং হলো শুধুমাত্র তাদের মান প্রিন্ট করা)। <em>src/main.rs</em> এর ১৪ নং লাইনের <code>dbg!</code> কলটি <code>&amp;rect1</code>-এর মান আউটপুট করে, যা <code>Rectangle</code> <code>struct</code>। এই আউটপুটটি <code>Rectangle</code> টাইপের সুন্দর <code>Debug</code> ফরম্যাটিং ব্যবহার করে। <code>dbg!</code> ম্যাক্রোটি খুব সহায়ক হতে পারে যখন আপনি আপনার কোড কী করছে তা বোঝার চেষ্টা করছেন!</p>
+<p><code>Debug</code> ট্রেইট ছাড়াও, রাস্ট আমাদের <code>derive</code> অ্যাট্রিবিউট দিয়ে ব্যবহারের জন্য বেশ কয়েকটি ট্রেইট সরবরাহ করেছে যা আমাদের কাস্টম টাইপগুলোতে দরকারী আচরণ যোগ করতে পারে। সেই ট্রেইট এবং তাদের আচরণগুলো <a href="appendix-03-derivable-traits.html">পরিশিষ্ট C</a><!-- ignore -->-তে তালিকাভুক্ত করা হয়েছে। আমরা কাস্টম আচরণ সহ এই ট্রেইটগুলো কীভাবে ইমপ্লিমেন্ট করতে হয় এবং কীভাবে আপনার নিজস্ব ট্রেইট তৈরি করতে হয় তা অধ্যায় ১০-এ আলোচনা করব। <code>derive</code> ছাড়াও আরও অনেক অ্যাট্রিবিউট রয়েছে; আরও তথ্যের জন্য, <a href="../reference/attributes.html">রাস্ট রেফারেন্সের "অ্যাট্রিবিউটস" বিভাগটি দেখুন</a>।</p>
+<p>আমাদের <code>area</code> ফাংশনটি খুব নির্দিষ্ট: এটি শুধুমাত্র আয়তক্ষেত্রের ক্ষেত্রফল গণনা করে। এই আচরণটিকে আমাদের <code>Rectangle</code> <code>struct</code>-এর সাথে আরও ঘনিষ্ঠভাবে যুক্ত করা সহায়ক হবে কারণ এটি অন্য কোনো টাইপের সাথে কাজ করবে না। আসুন দেখি কীভাবে আমরা <code>area</code> ফাংশনটিকে আমাদের <code>Rectangle</code> টাইপে ডিফাইন করা একটি <code>area</code> <em>মেথডে</em> পরিণত করে এই কোডটিকে রিফ্যাক্টর করা চালিয়ে যেতে পারি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch05-01-defining-structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch05-03-method-syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch05-01-defining-structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch05-03-method-syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

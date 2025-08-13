@@ -1,0 +1,651 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>লাইফটাইম দিয়ে রেফারেন্স যাচাই করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="লাইফটাইম-দিয়ে-রেফারেনস-ভযালিডেইট-করা"><a class="header" href="#লাইফটাইম-দিয়ে-রেফারেনস-ভযালিডেইট-করা">লাইফটাইম দিয়ে রেফারেন্স ভ্যালিডেইট করা</a></h2>
+<p>লাইফটাইম (Lifetimes) হলো আরেক ধরনের জেনেরিক যা আমরা ইতিমধ্যে ব্যবহার করে আসছি। একটি টাইপের কাঙ্ক্ষিত আচরণ আছে কিনা তা নিশ্চিত করার পরিবর্তে, লাইফটাইম নিশ্চিত করে যে রেফারেন্সগুলো যতক্ষণ আমাদের প্রয়োজন ততক্ষণ ভ্যালিড থাকবে।</p>
+<p>চ্যাপ্টার ৪-এর "রেফারেন্স এবং বরোয়িং" (References and Borrowing) বিভাগে আমরা একটি বিষয় আলোচনা করিনি, তা হলো Rust-এর প্রতিটি রেফারেন্সের একটি <em>লাইফটাইম</em> থাকে, যা হলো সেই স্কোপ যার জন্য রেফারেন্সটি ভ্যালিড। বেশিরভাগ সময়, লাইফটাইমগুলো উহ্য (implicit) এবং অনুমিত (inferred) থাকে, ঠিক যেমন বেশিরভাগ সময় টাইপগুলো অনুমিত থাকে। আমাদের কেবল তখনই টাইপ অ্যানোটেট করতে হয় যখন একাধিক টাইপ সম্ভব হয়। একইভাবে, আমাদের তখনই লাইফটাইম অ্যানোটেট করতে হয় যখন রেফারেন্সগুলোর লাইফটাইম কয়েকটি ভিন্ন উপায়ে সম্পর্কিত হতে পারে। Rust আমাদের এই সম্পর্কগুলো জেনেরিক লাইফটাইম প্যারামিটার ব্যবহার করে অ্যানোটেট করতে বলে, যাতে রানটাইমে ব্যবহৃত আসল রেফারেন্সগুলো অবশ্যই ভ্যালিড থাকে।</p>
+<p>লাইফটাইম অ্যানোটেট করা এমন একটি ধারণা যা অন্য বেশিরভাগ প্রোগ্রামিং ল্যাঙ্গুয়েজে নেই, তাই এটি অপরিচিত মনে হতে পারে। যদিও আমরা এই অধ্যায়ে লাইফটাইম সম্পূর্ণরূপে কভার করব না, আমরা সাধারণ উপায়গুলো আলোচনা করব যেখানে আপনি লাইফটাইম সিনট্যাক্সের সম্মুখীন হতে পারেন যাতে আপনি ধারণাটির সাথে পরিচিত হতে পারেন।</p>
+<h3 id="লাইফটাইম-দিয়ে-ডযাংলিং-রেফারেনস-পরতিরোধ-করা"><a class="header" href="#লাইফটাইম-দিয়ে-ডযাংলিং-রেফারেনস-পরতিরোধ-করা">লাইফটাইম দিয়ে ড্যাংলিং রেফারেন্স প্রতিরোধ করা</a></h3>
+<p>লাইফটাইমের মূল উদ্দেশ্য হলো <em>ড্যাংলিং রেফারেন্স</em> (dangling references) প্রতিরোধ করা, যা একটি প্রোগ্রামকে এমন ডেটা রেফারেন্স করতে বাধ্য করে যা তার উদ্দিষ্ট ডেটা নয়। লিস্টিং ১০-১৬-এর প্রোগ্রামটি বিবেচনা করুন, যার একটি বাইরের স্কোপ এবং একটি ভেতরের স্কোপ রয়েছে।</p>
+<Listing number="10-16" caption="একটি রেফারেন্স ব্যবহার করার চেষ্টা যার মান স্কোপের বাইরে চলে গেছে">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let r;
+
+    {
+        let x = 5;
+        r = &amp;x;
+    }
+
+    println!("r: {r}");
+}</code></pre>
+</Listing>
+<blockquote>
+<p>দ্রষ্টব্য: লিস্টিং ১০-১৬, ১০-১৭, এবং ১০-২৩ এর উদাহরণগুলোতে ভ্যারিয়েবল ডিক্লেয়ার করা হয়েছে কোনো প্রাথমিক মান না দিয়েই, তাই ভ্যারিয়েবলের নামটি বাইরের স্কোপে বিদ্যমান থাকে। প্রথম নজরে, এটি Rust-এর কোনো null ভ্যালু না থাকার সাথে সাংঘর্ষিক মনে হতে পারে। তবে, যদি আমরা কোনো ভ্যারিয়েবলকে মান দেওয়ার আগে ব্যবহার করার চেষ্টা করি, তাহলে আমরা একটি কম্পাইল-টাইম এরর পাব, যা দেখায় যে Rust সত্যিই null ভ্যালু অনুমোদন করে না।</p>
+</blockquote>
+<p>বাইরের স্কোপটি <code>r</code> নামে একটি ভ্যারিয়েবল ডিক্লেয়ার করে যার কোনো প্রাথমিক মান নেই, এবং ভেতরের স্কোপটি <code>x</code> নামে একটি ভ্যারিয়েবল ডিক্লেয়ার করে যার প্রাথমিক মান <code>5</code>। ভেতরের স্কোপের মধ্যে, আমরা <code>r</code>-এর মানকে <code>x</code>-এর একটি রেফারেন্স হিসাবে সেট করার চেষ্টা করি। তারপর ভেতরের স্কোপ শেষ হয়ে যায়, এবং আমরা <code>r</code>-এর মান প্রিন্ট করার চেষ্টা করি। এই কোডটি কম্পাইল হবে না কারণ <code>r</code> যে মানটিকে রেফার করছে তা আমরা ব্যবহার করার চেষ্টা করার আগেই স্কোপের বাইরে চলে গেছে। এখানে এরর মেসেজটি হলো:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0597]: `x` does not live long enough
+ --&gt; src/main.rs:6:13
+  |
+5 |         let x = 5;
+  |             - binding `x` declared here
+6 |         r = &amp;x;
+  |             ^^ borrowed value does not live long enough
+7 |     }
+  |     - `x` dropped here while still borrowed
+8 |
+9 |     println!("r: {r}");
+  |                  --- borrow later used here
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>এরর মেসেজটি বলছে যে ভ্যারিয়েবল <code>x</code> "যথেষ্ট দীর্ঘজীবী নয়" (does not live long enough)। কারণটি হলো লাইন ৭-এ ভেতরের স্কোপ শেষ হলে <code>x</code> স্কোপের বাইরে চলে যাবে। কিন্তু <code>r</code> বাইরের স্কোপের জন্য এখনও ভ্যালিড; যেহেতু এর স্কোপটি বড়, আমরা বলি যে এটি "দীর্ঘজীবী" (lives longer)। যদি Rust এই কোডটি কাজ করার অনুমতি দিত, <code>r</code> এমন মেমরি রেফারেন্স করত যা <code>x</code> স্কোপের বাইরে যাওয়ার সময় ডিঅ্যালোকেট হয়ে গিয়েছিল, এবং <code>r</code> দিয়ে আমরা যা করার চেষ্টা করতাম তা সঠিকভাবে কাজ করত না। তাহলে Rust কীভাবে নির্ধারণ করে যে এই কোডটি অবৈধ? এটি একটি borrow checker ব্যবহার করে।</p>
+<h3 id="দয-বরো-চেকার-the-borrow-checker"><a class="header" href="#দয-বরো-চেকার-the-borrow-checker">দ্য বরো চেকার (The Borrow Checker)</a></h3>
+<p>Rust কম্পাইলারের একটি <em>borrow checker</em> আছে যা স্কোপগুলো তুলনা করে নির্ধারণ করে যে সমস্ত borrow ভ্যালিড কিনা। লিস্টিং ১০-১৭ লিস্টিং ১০-১৬-এর মতো একই কোড দেখায় কিন্তু ভ্যারিয়েবলগুলোর লাইফটাইম দেখানো অ্যানোটেশনসহ।</p>
+<Listing number="10-17" caption="`r` এবং `x`-এর লাইফটাইমের অ্যানোটেশন, যাদের নাম যথাক্রমে `'a` এবং `'b`">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let r;                // ---------+-- 'a
+                          //          |
+    {                     //          |
+        let x = 5;        // -+-- 'b  |
+        r = &amp;x;           //  |       |
+    }                     // -+       |
+                          //          |
+    println!("r: {r}");   //          |
+}                         // ---------+</code></pre>
+</Listing>
+<p>এখানে, আমরা <code>r</code>-এর লাইফটাইমকে <code>'a</code> এবং <code>x</code>-এর লাইফটাইমকে <code>'b</code> দিয়ে অ্যানোটেট করেছি। जैसा कि आप देख सकते हैं, ভেতরের <code>'b</code> ব্লকটি বাইরের <code>'a</code> লাইফটাইম ব্লকের চেয়ে অনেক ছোট। কম্পাইল টাইমে, Rust দুটি লাইফটাইমের আকার তুলনা করে এবং দেখে যে <code>r</code>-এর লাইফটাইম <code>'a</code> কিন্তু এটি <code>'b</code> লাইফটাইমযুক্ত মেমরিকে রেফার করে। প্রোগ্রামটি প্রত্যাখ্যান করা হয়েছে কারণ <code>'b</code> <code>'a</code>-এর চেয়ে ছোট: রেফারেন্সের বিষয়বস্তুটি রেফারেন্সের মতো দীর্ঘজীবী নয়।</p>
+<p>লিস্টিং ১০-১৮ কোডটি ঠিক করে যাতে এটিতে কোনো ড্যাংলিং রেফারেন্স না থাকে এবং এটি কোনো এরর ছাড়াই কম্পাইল হয়।</p>
+<Listing number="10-18" caption="একটি ভ্যালিড রেফারেন্স কারণ ডেটার লাইফটাইম রেফারেন্সের চেয়ে দীর্ঘ">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 5;            // ----------+-- 'b
+                          //           |
+    let r = &amp;x;           // --+-- 'a  |
+                          //   |       |
+    println!("r: {r}");   //   |       |
+                          // --+       |
+}                         // ----------+</code></pre></pre>
+</Listing>
+<p>এখানে, <code>x</code>-এর লাইফটাইম <code>'b</code>, যা এই ক্ষেত্রে <code>'a</code>-এর চেয়ে বড়। এর মানে হলো <code>r</code>, <code>x</code>-কে রেফারেন্স করতে পারে কারণ Rust জানে যে <code>r</code>-এর রেফারেন্সটি সবসময় ভ্যালিড থাকবে যতক্ষণ <code>x</code> ভ্যালিড থাকে।</p>
+<p>এখন যেহেতু আপনি জানেন রেফারেন্সের লাইফটাইম কোথায় থাকে এবং Rust কীভাবে লাইফটাইম বিশ্লেষণ করে রেফারেন্সগুলো সবসময় ভ্যালিড থাকবে তা নিশ্চিত করে, চলুন ফাংশনের প্রেক্ষাপটে প্যারামিটার এবং রিটার্ন ভ্যালুর জেনেরিক লাইফটাইম অন্বেষণ করি।</p>
+<h3 id="ফাংশনে-জেনেরিক-লাইফটাইম"><a class="header" href="#ফাংশনে-জেনেরিক-লাইফটাইম">ফাংশনে জেনেরিক লাইফটাইম</a></h3>
+<p>আমরা একটি ফাংশন লিখব যা দুটি স্ট্রিং স্লাইসের মধ্যে দীর্ঘতরটি রিটার্ন করে। এই ফাংশনটি দুটি স্ট্রিং স্লাইস নেবে এবং একটি একক স্ট্রিং স্লাইস রিটার্ন করবে। আমরা <code>longest</code> ফাংশনটি ইমপ্লিমেন্ট করার পরে, লিস্টিং ১০-১৯-এর কোডটি <code>The longest string is abcd</code> প্রিন্ট করা উচিত।</p>
+<Listing number="10-19" file-name="src/main.rs" caption="একটি `main` ফাংশন যা `longest` ফাংশন কল করে দুটি স্ট্রিং স্লাইসের মধ্যে দীর্ঘতরটি খুঁজে বের করে">
+<pre><code class="language-rust ignore">fn main() {
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {result}");
+}</code></pre>
+</Listing>
+<p>লক্ষ্য করুন যে আমরা চাই ফাংশনটি স্ট্রিং স্লাইস (যা রেফারেন্স) নিক, স্ট্রিং নয়, কারণ আমরা চাই না যে <code>longest</code> ফাংশন তার প্যারামিটারগুলোর মালিকানা (ownership) নিয়ে নিক। লিস্টিং ১০-১৯-এ আমরা যে প্যারামিটারগুলো ব্যবহার করি সেগুলো কেন আমরা চাই সে সম্পর্কে আরও আলোচনার জন্য চ্যাপ্টার ৪-এর "প্যারামিটার হিসাবে স্ট্রিং স্লাইস" (String Slices as Parameters) দেখুন।</p>
+<p>যদি আমরা লিস্টিং ১০-২০-তে দেখানো হিসাবে <code>longest</code> ফাংশনটি ইমপ্লিমেন্ট করার চেষ্টা করি, তবে এটি কম্পাইল হবে না।</p>
+<Listing number="10-20" file-name="src/main.rs" caption="`longest` ফাংশনের একটি ইমপ্লিমেন্টেশন যা দুটি স্ট্রিং স্লাইসের মধ্যে দীর্ঘতরটি রিটার্ন করে কিন্তু এখনও কম্পাইল হয় না">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre>
+</Listing>
+<p>পরিবর্তে, আমরা নিম্নলিখিত এররটি পাই যা লাইফটাইম সম্পর্কে কথা বলে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0106]: missing lifetime specifier
+ --&gt; src/main.rs:9:33
+  |
+9 | fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
+  |               ----     ----     ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+help: consider introducing a named lifetime parameter
+  |
+9 | fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+  |           ++++     ++          ++          ++
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>হেল্প টেক্সট প্রকাশ করে যে রিটার্ন টাইপের উপর একটি জেনেরিক লাইফটাইম প্যারামিটার প্রয়োজন কারণ Rust বলতে পারে না যে রিটার্ন করা রেফারেন্সটি <code>x</code>-কে নাকি <code>y</code>-কে রেফার করে। আসলে, আমরাও জানি না, কারণ এই ফাংশনের বডির <code>if</code> ব্লকটি <code>x</code>-এর একটি রেফারেন্স রিটার্ন করে এবং <code>else</code> ব্লকটি <code>y</code>-এর একটি রেফারেন্স রিটার্ন করে!</p>
+<p>যখন আমরা এই ফাংশনটি ডিফাইন করছি, তখন আমরা জানি না কোন কংক্রিট (concrete) ভ্যালু এই ফাংশনে পাস করা হবে, তাই আমরা জানি না <code>if</code> কেস না <code>else</code> কেস এক্সিকিউট হবে। আমরা এটাও জানি না যে পাস করা রেফারেন্সগুলোর কংক্রিট লাইফটাইম কী হবে, তাই আমরা লিস্টিং ১০-১৭ এবং ১০-১৮ এর মতো স্কোপগুলো দেখে নির্ধারণ করতে পারি না যে আমাদের রিটার্ন করা রেফারেন্সটি সবসময় ভ্যালিড থাকবে কিনা। বরো চেকারও এটি নির্ধারণ করতে পারে না, কারণ এটি জানে না <code>x</code> এবং <code>y</code>-এর লাইফটাইম রিটার্ন ভ্যালুর লাইফটাইমের সাথে কীভাবে সম্পর্কিত। এই এররটি ঠিক করার জন্য, আমরা জেনেরিক লাইফটাইম প্যারামিটার যোগ করব যা রেফারেন্সগুলোর মধ্যে সম্পর্ক ডিফাইন করবে যাতে বরো চেকার তার বিশ্লেষণ করতে পারে।</p>
+<h3 id="লাইফটাইম-অযানোটেশন-সিনটযাকস"><a class="header" href="#লাইফটাইম-অযানোটেশন-সিনটযাকস">লাইফটাইম অ্যানোটেশন সিনট্যাক্স</a></h3>
+<p>লাইফটাইম অ্যানোটেশন কোনো রেফারেন্স কতদিন বেঁচে থাকবে তা পরিবর্তন করে না। বরং, তারা লাইফটাইমকে প্রভাবিত না করে একাধিক রেফারেন্সের লাইফটাইমের সম্পর্ক বর্ণনা করে। ঠিক যেমন ফাংশনগুলো যেকোনো টাইপ গ্রহণ করতে পারে যখন সিগনেচার একটি জেনেরিক টাইপ প্যারামিটার নির্দিষ্ট করে, ফাংশনগুলো একটি জেনেরিক লাইফটাইম প্যারামিটার নির্দিষ্ট করে যেকোনো লাইফটাইমসহ রেফারেন্স গ্রহণ করতে পারে।</p>
+<p>লাইফটাইম অ্যানোটেশনের একটি কিছুটা অস্বাভাবিক সিনট্যাক্স আছে: লাইফটাইম প্যারামিটারের নাম অবশ্যই একটি অ্যাপস্ট্রফি (<code>'</code>) দিয়ে শুরু হতে হবে এবং সাধারণত সবগুলো ছোট হাতের এবং খুব ছোট হয়, জেনেরিক টাইপের মতো। বেশিরভাগ লোক প্রথম লাইফটাইম অ্যানোটেশনের জন্য <code>'a</code> নামটি ব্যবহার করে। আমরা রেফারেন্সের <code>&amp;</code>-এর পরে লাইফটাইম প্যারামিটার অ্যানোটেশন রাখি, অ্যানোটেশনটিকে রেফারেন্সের টাইপ থেকে আলাদা করার জন্য একটি স্পেস ব্যবহার করে।</p>
+<p>এখানে কিছু উদাহরণ দেওয়া হলো: একটি <code>i32</code>-এর রেফারেন্স যাতে কোনো লাইফটাইম প্যারামিটার নেই, একটি <code>i32</code>-এর রেফারেন্স যার <code>'a</code> নামের একটি লাইফটাইম প্যারামিটার আছে, এবং একটি <code>i32</code>-এর মিউটেবল রেফারেন্স যারও <code>'a</code> লাইফটাইম আছে।</p>
+<pre><code class="language-rust ignore">&amp;i32        // একটি রেফারেন্স
+&amp;'a i32     // একটি সুস্পষ্ট লাইফটাইমসহ রেফারেন্স
+&amp;'a mut i32 // একটি সুস্পষ্ট লাইফটাইমসহ মিউটেবল রেফারেন্স</code></pre>
+<p>একটি লাইফটাইম অ্যানোটেশনের নিজের কোনো বিশেষ অর্থ নেই কারণ অ্যানোটেশনগুলো Rust-কে জানাতে চায় যে একাধিক রেফারেন্সের জেনেরিক লাইফটাইম প্যারামিটারগুলো একে অপরের সাথে কীভাবে সম্পর্কিত। আসুন <code>longest</code> ফাংশনের প্রেক্ষাপটে দেখি লাইফটাইম অ্যানোটেশনগুলো একে অপরের সাথে কীভাবে সম্পর্কিত।</p>
+<h3 id="ফাংশন-সিগনেচারে-লাইফটাইম-অযানোটেশন"><a class="header" href="#ফাংশন-সিগনেচারে-লাইফটাইম-অযানোটেশন">ফাংশন সিগনেচারে লাইফটাইম অ্যানোটেশন</a></h3>
+<p>ফাংশন সিগনেচারে লাইফটাইম অ্যানোটেশন ব্যবহার করার জন্য, আমাদের ফাংশনের নাম এবং প্যারামিটার তালিকার মধ্যে অ্যাঙ্গেল ব্র্যাকেটের ভিতরে জেনেরিক <em>লাইফটাইম</em> প্যারামিটার ডিক্লেয়ার করতে হবে, ঠিক যেমন আমরা জেনেরিক <em>টাইপ</em> প্যারামিটারের সাথে করেছিলাম।</p>
+<p>আমরা চাই সিগনেচারটি নিম্নলিখিত সীমাবদ্ধতা প্রকাশ করুক: রিটার্ন করা রেফারেন্সটি ততক্ষণ ভ্যালিড থাকবে যতক্ষণ উভয় প্যারামিটার ভ্যালিড থাকবে। এটি প্যারামিটার এবং রিটার্ন ভ্যালুর লাইফটাইমের মধ্যেকার সম্পর্ক। আমরা লাইফটাইমটির নাম দেব <code>'a</code> এবং তারপর প্রতিটি রেফারেন্সে এটি যোগ করব, যেমনটি লিস্টিং ১০-২১-এ দেখানো হয়েছে।</p>
+<Listing number="10-21" file-name="src/main.rs" caption="`longest` ফাংশন ডেফিনিশন যা নির্দিষ্ট করে যে সিগনেচারের সমস্ত রেফারেন্সের একই লাইফটাইম `'a` থাকতে হবে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি কম্পাইল হওয়া উচিত এবং আমরা যখন লিস্টিং ১০-১৯-এর <code>main</code> ফাংশনের সাথে এটি ব্যবহার করব তখন কাঙ্ক্ষিত ফলাফল তৈরি করা উচিত।</p>
+<p>ফাংশন সিগনেচারটি এখন Rust-কে বলছে যে কোনো একটি লাইফটাইম <code>'a</code>-এর জন্য, ফাংশনটি দুটি প্যারামিটার নেয়, উভয়ই স্ট্রিং স্লাইস যা অন্তত লাইফটাইম <code>'a</code> পর্যন্ত বেঁচে থাকে। ফাংশন সিগনেচারটি Rust-কে আরও বলছে যে ফাংশন থেকে রিটার্ন করা স্ট্রিং স্লাইসটি অন্তত লাইফটাইম <code>'a</code> পর্যন্ত বেঁচে থাকবে। বাস্তবে, এর মানে হলো <code>longest</code> ফাংশন দ্বারা রিটার্ন করা রেফারেন্সের লাইফটাইম ফাংশন আর্গুমেন্ট দ্বারা নির্দেশিত মানগুলির লাইফটাইমের মধ্যে যেটি ছোট তার সমান। এই সম্পর্কগুলোই আমরা চাই Rust এই কোড বিশ্লেষণ করার সময় ব্যবহার করুক।</p>
+<p>মনে রাখবেন, যখন আমরা এই ফাংশন সিগনেচারে লাইফটাইম প্যারামিটারগুলো নির্দিষ্ট করি, তখন আমরা পাস করা বা রিটার্ন করা কোনো মানের লাইফটাইম পরিবর্তন করছি না। বরং, আমরা নির্দিষ্ট করছি যে বরো চেকার এমন কোনো মান প্রত্যাখ্যান করবে যা এই সীমাবদ্ধতাগুলো মেনে চলে না। লক্ষ্য করুন যে <code>longest</code> ফাংশনটিকে <code>x</code> এবং <code>y</code> ঠিক কতদিন বেঁচে থাকবে তা জানার প্রয়োজন নেই, কেবল এটি জানতে হবে যে <code>'a</code>-এর জন্য এমন কোনো স্কোপ প্রতিস্থাপন করা যেতে পারে যা এই সিগনেচারটি সন্তুষ্ট করবে।</p>
+<p>ফাংশনে লাইফটাইম অ্যানোটেট করার সময়, অ্যানোটেশনগুলো ফাংশন সিগনেচারে যায়, ফাংশন বডিতে নয়। লাইফটাইম অ্যানোটেশনগুলো ফাংশনের চুক্তির অংশ হয়ে যায়, ঠিক যেমন সিগনেচারের টাইপগুলো। ফাংশন সিগনেচারে লাইফটাইম চুক্তি থাকার মানে হলো Rust কম্পাইলার যে বিশ্লেষণ করে তা সহজ হতে পারে। যদি কোনো ফাংশন যেভাবে অ্যানোটেট করা হয়েছে বা যেভাবে কল করা হয়েছে তাতে কোনো সমস্যা থাকে, তাহলে কম্পাইলার এররগুলো আমাদের কোডের অংশ এবং সীমাবদ্ধতাগুলোকে আরও স্পষ্টভাবে নির্দেশ করতে পারে। যদি, পরিবর্তে, Rust কম্পাইলার আমরা লাইফটাইমের সম্পর্কগুলো কেমন চেয়েছিলাম সে সম্পর্কে আরও বেশি অনুমান করত, তাহলে কম্পাইলার হয়তো সমস্যার কারণ থেকে অনেক দূরে আমাদের কোডের একটি ব্যবহারের দিকেই কেবল নির্দেশ করতে পারত।</p>
+<p>যখন আমরা <code>longest</code>-এ কংক্রিট রেফারেন্স পাস করি, তখন <code>'a</code>-এর জন্য প্রতিস্থাপিত কংক্রিট লাইফটাইম হলো <code>x</code>-এর স্কোপের সেই অংশ যা <code>y</code>-এর স্কোপের সাথে ওভারল্যাপ করে। অন্য কথায়, জেনেরিক লাইফটাইম <code>'a</code> সেই কংক্রিট লাইফটাইম পাবে যা <code>x</code> এবং <code>y</code>-এর লাইফটাইমের মধ্যে ছোটটির সমান। যেহেতু আমরা রিটার্ন করা রেফারেন্সটিকে একই লাইফটাইম প্যারামিটার <code>'a</code> দিয়ে অ্যানোটেট করেছি, তাই রিটার্ন করা রেফারেন্সটিও <code>x</code> এবং <code>y</code>-এর লাইফটাইমের মধ্যে ছোটটির দৈর্ঘ্যের জন্য ভ্যালিড থাকবে।</p>
+<p>আসুন দেখি কীভাবে লাইফটাইম অ্যানোটেশনগুলো <code>longest</code> ফাংশনটিকে সীমাবদ্ধ করে, ভিন্ন কংক্রিট লাইফটাইমযুক্ত রেফারেন্স পাস করে। লিস্টিং ১০-২২ একটি সহজ উদাহরণ।</p>
+<Listing number="10-22" file-name="src/main.rs" caption="ভিন্ন কংক্রিট লাইফটাইমযুক্ত `String` মানের রেফারেন্সসহ `longest` ফাংশন ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let string1 = String::from("long string is long");
+
+    {
+        let string2 = String::from("xyz");
+        let result = longest(string1.as_str(), string2.as_str());
+        println!("The longest string is {result}");
+    }
+}
+<span class="boring">
+</span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+</span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই উদাহরণে, <code>string1</code> বাইরের স্কোপের শেষ পর্যন্ত ভ্যালিড, <code>string2</code> ভেতরের স্কোপের শেষ পর্যন্ত ভ্যালিড, এবং <code>result</code> এমন কিছুকে রেফারেন্স করে যা ভেতরের স্কোপের শেষ পর্যন্ত ভ্যালিড। এই কোডটি চালান এবং আপনি দেখবেন যে বরো চেকার অনুমোদন করে; এটি কম্পাইল হবে এবং <code>The longest string is long string is long</code> প্রিন্ট করবে।</p>
+<p>এরপরে, আসুন একটি উদাহরণ চেষ্টা করি যা দেখায় যে <code>result</code>-এর রেফারেন্সের লাইফটাইম অবশ্যই দুটি আর্গুমেন্টের ছোট লাইফটাইম হতে হবে। আমরা <code>result</code> ভ্যারিয়েবলের ডিক্লেয়ারেশন ভেতরের স্কোপের বাইরে নিয়ে যাব কিন্তু <code>result</code> ভ্যারিয়েবলে মানের অ্যাসাইনমেন্ট <code>string2</code>-এর সাথে স্কোপের ভিতরেই রাখব। তারপর আমরা <code>println!</code> যা <code>result</code> ব্যবহার করে তা ভেতরের স্কোপের বাইরে, ভেতরের স্কোপ শেষ হওয়ার পরে নিয়ে যাব। লিস্টিং ১০-২৩-এর কোডটি কম্পাইল হবে না।</p>
+<Listing number="10-23" file-name="src/main.rs" caption="`string2` স্কোপের বাইরে চলে যাওয়ার পরে `result` ব্যবহার করার চেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    println!("The longest string is {result}");
+}
+<span class="boring">
+</span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+</span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>যখন আমরা এই কোডটি কম্পাইল করার চেষ্টা করি, তখন আমরা এই এররটি পাই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0597]: `string2` does not live long enough
+ --&gt; src/main.rs:6:44
+  |
+5 |         let string2 = String::from("xyz");
+  |             ------- binding `string2` declared here
+6 |         result = longest(string1.as_str(), string2.as_str());
+  |                                            ^^^^^^^ borrowed value does not live long enough
+7 |     }
+  |     - `string2` dropped here while still borrowed
+8 |     println!("The longest string is {result}");
+  |                                     -------- borrow later used here
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>এররটি দেখায় যে <code>println!</code> স্টেটমেন্টের জন্য <code>result</code> ভ্যালিড হতে হলে, <code>string2</code>-কে বাইরের স্কোপের শেষ পর্যন্ত ভ্যালিড থাকতে হতো। Rust এটি জানে কারণ আমরা ফাংশন প্যারামিটার এবং রিটার্ন ভ্যালুর লাইফটাইম একই লাইফটাইম প্যারামিটার <code>'a</code> ব্যবহার করে অ্যানোটেট করেছি।</p>
+<p>মানুষ হিসেবে, আমরা এই কোডটি দেখে বুঝতে পারি যে <code>string1</code> <code>string2</code>-এর চেয়ে দীর্ঘ, এবং তাই <code>result</code> <code>string1</code>-এর একটি রেফারেন্স ধারণ করবে। যেহেতু <code>string1</code> এখনও স্কোপের বাইরে যায়নি, তাই <code>string1</code>-এর একটি রেফারেন্স <code>println!</code> স্টেটমেন্টের জন্য এখনও ভ্যালিড থাকবে। তবে, কম্পাইলার এই ক্ষেত্রে দেখতে পারে না যে রেফারেন্সটি ভ্যালিড। আমরা Rust-কে বলেছি যে <code>longest</code> ফাংশন দ্বারা রিটার্ন করা রেফারেন্সের লাইফটাইম পাস করা রেফারেন্সগুলোর লাইফটাইমের মধ্যে যেটি ছোট তার সমান। তাই, বরো চেকার লিস্টিং ১০-২৩-এর কোডটিকে সম্ভবত একটি অবৈধ রেফারেন্স থাকার কারণে অনুমোদন করে না।</p>
+<p><code>longest</code> ফাংশনে পাস করা রেফারেন্সগুলোর মান এবং লাইফটাইম এবং রিটার্ন করা রেফারেন্সটি কীভাবে ব্যবহৃত হয় তা পরিবর্তন করে আরও পরীক্ষা ডিজাইন করার চেষ্টা করুন। আপনার পরীক্ষাগুলো বরো চেকার পাস করবে কিনা সে সম্পর্কে অনুমান করুন কম্পাইল করার আগে; তারপর পরীক্ষা করে দেখুন আপনি সঠিক ছিলেন কিনা!</p>
+<h3 id="লাইফটাইমের-দৃষটিকোণ-থেকে-চিনতা-করা"><a class="header" href="#লাইফটাইমের-দৃষটিকোণ-থেকে-চিনতা-করা">লাইফটাইমের দৃষ্টিকোণ থেকে চিন্তা করা</a></h3>
+<p>আপনার ফাংশন কী করছে তার উপর নির্ভর করে আপনাকে কীভাবে লাইফটাইম প্যারামিটার নির্দিষ্ট করতে হবে। উদাহরণস্বরূপ, যদি আমরা <code>longest</code> ফাংশনের ইমপ্লিমেন্টেশন পরিবর্তন করে সবসময় দীর্ঘতম স্ট্রিং স্লাইসের পরিবর্তে প্রথম প্যারামিটারটি রিটার্ন করতাম, তাহলে আমাদের <code>y</code> প্যারামিটারে একটি লাইফটাইম নির্দিষ্ট করার প্রয়োজন হতো না। নিম্নলিখিত কোডটি কম্পাইল হবে:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "efghijklmnopqrstuvwxyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;str) -&gt; &amp;'a str {
+    x
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>x</code> প্যারামিটার এবং রিটার্ন টাইপের জন্য একটি লাইফটাইম প্যারামিটার <code>'a</code> নির্দিষ্ট করেছি, কিন্তু <code>y</code> প্যারামিটারের জন্য নয়, কারণ <code>y</code>-এর লাইফটাইমের সাথে <code>x</code>-এর লাইফটাইম বা রিটার্ন ভ্যালুর কোনো সম্পর্ক নেই।</p>
+<p>একটি ফাংশন থেকে একটি রেফারেন্স রিটার্ন করার সময়, রিটার্ন টাইপের জন্য লাইফটাইম প্যারামিটারটি প্যারামিটারগুলোর মধ্যে একটির লাইফটাইম প্যারামিটারের সাথে মিলতে হবে। যদি রিটার্ন করা রেফারেন্সটি প্যারামিটারগুলোর মধ্যে একটিকে রেফার <em>না</em> করে, তবে এটি অবশ্যই এই ফাংশনের মধ্যে তৈরি একটি মানকে রেফার করবে। তবে, এটি একটি ড্যাংলিং রেফারেন্স হবে কারণ মানটি ফাংশনের শেষে স্কোপের বাইরে চলে যাবে। <code>longest</code> ফাংশনের এই প্রচেষ্টাটি বিবেচনা করুন যা কম্পাইল হবে না:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest(string1.as_str(), string2);
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn longest&lt;'a&gt;(x: &amp;str, y: &amp;str) -&gt; &amp;'a str {
+    let result = String::from("really long string");
+    result.as_str()
+}</code></pre>
+</Listing>
+<p>এখানে, যদিও আমরা রিটার্ন টাইপের জন্য একটি লাইফটাইম প্যারামিটার <code>'a</code> নির্দিষ্ট করেছি, এই ইমপ্লিমেন্টেশনটি কম্পাইল করতে ব্যর্থ হবে কারণ রিটার্ন ভ্যালুর লাইফটাইম প্যারামিটারগুলোর লাইফটাইমের সাথে মোটেও সম্পর্কিত নয়। এখানে আমরা যে এরর মেসেজটি পাই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0515]: cannot return value referencing local variable `result`
+  --&gt; src/main.rs:11:5
+   |
+11 |     result.as_str()
+   |     ------^^^^^^^^^
+   |     |
+   |     returns a value referencing data owned by the current function
+   |     `result` is borrowed here
+
+For more information about this error, try `rustc --explain E0515`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>সমস্যাটি হলো <code>result</code> <code>longest</code> ফাংশনের শেষে স্কোপের বাইরে চলে যায় এবং পরিষ্কার হয়ে যায়। আমরা ফাংশন থেকে <code>result</code>-এর একটি রেফারেন্সও রিটার্ন করার চেষ্টা করছি। এমন কোনো উপায় নেই যে আমরা লাইফটাইম প্যারামিটার নির্দিষ্ট করতে পারি যা ড্যাংলিং রেফারেন্স পরিবর্তন করবে, এবং Rust আমাদের একটি ড্যাংলিং রেফারেন্স তৈরি করতে দেবে না। এই ক্ষেত্রে, সেরা সমাধান হবে একটি ওনড (owned) ডেটা টাইপ রিটার্ন করা, রেফারেন্সের পরিবর্তে, যাতে কলিং ফাংশনটি মান পরিষ্কার করার জন্য দায়ী থাকে।</p>
+<p>শেষ পর্যন্ত, লাইফটাইম সিনট্যাক্স বিভিন্ন প্যারামিটার এবং ফাংশনের রিটার্ন ভ্যালুর লাইফটাইম সংযোগ করার বিষয়। একবার সেগুলো সংযুক্ত হয়ে গেলে, Rust-এর কাছে মেমরি-সেফ অপারেশন অনুমোদন করার এবং ড্যাংলিং পয়েন্টার তৈরি বা অন্যথায় মেমরি সেফটি লঙ্ঘনকারী অপারেশনগুলো নিষিদ্ধ করার জন্য যথেষ্ট তথ্য থাকে।</p>
+<h3 id="সটরাকট-ডেফিনিশনে-লাইফটাইম-অযানোটেশন"><a class="header" href="#সটরাকট-ডেফিনিশনে-লাইফটাইম-অযানোটেশন">স্ট্রাকট ডেফিনিশনে লাইফটাইম অ্যানোটেশন</a></h3>
+<p>এখন পর্যন্ত, আমরা যে struct গুলো ডিফাইন করেছি সেগুলো সবই owned টাইপ ধারণ করে। আমরা রেফারেন্স ধারণ করার জন্য struct ডিফাইন করতে পারি, কিন্তু সেক্ষেত্রে আমাদের struct-এর ডেফিনিশনে প্রতিটি রেফারেন্সের উপর একটি লাইফটাইম অ্যানোটেশন যোগ করতে হবে। লিস্টিং ১০-২৪-এ <code>ImportantExcerpt</code> নামে একটি struct আছে যা একটি স্ট্রিং স্লাইস ধারণ করে।</p>
+<Listing number="10-24" file-name="src/main.rs" caption="একটি struct যা একটি রেফারেন্স ধারণ করে, যার জন্য একটি লাইফটাইম অ্যানোটেশন প্রয়োজন">
+<pre><pre class="playground"><code class="language-rust edition2024">struct ImportantExcerpt&lt;'a&gt; {
+    part: &amp;'a str,
+}
+
+fn main() {
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let first_sentence = novel.split('.').next().unwrap();
+    let i = ImportantExcerpt {
+        part: first_sentence,
+    };
+}</code></pre></pre>
+</Listing>
+<p>এই struct-টির <code>part</code> নামে একটি মাত্র ফিল্ড আছে যা একটি স্ট্রিং স্লাইস ধারণ করে, যা একটি রেফারেন্স। জেনেরিক ডেটা টাইপের মতো, আমরা struct-এর নামের পরে অ্যাঙ্গেল ব্র্যাকেটের মধ্যে জেনেরিক লাইফটাইম প্যারামিটারের নাম ডিক্লেয়ার করি যাতে আমরা struct ডেফিনিশনের বডিতে লাইফটাইম প্যারামিটার ব্যবহার করতে পারি। এই অ্যানোটেশনের মানে হলো <code>ImportantExcerpt</code>-এর একটি ইনস্ট্যান্স তার <code>part</code> ফিল্ডে থাকা রেফারেন্সের চেয়ে বেশিদিন বাঁচতে পারে না।</p>
+<p>এখানকার <code>main</code> ফাংশনটি <code>ImportantExcerpt</code> struct-এর একটি ইনস্ট্যান্স তৈরি করে যা <code>novel</code> ভ্যারিয়েবলের মালিকানাধীন <code>String</code>-এর প্রথম বাক্যের একটি রেফারেন্স ধারণ করে। <code>ImportantExcerpt</code> ইনস্ট্যান্স তৈরি হওয়ার আগে <code>novel</code>-এর ডেটা বিদ্যমান থাকে। উপরন্তু, <code>ImportantExcerpt</code> স্কোপের বাইরে যাওয়ার পরেও <code>novel</code> স্কোপের বাইরে যায় না, তাই <code>ImportantExcerpt</code> ইনস্ট্যান্সের রেফারেন্সটি ভ্যালিড।</p>
+<h3 id="লাইফটাইম-এলিশন-lifetime-elision"><a class="header" href="#লাইফটাইম-এলিশন-lifetime-elision">লাইফটাইম এলিশন (Lifetime Elision)</a></h3>
+<p>আপনি শিখেছেন যে প্রতিটি রেফারেন্সের একটি লাইফটাইম আছে এবং আপনাকে রেফারেন্স ব্যবহার করে এমন ফাংশন বা struct-এর জন্য লাইফটাইম প্যারামিটার নির্দিষ্ট করতে হবে। তবে, আমাদের লিস্টিং ৪-৯-এ একটি ফাংশন ছিল, যা আবার লিস্টিং ১০-২৫-এ দেখানো হয়েছে, যা লাইফটাইম অ্যানোটেশন ছাড়াই কম্পাইল হয়েছে।</p>
+<Listing number="10-25" file-name="src/lib.rs" caption="লিস্টিং ৪-৯ এ সংজ্ঞায়িত একটি ফাংশন যা লাইফটাইম অ্যানোটেশন ছাড়াই কম্পাইল হয়েছে, যদিও প্যারামিটার এবং রিটার্ন টাইপ রেফারেন্স">
+<pre><pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;str) -&gt; &amp;str {
+    let bytes = s.as_bytes();
+
+    for (i, &amp;item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &amp;s[0..i];
+        }
+    }
+
+    &amp;s[..]
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let my_string = String::from("hello world");
+</span><span class="boring">
+</span><span class="boring">    // first_word works on slices of `String`s
+</span><span class="boring">    let word = first_word(&amp;my_string[..]);
+</span><span class="boring">
+</span><span class="boring">    let my_string_literal = "hello world";
+</span><span class="boring">
+</span><span class="boring">    // first_word works on slices of string literals
+</span><span class="boring">    let word = first_word(&amp;my_string_literal[..]);
+</span><span class="boring">
+</span><span class="boring">    // Because string literals *are* string slices already,
+</span><span class="boring">    // this works too, without the slice syntax!
+</span><span class="boring">    let word = first_word(my_string_literal);
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই ফাংশনটি লাইফটাইম অ্যানোটেশন ছাড়াই কম্পাইল হওয়ার কারণটি ঐতিহাসিক: Rust-এর প্রাথমিক সংস্করণগুলোতে (১.০-এর আগে), এই কোডটি কম্পাইল হতো না কারণ প্রতিটি রেফারেন্সের জন্য একটি সুস্পষ্ট লাইফটাইম প্রয়োজন ছিল। সেই সময়ে, ফাংশন সিগনেচারটি এভাবে লেখা হতো:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
+<p>অনেক Rust কোড লেখার পর, Rust টিম দেখতে পেল যে Rust প্রোগ্রামাররা নির্দিষ্ট পরিস্থিতিতে বারবার একই লাইফটাইম অ্যানোটেশন লিখছে। এই পরিস্থিতিগুলো অনুমানযোগ্য ছিল এবং কয়েকটি ডিটারমিনিস্টিক প্যাটার্ন অনুসরণ করত। ডেভেলপাররা এই প্যাটার্নগুলো কম্পাইলারের কোডে প্রোগ্রাম করে দিয়েছে যাতে বরো চেকার এই পরিস্থিতিতে লাইফটাইমগুলো অনুমান করতে পারে এবং সুস্পষ্ট অ্যানোটেশনের প্রয়োজন না হয়।</p>
+<p>Rust ইতিহাসের এই অংশটি প্রাসঙ্গিক কারণ ভবিষ্যতে আরও ডিটারমিনিস্টিক প্যাটার্ন ortaya আসতে পারে এবং কম্পাইলারে যোগ করা হতে পারে। ভবিষ্যতে, আরও কম লাইফটাইম অ্যানোটেশনের প্রয়োজন হতে পারে।</p>
+<p>Rust-এর রেফারেন্স বিশ্লেষণের মধ্যে প্রোগ্রাম করা প্যাটার্নগুলোকে <em>লাইফটাইম এলিশন রুলস</em> (lifetime elision rules) বলা হয়। এগুলো প্রোগ্রামারদের অনুসরণ করার নিয়ম নয়; এগুলো এমন কিছু বিশেষ কেসের সেট যা কম্পাইলার বিবেচনা করবে, এবং যদি আপনার কোড এই কেসগুলোর সাথে মিলে যায়, তাহলে আপনাকে সুস্পষ্টভাবে লাইফটাইম লেখার প্রয়োজন নেই।</p>
+<p>এলিশন রুলস সম্পূর্ণ অনুমান প্রদান করে না। যদি Rust রুলস প্রয়োগ করার পরেও রেফারেন্সগুলোর লাইফটাইম সম্পর্কে অস্পষ্টতা থাকে, কম্পাইলার বাকি রেফারেন্সগুলোর লাইফটাইম কী হওয়া উচিত তা অনুমান করবে না। অনুমান করার পরিবর্তে, কম্পাইলার আপনাকে একটি এরর দেবে যা আপনি লাইফটাইম অ্যানোটেশন যোগ করে সমাধান করতে পারেন।</p>
+<p>ফাংশন বা মেথড প্যারামিটারে লাইফটাইমকে <em>ইনপুট লাইফটাইম</em> (input lifetimes) বলা হয়, এবং রিটার্ন ভ্যালুতে লাইফটাইমকে <em>আউটপুট লাইফটাইম</em> (output lifetimes) বলা হয়।</p>
+<p>কম্পাইলার যখন সুস্পষ্ট অ্যানোটেশন না থাকে তখন রেফারেন্সের লাইফটাইম বের করার জন্য তিনটি নিয়ম ব্যবহার করে। প্রথম নিয়মটি ইনপুট লাইফটাইমের জন্য প্রযোজ্য, এবং দ্বিতীয় ও তৃতীয় নিয়ম আউটপুট লাইফটাইমের জন্য প্রযোজ্য। যদি কম্পাইলার তিনটি নিয়ম শেষে পৌঁছানোর পরেও এমন রেফারেন্স থাকে যার লাইফটাইম বের করতে পারে না, কম্পাইলার একটি এরর দিয়ে থেমে যাবে। এই নিয়মগুলো <code>fn</code> ডেফিনিশন এবং <code>impl</code> ব্লকের জন্য প্রযোজ্য।</p>
+<p>প্রথম নিয়মটি হলো কম্পাইলার প্রতিটি প্যারামিটার যা একটি রেফারেন্স, তাকে একটি লাইফটাইম প্যারামিটার বরাদ্দ করে। অন্য কথায়, একটি প্যারামিটারযুক্ত একটি ফাংশন একটি লাইফটাইম প্যারামিটার পায়: <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>; দুটি প্যারামিটারযুক্ত একটি ফাংশন দুটি পৃথক লাইফটাইম প্যারামিটার পায়: <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>; এবং এভাবেই চলতে থাকে।</p>
+<p>দ্বিতীয় নিয়মটি হলো, যদি ঠিক একটি ইনপুট লাইফটাইম প্যারামিটার থাকে, তবে সেই লাইফটাইমটি সমস্ত আউটপুট লাইফটাইম প্যারামিটারে বরাদ্দ করা হয়: <code>fn foo&lt;'a&gt;(x: &amp;'a i32) -&gt; &amp;'a i32</code>।</p>
+<p>তৃতীয় নিয়মটি হলো, যদি একাধিক ইনপুট লাইফটাইম প্যারামিটার থাকে, কিন্তু তাদের মধ্যে একটি <code>&amp;self</code> বা <code>&amp;mut self</code> হয় কারণ এটি একটি মেথড, তবে <code>self</code>-এর লাইফটাইম সমস্ত আউটপুট লাইফটাইম প্যারামিটারে বরাদ্দ করা হয়। এই তৃতীয় নিয়মটি মেথডগুলোকে পড়া এবং লেখা অনেক সুন্দর করে তোলে কারণ কম প্রতীকের প্রয়োজন হয়।</p>
+<p>চলুন আমরা কম্পাইলারের মতো ভান করি। আমরা লিস্টিং ১০-২৫-এর <code>first_word</code> ফাংশনের সিগনেচারে রেফারেন্সের লাইফটাইম বের করার জন্য এই নিয়মগুলো প্রয়োগ করব। সিগনেচারটি রেফারেন্সের সাথে কোনো লাইফটাইম যুক্ত না করে শুরু হয়:</p>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {</code></pre>
+<p>তারপর কম্পাইলার প্রথম নিয়মটি প্রয়োগ করে, যা নির্দিষ্ট করে যে প্রতিটি প্যারামিটার তার নিজস্ব লাইফটাইম পায়। আমরা এটিকে যথারীতি <code>'a</code> বলব, তাই এখন সিগনেচারটি হলো:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;str {</code></pre>
+<p>দ্বিতীয় নিয়মটি প্রযোজ্য কারণ ঠিক একটি ইনপুট লাইফটাইম আছে। দ্বিতীয় নিয়মটি নির্দিষ্ট করে যে একটি ইনপুট প্যারামিটারের লাইফটাইম আউটপুট লাইফটাইমে বরাদ্দ করা হয়, তাই সিগনেচারটি এখন হলো:</p>
+<pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
+<p>এখন এই ফাংশন সিগনেচারের সমস্ত রেফারেন্সের লাইফটাইম আছে, এবং কম্পাইলার প্রোগ্রামারকে এই ফাংশন সিগনেচারে লাইফটাইম অ্যানোটেট করার প্রয়োজন ছাড়াই তার বিশ্লেষণ চালিয়ে যেতে পারে।</p>
+<p>আসুন আরেকটি উদাহরণ দেখি, এবার <code>longest</code> ফাংশনটি ব্যবহার করে যা আমরা লিস্টিং ১০-২০-এ কাজ শুরু করার সময় কোনো লাইফটাইম প্যারামিটার ছিল না:</p>
+<pre><code class="language-rust ignore">fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {</code></pre>
+<p>আসুন প্রথম নিয়মটি প্রয়োগ করি: প্রতিটি প্যারামিটার তার নিজস্ব লাইফটাইম পায়। এবার আমাদের একটির পরিবর্তে দুটি প্যারামিটার আছে, তাই আমাদের দুটি লাইফটাইম আছে:</p>
+<pre><code class="language-rust ignore">fn longest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;str {</code></pre>
+<p>আপনি দেখতে পাচ্ছেন যে দ্বিতীয় নিয়মটি প্রযোজ্য নয় কারণ একাধিক ইনপুট লাইফটাইম আছে। তৃতীয় নিয়মটিও প্রযোজ্য নয়, কারণ <code>longest</code> একটি ফাংশন, মেথড নয়, তাই কোনো প্যারামিটার <code>self</code> নয়। তিনটি নিয়ম কাজ করার পরেও, আমরা এখনও বের করতে পারিনি যে রিটার্ন টাইপের লাইফটাইম কী। এই কারণেই আমরা লিস্টিং ১০-২০-এর কোড কম্পাইল করার চেষ্টা করার সময় একটি এরর পেয়েছিলাম: কম্পাইলার লাইফটাইম এলিশন রুলস কাজ করেছে কিন্তু এখনও সিগনেচারের সমস্ত রেফারেন্সের লাইফটাইম বের করতে পারেনি।</p>
+<p>যেহেতু তৃতীয় নিয়মটি সত্যিই কেবল মেথড সিগনেচারে প্রযোজ্য, আমরা পরবর্তী অংশে সেই প্রেক্ষাপটে লাইফটাইম দেখব কেন তৃতীয় নিয়মের মানে হলো আমাদের মেথড সিগনেচারে খুব কমই লাইফটাইম অ্যানোটেট করতে হয়।</p>
+<h3 id="মেথড-ডেফিনিশনে-লাইফটাইম-অযানোটেশন"><a class="header" href="#মেথড-ডেফিনিশনে-লাইফটাইম-অযানোটেশন">মেথড ডেফিনিশনে লাইফটাইম অ্যানোটেশন</a></h3>
+<p>যখন আমরা লাইফটাইমসহ একটি struct-এ মেথড ইমপ্লিমেন্ট করি, তখন আমরা জেনেরিক টাইপ প্যারামিটারের মতো একই সিনট্যাক্স ব্যবহার করি, যেমনটি লিস্টিং ১০-১১-এ দেখানো হয়েছে। আমরা কোথায় লাইফটাইম প্যারামিটার ডিক্লেয়ার এবং ব্যবহার করি তা নির্ভর করে সেগুলো struct ফিল্ড বা মেথড প্যারামিটার এবং রিটার্ন ভ্যালুর সাথে সম্পর্কিত কিনা তার উপর।</p>
+<p>struct ফিল্ডের জন্য লাইফটাইম নাম সবসময় <code>impl</code> কিওয়ার্ডের পরে ডিক্লেয়ার করতে হবে এবং তারপর struct-এর নামের পরে ব্যবহার করতে হবে কারণ সেই লাইফটাইমগুলো struct-এর টাইপের অংশ।</p>
+<p><code>impl</code> ব্লকের ভিতরে মেথড সিগনেচারে, রেফারেন্সগুলো struct-এর ফিল্ডে থাকা রেফারেন্সের লাইফটাইমের সাথে আবদ্ধ হতে পারে, অথবা সেগুলো স্বাধীন হতে পারে। উপরন্তু, লাইফটাইম এলিশন রুলস প্রায়শই মেথড সিগনেচারে লাইফটাইম অ্যানোটেশনের প্রয়োজন হয় না। আসুন আমরা লিস্টিং ১০-২৪-এ সংজ্ঞায়িত <code>ImportantExcerpt</code> নামক struct ব্যবহার করে কিছু উদাহরণ দেখি।</p>
+<p>প্রথমে আমরা <code>level</code> নামের একটি মেথড ব্যবহার করব যার একমাত্র প্যারামিটার হলো <code>self</code>-এর একটি রেফারেন্স এবং যার রিটার্ন ভ্যালু একটি <code>i32</code>, যা কোনো কিছুর রেফারেন্স নয়:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    part: &amp;'a str,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+    fn level(&amp;self) -&gt; i32 {
+        3
+    }
+}
+<span class="boring">
+</span><span class="boring">impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    fn announce_and_return_part(&amp;self, announcement: &amp;str) -&gt; &amp;str {
+</span><span class="boring">        println!("Attention please: {announcement}");
+</span><span class="boring">        self.part
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let novel = String::from("Call me Ishmael. Some years ago...");
+</span><span class="boring">    let first_sentence = novel.split('.').next().unwrap();
+</span><span class="boring">    let i = ImportantExcerpt {
+</span><span class="boring">        part: first_sentence,
+</span><span class="boring">    };
+</span><span class="boring">}</span></code></pre></pre>
+<p><code>impl</code>-এর পরে লাইফটাইম প্যারামিটার ডিক্লেয়ারেশন এবং টাইপের নামের পরে এর ব্যবহার প্রয়োজন, কিন্তু প্রথম এলিশন রুলের কারণে আমাদের <code>self</code>-এর রেফারেন্সের লাইফটাইম অ্যানোটেট করার প্রয়োজন নেই।</p>
+<p>এখানে একটি উদাহরণ যেখানে তৃতীয় লাইফটাইম এলিশন রুল প্রযোজ্য:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    part: &amp;'a str,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+</span><span class="boring">    fn level(&amp;self) -&gt; i32 {
+</span><span class="boring">        3
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
+    fn announce_and_return_part(&amp;self, announcement: &amp;str) -&gt; &amp;str {
+        println!("Attention please: {announcement}");
+        self.part
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let novel = String::from("Call me Ishmael. Some years ago...");
+</span><span class="boring">    let first_sentence = novel.split('.').next().unwrap();
+</span><span class="boring">    let i = ImportantExcerpt {
+</span><span class="boring">        part: first_sentence,
+</span><span class="boring">    };
+</span><span class="boring">}</span></code></pre></pre>
+<p>দুটি ইনপুট লাইফটাইম আছে, তাই Rust প্রথম লাইফটাইম এলিশন রুল প্রয়োগ করে এবং <code>&amp;self</code> এবং <code>announcement</code> উভয়কেই তাদের নিজস্ব লাইফটাইম দেয়। তারপর, যেহেতু প্যারামিটারগুলোর মধ্যে একটি <code>&amp;self</code>, রিটার্ন টাইপ <code>&amp;self</code>-এর লাইফটাইম পায়, এবং সমস্ত লাইফটাইম হিসাব করা হয়েছে।</p>
+<h3 id="সটযাটিক-লাইফটাইম-the-static-lifetime"><a class="header" href="#সটযাটিক-লাইফটাইম-the-static-lifetime">স্ট্যাটিক লাইফটাইম (The Static Lifetime)</a></h3>
+<p>একটি বিশেষ লাইফটাইম যা আমাদের আলোচনা করতে হবে তা হলো <code>'static</code>, যা বোঝায় যে প্রভাবিত রেফারেন্সটি প্রোগ্রামের পুরো সময়কাল ধরে বেঁচে <em>থাকতে পারে</em>। সমস্ত স্ট্রিং লিটারেলের <code>'static</code> লাইফটাইম থাকে, যা আমরা নিম্নরূপ অ্যানোটেট করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s: &amp;'static str = "I have a static lifetime.";
+<span class="boring">}</span></code></pre></pre>
+<p>এই স্ট্রিংয়ের টেক্সট সরাসরি প্রোগ্রামের বাইনারিতে সংরক্ষণ করা হয়, যা সর্বদা উপলব্ধ। তাই, সমস্ত স্ট্রিং লিটারেলের লাইফটাইম হলো <code>'static</code>।</p>
+<p>আপনি এরর মেসেজে <code>'static</code> লাইফটাইম ব্যবহার করার পরামর্শ দেখতে পারেন। কিন্তু একটি রেফারেন্সের জন্য <code>'static</code> লাইফটাইম নির্দিষ্ট করার আগে, ভাবুন যে আপনার রেফারেন্সটি আসলে আপনার প্রোগ্রামের পুরো লাইফটাইম বেঁচে থাকে কিনা, এবং আপনি তা চান কিনা। বেশিরভাগ সময়, <code>'static</code> লাইফটাইম প্রস্তাবকারী একটি এরর মেসেজ একটি ড্যাংলিং রেফারেন্স তৈরি করার চেষ্টা বা উপলব্ধ লাইফটাইমের অমিলের ফলে হয়। এই ধরনের ক্ষেত্রে, সমাধান হলো সেই সমস্যাগুলো ঠিক করা, <code>'static</code> লাইফটাইম নির্দিষ্ট করা নয়।</p>
+<h2 id="জেনেরিক-টাইপ-পযারামিটার-টরেইট-বাউনড-এবং-লাইফটাইম-একসাথে"><a class="header" href="#জেনেরিক-টাইপ-পযারামিটার-টরেইট-বাউনড-এবং-লাইফটাইম-একসাথে">জেনেরিক টাইপ প্যারামিটার, ট্রেইট বাউন্ড এবং লাইফটাইম একসাথে</a></h2>
+<p>আসুন সংক্ষেপে জেনেরিক টাইপ প্যারামিটার, ট্রেইট বাউন্ড এবং লাইফটাইম একসাথে একটি ফাংশনে নির্দিষ্ট করার সিনট্যাক্স দেখি!</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let string1 = String::from("abcd");
+</span><span class="boring">    let string2 = "xyz";
+</span><span class="boring">
+</span><span class="boring">    let result = longest_with_an_announcement(
+</span><span class="boring">        string1.as_str(),
+</span><span class="boring">        string2,
+</span><span class="boring">        "Today is someone's birthday!",
+</span><span class="boring">    );
+</span><span class="boring">    println!("The longest string is {result}");
+</span><span class="boring">}
+</span><span class="boring">
+</span>use std::fmt::Display;
+
+fn longest_with_an_announcement&lt;'a, T&gt;(
+    x: &amp;'a str,
+    y: &amp;'a str,
+    ann: T,
+) -&gt; &amp;'a str
+where
+    T: Display,
+{
+    println!("Announcement! {ann}");
+    if x.len() &gt; y.len() { x } else { y }
+}</code></pre></pre>
+<p>এটি লিস্টিং ১০-২১-এর <code>longest</code> ফাংশন যা দুটি স্ট্রিং স্লাইসের মধ্যে দীর্ঘতরটি রিটার্ন করে। কিন্তু এখন এর <code>ann</code> নামে একটি অতিরিক্ত প্যারামিটার আছে যা জেনেরিক টাইপ <code>T</code>-এর, যা <code>where</code> ক্লজ দ্বারা নির্দিষ্ট করা <code>Display</code> trait ইমপ্লিমেন্ট করে এমন যেকোনো টাইপ দ্বারা পূরণ করা যেতে পারে। এই অতিরিক্ত প্যারামিটারটি <code>{}</code> ব্যবহার করে প্রিন্ট করা হবে, যার কারণে <code>Display</code> trait bound প্রয়োজন। যেহেতু লাইফটাইম একটি ধরনের জেনেরিক, তাই লাইফটাইম প্যারামিটার <code>'a</code> এবং জেনেরিক টাইপ প্যারামিটার <code>T</code>-এর ডিক্লেয়ারেশন ফাংশনের নামের পরে অ্যাঙ্গেল ব্র্যাকেটের ভিতরে একই তালিকায় যায়।</p>
+<h2 id="সারাংশ"><a class="header" href="#সারাংশ">সারাংশ</a></h2>
+<p>আমরা এই অধ্যায়ে অনেক কিছু কভার করেছি! এখন যেহেতু আপনি জেনেরিক টাইপ প্যারামিটার, ট্রেইট এবং ট্রেইট বাউন্ড এবং জেনেরিক লাইফটাইম প্যারামিটার সম্পর্কে জানেন, আপনি পুনরাবৃত্তি ছাড়াই কোড লিখতে প্রস্তুত যা বিভিন্ন পরিস্থিতিতে কাজ করে। জেনেরিক টাইপ প্যারামিটার আপনাকে বিভিন্ন টাইপের উপর কোড প্রয়োগ করতে দেয়। ট্রেইট এবং ট্রেইট বাউন্ড নিশ্চিত করে যে যদিও টাইপগুলো জেনেরিক, তাদের সেই আচরণ থাকবে যা কোডের প্রয়োজন। আপনি শিখেছেন কীভাবে লাইফটাইম অ্যানোটেশন ব্যবহার করে নিশ্চিত করতে হয় যে এই ফ্লেক্সিবল কোডে কোনো ড্যাংলিং রেফারেন্স থাকবে না। এবং এই সমস্ত বিশ্লেষণ কম্পাইল টাইমে ঘটে, যা রানটাইম পারফরম্যান্সকে প্রভাবিত করে না!</p>
+<p>বিশ্বাস করুন বা না করুন, আমরা এই অধ্যায়ে যে বিষয়গুলো আলোচনা করেছি সে সম্পর্কে আরও অনেক কিছু শেখার আছে: চ্যাপ্টার ১৮ ট্রেইট অবজেক্ট নিয়ে আলোচনা করে, যা ট্রেইট ব্যবহার করার আরেকটি উপায়। লাইফটাইম অ্যানোটেশন জড়িত আরও জটিল পরিস্থিতিও রয়েছে যা আপনার কেবল খুব উন্নত পরিস্থিতিতে প্রয়োজন হবে; সেগুলোর জন্য, আপনার <a href="../reference/index.html">Rust Reference</a> পড়া উচিত। কিন্তু এর পরে, আপনি শিখবেন কীভাবে Rust-এ টেস্ট লিখতে হয় যাতে আপনি নিশ্চিত করতে পারেন যে আপনার কোড যেভাবে কাজ করা উচিত সেভাবে কাজ করছে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch10-02-traits.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch11-00-testing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch10-02-traits.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch11-00-testing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

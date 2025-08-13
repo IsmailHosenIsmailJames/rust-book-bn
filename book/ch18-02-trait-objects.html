@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>বিভিন্ন টাইপের ভ্যালুর জন্য ট্রেইট অবজেক্ট ব্যবহার - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="সাধারণ-আচরণ-অযাবসটরযাকট-করতে-টরেইট-অবজেকট-বযবহার-using-trait-objects-to-abstract-over-shared-behavior"><a class="header" href="#সাধারণ-আচরণ-অযাবসটরযাকট-করতে-টরেইট-অবজেকট-বযবহার-using-trait-objects-to-abstract-over-shared-behavior">সাধারণ আচরণ অ্যাবস্ট্র্যাক্ট করতে ট্রেইট অবজেক্ট ব্যবহার (Using Trait Objects to Abstract over Shared Behavior)</a></h2>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-trait-objects-that-allow-for-values-of-different-types"></a></p>
+<p>৮ম অধ্যায়ে আমরা উল্লেখ করেছিলাম যে ভেক্টরের একটি সীমাবদ্ধতা হলো এটি কেবল এক প্রকারের (one type) উপাদান সংরক্ষণ করতে পারে। আমরা লিস্টিং ৮-৯-এ এর একটি সমাধান তৈরি করেছিলাম যেখানে আমরা একটি <code>SpreadsheetCell</code> নামের <code>enum</code> সংজ্ঞায়িত করেছিলাম, যার মধ্যে ইন্টিজার, ফ্লোট এবং টেক্সট রাখার জন্য ভ্যারিয়েন্ট (variant) ছিল। এর মানে হলো আমরা প্রতিটি সেলে বিভিন্ন ধরণের ডেটা সংরক্ষণ করতে পারতাম এবং তারপরেও একটি ভেক্টর পেতাম যা সেলের একটি সারিকে উপস্থাপন করত। যখন আমাদের अदलाबदलযোগ্য আইটেমগুলো একটি নির্দিষ্ট সেটের টাইপ হয় যা কোড কম্পাইল করার সময় আমরা জানি, তখন এটি একটি চমৎকার সমাধান।</p>
+<p>তবে, কখনও কখনও আমরা চাই যে আমাদের লাইব্রেরি ব্যবহারকারী একটি নির্দিষ্ট পরিস্থিতিতে বৈধ টাইপের সেটকে প্রসারিত (extend) করতে সক্ষম হোক। এটি কীভাবে অর্জন করা যেতে পারে তা দেখানোর জন্য, আমরা একটি উদাহরণ হিসাবে গ্রাফিক্যাল ইউজার ইন্টারফেস (GUI) টুল তৈরি করব যা আইটেমগুলির একটি তালিকার মধ্য দিয়ে যায় এবং স্ক্রিনে আঁকার জন্য প্রতিটির উপর একটি <code>draw</code> মেথড কল করে—এটি GUI টুলগুলোর জন্য একটি সাধারণ কৌশল। আমরা <code>gui</code> নামে একটি লাইব্রেরি ক্রেট তৈরি করব যাতে একটি GUI লাইব্রেরির কাঠামো থাকবে। এই ক্রেটে মানুষের ব্যবহারের জন্য কিছু টাইপ অন্তর্ভুক্ত থাকতে পারে, যেমন <code>Button</code> বা <code>TextField</code>। এছাড়াও, <code>gui</code> ব্যবহারকারীরা তাদের নিজস্ব টাইপ তৈরি করতে চাইবে যা আঁকা যায়: উদাহরণস্বরূপ, একজন প্রোগ্রামার একটি <code>Image</code> যোগ করতে পারে এবং অন্য একজন একটি <code>SelectBox</code> যোগ করতে পারে।</p>
+<p>লাইব্রেরি লেখার সময়, আমরা অন্য প্রোগ্রামাররা যে সমস্ত টাইপ তৈরি করতে চাইতে পারে তা আগে থেকে জানতে ও সংজ্ঞায়িত করতে পারি না। কিন্তু আমরা জানি যে <code>gui</code>-কে বিভিন্ন ধরণের অনেকগুলো মান ট্র্যাক করতে হবে এবং এই ভিন্ন ভিন্ন টাইপের মানগুলির প্রতিটির উপর একটি <code>draw</code> মেথড কল করতে হবে। <code>draw</code> মেথড কল করার সময় ঠিক কী ঘটবে তা জানার প্রয়োজন নেই, শুধু জানা দরকার যে মানটির কাছে কল করার জন্য সেই মেথডটি থাকবে।</p>
+<p>ইনহেরিটেন্স আছে এমন কোনো ল্যাঙ্গুয়েজে এটি করার জন্য, আমরা <code>Component</code> নামে একটি ক্লাস সংজ্ঞায়িত করতে পারতাম যার একটি <code>draw</code> নামের মেথড থাকবে। অন্যান্য ক্লাস, যেমন <code>Button</code>, <code>Image</code>, এবং <code>SelectBox</code>, <code>Component</code> থেকে ইনহেরিট করত এবং এর ফলে <code>draw</code> মেথডটিও ইনহেরিট করত। তারা প্রত্যেকে তাদের নিজস্ব আচরণ সংজ্ঞায়িত করতে <code>draw</code> মেথডকে ওভাররাইড করতে পারত, কিন্তু ফ্রেমওয়ার্কটি সমস্ত টাইপকে <code>Component</code>-এর ইনস্ট্যান্স হিসাবে বিবেচনা করতে পারত এবং তাদের উপর <code>draw</code> কল করতে পারত। কিন্তু যেহেতু Rust-এ ইনহেরিটেন্স নেই, তাই আমাদের <code>gui</code> লাইব্রেরিটি এমনভাবে গঠন করার জন্য অন্য কোনো উপায়ের প্রয়োজন যাতে ব্যবহারকারীরা লাইব্রেরির সাথে সামঞ্জস্যপূর্ণ নতুন টাইপ তৈরি করতে পারে।</p>
+<h3 id="সাধারণ-আচরণের-জনয-একটি-টরেইট-সংজঞাযিত-করা-defining-a-trait-for-common-behavior"><a class="header" href="#সাধারণ-আচরণের-জনয-একটি-টরেইট-সংজঞাযিত-করা-defining-a-trait-for-common-behavior">সাধারণ আচরণের জন্য একটি ট্রেইট সংজ্ঞায়িত করা (Defining a Trait for Common Behavior)</a></h3>
+<p><code>gui</code>-এর যে আচরণ আমরা চাই তা বাস্তবায়ন করতে, আমরা <code>Draw</code> নামে একটি ট্রেইট সংজ্ঞায়িত করব যার একটি মেথড থাকবে, যার নাম <code>draw</code>। তারপরে আমরা একটি ভেক্টর সংজ্ঞায়িত করতে পারি যা একটি ট্রেইট অবজেক্ট (trait object) নেয়। একটি <em>ট্রেইট অবজেক্ট</em> একই সাথে আমাদের নির্দিষ্ট করা ট্রেইট বাস্তবায়নকারী একটি টাইপের ইনস্ট্যান্স এবং রানটাইমে সেই টাইপের ট্রেইট মেথডগুলো খুঁজে বের করার জন্য ব্যবহৃত একটি টেবিলের দিকে নির্দেশ করে। আমরা একটি ট্রেইট অবজেক্ট তৈরি করি কোনো এক ধরণের পয়েন্টার, যেমন একটি <code>&amp;</code> রেফারেন্স বা একটি <code>Box&lt;T&gt;</code> স্মার্ট পয়েন্টার, তারপর <code>dyn</code> কীওয়ার্ড এবং তারপরে প্রাসঙ্গিক ট্রেইট নির্দিষ্ট করে। (ট্রেইট অবজেক্টকে কেন একটি পয়েন্টার ব্যবহার করতে হবে তার কারণ সম্পর্কে আমরা ২০তম অধ্যায়ে "<a href="ch20-03-advanced-types.html#dynamically-sized-types-and-the-sized-trait">ডাইনামিক্যালি সাইজড টাইপস এবং <code>Sized</code> ট্রেইট</a>" অংশে আলোচনা করব।) আমরা একটি জেনেরিক বা সুনির্দিষ্ট টাইপের জায়গায় ট্রেইট অবজেক্ট ব্যবহার করতে পারি। যেখানেই আমরা একটি ট্রেইট অবজেক্ট ব্যবহার করি, Rust-এর টাইপ সিস্টেম কম্পাইল টাইমে নিশ্চিত করবে যে সেই প্রেক্ষাপটে ব্যবহৃত যেকোনো মান ট্রেইট অবজেক্টের ট্রেইটটি বাস্তবায়ন করবে। ফলস্বরূপ, আমাদের কম্পাইল টাইমে সমস্ত সম্ভাব্য টাইপ জানার প্রয়োজন নেই।</p>
+<p>আমরা উল্লেখ করেছি যে, Rust-এ, আমরা struct এবং enum-কে অন্য ল্যাঙ্গুয়েজের অবজেক্ট থেকে আলাদা করার জন্য "অবজেক্ট" বলা থেকে বিরত থাকি। একটি struct বা enum-এ, struct ফিল্ডের ডেটা এবং <code>impl</code> ব্লকের আচরণ আলাদা থাকে, যেখানে অন্য ল্যাঙ্গুয়েজে ডেটা এবং আচরণ একত্রিত হয়ে একটি ধারণা তৈরি করে, যাকে প্রায়ই অবজেক্ট বলা হয়। ট্রেইট অবজেক্ট অন্য ল্যাঙ্গুয়েজের অবজেক্ট থেকে ভিন্ন কারণ আমরা একটি ট্রেইট অবজেক্টে ডেটা যোগ করতে পারি না। ট্রেইট অবজেক্ট অন্য ল্যাঙ্গুয়েজের অবজেক্টের মতো ততটা সাধারণভাবে দরকারী নয়: তাদের নির্দিষ্ট উদ্দেশ্য হলো সাধারণ আচরণের উপর অ্যাবস্ট্র্যাকশন তৈরি করা।</p>
+<p>লিস্টিং ১৮-৩ দেখাচ্ছে কীভাবে <code>draw</code> নামে একটি মেথড সহ <code>Draw</code> নামে একটি ট্রেইট সংজ্ঞায়িত করতে হয়।</p>
+<Listing number="18-3" file-name="src/lib.rs" caption="`Draw` ট্রেইটের সংজ্ঞা">
+<pre><code class="language-rust noplayground">pub trait Draw {
+    fn draw(&amp;self);
+}</code></pre>
+</Listing>
+<p>১০ম অধ্যায়ে ট্রেইট কীভাবে সংজ্ঞায়িত করতে হয় সে সম্পর্কে আমাদের আলোচনা থেকে এই সিনট্যাক্সটি পরিচিত মনে হওয়া উচিত। এরপর আসছে কিছু নতুন সিনট্যাক্স: লিস্টিং ১৮-৪ একটি <code>Screen</code> নামের struct সংজ্ঞায়িত করে যা <code>components</code> নামের একটি ভেক্টর ধারণ করে। এই ভেক্টরটির টাইপ হলো <code>Box&lt;dyn Draw&gt;</code>, যা একটি ট্রেইট অবজেক্ট; এটি <code>Box</code>-এর ভিতরে থাকা যেকোনো টাইপের জন্য একটি বিকল্প যা <code>Draw</code> ট্রেইটটি বাস্তবায়ন করে।</p>
+<Listing number="18-4" file-name="src/lib.rs" caption="`Screen` struct-এর সংজ্ঞা যার `components` ফিল্ডটি `Draw` ট্রেইট ইমপ্লিমেন্ট করা ট্রেইট অবজেক্টের একটি ভেক্টর ধারণ করে">
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
+</span><span class="boring">    fn draw(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub struct Screen {
+    pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
+}</code></pre>
+</Listing>
+<p><code>Screen</code> struct-এর উপর, আমরা <code>run</code> নামে একটি মেথড সংজ্ঞায়িত করব যা তার প্রতিটি <code>components</code>-এর উপর <code>draw</code> মেথড কল করবে, যেমনটি লিস্টিং ১৮-৫-এ দেখানো হয়েছে।</p>
+<Listing number="18-5" file-name="src/lib.rs" caption="`Screen`-এর উপর একটি `run` মেথড যা প্রতিটি কম্পোনেন্টের উপর `draw` মেথড কল করে">
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
+</span><span class="boring">    fn draw(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Screen {
+</span><span class="boring">    pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Screen {
+    pub fn run(&amp;self) {
+        for component in self.components.iter() {
+            component.draw();
+        }
+    }
+}</code></pre>
+</Listing>
+<p>এটি একটি জেনেরিক টাইপ প্যারামিটার এবং ট্রেইট বাউন্ড ব্যবহার করে struct সংজ্ঞায়িত করার থেকে ভিন্নভাবে কাজ করে। একটি জেনেরিক টাইপ প্যারামিটার একবারে কেবল একটি সুনির্দিষ্ট টাইপ দ্বারা প্রতিস্থাপিত হতে পারে, যেখানে ট্রেইট অবজেক্ট রানটাইমে একাধিক সুনির্দিষ্ট টাইপকে ট্রেইট অবজেক্টের জায়গা পূরণ করার সুযোগ দেয়। উদাহরণস্বরূপ, আমরা <code>Screen</code> struct-কে একটি জেনেরিক টাইপ এবং একটি ট্রেইট বাউন্ড ব্যবহার করে সংজ্ঞায়িত করতে পারতাম, যেমন লিস্টিং ১৮-৬-এ দেখানো হয়েছে।</p>
+<Listing number="18-6" file-name="src/lib.rs" caption="জেনেরিক এবং ট্রেইট বাউন্ড ব্যবহার করে `Screen` struct এবং তার `run` মেথডের একটি বিকল্প বাস্তবায়ন">
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
+</span><span class="boring">    fn draw(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub struct Screen&lt;T: Draw&gt; {
+    pub components: Vec&lt;T&gt;,
+}
+
+impl&lt;T&gt; Screen&lt;T&gt;
+where
+    T: Draw,
+{
+    pub fn run(&amp;self) {
+        for component in self.components.iter() {
+            component.draw();
+        }
+    }
+}</code></pre>
+</Listing>
+<p>এটি আমাদের এমন একটি <code>Screen</code> ইনস্ট্যান্সের মধ্যে সীমাবদ্ধ করে ফেলে যার কম্পোনেন্টের তালিকায় হয় সবগুলো <code>Button</code> টাইপের অথবা সবগুলো <code>TextField</code> টাইপের হবে। আপনি যদি শুধুমাত্র সমজাতীয় (homogeneous) সংগ্রহ ব্যবহার করেন, তবে জেনেরিক এবং ট্রেইট বাউন্ড ব্যবহার করা শ্রেয়, কারণ সংজ্ঞাগুলো কম্পাইল টাইমে সুনির্দিষ্ট টাইপ ব্যবহার করার জন্য মনোমর্ফাইজ (monomorphized) করা হবে।</p>
+<p>অন্যদিকে, ট্রেইট অবজেক্ট ব্যবহারকারী মেথডটির মাধ্যমে, একটি <code>Screen</code> ইনস্ট্যান্স এমন একটি <code>Vec&lt;T&gt;</code> ধারণ করতে পারে যেখানে একটি <code>Box&lt;Button&gt;</code> এবং একটি <code>Box&lt;TextField&gt;</code> উভয়ই থাকতে পারে। চলুন দেখি এটি কীভাবে কাজ করে এবং তারপর আমরা রানটাইম পারফরম্যান্সের প্রভাব নিয়ে আলোচনা করব।</p>
+<h3 id="টরেইট-ইমপলিমেনট-করা-implementing-the-trait"><a class="header" href="#টরেইট-ইমপলিমেনট-করা-implementing-the-trait">ট্রেইট ইমপ্লিমেন্ট করা (Implementing the Trait)</a></h3>
+<p>এখন আমরা <code>Draw</code> ট্রেইট ইমপ্লিমেন্ট করে এমন কিছু টাইপ যোগ করব। আমরা <code>Button</code> টাইপটি সরবরাহ করব। আবারও বলছি, একটি GUI লাইব্রেরি বাস্তবে ইমপ্লিমেন্ট করা এই বইয়ের আওতার বাইরে, তাই <code>draw</code> মেথডের বডিতে কোনো দরকারী ইমপ্লিমেন্টেশন থাকবে না। ইমপ্লিমেন্টেশনটি কেমন হতে পারে তা কল্পনা করার জন্য, একটি <code>Button</code> struct-এ <code>width</code>, <code>height</code>, এবং <code>label</code>-এর জন্য ফিল্ড থাকতে পারে, যেমনটি লিস্টিং ১৮-৭-এ দেখানো হয়েছে।</p>
+<Listing number="18-7" file-name="src/lib.rs" caption="একটি `Button` struct যা `Draw` ট্রেইট ইমপ্লিমেন্ট করে">
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Draw {
+</span><span class="boring">    fn draw(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Screen {
+</span><span class="boring">    pub components: Vec&lt;Box&lt;dyn Draw&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Screen {
+</span><span class="boring">    pub fn run(&amp;self) {
+</span><span class="boring">        for component in self.components.iter() {
+</span><span class="boring">            component.draw();
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub struct Button {
+    pub width: u32,
+    pub height: u32,
+    pub label: String,
+}
+
+impl Draw for Button {
+    fn draw(&amp;self) {
+        // code to actually draw a button
+    }
+}</code></pre>
+</Listing>
+<p><code>Button</code>-এর <code>width</code>, <code>height</code>, এবং <code>label</code> ফিল্ডগুলো অন্যান্য কম্পোনেন্টের ফিল্ড থেকে ভিন্ন হবে; উদাহরণস্বরূপ, একটি <code>TextField</code> টাইপের এই একই ফিল্ডগুলো ছাড়াও একটি <code>placeholder</code> ফিল্ড থাকতে পারে। আমরা স্ক্রিনে যে সব টাইপ আঁকতে চাই, তার প্রত্যেকটি <code>Draw</code> ট্রেইট ইমপ্লিমেন্ট করবে কিন্তু <code>draw</code> মেথডে ভিন্ন কোড ব্যবহার করবে সেই নির্দিষ্ট টাইপটি কীভাবে আঁকতে হয় তা সংজ্ঞায়িত করার জন্য, যেমন <code>Button</code> এখানে করেছে (প্রকৃত GUI কোড ছাড়া, যেমনটি উল্লেখ করা হয়েছে)। <code>Button</code> টাইপটির, উদাহরণস্বরূপ, একটি অতিরিক্ত <code>impl</code> ব্লক থাকতে পারে যেখানে ব্যবহারকারী বাটনে ক্লিক করলে কী ঘটবে তার সাথে সম্পর্কিত মেথড থাকবে। এই ধরণের মেথড <code>TextField</code>-এর মতো টাইপের ক্ষেত্রে প্রযোজ্য হবে না।</p>
+<p>যদি আমাদের লাইব্রেরি ব্যবহারকারী কেউ <code>width</code>, <code>height</code>, এবং <code>options</code> ফিল্ড সহ একটি <code>SelectBox</code> struct ইমপ্লিমেন্ট করার সিদ্ধান্ত নেয়, তবে সে <code>SelectBox</code> টাইপের উপরও <code>Draw</code> ট্রেইট ইমপ্লিমেন্ট করবে, যেমনটি লিস্টিং ১৮-৮-এ দেখানো হয়েছে।</p>
+<Listing number="18-8" file-name="src/main.rs" caption="`gui` ব্যবহারকারী আরেকটি ক্রেট যা একটি `SelectBox` struct-এর উপর `Draw` ট্রেইট ইমপ্লিমেন্ট করছে">
+<pre><code class="language-rust ignore">use gui::Draw;
+
+struct SelectBox {
+    width: u32,
+    height: u32,
+    options: Vec&lt;String&gt;,
+}
+
+impl Draw for SelectBox {
+    fn draw(&amp;self) {
+        // code to actually draw a select box
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+</Listing>
+<p>আমাদের লাইব্রেরির ব্যবহারকারী এখন একটি <code>Screen</code> ইনস্ট্যান্স তৈরি করার জন্য তার <code>main</code> ফাংশন লিখতে পারে। <code>Screen</code> ইনস্ট্যান্সে, তারা একটি <code>SelectBox</code> এবং একটি <code>Button</code> যোগ করতে পারে, প্রতিটিকে <code>Box&lt;T&gt;</code>-এর মধ্যে রেখে একটি ট্রেইট অবজেক্টে পরিণত করে। তারপর তারা <code>Screen</code> ইনস্ট্যান্সের উপর <code>run</code> মেথড কল করতে পারে, যা প্রতিটি কম্পোনেন্টের উপর <code>draw</code> কল করবে। লিস্টিং ১৮-৯ এই ইমপ্লিমেন্টেশনটি দেখায়।</p>
+<Listing number="18-9" file-name="src/main.rs" caption="একই ট্রেইট ইমপ্লিমেন্ট করা বিভিন্ন টাইপের মান সংরক্ষণ করতে ট্রেইট অবজেক্ট ব্যবহার করা">
+<pre><code class="language-rust ignore"><span class="boring">use gui::Draw;
+</span><span class="boring">
+</span><span class="boring">struct SelectBox {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">    options: Vec&lt;String&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Draw for SelectBox {
+</span><span class="boring">    fn draw(&amp;self) {
+</span><span class="boring">        // code to actually draw a select box
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>use gui::{Button, Screen};
+
+fn main() {
+    let screen = Screen {
+        components: vec![
+            Box::new(SelectBox {
+                width: 75,
+                height: 10,
+                options: vec![
+                    String::from("Yes"),
+                    String::from("Maybe"),
+                    String::from("No"),
+                ],
+            }),
+            Box::new(Button {
+                width: 50,
+                height: 10,
+                label: String::from("OK"),
+            }),
+        ],
+    };
+
+    screen.run();
+}</code></pre>
+</Listing>
+<p>যখন আমরা লাইব্রেরিটি লিখেছিলাম, তখন আমরা জানতাম না যে কেউ <code>SelectBox</code> টাইপটি যোগ করতে পারে, কিন্তু আমাদের <code>Screen</code> ইমপ্লিমেন্টেশন নতুন টাইপের উপর কাজ করতে এবং এটি আঁকতে সক্ষম হয়েছিল কারণ <code>SelectBox</code> <code>Draw</code> ট্রেইটটি ইমপ্লিমেন্ট করে, যার মানে এটি <code>draw</code> মেথডটি ইমপ্লিমেন্ট করে।</p>
+<p>এই ধারণাটি—একটি মানের সুনির্দিষ্ট টাইপের পরিবর্তে শুধুমাত্র মানটি কোন বার্তাগুলিতে সাড়া দেয় সে সম্পর্কে উদ্বিগ্ন থাকা—ডাইনামিক্যালি টাইপড ল্যাঙ্গুয়েজগুলোর <em>ডাক টাইপিং (duck typing)</em> ধারণার মতো: যদি এটি হাঁসের মতো হাঁটে এবং হাঁসের মতো ডাকে, তবে এটি অবশ্যই একটি হাঁস! লিস্টিং ১৮-৫-এ <code>Screen</code>-এর <code>run</code> ইমপ্লিমেন্টেশনে, <code>run</code>-কে জানতে হবে না প্রতিটি কম্পোনেন্টের সুনির্দিষ্ট টাইপ কী। এটি পরীক্ষা করে না যে একটি কম্পোনেন্ট <code>Button</code> বা <code>SelectBox</code>-এর ইনস্ট্যান্স কিনা, এটি কেবল কম্পোনেন্টের উপর <code>draw</code> মেথড কল করে। <code>components</code> ভেক্টরের মানগুলোর টাইপ হিসাবে <code>Box&lt;dyn Draw&gt;</code> নির্দিষ্ট করে, আমরা <code>Screen</code>-কে এমনভাবে সংজ্ঞায়িত করেছি যার এমন মান প্রয়োজন যার উপর আমরা <code>draw</code> মেথড কল করতে পারি।</p>
+<p>ডাক টাইপিং ব্যবহার করে লেখা কোডের মতো কোড লেখার জন্য ট্রেইট অবজেক্ট এবং Rust-এর টাইপ সিস্টেম ব্যবহার করার সুবিধা হলো আমাদের রানটাইমে কখনও পরীক্ষা করতে হবে না যে একটি মান একটি নির্দিষ্ট মেথড ইমপ্লিমেন্ট করে কিনা বা একটি মান মেথডটি ইমপ্লিমেন্ট না করলেও আমরা যদি তা কল করি তবে ত্রুটি পাওয়ার বিষয়ে চিন্তা করতে হবে না। যদি মানগুলো ট্রেইট অবজেক্টের প্রয়োজনীয় ট্রেইটগুলো ইমপ্লিমেন্ট না করে তবে Rust আমাদের কোড কম্পাইল করবে না।</p>
+<p>উদাহরণস্বরূপ, লিস্টিং ১৮-১০ দেখায় যে আমরা যদি একটি <code>String</code>-কে কম্পোনেন্ট হিসাবে নিয়ে একটি <code>Screen</code> তৈরি করার চেষ্টা করি তবে কী ঘটে।</p>
+<Listing number="18-10" file-name="src/main.rs" caption="ট্রেইট অবজেক্টের ট্রেইট ইমপ্লিমেন্ট করে না এমন একটি টাইপ ব্যবহার করার প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">use gui::Screen;
+
+fn main() {
+    let screen = Screen {
+        components: vec![Box::new(String::from("Hi"))],
+    };
+
+    screen.run();
+}</code></pre>
+</Listing>
+<p>আমরা এই ত্রুটিটি পাব কারণ <code>String</code> <code>Draw</code> ট্রেইটটি ইমপ্লিমেন্ট করে না:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling gui v0.1.0 (file:///projects/gui)
+error[E0277]: the trait bound `String: Draw` is not satisfied
+ --&gt; src/main.rs:5:26
+  |
+5 |         components: vec![Box::new(String::from("Hi"))],
+  |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Draw` is not implemented for `String`
+  |
+  = help: the trait `Draw` is implemented for `Button`
+  = note: required for the cast from `Box&lt;String&gt;` to `Box&lt;dyn Draw&gt;`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `gui` (bin "gui") due to 1 previous error
+</code></pre>
+<p>এই ত্রুটিটি আমাদের জানায় যে হয় আমরা <code>Screen</code>-কে এমন কিছু পাঠাচ্ছি যা আমরা পাঠাতে চাইনি এবং তাই একটি ভিন্ন টাইপ পাঠানো উচিত, অথবা আমাদের <code>String</code>-এর উপর <code>Draw</code> ইমপ্লিমেন্ট করা উচিত যাতে <code>Screen</code> এটির উপর <code>draw</code> কল করতে পারে।</p>
+<h3 id="টরেইট-অবজেকট-ডাইনামিক-ডিসপযাচ-সমপাদন-করে-trait-objects-perform-dynamic-dispatch"><a class="header" href="#টরেইট-অবজেকট-ডাইনামিক-ডিসপযাচ-সমপাদন-করে-trait-objects-perform-dynamic-dispatch">ট্রেইট অবজেক্ট ডাইনামিক ডিসপ্যাচ সম্পাদন করে (Trait Objects Perform Dynamic Dispatch)</a></h3>
+<p>১০ম অধ্যায়ে "<a href="ch10-01-syntax.html#performance-of-code-using-generics">জেনেরিক ব্যবহারকারী কোডের পারফরম্যান্স</a>" অংশে কম্পাইলার দ্বারা জেনেরিকের উপর সঞ্চালিত মনোমর্ফাইজেশন প্রক্রিয়া সম্পর্কে আমাদের আলোচনা স্মরণ করুন: কম্পাইলার ফাংশন এবং মেথডগুলোর নন-জেনেরিক ইমপ্লিমেন্টেশন তৈরি করে প্রতিটি সুনির্দিষ্ট টাইপের জন্য যা আমরা একটি জেনেরিক টাইপ প্যারামিটারের জায়গায় ব্যবহার করি। মনোমর্ফাইজেশনের ফলে যে কোড তৈরি হয় তা <em>স্ট্যাটিক ডিসপ্যাচ</em> (static dispatch) করছে, যা তখন ঘটে যখন কম্পাইলার কম্পাইল টাইমে জানে আপনি কোন মেথড কল করছেন। এটি <em>ডাইনামিক ডিসপ্যাচ</em> (dynamic dispatch)-এর বিপরীত, যা তখন ঘটে যখন কম্পাইলার কম্পাইল টাইমে বলতে পারে না আপনি কোন মেথড কল করছেন। ডাইনামিক ডিসপ্যাচের ক্ষেত্রে, কম্পাইলার এমন কোড তৈরি করে যা রানটাইমে জানবে কোন মেথড কল করতে হবে।</p>
+<p>যখন আমরা ট্রেইট অবজেক্ট ব্যবহার করি, তখন Rust-কে অবশ্যই ডাইনামিক ডিসপ্যাচ ব্যবহার করতে হবে। কম্পাইলার সমস্ত টাইপ জানে না যা ট্রেইট অবজেক্ট ব্যবহারকারী কোডের সাথে ব্যবহৃত হতে পারে, তাই এটি জানে না কোন টাইপের উপর ইমপ্লিমেন্ট করা কোন মেথড কল করতে হবে। পরিবর্তে, রানটাইমে, Rust ট্রেইট অবজেক্টের ভিতরের পয়েন্টারগুলো ব্যবহার করে জানে কোন মেথড কল করতে হবে। এই লুকআপ একটি রানটাইম খরচ বহন করে যা স্ট্যাটিক ডিসপ্যাচের সাথে ঘটে না। ডাইনামিক ডিসপ্যাচ কম্পাইলারকে একটি মেথডের কোড ইনলাইন করার পছন্দ থেকেও বিরত রাখে, যা ফলস্বরূপ কিছু অপটিমাইজেশন প্রতিরোধ করে। এবং Rust-এর কিছু নিয়ম আছে যেখানে আপনি ডাইনামিক ডিসপ্যাচ ব্যবহার করতে পারেন এবং কোথায় পারেন না, যাকে <em>ডাইন কম্প্যাটিবিলিটি</em> (dyn compatibility) বলা হয়। সেই নিয়মগুলি এই আলোচনার আওতার বাইরে, তবে আপনি তাদের সম্পর্কে আরও পড়তে পারেন <a href="https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility">রেফারেন্সে</a>। তবে, আমরা লিস্টিং ১৮-৫-এ যে কোড লিখেছিলাম তাতে অতিরিক্ত নমনীয়তা পেয়েছিলাম এবং লিস্টিং ১৮-৯-এ সমর্থন করতে পেরেছিলাম, তাই এটি বিবেচনা করার মতো একটি ট্রেড-অফ।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch18-01-what-is-oo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch18-03-oo-design-patterns.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch18-01-what-is-oo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch18-03-oo-design-patterns.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

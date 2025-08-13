@@ -1,0 +1,252 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>একটি I/O প্রজেক্ট: একটি কমান্ড লাইন প্রোগ্রাম তৈরি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="একটি-io-পরজেকট-একটি-কমানড-লাইন-পরোগরাম-তৈরি"><a class="header" href="#একটি-io-পরজেকট-একটি-কমানড-লাইন-পরোগরাম-তৈরি">একটি I/O প্রজেক্ট: একটি কমান্ড লাইন প্রোগ্রাম তৈরি</a></h1>
+<p>এই অধ্যায়ে, আমরা এখন পর্যন্ত শেখা বিভিন্ন দক্ষতার পুনরালোচনা করব এবং আরও কিছু standard library-র ফিচার নিয়ে আলোচনা করব। আমরা একটি কমান্ড লাইন টুল তৈরি করব যা ফাইল এবং কমান্ড লাইন input/output-এর সাথে কাজ করে, যার মাধ্যমে আমরা এ পর্যন্ত শেখা Rust-এর কিছু ধারণা অনুশীলন করতে পারব।</p>
+<p>Rust-এর স্পিড, সেফটি, single binary আউটপুট এবং ক্রস-প্ল্যাটফর্ম সাপোর্ট এটিকে কমান্ড লাইন টুল তৈরির জন্য একটি আদর্শ ল্যাঙ্গুয়েজ করে তুলেছে। তাই, আমাদের প্রজেক্টের জন্য আমরা ক্লাসিক কমান্ড লাইন সার্চ টুল <code>grep</code> (<strong>g</strong>lobally search a <strong>r</strong>egular <strong>e</strong>xpression and <strong>p</strong>rint)-এর নিজস্ব একটি সংস্করণ তৈরি করব। সবচেয়ে সহজ ক্ষেত্রে, <code>grep</code> একটি নির্দিষ্ট ফাইলে একটি নির্দিষ্ট স্ট্রিং খুঁজে বের করে। এটি করার জন্য, <code>grep</code> আর্গুমেন্ট হিসেবে একটি ফাইলের পাথ এবং একটি স্ট্রিং গ্রহণ করে। এরপর এটি ফাইলটি পড়ে, ফাইলের যে লাইনগুলোতে স্ট্রিং আর্গুমেন্টটি রয়েছে সেগুলো খুঁজে বের করে এবং সেই লাইনগুলো প্রিন্ট করে।</p>
+<p>এই প্রজেক্টটি করার সময় আমরা দেখব কীভাবে আমাদের কমান্ড লাইন টুলটিতে অন্যান্য কমান্ড লাইন টুলের মতো টার্মিনালের ফিচারগুলো ব্যবহার করা যায়। আমরা একটি environment variable-এর ভ্যালু রিড করব, যাতে ইউজার আমাদের টুলের আচরণ কনফিগার করতে পারেন। আমরা error message-গুলো standard output (<code>stdout</code>)-এর পরিবর্তে standard error console stream (<code>stderr</code>)-এ প্রিন্ট করব। এর ফলে, উদাহরণস্বরূপ, ইউজার সফল আউটপুটকে একটি ফাইলে রিডাইরেক্ট করতে পারবেন এবং একই সাথে স্ক্রিনে error message-গুলোও দেখতে পাবেন।</p>
+<p>Rust কমিউনিটির একজন সদস্য, Andrew Gallant, ইতোমধ্যেই <code>grep</code>-এর একটি সম্পূর্ণ ফিচার সমৃদ্ধ এবং অত্যন্ত দ্রুতগতির সংস্করণ তৈরি করেছেন, যার নাম <code>ripgrep</code>। তুলনামূলকভাবে, আমাদের সংস্করণটি বেশ সহজ-সরল হবে, কিন্তু এই অধ্যায়টি আপনাকে <code>ripgrep</code>-এর মতো একটি বাস্তব প্রজেক্ট বোঝার জন্য প্রয়োজনীয় কিছু প্রাথমিক ধারণা দেবে।</p>
+<p>আমাদের <code>grep</code> প্রজেক্টটি আপনার শেখা বেশ কয়েকটি ধারণাকে একত্রিত করবে:</p>
+<ul>
+<li>কোড অর্গানাইজ করা (<a href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">অধ্যায় ৭</a><!-- ignore -->)</li>
+<li>ভেক্টর এবং স্ট্রিং ব্যবহার করা (<a href="ch08-00-common-collections.html">অধ্যায় ৮</a><!-- ignore -->)</li>
+<li>এরর হ্যান্ডলিং (<a href="ch09-00-error-handling.html">অধ্যায় ৯</a><!-- ignore -->)</li>
+<li>প্রয়োজনীয় ক্ষেত্রে ট্রেইট এবং লাইফটাইম ব্যবহার করা (<a href="ch10-00-generics.html">অধ্যায় ১০</a><!-- ignore -->)</li>
+<li>টেস্ট লেখা (<a href="ch11-00-testing.html">অধ্যায় ১১</a><!-- ignore -->)</li>
+</ul>
+<p>এছাড়াও আমরা সংক্ষিপ্তভাবে ক্লোজার (closures), ইটারেটর (iterators) এবং ট্রেইট অবজেক্ট (trait objects) সম্পর্কে জানব, যেগুলো নিয়ে <a href="ch13-00-functional-features.html">অধ্যায় ১৩</a><!-- ignore --> এবং <a href="ch18-00-oop.html">অধ্যায় ১৮</a><!-- ignore -->-তে বিস্তারিত আলোচনা করা হবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch11-03-test-organization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch12-01-accepting-command-line-arguments.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch11-03-test-organization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch12-01-accepting-command-line-arguments.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

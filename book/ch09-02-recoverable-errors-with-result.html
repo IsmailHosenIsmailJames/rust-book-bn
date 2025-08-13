@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Result দিয়ে পুনরুদ্ধারযোগ্য এরর - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="result-দিয়ে-পুনরুদধারযোগয-এরর-recoverable-errors"><a class="header" href="#result-দিয়ে-পুনরুদধারযোগয-এরর-recoverable-errors"><code>Result</code> দিয়ে পুনরুদ্ধারযোগ্য এরর (Recoverable Errors)</a></h2>
+<p>বেশিরভাগ এরর এতটাই গুরুতর নয় যে প্রোগ্রামটি পুরোপুরি বন্ধ করে দেওয়ার প্রয়োজন হয়। কখনও কখনও যখন একটি ফাংশন ব্যর্থ হয়, তখন তার কারণটি আপনি সহজেই বুঝতে পারেন এবং সেই অনুযায়ী ব্যবস্থা নিতে পারেন। উদাহরণস্বরূপ, যদি আপনি একটি ফাইল খোলার চেষ্টা করেন এবং ফাইলটি না থাকার কারণে সেই অপারেশনটি ব্যর্থ হয়, তাহলে আপনি প্রসেসটি বন্ধ করে দেওয়ার পরিবর্তে ফাইলটি তৈরি করতে চাইতে পারেন।</p>
+<p>অধ্যায় ২-এর <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-result">“Handling Potential Failure with <code>Result</code>”</a><!-- ignore --> থেকে মনে করুন যে <code>Result</code> enum-কে দুটি ভ্যারিয়েন্ট <code>Ok</code> এবং <code>Err</code> সহ সংজ্ঞায়িত করা হয়েছে, যা নিম্নরূপ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>T</code> এবং <code>E</code> হলো জেনেরিক টাইপ প্যারামিটার (generic type parameters): আমরা অধ্যায় ১০-এ জেনেরিক সম্পর্কে আরও বিস্তারিত আলোচনা করব। এখন আপনার যা জানা দরকার তা হলো, <code>T</code> সফল ক্ষেত্রে <code>Ok</code> ভ্যারিয়েন্টের মধ্যে ফেরত আসা ভ্যালুর টাইপকে প্রতিনিধিত্ব করে, এবং <code>E</code> ব্যর্থতার ক্ষেত্রে <code>Err</code> ভ্যারিয়েন্টের মধ্যে ফেরত আসা এররের টাইপকে প্রতিনিধিত্ব করে। যেহেতু <code>Result</code>-এর এই জেনেরিক টাইপ প্যারামিটারগুলো রয়েছে, তাই আমরা <code>Result</code> টাইপ এবং এর উপর সংজ্ঞায়িত ফাংশনগুলো বিভিন্ন পরিস্থিতিতে ব্যবহার করতে পারি যেখানে আমরা যে সফল ভ্যালু এবং এরর ভ্যালু ফেরত দিতে চাই তা ভিন্ন হতে পারে।</p>
+<p>আসুন এমন একটি ফাংশন কল করি যা একটি <code>Result</code> ভ্যালু রিটার্ন করে কারণ ফাংশনটি ব্যর্থ হতে পারে। লিস্টিং ৯-৩-এ আমরা একটি ফাইল খোলার চেষ্টা করছি।</p>
+<Listing number="9-3" file-name="src/main.rs" caption="একটি ফাইল খোলা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+}</code></pre></pre>
+</Listing>
+<p><code>File::open</code>-এর রিটার্ন টাইপ হলো একটি <code>Result&lt;T, E&gt;</code>। জেনেরিক প্যারামিটার <code>T</code> <code>File::open</code>-এর ইমপ্লিমেন্টেশনে সফল ভ্যালুর টাইপ <code>std::fs::File</code> দ্বারা পূর্ণ হয়েছে, যা একটি ফাইল হ্যান্ডেল (file handle)। এরর ভ্যালুতে ব্যবহৃত <code>E</code>-এর টাইপ হলো <code>std::io::Error</code>। এই রিটার্ন টাইপের মানে হলো <code>File::open</code> কলটি সফল হতে পারে এবং একটি ফাইল হ্যান্ডেল রিটার্ন করতে পারে যা থেকে আমরা পড়তে বা লিখতে পারি। ফাংশন কলটি ব্যর্থও হতে পারে: উদাহরণস্বরূপ, ফাইলটি নাও থাকতে পারে, অথবা আমাদের ফাইল অ্যাক্সেস করার অনুমতি নাও থাকতে পারে। <code>File::open</code> ফাংশনটির আমাদের জানানোর একটি উপায় থাকা দরকার যে এটি সফল হয়েছে নাকি ব্যর্থ হয়েছে এবং একই সাথে আমাদের ফাইল হ্যান্ডেল বা এররের তথ্য দেওয়া দরকার। <code>Result</code> enum ঠিক এই তথ্যই বহন করে।</p>
+<p>যে ক্ষেত্রে <code>File::open</code> সফল হয়, <code>greeting_file_result</code> ভ্যারিয়েবলের ভ্যালুটি হবে <code>Ok</code>-এর একটি ইনস্ট্যান্স যা একটি ফাইল হ্যান্ডেল ধারণ করে। যে ক্ষেত্রে এটি ব্যর্থ হয়, <code>greeting_file_result</code>-এর ভ্যালুটি হবে <code>Err</code>-এর একটি ইনস্ট্যান্স যা কী ধরনের এরর ঘটেছে সে সম্পর্কে আরও তথ্য ধারণ করে।</p>
+<p><code>File::open</code> যে ভ্যালু রিটার্ন করে তার উপর নির্ভর করে বিভিন্ন পদক্ষেপ নেওয়ার জন্য আমাদের লিস্টিং ৯-৩-এর কোডে আরও কিছু যোগ করতে হবে। লিস্টিং ৯-৪ <code>Result</code> হ্যান্ডেল করার একটি উপায় দেখায়, যেখানে একটি বেসিক টুল, <code>match</code> এক্সপ্রেশন ব্যবহার করা হয়েছে যা আমরা অধ্যায় ৬-এ আলোচনা করেছি।</p>
+<Listing number="9-4" file-name="src/main.rs" caption="`Result` ভ্যারিয়েন্টগুলো হ্যান্ডেল করার জন্য `match` এক্সপ্রেশন ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; panic!("Problem opening the file: {error:?}"),
+    };
+}</code></pre></pre>
+</Listing>
+<p>লক্ষ্য করুন যে, <code>Option</code> enum-এর মতো, <code>Result</code> enum এবং এর ভ্যারিয়েন্টগুলো prelude দ্বারা স্কোপে আনা হয়েছে, তাই আমাদের <code>match</code> arm-গুলোতে <code>Ok</code> এবং <code>Err</code> ভ্যারিয়েন্টের আগে <code>Result::</code> নির্দিষ্ট করার প্রয়োজন নেই।</p>
+<p>যখন ফলাফল <code>Ok</code> হয়, এই কোডটি <code>Ok</code> ভ্যারিয়েন্ট থেকে ভেতরের <code>file</code> ভ্যালুটি রিটার্ন করবে, এবং আমরা তারপর সেই ফাইল হ্যান্ডেল ভ্যালুটি <code>greeting_file</code> ভ্যারিয়েবলে অ্যাসাইন করি। <code>match</code>-এর পরে, আমরা ফাইল হ্যান্ডেলটি পড়া বা লেখার জন্য ব্যবহার করতে পারি।</p>
+<p><code>match</code>-এর অন্য arm-টি সেই কেসটি হ্যান্ডেল করে যেখানে আমরা <code>File::open</code> থেকে একটি <code>Err</code> ভ্যালু পাই। এই উদাহরণে, আমরা <code>panic!</code> ম্যাক্রো কল করতে বেছে নিয়েছি। যদি আমাদের বর্তমান ডিরেক্টরিতে <em>hello.txt</em> নামে কোনো ফাইল না থাকে এবং আমরা এই কোডটি চালাই, আমরা <code>panic!</code> ম্যাক্রো থেকে নিম্নলিখিত আউটপুট দেখতে পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/error-handling`
+
+thread 'main' panicked at src/main.rs:8:23:
+Problem opening the file: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>বরাবরের মতো, এই আউটপুটটি আমাদের ঠিক কী ভুল হয়েছে তা বলে দেয়।</p>
+<h3 id="বিভিনন-এররের-উপর-মযাচিং-matching-on-different-errors"><a class="header" href="#বিভিনন-এররের-উপর-মযাচিং-matching-on-different-errors">বিভিন্ন এররের উপর ম্যাচিং (Matching on Different Errors)</a></h3>
+<p>লিস্টিং ৯-৪-এর কোডটি <code>File::open</code> কেন ব্যর্থ হয়েছে তা নির্বিশেষে <code>panic!</code> করবে। তবে, আমরা বিভিন্ন ব্যর্থতার কারণের জন্য বিভিন্ন পদক্ষেপ নিতে চাই। যদি ফাইলটি না থাকার কারণে <code>File::open</code> ব্যর্থ হয়, আমরা ফাইলটি তৈরি করতে এবং নতুন ফাইলের হ্যান্ডেল রিটার্ন করতে চাই। যদি <code>File::open</code> অন্য কোনো কারণে ব্যর্থ হয়—উদাহরণস্বরূপ, কারণ আমাদের ফাইল খোলার অনুমতি ছিল না—আমরা এখনও চাই কোডটি লিস্টিং ৯-৪-এর মতোই <code>panic!</code> করুক। এর জন্য, আমরা একটি অভ্যন্তরীণ <code>match</code> এক্সপ্রেশন যোগ করি, যা লিস্টিং ৯-৫-এ দেখানো হয়েছে।</p>
+<Listing number="9-5" file-name="src/main.rs" caption="ভিন্ন ভিন্ন ধরনের এরর ভিন্ন ভিন্ন উপায়ে হ্যান্ডেল করা">
+<!-- ignore this test because otherwise it creates hello.txt which causes other
+tests to fail lol -->
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) =&gt; file,
+        Err(error) =&gt; match error.kind() {
+            ErrorKind::NotFound =&gt; match File::create("hello.txt") {
+                Ok(fc) =&gt; fc,
+                Err(e) =&gt; panic!("Problem creating the file: {e:?}"),
+            },
+            _ =&gt; {
+                panic!("Problem opening the file: {error:?}");
+            }
+        },
+    };
+}</code></pre>
+</Listing>
+<p><code>File::open</code> <code>Err</code> ভ্যারিয়েন্টের ভিতরে যে ভ্যালুটি রিটার্ন করে তার টাইপ হলো <code>io::Error</code>, যা standard library দ্বারা সরবরাহ করা একটি struct। এই struct-টির একটি মেথড <code>kind</code> আছে যা আমরা একটি <code>io::ErrorKind</code> ভ্যালু পেতে কল করতে পারি। <code>io::ErrorKind</code> enum-টি standard library দ্বারা সরবরাহ করা হয় এবং এতে এমন ভ্যারিয়েন্ট রয়েছে যা একটি <code>io</code> অপারেশনের ফলে হতে পারে এমন বিভিন্ন ধরনের এররকে প্রতিনিধিত্ব করে। আমরা যে ভ্যারিয়েন্টটি ব্যবহার করতে চাই তা হলো <code>ErrorKind::NotFound</code>, যা নির্দেশ করে যে আমরা যে ফাইলটি খোলার চেষ্টা করছি তা এখনও বিদ্যমান নেই। তাই আমরা <code>greeting_file_result</code>-এর উপর ম্যাচ করি, কিন্তু আমাদের <code>error.kind()</code>-এর উপর একটি অভ্যন্তরীণ ম্যাচও রয়েছে।</p>
+<p>অভ্যন্তরীণ ম্যাচে আমরা যে শর্তটি পরীক্ষা করতে চাই তা হলো <code>error.kind()</code> দ্বারা রিটার্ন করা ভ্যালুটি <code>ErrorKind</code> enum-এর <code>NotFound</code> ভ্যারিয়েন্ট কিনা। যদি তাই হয়, আমরা <code>File::create</code> দিয়ে ফাইলটি তৈরি করার চেষ্টা করি। তবে, যেহেতু <code>File::create</code>-ও ব্যর্থ হতে পারে, তাই আমাদের অভ্যন্তরীণ <code>match</code> এক্সপ্রেশনে একটি দ্বিতীয় arm দরকার। যখন ফাইলটি তৈরি করা যায় না, তখন একটি ভিন্ন এরর বার্তা প্রিন্ট করা হয়। বাইরের <code>match</code>-এর দ্বিতীয় arm-টি একই থাকে, তাই প্রোগ্রামটি ফাইল না পাওয়ার এরর ছাড়া অন্য যেকোনো এররের জন্য প্যানিক করে।</p>
+<blockquote>
+<h4 id="resultt-e-এর-সাথে-match-বযবহারের-বিকলপ"><a class="header" href="#resultt-e-এর-সাথে-match-বযবহারের-বিকলপ"><code>Result&lt;T, E&gt;</code>-এর সাথে <code>match</code> ব্যবহারের বিকল্প</a></h4>
+<p>এখানে অনেক <code>match</code> ব্যবহার হয়েছে! <code>match</code> এক্সপ্রেশনটি খুব দরকারী কিন্তু এটি একটি বেশ আদিম (primitive) টুল। অধ্যায় ১৩-তে, আপনি closures সম্পর্কে শিখবেন, যা <code>Result&lt;T, E&gt;</code>-তে সংজ্ঞায়িত অনেক মেথডের সাথে ব্যবহৃত হয়। আপনার কোডে <code>Result&lt;T, E&gt;</code> ভ্যালু হ্যান্ডেল করার সময় এই মেথডগুলো <code>match</code> ব্যবহারের চেয়ে বেশি সংক্ষিপ্ত হতে পারে।</p>
+<p>উদাহরণস্বরূপ, লিস্টিং ৯-৫-এর মতো একই লজিক লেখার আরেকটি উপায় এখানে দেওয়া হলো, এবার closures এবং <code>unwrap_or_else</code> মেথড ব্যবহার করে:</p>
+<!-- CAN'T EXTRACT SEE https://github.com/rust-lang/mdBook/issues/1127 -->
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {error:?}");
+            })
+        } else {
+            panic!("Problem opening the file: {error:?}");
+        }
+    });
+}</code></pre>
+<p>যদিও এই কোডটির আচরণ লিস্টিং ৯-৫-এর মতোই, এতে কোনো <code>match</code> এক্সপ্রেশন নেই এবং এটি পড়তে আরও পরিষ্কার। অধ্যায় ১৩ পড়ার পরে এই উদাহরণে ফিরে আসুন, এবং standard library ডকুমেন্টেশনে <code>unwrap_or_else</code> মেথডটি দেখুন। এরর নিয়ে কাজ করার সময় এরকম আরও অনেক মেথড আছে যা বিশাল নেস্টেড <code>match</code> এক্সপ্রেশনকে পরিষ্কার করতে পারে।</p>
+</blockquote>
+<h4 id="এররের-উপর-পযানিকের-জনয-শরটকাট-unwrap-এবং-expect"><a class="header" href="#এররের-উপর-পযানিকের-জনয-শরটকাট-unwrap-এবং-expect">এররের উপর প্যানিকের জন্য শর্টকাট: <code>unwrap</code> এবং <code>expect</code></a></h4>
+<p><code>match</code> ব্যবহার করা যথেষ্ট ভালো কাজ করে, তবে এটি কিছুটা দীর্ঘ হতে পারে এবং সবসময় উদ্দেশ্য ভালোভাবে বোঝাতে পারে না। <code>Result&lt;T, E&gt;</code> টাইপের উপর বিভিন্ন, আরও নির্দিষ্ট কাজ করার জন্য অনেক হেল্পার মেথড সংজ্ঞায়িত করা আছে। <code>unwrap</code> মেথডটি একটি শর্টকাট মেথড যা আমরা লিস্টিং ৯-৪-এ লেখা <code>match</code> এক্সপ্রেশনের মতোই প্রয়োগ করা হয়েছে। যদি <code>Result</code> ভ্যালুটি <code>Ok</code> ভ্যারিয়েন্ট হয়, <code>unwrap</code> <code>Ok</code>-এর ভিতরের ভ্যালুটি রিটার্ন করবে। যদি <code>Result</code> <code>Err</code> ভ্যারিয়েন্ট হয়, <code>unwrap</code> আমাদের জন্য <code>panic!</code> ম্যাক্রো কল করবে। এখানে <code>unwrap</code>-এর একটি উদাহরণ দেওয়া হলো:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap();
+}</code></pre></pre>
+</Listing>
+<p>যদি আমরা <em>hello.txt</em> ফাইল ছাড়া এই কোডটি চালাই, আমরা <code>unwrap</code> মেথডের করা <code>panic!</code> কল থেকে একটি এরর বার্তা দেখতে পাব:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-04-unwrap
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:4:49:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+</code></pre>
+<p>একইভাবে, <code>expect</code> মেথডটি আমাদের <code>panic!</code> এরর বার্তাও বেছে নিতে দেয়। <code>unwrap</code>-এর পরিবর্তে <code>expect</code> ব্যবহার করা এবং ভালো এরর বার্তা সরবরাহ করা আপনার উদ্দেশ্য বোঝাতে পারে এবং প্যানিকের উৎস খুঁজে বের করা সহজ করে তুলতে পারে। <code>expect</code>-এর সিনট্যাক্সটি এইরকম:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>expect</code> <code>unwrap</code>-এর মতোই ব্যবহার করি: ফাইল হ্যান্ডেল রিটার্ন করতে বা <code>panic!</code> ম্যাক্রো কল করতে। <code>expect</code>-এর <code>panic!</code> কলে ব্যবহৃত এরর বার্তাটি হবে <code>expect</code>-এ পাস করা প্যারামিটার, <code>unwrap</code>-এর ব্যবহৃত ডিফল্ট <code>panic!</code> বার্তার পরিবর্তে। এটি দেখতে এইরকম:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-05-expect
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:5:10:
+hello.txt should be included in this project: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+</code></pre>
+<p>প্রোডাকশন-মানের কোডে, বেশিরভাগ রাস্টেসিয়ান (Rustaceans) <code>unwrap</code>-এর পরিবর্তে <code>expect</code> বেছে নেয় এবং অপারেশনটি কেন সবসময় সফল হবে বলে আশা করা হচ্ছে সে সম্পর্কে আরও প্রসঙ্গ দেয়। এভাবে, যদি আপনার অনুমান কখনও ভুল প্রমাণিত হয়, আপনার ডিবাগিংয়ে ব্যবহার করার জন্য আরও তথ্য থাকবে।</p>
+<h3 id="এরর-পরচার-করা-propagating-errors"><a class="header" href="#এরর-পরচার-করা-propagating-errors">এরর প্রচার করা (Propagating Errors)</a></h3>
+<p>যখন একটি ফাংশনের ইমপ্লিমেন্টেশন এমন কিছু কল করে যা ব্যর্থ হতে পারে, তখন ফাংশনের মধ্যেই এররটি হ্যান্ডেল করার পরিবর্তে, আপনি এররটি কলিং কোডে ফেরত দিতে পারেন যাতে এটি কী করতে হবে তা সিদ্ধান্ত নিতে পারে। এটিকে এরর <em>প্রচার করা</em> (propagating) বলা হয় এবং এটি কলিং কোডকে আরও নিয়ন্ত্রণ দেয়, যেখানে আপনার কোডের প্রেক্ষাপটে আপনার কাছে যা উপলব্ধ তার চেয়ে বেশি তথ্য বা লজিক থাকতে পারে যা নির্দেশ করে যে এররটি কীভাবে হ্যান্ডেল করা উচিত।</p>
+<p>উদাহরণস্বরূপ, লিস্টিং ৯-৬ একটি ফাংশন দেখায় যা একটি ফাইল থেকে একটি ব্যবহারকারীর নাম পড়ে। যদি ফাইলটি বিদ্যমান না থাকে বা পড়া না যায়, এই ফাংশনটি সেই এররগুলো ফাংশনটিকে কল করা কোডে ফেরত দেবে।</p>
+<Listing number="9-6" file-name="src/main.rs" caption="`match` ব্যবহার করে কলিং কোডে এরর ফেরত দেয় এমন একটি ফাংশন">
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let username_file_result = File::open("hello.txt");
+
+    let mut username_file = match username_file_result {
+        Ok(file) =&gt; file,
+        Err(e) =&gt; return Err(e),
+    };
+
+    let mut username = String::new();
+
+    match username_file.read_to_string(&amp;mut username) {
+        Ok(_) =&gt; Ok(username),
+        Err(e) =&gt; Err(e),
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই ফাংশনটি অনেক ছোট করে লেখা যায়, কিন্তু আমরা এরর হ্যান্ডলিং অন্বেষণ করার জন্য প্রথমে এটি ম্যানুয়ালি অনেক কিছু করব; শেষে, আমরা ছোট উপায়টি দেখাব। আসুন প্রথমে ফাংশনের রিটার্ন টাইপটি দেখি: <code>Result&lt;String, io::Error&gt;</code>। এর মানে হলো ফাংশনটি <code>Result&lt;T, E&gt;</code> টাইপের একটি ভ্যালু রিটার্ন করছে, যেখানে জেনেরিক প্যারামিটার <code>T</code> কংক্রিট টাইপ <code>String</code> দিয়ে এবং জেনেরিক টাইপ <code>E</code> কংক্রিট টাইপ <code>io::Error</code> দিয়ে পূর্ণ করা হয়েছে।</p>
+<p>যদি এই ফাংশনটি কোনো সমস্যা ছাড়াই সফল হয়, তবে এই ফাংশনটি কল করা কোডটি একটি <code>Ok</code> ভ্যালু পাবে যা একটি <code>String</code> ধারণ করে—এই ফাংশনটি ফাইল থেকে যে <code>username</code> পড়েছে। যদি এই ফাংশনটি কোনো সমস্যার সম্মুখীন হয়, তবে কলিং কোডটি একটি <code>Err</code> ভ্যালু পাবে যা <code>io::Error</code>-এর একটি ইনস্ট্যান্স ধারণ করে যা সমস্যাগুলো কী ছিল সে সম্পর্কে আরও তথ্য ধারণ করে। আমরা এই ফাংশনের রিটার্ন টাইপ হিসাবে <code>io::Error</code> বেছে নিয়েছি কারণ এই ফাংশনের বডিতে আমরা যে দুটি অপারেশন কল করছি যা ব্যর্থ হতে পারে—<code>File::open</code> ফাংশন এবং <code>read_to_string</code> মেথড—উভয় থেকেই রিটার্ন করা এরর ভ্যালুর টাইপ এটি।</p>
+<p>ফাংশনের বডি <code>File::open</code> ফাংশন কল করে শুরু হয়। তারপর আমরা লিস্টিং ৯-৪-এর <code>match</code>-এর মতো একটি <code>match</code> দিয়ে <code>Result</code> ভ্যালুটি হ্যান্ডেল করি। যদি <code>File::open</code> সফল হয়, প্যাটার্ন ভ্যারিয়েবল <code>file</code>-এর ফাইল হ্যান্ডেলটি মিউটেবল ভ্যারিয়েবল <code>username_file</code>-এর ভ্যালু হয়ে যায় এবং ফাংশনটি চলতে থাকে। <code>Err</code> ক্ষেত্রে, <code>panic!</code> কল করার পরিবর্তে, আমরা <code>return</code> কীওয়ার্ড ব্যবহার করে ফাংশন থেকে পুরোপুরি আগেভাগে রিটার্ন করি এবং <code>File::open</code> থেকে এরর ভ্যালুটি, এখন প্যাটার্ন ভ্যারিয়েবল <code>e</code>-তে, এই ফাংশনের এরর ভ্যালু হিসাবে কলিং কোডে ফেরত পাঠাই।</p>
+<p>সুতরাং, যদি আমাদের <code>username_file</code>-এ একটি ফাইল হ্যান্ডেল থাকে, ফাংশনটি তখন <code>username</code> ভ্যারিয়েবলে একটি নতুন <code>String</code> তৈরি করে এবং <code>username_file</code>-এর ফাইল হ্যান্ডেলের উপর <code>read_to_string</code> মেথড কল করে ফাইলের বিষয়বস্তু <code>username</code>-এ পড়ে। <code>read_to_string</code> মেথডটিও একটি <code>Result</code> রিটার্ন করে কারণ এটিও ব্যর্থ হতে পারে, যদিও <code>File::open</code> সফল হয়েছিল। তাই আমাদের সেই <code>Result</code> হ্যান্ডেল করার জন্য আরেকটি <code>match</code> দরকার: যদি <code>read_to_string</code> সফল হয়, তাহলে আমাদের ফাংশন সফল হয়েছে, এবং আমরা ফাইল থেকে পড়া ইউজারনেমটি, যা এখন <code>username</code>-এ আছে, একটি <code>Ok</code>-তে র‍্যাপ করে রিটার্ন করি। যদি <code>read_to_string</code> ব্যর্থ হয়, আমরা এরর ভ্যালুটি একইভাবে রিটার্ন করি যেভাবে আমরা <code>File::open</code>-এর রিটার্ন ভ্যালু হ্যান্ডেল করা <code>match</code>-এ এরর ভ্যালু রিটার্ন করেছিলাম। তবে, আমাদের স্পষ্টভাবে <code>return</code> বলার প্রয়োজন নেই, কারণ এটি ফাংশনের শেষ এক্সপ্রেশন।</p>
+<p>এই কোডটি কল করা কোডটি তখন একটি <code>Ok</code> ভ্যালু যা একটি ইউজারনেম ধারণ করে বা একটি <code>Err</code> ভ্যালু যা একটি <code>io::Error</code> ধারণ করে তা হ্যান্ডেল করবে। সেই ভ্যালুগুলো দিয়ে কী করতে হবে তা সিদ্ধান্ত নেওয়া কলিং কোডের উপর নির্ভর করে। যদি কলিং কোড একটি <code>Err</code> ভ্যালু পায়, তবে এটি <code>panic!</code> কল করে প্রোগ্রাম ক্র্যাশ করতে পারে, একটি ডিফল্ট ইউজারনেম ব্যবহার করতে পারে, অথবা ফাইল ছাড়া অন্য কোথাও থেকে ইউজারনেম খুঁজতে পারে, উদাহরণস্বরূপ। কলিং কোড আসলে কী করার চেষ্টা করছে সে সম্পর্কে আমাদের কাছে পর্যাপ্ত তথ্য নেই, তাই আমরা সমস্ত সফলতা বা এররের তথ্য উপরে প্রচার করি যাতে এটি যথাযথভাবে হ্যান্ডেল করতে পারে।</p>
+<p>এরর প্রচারের এই প্যাটার্নটি Rust-এ এতটাই সাধারণ যে Rust এটিকে সহজ করার জন্য প্রশ্নবোধক চিহ্ন অপারেটর <code>?</code> সরবরাহ করে।</p>
+<h4 id="এরর-পরচারের-জনয-একটি-শরটকাট--অপারেটর"><a class="header" href="#এরর-পরচারের-জনয-একটি-শরটকাট--অপারেটর">এরর প্রচারের জন্য একটি শর্টকাট: <code>?</code> অপারেটর</a></h4>
+<p>লিস্টিং ৯-৭ <code>read_username_from_file</code>-এর একটি ইমপ্লিমেন্টেশন দেখায় যা লিস্টিং ৯-৬-এর মতোই কার্যকারিতা সম্পন্ন, কিন্তু এই ইমপ্লিমেন্টেশনটি <code>?</code> অপারেটর ব্যবহার করে।</p>
+<Listing number="9-7" file-name="src/main.rs" caption="`?` অপারেটর ব্যবহার করে কলিং কোডে এরর ফেরত দেওয়া একটি ফাংশন">
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&amp;mut username)?;
+    Ok(username)
+}
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>একটি <code>Result</code> ভ্যালুর পরে রাখা <code>?</code> অপারেটরটি প্রায় একইভাবে কাজ করার জন্য সংজ্ঞায়িত করা হয়েছে যেভাবে আমরা লিস্টিং ৯-৬-এ <code>Result</code> ভ্যালুগুলো হ্যান্ডেল করার জন্য <code>match</code> এক্সপ্রেশন সংজ্ঞায়িত করেছি। যদি <code>Result</code>-এর ভ্যালুটি একটি <code>Ok</code> হয়, তবে <code>Ok</code>-এর ভিতরের ভ্যালুটি এই এক্সপ্রেশন থেকে ফেরত আসবে, এবং প্রোগ্রামটি চলতে থাকবে। যদি ভ্যালুটি একটি <code>Err</code> হয়, তবে <code>Err</code> পুরো ফাংশন থেকে ফেরত আসবে যেন আমরা <code>return</code> কীওয়ার্ড ব্যবহার করেছি যাতে এরর ভ্যালুটি কলিং কোডে প্রচারিত হয়।</p>
+<p>লিস্টিং ৯-৬-এর <code>match</code> এক্সপ্রেশন যা করে এবং <code>?</code> অপারেটর যা করে তার মধ্যে একটি পার্থক্য রয়েছে: যে এরর ভ্যালুগুলোর উপর <code>?</code> অপারেটর কল করা হয় সেগুলি standard library-এর <code>From</code> trait-এ সংজ্ঞায়িত <code>from</code> ফাংশনের মধ্য দিয়ে যায়, যা এক টাইপের ভ্যালুকে অন্য টাইপে রূপান্তর করতে ব্যবহৃত হয়। যখন <code>?</code> অপারেটর <code>from</code> ফাংশনটি কল করে, তখন প্রাপ্ত এরর টাইপটি বর্তমান ফাংশনের রিটার্ন টাইপে সংজ্ঞায়িত এরর টাইপে রূপান্তরিত হয়। এটি দরকারী যখন একটি ফাংশন একটি এরর টাইপ রিটার্ন করে যা ফাংশনটি ব্যর্থ হওয়ার সমস্ত উপায়কে প্রতিনিধিত্ব করে, এমনকি যদি অংশগুলি বিভিন্ন কারণে ব্যর্থ হতে পারে।</p>
+<p>উদাহরণস্বরূপ, আমরা লিস্টিং ৯-৭-এর <code>read_username_from_file</code> ফাংশনটি পরিবর্তন করে <code>OurError</code> নামের একটি কাস্টম এরর টাইপ রিটার্ন করতে পারি যা আমরা সংজ্ঞায়িত করি। যদি আমরা একটি <code>io::Error</code> থেকে <code>OurError</code>-এর একটি ইনস্ট্যান্স তৈরি করার জন্য <code>impl From&lt;io::Error&gt; for OurError</code>-ও সংজ্ঞায়িত করি, তবে <code>read_username_from_file</code>-এর বডিতে <code>?</code> অপারেটর কলগুলো <code>from</code> কল করবে এবং ফাংশনে কোনো অতিরিক্ত কোড যোগ না করেই এরর টাইপগুলো রূপান্তর করবে।</p>
+<p>লিস্টিং ৯-৭-এর প্রেক্ষাপটে, <code>File::open</code> কলের শেষে <code>?</code> একটি <code>Ok</code>-এর ভিতরের ভ্যালুটি <code>username_file</code> ভ্যারিয়েবলে রিটার্ন করবে। যদি একটি এরর ঘটে, <code>?</code> অপারেটরটি পুরো ফাংশন থেকে আগেভাগে রিটার্ন করবে এবং কলিং কোডকে যেকোনো <code>Err</code> ভ্যালু দেবে। একই জিনিস <code>read_to_string</code> কলের শেষে <code>?</code>-এর ক্ষেত্রেও প্রযোজ্য।</p>
+<p><code>?</code> অপারেটরটি অনেক বয়লারপ্লেট (boilerplate) দূর করে এবং এই ফাংশনের ইমপ্লিমেন্টেশনকে সহজ করে তোলে। আমরা <code>?</code>-এর ঠিক পরে মেথড কল চেইন করে এই কোডটিকে আরও ছোট করতে পারি, যেমনটি লিস্টিং ৯-৮-এ দেখানো হয়েছে।</p>
+<Listing number="9-8" file-name="src/main.rs" caption="`?` অপারেটরের পরে মেথড কল চেইন করা">
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs::File;
+use std::io::{self, Read};
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut username = String::new();
+
+    File::open("hello.txt")?.read_to_string(&amp;mut username)?;
+
+    Ok(username)
+}
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা <code>username</code>-এ নতুন <code>String</code> তৈরি করাটা ফাংশনের শুরুতে নিয়ে এসেছি; সেই অংশটি পরিবর্তিত হয়নি। <code>username_file</code> ভ্যারিয়েবল তৈরি করার পরিবর্তে, আমরা <code>read_to_string</code> কলটি সরাসরি <code>File::open("hello.txt")?</code>-এর ফলাফলের সাথে চেইন করেছি। <code>read_to_string</code> কলের শেষে আমাদের এখনও একটি <code>?</code> রয়েছে, এবং <code>File::open</code> এবং <code>read_to_string</code> উভয়ই সফল হলে আমরা এখনও এরর রিটার্ন করার পরিবর্তে <code>username</code> ধারণকারী একটি <code>Ok</code> ভ্যালু রিটার্ন করি। কার্যকারিতা আবার লিস্টিং ৯-৬ এবং লিস্টিং ৯-৭-এর মতোই; এটি লেখার একটি ভিন্ন, আরও সুবিধাজনক উপায়।</p>
+<p>লিস্টিং ৯-৯ <code>fs::read_to_string</code> ব্যবহার করে এটিকে আরও ছোট করার একটি উপায় দেখায়।</p>
+<Listing number="9-9" file-name="src/main.rs" caption="ফাইল খুলে তারপর পড়ার পরিবর্তে `fs::read_to_string` ব্যবহার করা">
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs;
+use std::io;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    fs::read_to_string("hello.txt")
+}
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>একটি ফাইলকে একটি স্ট্রিং-এ পড়া একটি মোটামুটি সাধারণ অপারেশন, তাই standard library সুবিধাজনক <code>fs::read_to_string</code> ফাংশন সরবরাহ করে যা ফাইলটি খোলে, একটি নতুন <code>String</code> তৈরি করে, ফাইলের বিষয়বস্তু পড়ে, সেই <code>String</code>-এ বিষয়বস্তু রাখে এবং এটি রিটার্ন করে। অবশ্যই, <code>fs::read_to_string</code> ব্যবহার করা আমাদের সমস্ত এরর হ্যান্ডলিং ব্যাখ্যা করার সুযোগ দেয় না, তাই আমরা প্রথমে দীর্ঘ উপায়টি করেছি।</p>
+<h4 id="কোথায--অপারেটর-বযবহার-করা-যেতে-পারে"><a class="header" href="#কোথায--অপারেটর-বযবহার-করা-যেতে-পারে">কোথায় <code>?</code> অপারেটর ব্যবহার করা যেতে পারে</a></h4>
+<p><code>?</code> অপারেটরটি শুধুমাত্র সেই ফাংশনগুলিতে ব্যবহার করা যেতে পারে যাদের রিটার্ন টাইপ <code>?</code> যে ভ্যালুর উপর ব্যবহৃত হয় তার সাথে সামঞ্জস্যপূর্ণ। এটি কারণ <code>?</code> অপারেটরটি একটি ফাংশন থেকে একটি ভ্যালুর আগেভাগে রিটার্ন করার জন্য সংজ্ঞায়িত করা হয়েছে, ঠিক যেমনটি আমরা লিস্টিং ৯-৬-এ সংজ্ঞায়িত <code>match</code> এক্সপ্রেশনের মতো। লিস্টিং ৯-৬-এ, <code>match</code> একটি <code>Result</code> ভ্যালু ব্যবহার করছিল, এবং আগেভাগে রিটার্ন করা arm-টি একটি <code>Err(e)</code> ভ্যালু রিটার্ন করেছিল। ফাংশনের রিটার্ন টাইপটি একটি <code>Result</code> হতে হবে যাতে এটি এই <code>return</code>-এর সাথে সামঞ্জস্যপূর্ণ হয়।</p>
+<p>লিস্টিং ৯-১০-এ, আসুন দেখি আমরা যদি একটি <code>main</code> ফাংশনে <code>?</code> অপারেটর ব্যবহার করি যার রিটার্ন টাইপ আমরা যে ভ্যালুর উপর <code>?</code> ব্যবহার করি তার টাইপের সাথে অসামঞ্জস্যপূর্ণ হয় তবে আমরা কী এরর পাব।</p>
+<Listing number="9-10" file-name="src/main.rs" caption="`()` রিটার্ন করে এমন `main` ফাংশনে `?` ব্যবহার করার চেষ্টা কম্পাইল হবে না।">
+<pre><code class="language-rust ignore does_not_compile">use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")?;
+}</code></pre>
+</Listing>
+<p>এই কোডটি একটি ফাইল খোলে, যা ব্যর্থ হতে পারে। <code>?</code> অপারেটরটি <code>File::open</code> দ্বারা রিটার্ন করা <code>Result</code> ভ্যালুটিকে অনুসরণ করে, কিন্তু এই <code>main</code> ফাংশনটির রিটার্ন টাইপ <code>()</code> , <code>Result</code> নয়। যখন আমরা এই কোডটি কম্পাইল করি, তখন আমরা নিম্নলিখিত এরর বার্তাটি পাই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+ --&gt; src/main.rs:4:48
+  |
+3 | fn main() {
+  | --------- this function should return `Result` or `Option` to accept `?`
+4 |     let greeting_file = File::open("hello.txt")?;
+  |                                                ^ cannot use the `?` operator in a function that returns `()`
+  |
+  = help: the trait `FromResidual&lt;Result&lt;Infallible, std::io::Error&gt;&gt;` is not implemented for `()`
+help: consider adding return type
+  |
+3 ~ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+4 |     let greeting_file = File::open("hello.txt")?;
+5 +     Ok(())
+  |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `error-handling` (bin "error-handling") due to 1 previous error
+</code></pre>
+<p>এই এররটি নির্দেশ করে যে আমরা শুধুমাত্র সেই ফাংশনে <code>?</code> অপারেটর ব্যবহার করতে পারি যা <code>Result</code>, <code>Option</code>, বা <code>FromResidual</code> ইমপ্লিমেন্ট করে এমন অন্য কোনো টাইপ রিটার্ন করে।</p>
+<p>এররটি ঠিক করার জন্য, আপনার দুটি বিকল্প রয়েছে। একটি বিকল্প হলো আপনার ফাংশনের রিটার্ন টাইপ পরিবর্তন করে আপনি যে ভ্যালুর উপর <code>?</code> অপারেটর ব্যবহার করছেন তার সাথে সামঞ্জস্যপূর্ণ করা, যতক্ষণ না আপনার কোনো সীমাবদ্ধতা থাকে যা এটি প্রতিরোধ করে। অন্য বিকল্পটি হলো <code>Result&lt;T, E&gt;</code>-কে যেভাবে উপযুক্ত সেভাবে হ্যান্ডেল করার জন্য একটি <code>match</code> বা <code>Result&lt;T, E&gt;</code>-এর কোনো মেথড ব্যবহার করা।</p>
+<p>এরর বার্তাটিতে আরও উল্লেখ করা হয়েছে যে <code>?</code> <code>Option&lt;T&gt;</code> ভ্যালুগুলোর সাথেও ব্যবহার করা যেতে পারে। <code>Result</code>-এর উপর <code>?</code> ব্যবহারের মতোই, আপনি শুধুমাত্র সেই ফাংশনে <code>Option</code>-এর উপর <code>?</code> ব্যবহার করতে পারেন যা একটি <code>Option</code> রিটার্ন করে। <code>Option&lt;T&gt;</code>-এর উপর কল করা হলে <code>?</code> অপারেটরের আচরণ <code>Result&lt;T, E&gt;</code>-এর উপর কল করা হলে তার আচরণের মতোই: যদি ভ্যালুটি <code>None</code> হয়, তবে সেই সময়ে ফাংশন থেকে <code>None</code> আগেভাগে রিটার্ন করা হবে। যদি ভ্যালুটি <code>Some</code> হয়, তবে <code>Some</code>-এর ভিতরের ভ্যালুটি এক্সপ্রেশনের ফলস্বরূপ ভ্যালু হয়, এবং ফাংশনটি চলতে থাকে। লিস্টিং ৯-১১-এ একটি ফাংশনের উদাহরণ রয়েছে যা প্রদত্ত টেক্সটের প্রথম লাইনের শেষ অক্ষরটি খুঁজে বের করে।</p>
+<Listing number="9-11" caption="`Option<T>` ভ্যালুর উপর `?` অপারেটর ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn last_char_of_first_line(text: &amp;str) -&gt; Option&lt;char&gt; {
+    text.lines().next()?.chars().last()
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    assert_eq!(
+</span><span class="boring">        last_char_of_first_line("Hello, world\nHow are you today?"),
+</span><span class="boring">        Some('d')
+</span><span class="boring">    );
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(last_char_of_first_line(""), None);
+</span><span class="boring">    assert_eq!(last_char_of_first_line("\nhi"), None);
+</span><span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+এই ফাংশনটি `Option&lt;char&gt;` রিটার্ন করে কারণ এটি সম্ভব যে সেখানে একটি অক্ষর আছে, কিন্তু এটিও সম্ভব যে সেখানে নেই। এই কোডটি `text` স্ট্রিং স্লাইস আর্গুমেন্টটি নেয় এবং এর উপর `lines` মেথড কল করে, যা স্ট্রিং-এর লাইনগুলোর উপর একটি ইটারেটর রিটার্ন করে। যেহেতু এই ফাংশনটি প্রথম লাইনটি পরীক্ষা করতে চায়, এটি ইটারেটরের প্রথম ভ্যালুটি পেতে ইটারেটরের উপর `next` কল করে। যদি `text` একটি খালি স্ট্রিং হয়, তবে এই `next` কলটি `None` রিটার্ন করবে, সেক্ষেত্রে আমরা `?` ব্যবহার করে `last_char_of_first_line` থেকে `None` রিটার্ন করে থেমে যাই। যদি `text` একটি খালি স্ট্রিং না হয়, `next` একটি `Some` ভ্যালু রিটার্ন করবে যা `text`-এর প্রথম লাইনের একটি স্ট্রিং স্লাইস ধারণ করে।
+
+`?` স্ট্রিং স্লাইসটি এক্সট্র্যাক্ট করে, এবং আমরা সেই স্ট্রিং স্লাইসের উপর `chars` কল করে এর অক্ষরগুলোর একটি ইটারেটর পেতে পারি। আমরা এই প্রথম লাইনের শেষ অক্ষরে আগ্রহী, তাই আমরা ইটারেটরের শেষ আইটেমটি রিটার্ন করার জন্য `last` কল করি। এটি একটি `Option` কারণ এটি সম্ভব যে প্রথম লাইনটি একটি খালি স্ট্রিং; উদাহরণস্বরূপ, যদি `text` একটি ফাঁকা লাইন দিয়ে শুরু হয় কিন্তু অন্য লাইনে অক্ষর থাকে, যেমন `"\nhi"`। তবে, যদি প্রথম লাইনে একটি শেষ অক্ষর থাকে, তবে এটি `Some` ভ্যারিয়েন্টে রিটার্ন করা হবে। মাঝখানে `?` অপারেটরটি আমাদের এই লজিকটি সংক্ষিপ্তভাবে প্রকাশ করার একটি উপায় দেয়, যা আমাদের ফাংশনটি এক লাইনে ইমপ্লিমেন্ট করতে দেয়। যদি আমরা `Option`-এর উপর `?` অপারেটর ব্যবহার করতে না পারতাম, তবে আমাদের এই লজিকটি আরও মেথড কল বা একটি `match` এক্সপ্রেশন ব্যবহার করে ইমপ্লিমেন্ট করতে হতো।
+
+মনে রাখবেন যে আপনি একটি ফাংশনে `Result`-এর উপর `?` অপারেটর ব্যবহার করতে পারেন যা `Result` রিটার্ন করে, এবং আপনি একটি ফাংশনে `Option`-এর উপর `?` অপারেটর ব্যবহার করতে পারেন যা `Option` রিটার্ন করে, কিন্তু আপনি মিশ্রণ করতে পারবেন না। `?` অপারেটরটি স্বয়ংক্রিয়ভাবে একটি `Result`-কে একটি `Option`-এ বা তার বিপরীতে রূপান্তর করবে না; সেই ক্ষেত্রে, আপনি স্পষ্টভাবে রূপান্তর করার জন্য `Result`-এর উপর `ok` মেথড বা `Option`-এর উপর `ok_or` মেথডের মতো মেথড ব্যবহার করতে পারেন।
+
+এখন পর্যন্ত, আমরা যে সমস্ত `main` ফাংশন ব্যবহার করেছি সেগুলি `()` রিটার্ন করে। `main` ফাংশনটি বিশেষ কারণ এটি একটি এক্সিকিউটেবল প্রোগ্রামের প্রবেশ এবং প্রস্থান বিন্দু, এবং প্রোগ্রামটি প্রত্যাশিতভাবে আচরণ করার জন্য এর রিটার্ন টাইপের উপর বিধিনিষেধ রয়েছে।
+
+সৌভাগ্যবশত, `main` একটি `Result&lt;(), E&gt;`-ও রিটার্ন করতে পারে। লিস্টিং ৯-১২-এ লিস্টিং ৯-১০-এর কোড রয়েছে, কিন্তু আমরা `main`-এর রিটার্ন টাইপ পরিবর্তন করে `Result&lt;(), Box&lt;dyn Error&gt;&gt;` করেছি এবং শেষে একটি রিটার্ন ভ্যালু `Ok(())` যোগ করেছি। এই কোডটি এখন কম্পাইল হবে।
+
+&lt;Listing number="9-12" file-name="src/main.rs" caption="`main`-কে `Result&lt;(), E&gt;` রিটার্ন করার জন্য পরিবর্তন করা `Result` ভ্যালুগুলোর উপর `?` অপারেটর ব্যবহারের অনুমতি দেয়।"&gt;
+
+```rust,ignore
+use std::error::Error;
+use std::fs::File;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let greeting_file = File::open("hello.txt")?;
+
+    Ok(())
+}</code></pre></pre>
+</Listing>
+<p><code>Box&lt;dyn Error&gt;</code> টাইপটি একটি <em>trait object</em>, যা আমরা অধ্যায় ১৮-এর <a href="ch18-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Using Trait Objects That Allow for Values of Different Types”</a><!-- ignore --> বিভাগে আলোচনা করব। আপাতত, আপনি <code>Box&lt;dyn Error&gt;</code>-কে “যেকোনো ধরনের এরর” হিসাবে পড়তে পারেন। <code>main</code> ফাংশনে <code>Box&lt;dyn Error&gt;</code> এরর টাইপসহ একটি <code>Result</code> ভ্যালুর উপর <code>?</code> ব্যবহার করা অনুমোদিত কারণ এটি যেকোনো <code>Err</code> ভ্যালুকে আগেভাগে রিটার্ন করার অনুমতি দেয়। যদিও এই <code>main</code> ফাংশনের বডি শুধুমাত্র <code>std::io::Error</code> টাইপের এরর রিটার্ন করবে, <code>Box&lt;dyn Error&gt;</code> নির্দিষ্ট করার মাধ্যমে, এই সিগনেচারটি সঠিক থাকবে এমনকি যদি <code>main</code>-এর বডিতে অন্য এরর রিটার্ন করে এমন আরও কোড যোগ করা হয়।</p>
+<p>যখন একটি <code>main</code> ফাংশন একটি <code>Result&lt;(), E&gt;</code> রিটার্ন করে, তখন এক্সিকিউটেবলটি <code>0</code> ভ্যালু দিয়ে প্রস্থান করবে যদি <code>main</code> <code>Ok(())</code> রিটার্ন করে এবং একটি নন-জিরো ভ্যালু দিয়ে প্রস্থান করবে যদি <code>main</code> একটি <code>Err</code> ভ্যালু রিটার্ন করে। C-তে লেখা এক্সিকিউটেবলগুলো প্রস্থান করার সময় ইন্টিজার রিটার্ন করে: যে প্রোগ্রামগুলো সফলভাবে প্রস্থান করে সেগুলি <code>0</code> ইন্টিজার রিটার্ন করে, এবং যে প্রোগ্রামগুলো এরর করে সেগুলি <code>0</code> ছাড়া অন্য কোনো ইন্টিজার রিটার্ন করে। Rust এই কনভেনশনের সাথে সামঞ্জস্যপূর্ণ হওয়ার জন্য এক্সিকিউটেবল থেকে ইন্টিজার রিটার্ন করে।</p>
+<p><code>main</code> ফাংশনটি যেকোনো টাইপ রিটার্ন করতে পারে যা <a href="../std/process/trait.Termination.html"><code>std::process::Termination</code> trait</a><!-- ignore --> ইমপ্লিমেন্ট করে, যা একটি <code>report</code> ফাংশন ধারণ করে যা একটি <code>ExitCode</code> রিটার্ন করে। আপনার নিজের টাইপের জন্য <code>Termination</code> trait ইমপ্লিমেন্ট করার বিষয়ে আরও তথ্যের জন্য standard library ডকুমেন্টেশন দেখুন।</p>
+<p>এখন যেহেতু আমরা <code>panic!</code> কল করা বা <code>Result</code> রিটার্ন করার বিস্তারিত আলোচনা করেছি, আসুন আমরা কোন ক্ষেত্রে কোনটি ব্যবহার করা উপযুক্ত তা সিদ্ধান্ত নেওয়ার বিষয়ে ফিরে যাই।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-03-to-panic-or-not-to-panic.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch09-01-unrecoverable-errors-with-panic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-03-to-panic-or-not-to-panic.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

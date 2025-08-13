@@ -1,0 +1,599 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>এনভায়রনমেন্ট ভেরিয়েবল নিয়ে কাজ করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="এনভায়রনমেনট-ভেরিযেবল-environment-variables-নিয়ে-কাজ-করা"><a class="header" href="#এনভায়রনমেনট-ভেরিযেবল-environment-variables-নিয়ে-কাজ-করা">এনভায়রনমেন্ট ভেরিয়েবল (Environment Variables) নিয়ে কাজ করা</a></h2>
+<p>আমরা <code>minigrep</code> বাইনারিটিকে একটি অতিরিক্ত ফিচার যোগ করে উন্নত করব: case-insensitive (ছোট বা বড় হাতের অক্ষর নির্বিশেষে) সার্চিংয়ের একটি অপশন, যা ব্যবহারকারী একটি এনভায়রনমেন্ট ভেরিয়েবলের মাধ্যমে চালু করতে পারবেন। আমরা এই ফিচারটিকে একটি কমান্ড লাইন অপশন হিসেবে তৈরি করতে পারতাম এবং ব্যবহারকারীদের প্রতিবার এটি ব্যবহার করার জন্য টাইপ করতে বলতে পারতাম। কিন্তু এর পরিবর্তে এটিকে একটি এনভায়রনমেন্ট ভেরিয়েবল হিসেবে তৈরি করার মাধ্যমে আমরা আমাদের ব্যবহারকারীদের একবার এনভায়রনমেন্ট ভেরিয়েবল সেট করার সুযোগ দিচ্ছি, এবং সেই টার্মিনাল সেশনে তাদের সমস্ত সার্চ case-insensitive হবে।</p>
+<h3 id="case-insensitive-search-ফাংশনের-জনয-একটি-ফেইলিং-টেসট-লেখা"><a class="header" href="#case-insensitive-search-ফাংশনের-জনয-একটি-ফেইলিং-টেসট-লেখা">Case-Insensitive <code>search</code> ফাংশনের জন্য একটি ফেইলিং টেস্ট লেখা</a></h3>
+<p>প্রথমে আমরা <code>minigrep</code> লাইব্রেরিতে একটি নতুন <code>search_case_insensitive</code> ফাংশন যোগ করব যা এনভায়রনমেন্ট ভেরিয়েবলের ভ্যালু থাকলে কল করা হবে। আমরা TDD প্রক্রিয়া অনুসরণ করা চালিয়ে যাব, তাই প্রথম ধাপটি হলো আবার একটি ফেইলিং টেস্ট লেখা। আমরা নতুন <code>search_case_insensitive</code> ফাংশনের জন্য একটি নতুন টেস্ট যোগ করব এবং আমাদের পুরনো টেস্টের নাম <code>one_result</code> থেকে <code>case_sensitive</code>-এ পরিবর্তন করব যাতে দুটি টেস্টের মধ্যে পার্থক্য স্পষ্ট হয়, যেমনটি লিস্টিং ১২-২০-এ দেখানো হয়েছে।</p>
+<Listing number="12-20" file-name="src/lib.rs" caption="আমরা যে case-insensitive ফাংশনটি যোগ করতে চলেছি তার জন্য একটি নতুন ফেইলিং টেস্ট যোগ করা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    let mut results = Vec::new();
+</span><span class="boring">
+</span><span class="boring">    for line in contents.lines() {
+</span><span class="boring">        if line.contains(query) {
+</span><span class="boring">            results.push(line);
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    results
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Duct tape.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
+    }
+}</code></pre>
+</Listing>
+<p>লক্ষ্য করুন যে আমরা পুরনো টেস্টের <code>contents</code>-ও এডিট করেছি। আমরা একটি নতুন লাইন যোগ করেছি <code>"Duct tape."</code> টেক্সট সহ, যেখানে একটি বড় হাতের <em>D</em> ব্যবহার করা হয়েছে, যা case-sensitive ভাবে সার্চ করার সময় <code>"duct"</code> কোয়েরির সাথে ম্যাচ করা উচিত নয়। পুরনো টেস্টটি এভাবে পরিবর্তন করা নিশ্চিত করতে সাহায্য করে যে আমরা ইতোমধ্যে প্রয়োগ করা case-sensitive সার্চ ফাংশনালিটি দুর্ঘটনাক্রমে নষ্ট করে ফেলছি না। এই টেস্টটি এখন পাস করা উচিত এবং case-insensitive সার্চ নিয়ে কাজ করার সময়ও পাস করা উচিত।</p>
+<p>case-<em>insensitive</em> সার্চের জন্য নতুন টেস্টটি তার কোয়েরি হিসেবে <code>"rUsT"</code> ব্যবহার করে। আমরা যে <code>search_case_insensitive</code> ফাংশনটি যোগ করতে চলেছি, সেখানে <code>"rUsT"</code> কোয়েরিটি বড় হাতের <em>R</em> সহ <code>"Rust:"</code> লাইনটির সাথে ম্যাচ করা উচিত এবং <code>"Trust me."</code> লাইনটির সাথেও ম্যাচ করা উচিত, যদিও উভয়ের কেসিং কোয়েরি থেকে ভিন্ন। এটি আমাদের ফেইলিং টেস্ট, এবং এটি কম্পাইল করতে ব্যর্থ হবে কারণ আমরা এখনও <code>search_case_insensitive</code> ফাংশনটি ডিফাইন করিনি। আপনি নির্দ্বিধায় একটি স্কেলেটন ইমপ্লিমেন্টেশন যোগ করতে পারেন যা সর্বদা একটি খালি ভেক্টর রিটার্ন করে, যেমনটি আমরা লিস্টিং ১২-১৬-তে <code>search</code> ফাংশনের জন্য করেছিলাম, যাতে টেস্টটি কম্পাইল হয় এবং ফেইল করে।</p>
+<h3 id="search_case_insensitive-ফাংশন-ইমপলিমেনট-করা"><a class="header" href="#search_case_insensitive-ফাংশন-ইমপলিমেনট-করা"><code>search_case_insensitive</code> ফাংশন ইমপ্লিমেন্ট করা</a></h3>
+<p><code>search_case_insensitive</code> ফাংশনটি, যা লিস্টিং ১২-২১-এ দেখানো হয়েছে, প্রায় <code>search</code> ফাংশনের মতোই হবে। একমাত্র পার্থক্য হলো আমরা <code>query</code> এবং প্রতিটি <code>line</code>-কে লোয়ারকেস (lowercase) করব, যাতে ইনপুট আর্গুমেন্টের কেস যাই হোক না কেন, লাইনটিতে কোয়েরি আছে কিনা তা পরীক্ষা করার সময় তারা একই কেস-এ থাকবে।</p>
+<Listing number="12-21" file-name="src/lib.rs" caption="কোয়েরি এবং লাইন তুলনা করার আগে সেগুলোকে লোয়ারকেস করার জন্য `search_case_insensitive` ফাংশন ডিফাইন করা">
+<pre><code class="language-rust noplayground"><span class="boring">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    let mut results = Vec::new();
+</span><span class="boring">
+</span><span class="boring">    for line in contents.lines() {
+</span><span class="boring">        if line.contains(query) {
+</span><span class="boring">            results.push(line);
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    results
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub fn search_case_insensitive&lt;'a&gt;(
+    query: &amp;str,
+    contents: &amp;'a str,
+) -&gt; Vec&lt;&amp;'a str&gt; {
+    let query = query.to_lowercase();
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&amp;query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_sensitive() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Duct tape.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_insensitive() {
+</span><span class="boring">        let query = "rUsT";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Trust me.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(
+</span><span class="boring">            vec!["Rust:", "Trust me."],
+</span><span class="boring">            search_case_insensitive(query, contents)
+</span><span class="boring">        );
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>প্রথমে আমরা <code>query</code> স্ট্রিংকে লোয়ারকেস করি এবং এটিকে একই নামের একটি নতুন ভেরিয়েবলে সংরক্ষণ করি, যা মূল <code>query</code>-কে শ্যাডো (shadow) করে। কোয়েরির উপর <code>to_lowercase</code> কল করা প্রয়োজন যাতে ব্যবহারকারীর কোয়েরি <code>"rust"</code>, <code>"RUST"</code>, <code>"Rust"</code>, বা <code>"</code>rUsT<code>"</code> যাই হোক না কেন, আমরা কোয়েরিটিকে <code>"rust"</code> হিসেবে বিবেচনা করব এবং কেস-এর প্রতি সংবেদনশীল থাকব না। যদিও <code>to_lowercase</code> বেসিক ইউনিকোড (Unicode) হ্যান্ডেল করবে, এটি ১০০ শতাংশ সঠিক হবে না। যদি আমরা একটি বাস্তব অ্যাপ্লিকেশন লিখতাম, তবে আমাদের এখানে আরও কিছু কাজ করতে হতো, কিন্তু এই বিভাগটি এনভায়রনমেন্ট ভেরিয়েবল সম্পর্কে, ইউনিকোড সম্পর্কে নয়, তাই আমরা এখানেই এটি ছেড়ে দেব।</p>
+<p>লক্ষ্য করুন যে <code>query</code> এখন একটি স্ট্রিং স্লাইসের পরিবর্তে একটি <code>String</code>, কারণ <code>to_lowercase</code> কল করা বিদ্যমান ডেটাকে রেফারেন্স করার পরিবর্তে নতুন ডেটা তৈরি করে। উদাহরণস্বরূপ, ধরুন কোয়েরিটি <code>"rUsT"</code>: সেই স্ট্রিং স্লাইসে আমাদের ব্যবহারের জন্য ছোট হাতের <code>u</code> বা <code>t</code> নেই, তাই আমাদের <code>"rust"</code> ধারণকারী একটি নতুন <code>String</code> অ্যালোকেট করতে হবে। যখন আমরা এখন <code>contains</code> মেথডের আর্গুমেন্ট হিসেবে <code>query</code> পাস করব, আমাদের একটি অ্যামপারস্যান্ড (&amp;) যোগ করতে হবে কারণ <code>contains</code>-এর সিগনেচার একটি স্ট্রিং স্লাইস নেওয়ার জন্য ডিফাইন করা হয়েছে।</p>
+<p>এরপরে, আমরা প্রতিটি <code>line</code>-এ <code>to_lowercase</code>-এ একটি কল যোগ করি সমস্ত ক্যারেক্টার লোয়ারকেস করতে। এখন যেহেতু আমরা <code>line</code> এবং <code>query</code> উভয়কেই লোয়ারকেসে রূপান্তর করেছি, কোয়েরির কেস যাই হোক না কেন আমরা ম্যাচ খুঁজে পাব।</p>
+<p>দেখা যাক এই ইমপ্লিমেন্টেশনটি টেস্ট পাস করে কিনা:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.33s
+     Running unittests src/lib.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
+
+running 2 tests
+test tests::case_insensitive ... ok
+test tests::case_sensitive ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests minigrep
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>চমৎকার! তারা পাস করেছে। এখন, আসুন <code>run</code> ফাংশন থেকে নতুন <code>search_case_insensitive</code> ফাংশনটি কল করি। প্রথমে আমরা <code>Config</code> স্ট্রাকটে case-sensitive এবং case-insensitive সার্চের মধ্যে সুইচ করার জন্য একটি কনফিগারেশন অপশন যোগ করব। এই ফিল্ডটি যোগ করলে কম্পাইলার এরর দেখা যাবে কারণ আমরা এখনও কোথাও এই ফিল্ডটি ইনিশিয়ালাইজ করছি না:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">// --snip--
+</span><span class="boring">
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub struct Config {
+    pub query: String,
+    pub file_path: String,
+    pub ignore_case: bool,
+}
+<span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<p>আমরা <code>ignore_case</code> ফিল্ডটি যোগ করেছি যা একটি বুলিয়ান (boolean) ধারণ করে। এরপরে, আমাদের <code>run</code> ফাংশনটিকে <code>ignore_case</code> ফিল্ডের ভ্যালু পরীক্ষা করতে হবে এবং <code>search</code> ফাংশন বা <code>search_case_insensitive</code> ফাংশন কল করার সিদ্ধান্ত নিতে হবে, যেমনটি লিস্টিং ১২-২২-এ দেখানো হয়েছে। এটি এখনও কম্পাইল হবে না।</p>
+<Listing number="12-22" file-name="src/main.rs" caption="`config.ignore_case`-এর ভ্যালুর উপর ভিত্তি করে `search` বা `search_case_insensitive` কল করা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span>use minigrep::{search, search_case_insensitive};
+
+// --snip--
+
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    let results = if config.ignore_case {
+        search_case_insensitive(&amp;config.query, &amp;contents)
+    } else {
+        search(&amp;config.query, &amp;contents)
+    };
+
+    for line in results {
+        println!("{line}");
+    }
+
+    Ok(())
+}</code></pre>
+</Listing>
+<p>অবশেষে, আমাদের এনভায়রনমেন্ট ভেরিয়েবল পরীক্ষা করতে হবে। এনভায়রনমেন্ট ভেরিয়েবলের সাথে কাজ করার ফাংশনগুলো standard library-র <code>env</code> মডিউলে রয়েছে, যা ইতোমধ্যে <em>src/main.rs</em>-এর শীর্ষে স্কোপে রয়েছে। আমরা <code>env</code> মডিউলের <code>var</code> ফাংশনটি ব্যবহার করে দেখব <code>IGNORE_CASE</code> নামের কোনো এনভায়রনমেন্ট ভেরিয়েবলের জন্য কোনো ভ্যালু সেট করা হয়েছে কিনা, যেমনটি লিস্টিং ১২-২৩-এ দেখানো হয়েছে।</p>
+<Listing number="12-23" file-name="src/main.rs" caption="`IGNORE_CASE` নামের এনভায়রনমেন্ট ভেরিয়েবলে কোনো ভ্যালু আছে কিনা তা পরীক্ষা করা">
+<pre><code class="language-rust ignore noplayground"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+        if args.len() &lt; 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
+    }
+}
+<span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এখানে, আমরা একটি নতুন ভেরিয়েবল <code>ignore_case</code> তৈরি করি। এর ভ্যালু সেট করতে, আমরা <code>env::var</code> ফাংশন কল করি এবং এতে <code>IGNORE_CASE</code> এনভায়রনমেন্ট ভেরিয়েবলের নাম পাস করি। <code>env::var</code> ফাংশনটি একটি <code>Result</code> রিটার্ন করে যা সফল <code>Ok</code> ভ্যারিয়েন্ট হবে এবং এনভায়রনমেন্ট ভেরিয়েবলের ভ্যালু ধারণ করবে যদি এনভায়রনমেন্ট ভেরিয়েবলটি কোনো ভ্যালুতে সেট করা থাকে। যদি এনভায়রনমেন্ট ভেরিয়েবলটি সেট না করা থাকে তবে এটি <code>Err</code> ভ্যারিয়েন্ট রিটার্ন করবে।</p>
+<p>এনভায়রনমেন্ট ভেরিয়েবলটি সেট করা আছে কিনা তা পরীক্ষা করার জন্য আমরা <code>Result</code>-এর <code>is_ok</code> মেথড ব্যবহার করছি, যার মানে প্রোগ্রামটি একটি case-insensitive সার্চ করবে। যদি <code>IGNORE_CASE</code> এনভায়রনমেন্ট ভেরিয়েবলটি কিছুতেই সেট না করা থাকে, <code>is_ok</code> <code>false</code> রিটার্ন করবে এবং প্রোগ্রামটি একটি case-sensitive সার্চ করবে। আমরা এনভায়রনমেন্ট ভেরিয়েবলের <em>ভ্যালু</em> নিয়ে চিন্তিত নই, শুধু এটি সেট করা আছে নাকি নেই তা নিয়েই ভাবছি, তাই আমরা <code>unwrap</code>, <code>expect</code>, বা <code>Result</code>-এ আমরা দেখেছি এমন অন্য কোনো মেথড ব্যবহার না করে <code>is_ok</code> পরীক্ষা করছি।</p>
+<p>আমরা <code>ignore_case</code> ভেরিয়েবলের ভ্যালুটি <code>Config</code> ইনস্ট্যান্সে পাস করি যাতে <code>run</code> ফাংশনটি সেই ভ্যালুটি পড়তে পারে এবং <code>search_case_insensitive</code> বা <code>search</code> কল করার সিদ্ধান্ত নিতে পারে, যেমনটি আমরা লিস্টিং ১২-২২-এ ইমপ্লিমেন্ট করেছি।</p>
+<p>চলুন চেষ্টা করে দেখা যাক! প্রথমে আমরা এনভায়রনমেন্ট ভেরিয়েবল সেট না করে এবং <code>to</code> কোয়েরি দিয়ে আমাদের প্রোগ্রামটি চালাব, যা সমস্ত ছোট হাতের অক্ষরে <em>to</em> শব্দটি ধারণকারী যেকোনো লাইনের সাথে ম্যাচ করা উচিত:</p>
+<pre><code class="language-console">$ cargo run -- to poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep to poem.txt`
+Are you nobody, too?
+How dreary to be somebody!
+</code></pre>
+<p>মনে হচ্ছে এটি এখনও কাজ করছে! এখন আসুন <code>IGNORE_CASE</code>-কে <code>1</code> এ সেট করে এবং একই কোয়েরি <em>to</em> দিয়ে প্রোগ্রামটি চালাই:</p>
+<pre><code class="language-console">$ IGNORE_CASE=1 cargo run -- to poem.txt
+</code></pre>
+<p>আপনি যদি PowerShell ব্যবহার করেন, তবে আপনাকে এনভায়রনমেন্ট ভেরিয়েবল সেট করতে হবে এবং প্রোগ্রামটি আলাদা কমান্ড হিসাবে চালাতে হবে:</p>
+<pre><code class="language-console">PS&gt; $Env:IGNORE_CASE=1; cargo run -- to poem.txt
+</code></pre>
+<p>এটি আপনার শেল সেশনের বাকি অংশের জন্য <code>IGNORE_CASE</code>-কে স্থায়ী করবে। এটি <code>Remove-Item</code> cmdlet দিয়ে আনসেট করা যেতে পারে:</p>
+<pre><code class="language-console">PS&gt; Remove-Item Env:IGNORE_CASE
+</code></pre>
+<p>আমাদের এমন লাইন পাওয়া উচিত যাতে <em>to</em> শব্দটি রয়েছে এবং যার মধ্যে বড় হাতের অক্ষর থাকতে পারে:</p>
+<!-- manual-regeneration
+cd listings/ch12-an-io-project/listing-12-23
+IGNORE_CASE=1 cargo run -- to poem.txt
+can't extract because of the environment variable
+-->
+<pre><code class="language-console">Are you nobody, too?
+How dreary to be somebody!
+To tell your name the livelong day
+To an admiring bog!
+</code></pre>
+<p>চমৎকার, আমরা <em>To</em> ধারণকারী লাইনগুলোও পেয়েছি! আমাদের <code>minigrep</code> প্রোগ্রাম এখন একটি এনভায়রনমেন্ট ভেরিয়েবল দ্বারা নিয়ন্ত্রিত case-insensitive সার্চিং করতে পারে। এখন আপনি জানেন কীভাবে কমান্ড লাইন আর্গুমেন্ট বা এনভায়রনমেন্ট ভেরিয়েবল ব্যবহার করে সেট করা অপশনগুলো পরিচালনা করতে হয়।</p>
+<p>কিছু প্রোগ্রাম একই কনফিগারেশনের জন্য আর্গুমেন্ট <em>এবং</em> এনভায়রনমেন্ট ভেরিয়েবল উভয়ই অনুমোদন করে। সেই ক্ষেত্রে, প্রোগ্রামগুলো সিদ্ধান্ত নেয় যে একটির উপর আরেকটির অগ্রাধিকার থাকবে। আপনার নিজের জন্য আরেকটি অনুশীলনী হিসেবে, একটি কমান্ড লাইন আর্গুমেন্ট বা একটি এনভায়রনমেন্ট ভেরিয়েবলের মাধ্যমে case sensitivity নিয়ন্ত্রণ করার চেষ্টা করুন। প্রোগ্রামটি যদি একটি case sensitive এবং অন্যটি ignore case-এ সেট করে চালানো হয় তবে কমান্ড লাইন আর্গুমেন্ট বা এনভায়রনমেন্ট ভেরিয়েবলের মধ্যে কোনটি অগ্রাধিকার পাবে তা নির্ধারণ করুন।</p>
+<p><code>std::env</code> মডিউলে এনভায়রনমেন্ট ভেরিয়েবলের সাথে কাজ করার জন্য আরও অনেক দরকারী ফিচার রয়েছে: কী কী উপলব্ধ আছে তা দেখতে এর ডকুমেন্টেশন দেখুন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch12-04-testing-the-librarys-functionality.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch12-06-writing-to-stderr-instead-of-stdout.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch12-04-testing-the-librarys-functionality.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch12-06-writing-to-stderr-instead-of-stdout.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

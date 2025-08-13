@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>G - Rust কীভাবে তৈরি হয় এবং “নাইটলি Rust” - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পরিশিষট-g---rust-কীভাবে-তৈরি-হয-এবং-নাইটলি-rust"><a class="header" href="#পরিশিষট-g---rust-কীভাবে-তৈরি-হয-এবং-নাইটলি-rust">পরিশিষ্ট G - Rust কীভাবে তৈরি হয় এবং “নাইটলি Rust”</a></h2>
+<p>এই পরিশিষ্টটি Rust কীভাবে তৈরি হয় এবং একজন Rust ডেভেলপার হিসেবে এটি আপনাকে কীভাবে প্রভাবিত করে সে সম্পর্কে।</p>
+<h3 id="সথবিরতা-ছাডা-সথিতিশীলতা"><a class="header" href="#সথবিরতা-ছাডা-সথিতিশীলতা">স্থবিরতা ছাড়া স্থিতিশীলতা</a></h3>
+<p>একটি ভাষা হিসেবে, Rust আপনার কোডের স্থিতিশীলতা নিয়ে <em>অনেক</em> বেশি ভাবে। আমরা চাই Rust একটি শিলা-কঠিন ভিত্তি হোক যার উপর আপনি নির্মাণ করতে পারেন, এবং যদি জিনিসগুলো ক্রমাগত পরিবর্তন হতে থাকে, তবে তা অসম্ভব হবে। একই সময়ে, যদি আমরা নতুন ফিচার নিয়ে পরীক্ষা-নিরীক্ষা করতে না পারি, তবে আমরা হয়তো তাদের প্রকাশের পরে গুরুত্বপূর্ণ ত্রুটিগুলো খুঁজে পাব না, যখন আমরা আর জিনিসগুলো পরিবর্তন করতে পারব না।</p>
+<p>এই সমস্যার আমাদের সমাধান হলো যাকে আমরা বলি "স্থবিরতা ছাড়া স্থিতিশীলতা" (stability without stagnation), এবং আমাদের পথপ্রদর্শক নীতিটি হলো: আপনার কখনই স্থিতিশীল Rust-এর নতুন সংস্করণে আপগ্রেড করতে ভয় পাওয়া উচিত নয়। প্রতিটি আপগ্রেড যন্ত্রণাহীন হওয়া উচিত, তবে আপনার জন্য নতুন ফিচার, কম বাগ এবং দ্রুত কম্পাইল সময়ও নিয়ে আসা উচিত।</p>
+<h3 id="ছু-ছু-রিলিজ-চযানেল-এবং-টরেনে-চডা"><a class="header" href="#ছু-ছু-রিলিজ-চযানেল-এবং-টরেনে-চডা">ছু, ছু! রিলিজ চ্যানেল এবং ট্রেনে চড়া</a></h3>
+<p>Rust-এর ডেভেলপমেন্ট একটি <em>ট্রেন সময়সূচী</em> (train schedule) মেনে চলে। অর্থাৎ, সমস্ত ডেভেলপমেন্ট Rust রিপোজিটরির <code>master</code> ব্রাঞ্চে করা হয়। রিলিজগুলো একটি সফটওয়্যার রিলিজ ট্রেন মডেল অনুসরণ করে, যা Cisco IOS এবং অন্যান্য সফটওয়্যার প্রজেক্টে ব্যবহৃত হয়েছে। Rust-এর জন্য তিনটি <em>রিলিজ চ্যানেল</em> রয়েছে:</p>
+<ul>
+<li>নাইটলি (Nightly)</li>
+<li>বেটা (Beta)</li>
+<li>স্টেবল (Stable)</li>
+</ul>
+<p>বেশিরভাগ Rust ডেভেলপার প্রাথমিকভাবে স্টেবল চ্যানেল ব্যবহার করেন, কিন্তু যারা পরীক্ষামূলক নতুন ফিচার চেষ্টা করতে চান তারা নাইটলি বা বেটা ব্যবহার করতে পারেন।</p>
+<p>ডেভেলপমেন্ট এবং রিলিজ প্রক্রিয়া কীভাবে কাজ করে তার একটি উদাহরণ এখানে দেওয়া হলো: চলুন ধরে নেওয়া যাক যে Rust টিম Rust 1.5 রিলিজের উপর কাজ করছে। সেই রিলিজটি ২০১৫ সালের ডিসেম্বরে হয়েছিল, কিন্তু এটি আমাদের বাস্তবসম্মত সংস্করণ নম্বর সরবরাহ করবে। Rust-এ একটি নতুন ফিচার যোগ করা হয়েছে: <code>master</code> ব্রাঞ্চে একটি নতুন কমিট এসেছে। প্রতি রাতে, Rust-এর একটি নতুন নাইটলি সংস্করণ তৈরি করা হয়। প্রতিদিন একটি রিলিজের দিন, এবং এই রিলিজগুলো আমাদের রিলিজ পরিকাঠামো দ্বারা স্বয়ংক্রিয়ভাবে তৈরি করা হয়। তাই সময় পার হওয়ার সাথে সাথে, আমাদের রিলিজগুলো প্রতি রাতে এমন দেখায়:</p>
+<pre><code class="language-text">nightly: * - - * - - *
+</code></pre>
+<p>প্রতি ছয় সপ্তাহ পর, একটি নতুন রিলিজ প্রস্তুত করার সময়! Rust রিপোজিটরির <code>beta</code> ব্রাঞ্চটি নাইটলি দ্বারা ব্যবহৃত <code>master</code> ব্রাঞ্চ থেকে আলাদা হয়। এখন, দুটি রিলিজ রয়েছে:</p>
+<pre><code class="language-text">nightly: * - - * - - *
+                     |
+beta:                *
+</code></pre>
+<p>বেশিরভাগ Rust ব্যবহারকারী সক্রিয়ভাবে বেটা রিলিজ ব্যবহার করেন না, কিন্তু সম্ভাব্য রিগ্রেশন আবিষ্কারে Rust-কে সাহায্য করার জন্য তাদের CI সিস্টেমে বেটার বিরুদ্ধে পরীক্ষা চালান। ইতিমধ্যে, প্রতি রাতে এখনও একটি নাইটলি রিলিজ হয়:</p>
+<pre><code class="language-text">nightly: * - - * - - * - - * - - *
+                     |
+beta:                *
+</code></pre>
+<p>ধরা যাক একটি রিগ্রেশন পাওয়া গেল। ভালো ব্যাপার যে স্টেবল রিলিজে রিগ্রেশনটি ঢুকে পড়ার আগে বেটা রিলিজ পরীক্ষা করার জন্য আমাদের কিছু সময় ছিল! ফিক্সটি <code>master</code>-এ প্রয়োগ করা হয়, যাতে নাইটলি ঠিক হয়ে যায়, এবং তারপর ফিক্সটি <code>beta</code> ব্রাঞ্চে ব্যাকপোর্ট করা হয়, এবং বেটার একটি নতুন রিলিজ তৈরি করা হয়:</p>
+<pre><code class="language-text">nightly: * - - * - - * - - * - - * - - *
+                     |
+beta:                * - - - - - - - - *
+</code></pre>
+<p>প্রথম বেটা তৈরি হওয়ার ছয় সপ্তাহ পর, একটি স্টেবল রিলিজের সময়! <code>stable</code> ব্রাঞ্চটি <code>beta</code> ব্রাঞ্চ থেকে তৈরি করা হয়:</p>
+<pre><code class="language-text">nightly: * - - * - - * - - * - - * - - * - * - *
+                     |
+beta:                * - - - - - - - - *
+                                       |
+stable:                                *
+</code></pre>
+<p>হুররে! Rust 1.5 সম্পন্ন! যাইহোক, আমরা একটি জিনিস ভুলে গেছি: যেহেতু ছয় সপ্তাহ কেটে গেছে, তাই আমাদের Rust-এর <em>পরবর্তী</em> সংস্করণ, 1.6-এর একটি নতুন বেটাও প্রয়োজন। তাই <code>stable</code> ব্রাঞ্চটি <code>beta</code> থেকে আলাদা হওয়ার পর, <code>beta</code>-এর পরবর্তী সংস্করণটি আবার <code>nightly</code> থেকে আলাদা হয়:</p>
+<pre><code class="language-text">nightly: * - - * - - * - - * - - * - - * - * - *
+                     |                         |
+beta:                * - - - - - - - - *       *
+                                       |
+stable:                                *
+</code></pre>
+<p>এটিকে "ট্রেন মডেল" বলা হয় কারণ প্রতি ছয় সপ্তাহে, একটি রিলিজ "স্টেশন ছেড়ে যায়", কিন্তু একটি স্টেবল রিলিজ হিসাবে পৌঁছানোর আগে তাকে বেটা চ্যানেলের মাধ্যমে একটি যাত্রা করতে হয়।</p>
+<p>Rust প্রতি ছয় সপ্তাহে, ঘড়ির কাঁটার মতো রিলিজ করে। আপনি যদি একটি Rust রিলিজের তারিখ জানেন, আপনি পরেরটির তারিখ জানতে পারবেন: এটি ছয় সপ্তাহ পরে। প্রতি ছয় সপ্তাহে রিলিজ নির্ধারিত থাকার একটি চমৎকার দিক হলো যে পরবর্তী ট্রেনটি শীঘ্রই আসছে। যদি কোনো ফিচার কোনো নির্দিষ্ট রিলিজ মিস করে, তবে চিন্তা করার দরকার নেই: অল্প সময়ের মধ্যেই আরেকটি আসছে! এটি রিলিজের সময়সীমার কাছাকাছি সম্ভাব্য অপরিশোধিত ফিচারগুলোকে লুকিয়ে ফেলার চাপ কমাতে সাহায্য করে।</p>
+<p>এই প্রক্রিয়ার জন্য ধন্যবাদ, আপনি সর্বদা Rust-এর পরবর্তী বিল্ডটি পরীক্ষা করতে পারেন এবং নিজের জন্য যাচাই করতে পারেন যে এটিতে আপগ্রেড করা সহজ: যদি একটি বেটা রিলিজ প্রত্যাশা অনুযায়ী কাজ না করে, আপনি টিমকে এটি রিপোর্ট করতে পারেন এবং পরবর্তী স্টেবল রিলিজ হওয়ার আগে এটি ঠিক করাতে পারেন! একটি বেটা রিলিজে ব্রেকএজ তুলনামূলকভাবে বিরল, কিন্তু <code>rustc</code> এখনও একটি সফটওয়্যার, এবং বাগ বিদ্যমান।</p>
+<h3 id="রকষণাবেকষণের-সময"><a class="header" href="#রকষণাবেকষণের-সময">রক্ষণাবেক্ষণের সময়</a></h3>
+<p>Rust প্রজেক্ট সবচেয়ে সাম্প্রতিক স্টেবল সংস্করণটিকে সমর্থন করে। যখন একটি নতুন স্টেবল সংস্করণ রিলিজ হয়, তখন পুরানো সংস্করণটি তার জীবনকালের শেষ পর্যায়ে (end of life - EOL) পৌঁছে যায়। এর মানে হলো প্রতিটি সংস্করণ ছয় সপ্তাহের জন্য সমর্থিত থাকে।</p>
+<h3 id="আনসটেবল-ফিচার"><a class="header" href="#আনসটেবল-ফিচার">আনস্টেবল ফিচার</a></h3>
+<p>এই রিলিজ মডেলের সাথে আরও একটি বিষয় জড়িত: আনস্টেবল ফিচার। Rust একটি নির্দিষ্ট রিলিজে কোন ফিচারগুলো সক্রিয় আছে তা নির্ধারণ করতে "ফিচার ফ্ল্যাগ" নামক একটি কৌশল ব্যবহার করে। যদি একটি নতুন ফিচার সক্রিয় বিকাশের অধীনে থাকে, তবে এটি <code>master</code>-এ আসে, এবং ফলস্বরূপ, নাইটলি-তে, কিন্তু একটি <em>ফিচার ফ্ল্যাগের</em> আড়ালে। আপনি যদি একজন ব্যবহারকারী হিসেবে, কাজটি চলমান থাকা ফিচারটি চেষ্টা করতে চান, তবে আপনি তা করতে পারেন, কিন্তু আপনাকে অবশ্যই Rust-এর একটি নাইটলি রিলিজ ব্যবহার করতে হবে এবং অপ্ট-ইন করার জন্য আপনার সোর্স কোডটি উপযুক্ত ফ্ল্যাগ দিয়ে অ্যানোটেট করতে হবে।</p>
+<p>আপনি যদি Rust-এর বেটা বা স্টেবল রিলিজ ব্যবহার করেন, তবে আপনি কোনো ফিচার ফ্ল্যাগ ব্যবহার করতে পারবেন না। এটিই সেই চাবিকাঠি যা আমাদের নতুন ফিচারগুলোকে চিরস্থায়ীভাবে স্টেবল ঘোষণা করার আগে তাদের ব্যবহারিক ব্যবহার পেতে দেয়। যারা অত্যাধুনিক ফিচার অপ্ট-ইন করতে চান তারা তা করতে পারেন, এবং যারা একটি শিলা-কঠিন অভিজ্ঞতা চান তারা স্টেবল-এর সাথে থাকতে পারেন এবং জানতে পারেন যে তাদের কোড ভাঙবে না। স্থবিরতা ছাড়া স্থিতিশীলতা।</p>
+<p>এই বইটিতে শুধুমাত্র স্টেবল ফিচার সম্পর্কে তথ্য রয়েছে, কারণ কাজ চলমান থাকা ফিচারগুলো এখনও পরিবর্তিত হচ্ছে, এবং নিশ্চিতভাবেই এই বইটি লেখার সময় এবং যখন সেগুলি স্টেবল বিল্ডে সক্রিয় হবে তার মধ্যে সেগুলি ভিন্ন হবে। আপনি অনলাইনে নাইটলি-কেবল ফিচারগুলোর জন্য ডকুমেন্টেশন খুঁজে পেতে পারেন।</p>
+<h3 id="rustup-এবং-রাসট-নাইটলি-র-ভূমিকা"><a class="header" href="#rustup-এবং-রাসট-নাইটলি-র-ভূমিকা"><code>rustup</code> এবং রাস্ট নাইটলি-র ভূমিকা</a></h3>
+<p><code>rustup</code> গ্লোবাল বা প্রতি-প্রজেক্ট ভিত্তিতে Rust-এর বিভিন্ন রিলিজ চ্যানেলের মধ্যে পরিবর্তন করা সহজ করে তোলে। ডিফল্টরূপে, আপনার কাছে স্টেবল Rust ইনস্টল করা থাকবে। উদাহরণস্বরূপ, নাইটলি ইনস্টল করতে:</p>
+<pre><code class="language-console">$ rustup toolchain install nightly
+</code></pre>
+<p>আপনি <code>rustup</code> দিয়ে আপনার ইনস্টল করা সমস্ত <em>টুলচেইন</em> (Rust-এর রিলিজ এবং সংশ্লিষ্ট উপাদান) দেখতে পারেন। এখানে আপনার একজন লেখকের উইন্ডোজ কম্পিউটারে একটি উদাহরণ দেওয়া হলো:</p>
+<pre><code class="language-powershell">&gt; rustup toolchain list
+stable-x86_64-pc-windows-msvc (default)
+beta-x86_64-pc-windows-msvc
+nightly-x86_64-pc-windows-msvc
+</code></pre>
+<p>যেমন আপনি দেখতে পাচ্ছেন, স্টেবল টুলচেইনটি ডিফল্ট। বেশিরভাগ Rust ব্যবহারকারী বেশিরভাগ সময় স্টেবল ব্যবহার করেন। আপনি হয়তো বেশিরভাগ সময় স্টেবল ব্যবহার করতে চান, কিন্তু একটি নির্দিষ্ট প্রজেক্টে নাইটলি ব্যবহার করতে চান, কারণ আপনি একটি অত্যাধুনিক ফিচার নিয়ে আগ্রহী। এটি করার জন্য, আপনি সেই প্রজেক্টের ডিরেক্টরিতে <code>rustup override</code> ব্যবহার করে নাইটলি টুলচেইনটিকে সেট করতে পারেন যা <code>rustup</code> ব্যবহার করবে যখন আপনি সেই ডিরেক্টরিতে থাকবেন:</p>
+<pre><code class="language-console">$ cd ~/projects/needs-nightly
+$ rustup override set nightly
+</code></pre>
+<p>এখন, প্রতিবার যখন আপনি <em>~/projects/needs-nightly</em>-এর ভিতরে <code>rustc</code> বা <code>cargo</code> কল করবেন, তখন <code>rustup</code> নিশ্চিত করবে যে আপনি আপনার ডিফল্ট স্টেবল Rust-এর পরিবর্তে নাইটলি Rust ব্যবহার করছেন। এটি কার্যকর হয় যখন আপনার অনেক Rust প্রজেক্ট থাকে!</p>
+<h3 id="rfc-পরকরিযা-এবং-টিম"><a class="header" href="#rfc-পরকরিযা-এবং-টিম">RFC প্রক্রিয়া এবং টিম</a></h3>
+<p>তাহলে আপনি এই নতুন ফিচারগুলো সম্পর্কে কীভাবে জানবেন? Rust-এর ডেভেলপমেন্ট মডেল একটি <em>রিকোয়েস্ট ফর কমেন্টস (RFC) প্রক্রিয়া</em> অনুসরণ করে। আপনি যদি Rust-এ কোনো উন্নতি চান, তবে আপনি একটি প্রস্তাবনা লিখতে পারেন, যাকে RFC বলা হয়।</p>
+<p>যে কেউ Rust উন্নত করার জন্য RFC লিখতে পারে, এবং প্রস্তাবনাগুলো Rust টিম দ্বারা পর্যালোচনা এবং আলোচনা করা হয়, যা অনেকগুলো বিষয়ভিত্তিক সাবটিম নিয়ে গঠিত। Rust-এর ওয়েবসাইটে টিমগুলোর একটি সম্পূর্ণ তালিকা রয়েছে, যার মধ্যে প্রজেক্টের প্রতিটি ক্ষেত্রের জন্য টিম অন্তর্ভুক্ত: ভাষা ডিজাইন, কম্পাইলার ইমপ্লিমেন্টেশন, ইনফ্রাস্ট্রাকচার, ডকুমেন্টেশন এবং আরও অনেক কিছু। উপযুক্ত টিম প্রস্তাবনা এবং মন্তব্যগুলো পড়ে, তাদের নিজস্ব কিছু মন্তব্য লেখে, এবং অবশেষে, ফিচারটি গ্রহণ বা প্রত্যাখ্যান করার জন্য একটি ঐকমত্যে পৌঁছানো হয়।</p>
+<p>যদি ফিচারটি গৃহীত হয়, তবে Rust রিপোজিটরিতে একটি ইস্যু খোলা হয়, এবং কেউ এটি ইমপ্লিমেন্ট করতে পারে। যে ব্যক্তি এটি ইমপ্লিমেন্ট করে সে খুব সম্ভবত সেই ব্যক্তি নাও হতে পারে যে প্রথম ফিচারটি প্রস্তাব করেছিল! যখন ইমপ্লিমেন্টেশনটি প্রস্তুত হয়, তখন এটি একটি ফিচার গেটের আড়ালে <code>master</code> ব্রাঞ্চে আসে, যেমনটি আমরা <a href="#unstable-features">"আনস্টেবল ফিচার"</a> বিভাগে আলোচনা করেছি।</p>
+<p>কিছু সময় পর, যখন নাইটলি রিলিজ ব্যবহারকারী Rust ডেভেলপাররা নতুন ফিচারটি চেষ্টা করতে সক্ষম হন, তখন টিমের সদস্যরা ফিচারটি নিয়ে আলোচনা করেন, এটি নাইটলি-তে কীভাবে কাজ করেছে তা নিয়ে আলোচনা করেন, এবং সিদ্ধান্ত নেন যে এটি স্টেবল Rust-এ আসা উচিত কিনা। যদি এগিয়ে যাওয়ার সিদ্ধান্ত নেওয়া হয়, তবে ফিচার গেটটি সরিয়ে ফেলা হয়, এবং ফিচারটি এখন স্টেবল হিসাবে বিবেচিত হয়! এটি ট্রেনগুলোতে চড়ে Rust-এর একটি নতুন স্টেবল রিলিজে আসে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="appendix-06-translation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="appendix-06-translation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>শেয়ার্ড-স্টেট কনকারেন্সি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="শেযারড-সটেট-কনকারেনসি-shared-state-concurrency"><a class="header" href="#শেযারড-সটেট-কনকারেনসি-shared-state-concurrency">শেয়ারড-স্টেট কনকারেন্সি (Shared-State Concurrency)</a></h2>
+<p>মেসেজ পাসিং কনকারেন্সি পরিচালনা করার একটি চমৎকার উপায়, কিন্তু এটিই একমাত্র উপায় নয়। আরেকটি পদ্ধতি হলো একাধিক থ্রেডের একই শেয়ারড ডেটা অ্যাক্সেস করা। গো ল্যাঙ্গুয়েজের ডকুমেন্টেশনের স্লোগানের এই অংশটি আবার বিবেচনা করুন: "মেমরি শেয়ার করে যোগাযোগ করবেন না।"</p>
+<p>মেমরি শেয়ার করে যোগাযোগ করা দেখতে কেমন হবে? এছাড়াও, মেসেজ পাসিংয়ের উৎসাহীরা কেন মেমরি শেয়ারিং ব্যবহার না করার জন্য সাবধান করে?</p>
+<p>একভাবে, যেকোনো প্রোগ্রামিং ল্যাঙ্গুয়েজে চ্যানেলগুলো একক মালিকানার (single ownership) মতো কারণ একবার আপনি একটি চ্যানেলের মাধ্যমে একটি ভ্যালু স্থানান্তর করলে, আপনার আর সেই ভ্যালুটি ব্যবহার করা উচিত নয়। শেয়ারড-মেমরি কনকারেন্সি একাধিক মালিকানার (multiple ownership) মতো: একাধিক থ্রেড একই সময়ে একই মেমরি লোকেশন অ্যাক্সেস করতে পারে। যেমনটি আপনি অধ্যায় ১৫-এ দেখেছেন, যেখানে স্মার্ট পয়েন্টার একাধিক মালিকানা সম্ভব করেছিল, একাধিক মালিকানা জটিলতা বাড়াতে পারে কারণ এই বিভিন্ন মালিকদের পরিচালনা করার প্রয়োজন হয়। Rust-এর টাইপ সিস্টেম এবং মালিকানার নিয়মগুলো এই পরিচালনা সঠিকভাবে করতে ব্যাপকভাবে সহায়তা করে। একটি উদাহরণ হিসাবে, আসুন আমরা মিউটেক্স (mutexes) দেখি, যা শেয়ারড মেমোরির জন্য অন্যতম সাধারণ কনকারেন্সি প্রিমিটিভ।</p>
+<h3 id="এক-সমযে-একটি-থরেড-থেকে-ডেটা-অযাকসেসের-অনুমতি-দেওযার-জনয-মিউটেকস-বযবহার-করা"><a class="header" href="#এক-সমযে-একটি-থরেড-থেকে-ডেটা-অযাকসেসের-অনুমতি-দেওযার-জনয-মিউটেকস-বযবহার-করা">এক সময়ে একটি থ্রেড থেকে ডেটা অ্যাক্সেসের অনুমতি দেওয়ার জন্য মিউটেক্স ব্যবহার করা</a></h3>
+<p><em>মিউটেক্স</em> (<em>Mutex</em>) হলো <em>মিউচুয়াল এক্সক্লুশন</em> (<em>mutual exclusion</em>) এর একটি সংক্ষিপ্ত রূপ, যেমন একটি মিউটেক্স যেকোনো সময়ে শুধুমাত্র একটি থ্রেডকে কিছু ডেটা অ্যাক্সেস করার অনুমতি দেয়। একটি মিউটেক্সের ডেটা অ্যাক্সেস করার জন্য, একটি থ্রেডকে প্রথমে মিউটেক্সের লক (lock) অর্জন করার জন্য অনুরোধ করে অ্যাক্সেস চাওয়ার সংকেত দিতে হয়। <em>লক</em> হলো একটি ডেটা স্ট্রাকচার যা মিউটেক্সের অংশ এবং এটি ট্র্যাক রাখে যে বর্তমানে কার ডেটাতে একচেটিয়া অ্যাক্সেস রয়েছে। অতএব, মিউটেক্সকে লকিং সিস্টেমের মাধ্যমে তার ধারণ করা ডেটা <em>গার্ড</em> (guarding) করছে বলে বর্ণনা করা হয়।</p>
+<p>মিউটেক্স ব্যবহার করা কঠিন বলে একটি খ্যাতি আছে কারণ আপনাকে দুটি নিয়ম মনে রাখতে হবে:</p>
+<p>১. ডেটা ব্যবহার করার আগে আপনাকে অবশ্যই লক অর্জন করার চেষ্টা করতে হবে।
+২. যখন মিউটেক্স দ্বারা সুরক্ষিত ডেটার সাথে আপনার কাজ শেষ হয়ে যায়, তখন আপনাকে অবশ্যই ডেটা আনলক করতে হবে যাতে অন্য থ্রেডগুলো লক অর্জন করতে পারে।</p>
+<p>মিউটেক্সের একটি বাস্তব-জগতের উপমা হিসাবে, একটি সম্মেলনের প্যানেল আলোচনার কথা কল্পনা করুন যেখানে শুধুমাত্র একটি মাইক্রোফোন রয়েছে। একজন প্যানেলিস্ট কথা বলার আগে, তাকে মাইক্রোফোন ব্যবহার করতে চাওয়ার জন্য অনুরোধ বা সংকেত দিতে হবে। যখন সে মাইক্রোফোন পায়, তখন সে যতক্ষণ চায় কথা বলতে পারে এবং তারপর পরবর্তী প্যানেলিস্টকে মাইক্রোফোনটি হস্তান্তর করে যে কথা বলতে অনুরোধ করে। যদি একজন প্যানেলিস্ট কথা শেষ করে মাইক্রোফোনটি হস্তান্তর করতে ভুলে যায়, তবে অন্য কেউ কথা বলতে পারে না। যদি শেয়ারড মাইক্রোফোনের ব্যবস্থাপনায় ভুল হয়, প্যানেলটি পরিকল্পনা অনুযায়ী কাজ করবে না!</p>
+<p>মিউটেক্সের ব্যবস্থাপনা সঠিকভাবে করা অবিশ্বাস্যভাবে কঠিন হতে পারে, যে কারণে এত লোক চ্যানেল সম্পর্কে উত্সাহী। যাইহোক, Rust-এর টাইপ সিস্টেম এবং মালিকানার নিয়মগুলোর জন্য ধন্যবাদ, আপনি লকিং এবং আনলকিংয়ে ভুল করতে পারবেন না।</p>
+<h4 id="mutext-এর-api"><a class="header" href="#mutext-এর-api"><code>Mutex&lt;T&gt;</code> এর API</a></h4>
+<p>একটি মিউটেক্স কীভাবে ব্যবহার করতে হয় তার একটি উদাহরণ হিসাবে, আসুন আমরা একটি একক-থ্রেডেড প্রেক্ষাপটে একটি মিউটেক্স ব্যবহার করে শুরু করি, যেমনটি তালিকা ১৬-১২-এ দেখানো হয়েছে।</p>
+<Listing number="16-12" file-name="src/main.rs" caption="সরলতার জন্য একটি একক-থ্রেডেড প্রেক্ষাপটে `Mutex<T>` এর API অন্বেষণ করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::sync::Mutex;
+
+fn main() {
+    let m = Mutex::new(5);
+
+    {
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+
+    println!("m = {m:?}");
+}</code></pre></pre>
+</Listing>
+<p>অনেক টাইপের মতোই, আমরা অ্যাসোসিয়েটেড ফাংশন <code>new</code> ব্যবহার করে একটি <code>Mutex&lt;T&gt;</code> তৈরি করি। মিউটেক্সের ভিতরের ডেটা অ্যাক্সেস করার জন্য, আমরা লক অর্জন করতে <code>lock</code> মেথড ব্যবহার করি। এই কলটি বর্তমান থ্রেডটিকে ব্লক করবে যাতে এটি কোনো কাজ করতে না পারে যতক্ষণ না আমাদের লক পাওয়ার পালা আসে।</p>
+<p><code>lock</code> এর কলটি ব্যর্থ হবে যদি লক ধরে রাখা অন্য কোনো থ্রেড প্যানিক করে। সেক্ষেত্রে, কেউ কখনও লকটি পেতে পারবে না, তাই আমরা <code>unwrap</code> করতে বেছে নিয়েছি এবং যদি আমরা সেই পরিস্থিতিতে থাকি তবে এই থ্রেডটি প্যানিক করবে।</p>
+<p>আমরা লকটি অর্জন করার পরে, আমরা রিটার্ন ভ্যালুটিকে, এই ক্ষেত্রে যার নাম <code>num</code>, ভিতরের ডেটার একটি মিউটেবল রেফারেন্স (mutable reference) হিসাবে ব্যবহার করতে পারি। টাইপ সিস্টেম নিশ্চিত করে যে <code>m</code>-এর ভ্যালু ব্যবহার করার আগে আমরা একটি লক অর্জন করি। <code>m</code>-এর টাইপ হলো <code>Mutex&lt;i32&gt;</code>, <code>i32</code> নয়, তাই <code>i32</code> ভ্যালুটি ব্যবহার করতে সক্ষম হওয়ার জন্য আমাদের <em>অবশ্যই</em> <code>lock</code> কল করতে হবে। আমরা ভুলতে পারি না; টাইপ সিস্টেম অন্যথায় আমাদের ভিতরের <code>i32</code> অ্যাক্সেস করতে দেবে না।</p>
+<p><code>lock</code> এর কলটি <code>MutexGuard</code> নামের একটি টাইপ রিটার্ন করে, যা একটি <code>LockResult</code>-এ মোড়ানো থাকে যা আমরা <code>unwrap</code>-এর কল দিয়ে হ্যান্ডেল করেছি। <code>MutexGuard</code> টাইপটি আমাদের ভিতরের ডেটার দিকে নির্দেশ করতে <code>Deref</code> ইমপ্লিমেন্ট করে; এই টাইপের একটি <code>Drop</code> ইমপ্লিমেন্টেশনও রয়েছে যা <code>MutexGuard</code> স্কোপের বাইরে চলে গেলে স্বয়ংক্রিয়ভাবে লকটি ছেড়ে দেয়, যা ভিতরের স্কোপের শেষে ঘটে। ফলস্বরূপ, আমরা লকটি ছেড়ে দিতে ভুলে যাওয়ার এবং মিউটেক্সটিকে অন্য থ্রেড দ্বারা ব্যবহৃত হতে ব্লক করার ঝুঁকি নিই না কারণ লক রিলিজ স্বয়ংক্রিয়ভাবে ঘটে।</p>
+<p>লকটি ড্রপ করার পরে, আমরা মিউটেক্সের ভ্যালু প্রিন্ট করতে পারি এবং দেখতে পারি যে আমরা ভিতরের <code>i32</code> কে <code>6</code>-এ পরিবর্তন করতে সক্ষম হয়েছি।</p>
+<h4 id="একাধিক-থরেডের-মধযে-একটি-mutext-শেযার-করা"><a class="header" href="#একাধিক-থরেডের-মধযে-একটি-mutext-শেযার-করা">একাধিক থ্রেডের মধ্যে একটি <code>Mutex&lt;T&gt;</code> শেয়ার করা</a></h4>
+<p>এখন আসুন একাধিক থ্রেডের মধ্যে <code>Mutex&lt;T&gt;</code> ব্যবহার করে একটি ভ্যালু শেয়ার করার চেষ্টা করি। আমরা ১০টি থ্রেড চালু করব এবং তাদের প্রত্যেককে একটি কাউন্টার ভ্যালু ১ করে বাড়াতে বলব, যাতে কাউন্টার ০ থেকে ১০ পর্যন্ত যায়। তালিকা ১৬-১৩-এর উদাহরণটিতে একটি কম্পাইলার এরর থাকবে, এবং আমরা সেই এররটি <code>Mutex&lt;T&gt;</code> ব্যবহার সম্পর্কে এবং Rust কীভাবে আমাদের এটি সঠিকভাবে ব্যবহার করতে সাহায্য করে সে সম্পর্কে আরও জানতে ব্যবহার করব।</p>
+<Listing number="16-13" file-name="src/main.rs" caption="দশটি থ্রেড, প্রত্যেকটি একটি `Mutex<T>` দ্বারা সুরক্ষিত একটি কাউন্টার বাড়াচ্ছে">
+<pre><code class="language-rust ignore does_not_compile">use std::sync::Mutex;
+use std::thread;
+
+fn main() {
+    let counter = Mutex::new(0);
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre>
+</Listing>
+<p>আমরা একটি <code>counter</code> ভ্যারিয়েবল তৈরি করি যা একটি <code>Mutex&lt;T&gt;</code>-এর ভিতরে একটি <code>i32</code> ধারণ করে, যেমনটি আমরা তালিকা ১৬-১২-এ করেছি। এরপর, আমরা একটি সংখ্যার পরিসরের উপর ইটারেট করে ১০টি থ্রেড তৈরি করি। আমরা <code>thread::spawn</code> ব্যবহার করি এবং সমস্ত থ্রেডকে একই ক্লোজার দিই: একটি যা কাউন্টারটিকে থ্রেডে منتقل করে, <code>lock</code> মেথড কল করে <code>Mutex&lt;T&gt;</code>-এর উপর একটি লক অর্জন করে, এবং তারপর মিউটেক্সের ভ্যালুতে ১ যোগ করে। যখন একটি থ্রেড তার ক্লোজার চালানো শেষ করে, <code>num</code> স্কোপের বাইরে চলে যাবে এবং লকটি ছেড়ে দেবে যাতে অন্য থ্রেড এটি অর্জন করতে পারে।</p>
+<p>মূল থ্রেডে, আমরা সমস্ত জয়েন হ্যান্ডেল সংগ্রহ করি। তারপর, যেমনটি আমরা তালিকা ১৬-২-এ করেছি, আমরা প্রতিটি হ্যান্ডেলের উপর <code>join</code> কল করি যাতে নিশ্চিত করা যায় যে সমস্ত থ্রেড শেষ হয়েছে। সেই সময়ে, মূল থ্রেডটি লক অর্জন করবে এবং এই প্রোগ্রামের ফলাফল প্রিন্ট করবে।</p>
+<p>আমরা ইঙ্গিত দিয়েছিলাম যে এই উদাহরণটি কম্পাইল হবে না। এখন আসুন জেনে নেওয়া যাক কেন!</p>
+<pre><code class="language-console">$ cargo run
+   Compiling shared-state v0.1.0 (file:///projects/shared-state)
+error[E0382]: borrow of moved value: `counter`
+  --&gt; src/main.rs:21:29
+   |
+5  |     let counter = Mutex::new(0);
+   |         ------- move occurs because `counter` has type `Mutex&lt;i32&gt;`, which does not implement the `Copy` trait
+...
+8  |     for _ in 0..10 {
+   |     -------------- inside of this loop
+9  |         let handle = thread::spawn(move || {
+   |                                    ------- value moved into closure here, in previous iteration of loop
+...
+21 |     println!("Result: {}", *counter.lock().unwrap());
+   |                             ^^^^^^^ value borrowed here after move
+   |
+help: consider moving the expression out of the loop so it is only moved once
+   |
+8  ~     let mut value = counter.lock();
+9  ~     for _ in 0..10 {
+10 |         let handle = thread::spawn(move || {
+11 ~             let mut num = value.unwrap();
+   |
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `shared-state` (bin "shared-state") due to 1 previous error
+</code></pre>
+<p>এরর মেসেজটি বলছে যে <code>counter</code> ভ্যালুটি লুপের আগের ইটারেশনে সরানো হয়েছে। Rust আমাদের বলছে যে আমরা লক <code>counter</code>-এর মালিকানা একাধিক থ্রেডে منتقل করতে পারি না। আসুন আমরা অধ্যায় ১৫-এ আলোচনা করা একাধিক মালিকানার পদ্ধতি দিয়ে কম্পাইলার এররটি ঠিক করি।</p>
+<h4 id="একাধিক-থরেডের-সাথে-একাধিক-মালিকানা"><a class="header" href="#একাধিক-থরেডের-সাথে-একাধিক-মালিকানা">একাধিক থ্রেডের সাথে একাধিক মালিকানা</a></h4>
+<p>অধ্যায় ১৫-এ, আমরা একটি রেফারেন্স কাউন্টেড ভ্যালু তৈরি করতে স্মার্ট পয়েন্টার <code>Rc&lt;T&gt;</code> ব্যবহার করে একটি ভ্যালুকে একাধিক মালিক দিয়েছিলাম। আসুন এখানে একই কাজ করি এবং দেখি কী হয়। আমরা তালিকা ১৬-১৪-এ <code>Mutex&lt;T&gt;</code> কে <code>Rc&lt;T&gt;</code>-তে মোড়াব এবং থ্রেডে মালিকানা منتقل করার আগে <code>Rc&lt;T&gt;</code> ক্লোন করব।</p>
+<Listing number="16-14" file-name="src/main.rs" caption="একাধিক থ্রেডকে `Mutex<T>`-এর মালিকানা দেওয়ার জন্য `Rc<T>` ব্যবহার করার চেষ্টা করা">
+<pre><code class="language-rust ignore does_not_compile">use std::rc::Rc;
+use std::sync::Mutex;
+use std::thread;
+
+fn main() {
+    let counter = Rc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Rc::clone(&amp;counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre>
+</Listing>
+<p>আবারও, আমরা কম্পাইল করি এবং... ভিন্ন এরর পাই! কম্পাইলার আমাদের অনেক কিছু শেখাচ্ছে।</p>
+<pre><code class="language-console">$ cargo run
+   Compiling shared-state v0.1.0 (file:///projects/shared-state)
+error[E0277]: `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
+  --&gt; src/main.rs:11:36
+   |
+11 |           let handle = thread::spawn(move || {
+   |                        ------------- ^------
+   |                        |             |
+   |  ______________________|_____________within this `{closure@src/main.rs:11:36: 11:43}`
+   | |                      |
+   | |                      required by a bound introduced by this call
+12 | |             let mut num = counter.lock().unwrap();
+13 | |
+14 | |             *num += 1;
+15 | |         });
+   | |_________^ `Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely
+   |
+   = help: within `{closure@src/main.rs:11:36: 11:43}`, the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`
+note: required because it's used within this closure
+  --&gt; src/main.rs:11:36
+   |
+11 |         let handle = thread::spawn(move || {
+   |                                    ^^^^^^^
+note: required by a bound in `spawn`
+  --&gt; /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/std/src/thread/mod.rs:728:1
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `shared-state` (bin "shared-state") due to 1 previous error
+</code></pre>
+<p>বাহ, এই এরর মেসেজটি খুব শব্দবহুল! এখানে মনোযোগ দেওয়ার গুরুত্বপূর্ণ অংশটি হলো: <code>`Rc&lt;Mutex&lt;i32&gt;&gt;` cannot be sent between threads safely</code>। কম্পাইলার আমাদের কারণটিও বলছে: <code>the trait `Send` is not implemented for `Rc&lt;Mutex&lt;i32&gt;&gt;`</code>। আমরা পরবর্তী বিভাগে <code>Send</code> সম্পর্কে কথা বলব: এটি এমন একটি ট্রেইট যা নিশ্চিত করে যে আমরা থ্রেডের সাথে যে টাইপগুলো ব্যবহার করি তা কনকারেন্ট পরিস্থিতিতে ব্যবহারের জন্য তৈরি।</p>
+<p>দুর্ভাগ্যবশত, <code>Rc&lt;T&gt;</code> থ্রেড জুড়ে শেয়ার করার জন্য নিরাপদ নয়। যখন <code>Rc&lt;T&gt;</code> রেফারেন্স কাউন্ট পরিচালনা করে, তখন এটি <code>clone</code>-এর প্রতিটি কলের জন্য কাউন্ট যোগ করে এবং প্রতিটি ক্লোন ড্রপ করা হলে কাউন্ট থেকে বিয়োগ করে। কিন্তু এটি কোনো কনকারেন্সি প্রিমিটিভ ব্যবহার করে না যাতে নিশ্চিত করা যায় যে কাউন্টের পরিবর্তনগুলো অন্য কোনো থ্রেড দ্বারা বাধাগ্রস্ত হতে না পারে। এটি ভুল গণনার কারণ হতে পারে—সূক্ষ্ম বাগ যা ফলস্বরূপ মেমরি লিক বা আমাদের কাজ শেষ হওয়ার আগে একটি ভ্যালু ড্রপ হয়ে যাওয়ার কারণ হতে পারে। আমাদের যা প্রয়োজন তা হলো এমন একটি টাইপ যা হুবহু <code>Rc&lt;T&gt;</code>-এর মতো, কিন্তু যা রেফারেন্স কাউন্টের পরিবর্তনগুলো একটি থ্রেড-সেফ উপায়ে করে।</p>
+<h4 id="arct-এর-সাথে-অযাটমিক-রেফারেনস-কাউনটিং"><a class="header" href="#arct-এর-সাথে-অযাটমিক-রেফারেনস-কাউনটিং"><code>Arc&lt;T&gt;</code> এর সাথে অ্যাটমিক রেফারেন্স কাউন্টিং</a></h4>
+<p>ভাগ্যক্রমে, <code>Arc&lt;T&gt;</code> হলো <code>Rc&lt;T&gt;</code>-এর মতো একটি টাইপ যা কনকারেন্ট পরিস্থিতিতে ব্যবহার করার জন্য নিরাপদ। <em>a</em> এর অর্থ হলো <em>অ্যাটমিক</em>, যার মানে এটি একটি <em>অ্যাটমিকালি রেফারেন্স-কাউন্টেড</em> টাইপ। অ্যাটমিক্স হলো অতিরিক্ত এক ধরনের কনকারেন্সি প্রিমিটিভ যা আমরা এখানে বিস্তারিতভাবে আলোচনা করব না: আরও বিস্তারিত জানার জন্য স্ট্যান্ডার্ড লাইব্রেরি ডকুমেন্টেশন <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code></a><!-- ignore --> দেখুন। এই মুহূর্তে, আপনাকে শুধু জানতে হবে যে অ্যাটমিক্স প্রিমিটিভ টাইপের মতো কাজ করে কিন্তু থ্রেড জুড়ে শেয়ার করার জন্য নিরাপদ।</p>
+<p>আপনি তখন ভাবতে পারেন কেন সমস্ত প্রিমিটিভ টাইপ অ্যাটমিক নয় এবং কেন স্ট্যান্ডার্ড লাইব্রেরি টাইপগুলো ডিফল্টরূপে <code>Arc&lt;T&gt;</code> ব্যবহার করার জন্য ইমপ্লিমেন্ট করা হয় না। কারণ হলো থ্রেড সেফটির সাথে একটি পারফরম্যান্স পেনাল্টি আসে যা আপনি শুধুমাত্র যখন সত্যিই প্রয়োজন তখনই দিতে চান। আপনি যদি শুধুমাত্র একটি একক থ্রেডের মধ্যে ভ্যালুগুলোর উপর অপারেশন করেন, তবে আপনার কোড দ্রুত চলতে পারে যদি এটিকে অ্যাটমিক্স যে গ্যারান্টি প্রদান করে তা প্রয়োগ করতে না হয়।</p>
+<p>আসুন আমাদের উদাহরণে ফিরে যাই: <code>Arc&lt;T&gt;</code> এবং <code>Rc&lt;T&gt;</code>-এর একই API রয়েছে, তাই আমরা <code>use</code> লাইন, <code>new</code>-এর কল এবং <code>clone</code>-এর কল পরিবর্তন করে আমাদের প্রোগ্রামটি ঠিক করি। তালিকা ১৬-১৫-এর কোডটি অবশেষে কম্পাইল হবে এবং চলবে।</p>
+<Listing number="16-15" file-name="src/main.rs" caption="একাধিক থ্রেডে মালিকানা শেয়ার করতে সক্ষম হওয়ার জন্য `Mutex<T>` কে মোড়ানোর জন্য একটি `Arc<T>` ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&amp;counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি নিম্নলিখিতটি প্রিন্ট করবে:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Result: 10
+</code></pre>
+<p>আমরা এটা করেছি! আমরা ০ থেকে ১০ পর্যন্ত গণনা করেছি, যা খুব চিত্তাকর্ষক মনে নাও হতে পারে, কিন্তু এটি আমাদের <code>Mutex&lt;T&gt;</code> এবং থ্রেড সেফটি সম্পর্কে অনেক কিছু শিখিয়েছে। আপনি এই প্রোগ্রামের কাঠামোটি শুধু একটি কাউন্টার বাড়ানোর চেয়ে আরও জটিল অপারেশন করার জন্যও ব্যবহার করতে পারেন। এই কৌশলটি ব্যবহার করে, আপনি একটি গণনাকাজকে স্বাধীন অংশে ভাগ করতে পারেন, সেই অংশগুলোকে থ্রেড জুড়ে বিভক্ত করতে পারেন, এবং তারপর প্রতিটি থ্রেডকে তার অংশ দিয়ে চূড়ান্ত ফলাফল আপডেট করার জন্য একটি <code>Mutex&lt;T&gt;</code> ব্যবহার করতে পারেন।</p>
+<p>মনে রাখবেন যে আপনি যদি সহজ সাংখ্যিক অপারেশন করেন, তবে স্ট্যান্ডার্ড লাইব্রেরির <a href="../std/sync/atomic/index.html"><code>std::sync::atomic</code> মডিউল</a><!-- ignore --> দ্বারা প্রদত্ত <code>Mutex&lt;T&gt;</code> টাইপের চেয়ে সহজ টাইপ রয়েছে। এই টাইপগুলো প্রিমিটিভ টাইপগুলোতে নিরাপদ, কনকারেন্ট, অ্যাটমিক অ্যাক্সেস প্রদান করে। আমরা এই উদাহরণের জন্য একটি প্রিমিটিভ টাইপের সাথে <code>Mutex&lt;T&gt;</code> ব্যবহার করতে বেছে নিয়েছি যাতে আমরা <code>Mutex&lt;T&gt;</code> কীভাবে কাজ করে তার উপর মনোযোগ দিতে পারি।</p>
+<h3 id="refcelltrct-এবং-mutextarct-এর-মধযে-সাদৃশয"><a class="header" href="#refcelltrct-এবং-mutextarct-এর-মধযে-সাদৃশয"><code>RefCell&lt;T&gt;</code>/<code>Rc&lt;T&gt;</code> এবং <code>Mutex&lt;T&gt;</code>/<code>Arc&lt;T&gt;</code> এর মধ্যে সাদৃশ্য</a></h3>
+<p>আপনি হয়তো লক্ষ্য করেছেন যে <code>counter</code> অপরিবর্তনীয় কিন্তু আমরা এর ভিতরের ভ্যালুতে একটি মিউটেবল রেফারেন্স পেতে পারি; এর মানে হলো <code>Mutex&lt;T&gt;</code> ইন্টেরিয়র মিউটেবিলিটি (interior mutability) প্রদান করে, যেমন <code>Cell</code> পরিবার করে। অধ্যায় ১৫-এ আমরা যেভাবে <code>Rc&lt;T&gt;</code>-এর ভিতরের বিষয়বস্তু মিউটেট করার অনুমতি দেওয়ার জন্য <code>RefCell&lt;T&gt;</code> ব্যবহার করেছি, সেভাবেই আমরা <code>Arc&lt;T&gt;</code>-এর ভিতরের বিষয়বস্তু মিউটেট করার জন্য <code>Mutex&lt;T&gt;</code> ব্যবহার করি।</p>
+<p>আরেকটি বিষয় লক্ষ্য করার মতো হলো যে আপনি যখন <code>Mutex&lt;T&gt;</code> ব্যবহার করেন তখন Rust আপনাকে সব ধরনের লজিক এরর থেকে রক্ষা করতে পারে না। অধ্যায় ১৫ থেকে মনে করুন যে <code>Rc&lt;T&gt;</code> ব্যবহার করার সাথে রেফারেন্স সাইকেল (reference cycles) তৈরি করার ঝুঁকি ছিল, যেখানে দুটি <code>Rc&lt;T&gt;</code> ভ্যালু একে অপরকে রেফার করে, যা মেমরি লিকের কারণ হয়। একইভাবে, <code>Mutex&lt;T&gt;</code>-এর সাথে <em>ডেডলক</em> (<em>deadlocks</em>) তৈরি করার ঝুঁকি রয়েছে। এটি তখন ঘটে যখন একটি অপারেশনের জন্য দুটি রিসোর্স লক করার প্রয়োজন হয় এবং দুটি থ্রেড প্রত্যেকে একটি করে লক অর্জন করে, যার ফলে তারা একে অপরের জন্য চিরকাল অপেক্ষা করে। আপনি যদি ডেডলকে আগ্রহী হন, তবে একটি Rust প্রোগ্রাম তৈরি করার চেষ্টা করুন যাতে একটি ডেডলক আছে; তারপর যেকোনো ল্যাঙ্গুয়েজে মিউটেক্সের জন্য ডেডলক প্রশমন কৌশল নিয়ে গবেষণা করুন এবং Rust-এ সেগুলো ইমপ্লিমেন্ট করার চেষ্টা করুন। <code>Mutex&lt;T&gt;</code> এবং <code>MutexGuard</code>-এর জন্য স্ট্যান্ডার্ড লাইব্রেরি API ডকুমেন্টেশন দরকারী তথ্য প্রদান করে।</p>
+<p>আমরা <code>Send</code> এবং <code>Sync</code> ট্রেইট এবং কীভাবে আমরা কাস্টম টাইপের সাথে সেগুলো ব্যবহার করতে পারি সে সম্পর্কে কথা বলে এই অধ্যায়টি শেষ করব।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch16-02-message-passing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch16-04-extensible-concurrency-sync-and-send.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch16-02-message-passing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch16-04-extensible-concurrency-sync-and-send.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

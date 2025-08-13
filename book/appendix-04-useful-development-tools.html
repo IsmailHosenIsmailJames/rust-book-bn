@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>D - দরকারি ডেভেলপমেন্ট টুল - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পরিশিষট-ঘ---দরকারি-ডেভেলপমেনট-টুল"><a class="header" href="#পরিশিষট-ঘ---দরকারি-ডেভেলপমেনট-টুল">পরিশিষ্ট ঘ - দরকারি ডেভেলপমেন্ট টুল</a></h2>
+<p>এই পরিশিষ্টে, আমরা Rust প্রজেক্ট দ্বারা সরবরাহ করা কিছু দরকারি ডেভেলপমেন্ট টুল নিয়ে আলোচনা করব। আমরা স্বয়ংক্রিয় ফরম্যাটিং, ওয়ার্নিংগুলো দ্রুত সমাধান করার উপায়, একটি লিন্টার এবং IDE-এর সাথে ইন্টিগ্রেশন নিয়ে আলোচনা করব।</p>
+<h3 id="rustfmt-দিয়ে-সবযংকরিয-ফরমযাটিং"><a class="header" href="#rustfmt-দিয়ে-সবযংকরিয-ফরমযাটিং"><code>rustfmt</code> দিয়ে স্বয়ংক্রিয় ফরম্যাটিং</a></h3>
+<p><code>rustfmt</code> টুলটি আপনার কোডকে কমিউনিটির কোড স্টাইল অনুযায়ী রিফরম্যাট করে। অনেক সহযোগী প্রজেক্টে <code>rustfmt</code> ব্যবহার করা হয় যাতে Rust লেখার সময় কোন স্টাইল ব্যবহার করা হবে তা নিয়ে তর্ক-বিতর্ক এড়ানো যায়: সবাই এই টুলটি ব্যবহার করে তাদের কোড ফরম্যাট করে।</p>
+<p>Rust ইনস্টলেশনের সাথে <code>rustfmt</code> ডিফল্টভাবে অন্তর্ভুক্ত থাকে, তাই আপনার সিস্টেমে ইতোমধ্যে <code>rustfmt</code> এবং <code>cargo-fmt</code> প্রোগ্রামগুলো থাকা উচিত। এই দুটি কমান্ড <code>rustc</code> এবং <code>cargo</code>-এর মতোই, যেখানে <code>rustfmt</code> আরও সূক্ষ্ম নিয়ন্ত্রণ দেয় এবং <code>cargo-fmt</code> কার্গো ব্যবহারকারী একটি প্রজেক্টের কনভেনশনগুলো বোঝে। যেকোনো কার্গো প্রজেক্ট ফরম্যাট করতে, নিম্নলিখিতটি লিখুন:</p>
+<pre><code class="language-console">$ cargo fmt
+</code></pre>
+<p>এই কমান্ডটি চালালে বর্তমান ক্রেটের সমস্ত Rust কোড রিফরম্যাট হয়ে যায়। এটি শুধুমাত্র কোডের স্টাইল পরিবর্তন করবে, কোডের সেমান্টিক্স (অর্থ) নয়। <code>rustfmt</code> সম্পর্কে আরও তথ্যের জন্য, <a href="https://github.com/rust-lang/rustfmt">এর ডকুমেন্টেশন</a> দেখুন।</p>
+<h3 id="rustfix-দিয়ে-আপনার-কোড-ঠিক-করুন"><a class="header" href="#rustfix-দিয়ে-আপনার-কোড-ঠিক-করুন"><code>rustfix</code> দিয়ে আপনার কোড ঠিক করুন</a></h3>
+<p><code>rustfix</code> টুলটি Rust ইনস্টলেশনের সাথে অন্তর্ভুক্ত থাকে এবং এটি কম্পাইলারের সেইসব ওয়ার্নিং স্বয়ংক্রিয়ভাবে ঠিক করতে পারে যেগুলোর সমস্যা সমাধানের একটি স্পষ্ট উপায় আছে এবং সম্ভবত আপনি সেটাই করতে চান। আপনি সম্ভবত আগেও কম্পাইলার ওয়ার্নিং দেখেছেন। উদাহরণস্বরূপ, এই কোডটি বিবেচনা করুন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut x = 42;
+    println!("{x}");
+}</code></pre></pre>
+<p>এখানে, আমরা <code>x</code> ভেরিয়েবলটিকে মিউটেবল হিসেবে ডিফাইন করছি, কিন্তু আমরা আসলে এটিকে কখনও পরিবর্তন করছি না। Rust আমাদের এই বিষয়ে সতর্ক করে:</p>
+<pre><code class="language-console">$ cargo build
+   Compiling myprogram v0.1.0 (file:///projects/myprogram)
+warning: variable does not need to be mutable
+ --&gt; src/main.rs:2:9
+  |
+2 |     let mut x = 0;
+  |         ----^
+  |         |
+  |         help: remove this `mut`
+  |
+  = note: `#[warn(unused_mut)]` on by default
+</code></pre>
+<p>ওয়ার্নিংটি আমাদের <code>mut</code> কীওয়ার্ডটি সরিয়ে ফেলার পরামর্শ দিচ্ছে। আমরা <code>rustfix</code> টুলটি ব্যবহার করে <code>cargo fix</code> কমান্ডটি চালিয়ে স্বয়ংক্রিয়ভাবে সেই পরামর্শটি প্রয়োগ করতে পারি:</p>
+<pre><code class="language-console">$ cargo fix
+    Checking myprogram v0.1.0 (file:///projects/myprogram)
+      Fixing src/main.rs (1 fix)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+</code></pre>
+<p>যখন আমরা আবার <em>src/main.rs</em> দেখব, তখন আমরা দেখতে পাব যে <code>cargo fix</code> কোডটি পরিবর্তন করেছে:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 42;
+    println!("{x}");
+}```
+
+`x` ভেরিয়েবলটি এখন ইমিউটেবল, এবং ওয়ার্নিংটি আর দেখা যাচ্ছে না।
+
+আপনি বিভিন্ন Rust এডিশনের মধ্যে আপনার কোড স্থানান্তর করতেও `cargo fix` কমান্ডটি ব্যবহার করতে পারেন। এডিশনগুলো [পরিশিষ্ট ঙ][editions]-এ আলোচনা করা হয়েছে।
+
+## `clippy` দিয়ে আরও লিন্ট
+
+Clippy টুলটি হলো আপনার কোড বিশ্লেষণ করার জন্য লিন্টের একটি সংগ্রহ, যাতে আপনি সাধারণ ভুলগুলো ধরতে পারেন এবং আপনার Rust কোড উন্নত করতে পারেন। Clippy স্ট্যান্ডার্ড Rust ইনস্টলেশনের সাথে অন্তর্ভুক্ত থাকে।
+
+যেকোনো কার্গো প্রজেক্টে Clippy-এর লিন্টগুলো চালাতে, নিম্নলিখিতটি লিখুন:
+
+```console
+$ cargo clippy</code></pre></pre>
+<p>উদাহরণস্বরূপ, ধরুন আপনি একটি প্রোগ্রাম লিখেছেন যা একটি গাণিতিক ধ্রুবক, যেমন পাই (pi)-এর একটি আনুমানিক মান ব্যবহার করে, যেমন এই প্রোগ্রামটি করে:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 3.1415;
+    let r = 8.0;
+    println!("the area of the circle is {}", x * r * r);
+}</code></pre></pre>
+</Listing>
+<p>এই প্রজেক্টে <code>cargo clippy</code> চালালে এই এররটি আসে:</p>
+<pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found
+ --&gt; src/main.rs:2:13
+  |
+2 |     let x = 3.1415;
+  |             ^^^^^^
+  |
+  = note: `#[deny(clippy::approx_constant)]` on by default
+  = help: consider using the constant directly
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
+</code></pre>
+<p>এই এররটি আপনাকে জানায় যে Rust-এ ইতোমধ্যে আরও নির্ভুল একটি <code>PI</code> ধ্রুবক ডিফাইন করা আছে, এবং আপনি যদি সেই ধ্রুবকটি ব্যবহার করেন তবে আপনার প্রোগ্রামটি আরও সঠিক হবে। এরপর আপনি <code>PI</code> ধ্রুবকটি ব্যবহার করার জন্য আপনার কোড পরিবর্তন করবেন।</p>
+<p>নিম্নলিখিত কোডটি Clippy থেকে কোনো এরর বা ওয়ার্নিং তৈরি করে না:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = std::f64::consts::PI;
+    let r = 8.0;
+    println!("the area of the circle is {}", x * r * r);
+}</code></pre></pre>
+</Listing>
+<p>Clippy সম্পর্কে আরও তথ্যের জন্য, <a href="https://github.com/rust-lang/rust-clippy">এর ডকুমেন্টেশন</a> দেখুন।</p>
+<h3 id="rust-analyzer-বযবহার-করে-ide-ইনটিগরেশন"><a class="header" href="#rust-analyzer-বযবহার-করে-ide-ইনটিগরেশন"><code>rust-analyzer</code> ব্যবহার করে IDE ইন্টিগ্রেশন</a></h3>
+<p>IDE ইন্টিগ্রেশনে সাহায্য করার জন্য, Rust কমিউনিটি <a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a> ব্যবহার করার সুপারিশ করে। এই টুলটি হলো কম্পাইলার-কেন্দ্রিক ইউটিলিটিগুলোর একটি সেট যা <a href="http://langserver.org/">Language Server Protocol</a> (LSP) ব্যবহার করে কথা বলে, যা IDE এবং প্রোগ্রামিং ল্যাঙ্গুয়েজগুলোর একে অপরের সাথে যোগাযোগের জন্য একটি স্পেসিফিকেশন। বিভিন্ন ক্লায়েন্ট <code>rust-analyzer</code> ব্যবহার করতে পারে, যেমন <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">Visual Studio Code-এর জন্য Rust analyzer প্লাগ-ইন</a>।</p>
+<p>ইনস্টলেশন নির্দেশাবলীর জন্য <code>rust-analyzer</code> প্রজেক্টের <a href="https://rust-analyzer.github.io">হোম পেজ</a> দেখুন, তারপর আপনার নির্দিষ্ট IDE-তে ল্যাঙ্গুয়েজ সার্ভার সাপোর্ট ইনস্টল করুন। আপনার IDE স্বয়ংক্রিয়-সম্পূর্ণকরণ (autocompletion), সংজ্ঞায় ঝাঁপ (jump to definition), এবং ইনলাইন এরর (inline errors) এর মতো ক্ষমতা অর্জন করবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="appendix-03-derivable-traits.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="appendix-05-editions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="appendix-03-derivable-traits.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="appendix-05-editions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

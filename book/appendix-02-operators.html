@@ -1,0 +1,408 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>B - অপারেটর এবং প্রতীক - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পরিশিষট-খ-অপারেটর-এবং-পরতীক"><a class="header" href="#পরিশিষট-খ-অপারেটর-এবং-পরতীক">পরিশিষ্ট খ: অপারেটর এবং প্রতীক</a></h2>
+<p>এই পরিশিষ্টে Rust-এর সিনট্যাক্সের একটি শব্দকোষ রয়েছে, যার মধ্যে অপারেটর এবং অন্যান্য প্রতীকগুলো অন্তর্ভুক্ত যা নিজে থেকেই অথবা পাথ, জেনেরিক, ট্রেইট বাউন্ড, ম্যাক্রো, অ্যাট্রিবিউট, কমেন্ট, টাপল এবং ব্র্যাকেটের প্রসঙ্গে উপস্থিত হয়।</p>
+<h3 id="অপারেটর"><a class="header" href="#অপারেটর">অপারেটর</a></h3>
+<p>সারণী খ-১ এ Rust-এর অপারেটর, প্রসঙ্গে অপারেটরটি কীভাবে প্রদর্শিত হবে তার একটি উদাহরণ, একটি সংক্ষিপ্ত ব্যাখ্যা এবং সেই অপারেটরটি ওভারলোডযোগ্য কিনা তা রয়েছে। যদি কোনো অপারেটর ওভারলোডযোগ্য হয়, তবে সেই অপারেটরটিকে ওভারলোড করার জন্য ব্যবহৃত প্রাসঙ্গিক ট্রেইটটি তালিকাভুক্ত করা হয়েছে।</p>
+<p><span class="caption">সারণী খ-১: অপারেটর</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">অপারেটর</th><th style="text-align: left">উদাহরণ</th><th style="text-align: left">ব্যাখ্যা</th><th style="text-align: left">ওভারলোডযোগ্য?</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>!</code></td><td style="text-align: left"><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td style="text-align: left">ম্যাক্রো এক্সপ্যানশন</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>!</code></td><td style="text-align: left"><code>!expr</code></td><td style="text-align: left">বিটওয়াইজ বা লজিক্যাল কমপ্লিমেন্ট</td><td style="text-align: left"><code>Not</code></td></tr>
+<tr><td style="text-align: left"><code>!=</code></td><td style="text-align: left"><code>expr != expr</code></td><td style="text-align: left">অসমতা তুলনা</td><td style="text-align: left"><code>PartialEq</code></td></tr>
+<tr><td style="text-align: left"><code>%</code></td><td style="text-align: left"><code>expr % expr</code></td><td style="text-align: left">গাণিতিক ভাগশেষ</td><td style="text-align: left"><code>Rem</code></td></tr>
+<tr><td style="text-align: left"><code>%=</code></td><td style="text-align: left"><code>var %= expr</code></td><td style="text-align: left">গাণিতিক ভাগশেষ এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>RemAssign</code></td></tr>
+<tr><td style="text-align: left"><code>&amp;</code></td><td style="text-align: left"><code>&amp;expr</code>, <code>&amp;mut expr</code></td><td style="text-align: left">ধার (Borrow)</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>&amp;</code></td><td style="text-align: left"><code>&amp;type</code>, <code>&amp;mut type</code>, <code>&amp;'a type</code>, <code>&amp;'a mut type</code></td><td style="text-align: left">ধার করা পয়েন্টার টাইপ</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>&amp;</code></td><td style="text-align: left"><code>expr &amp; expr</code></td><td style="text-align: left">বিটওয়াইজ AND</td><td style="text-align: left"><code>BitAnd</code></td></tr>
+<tr><td style="text-align: left"><code>&amp;=</code></td><td style="text-align: left"><code>var &amp;= expr</code></td><td style="text-align: left">বিটওয়াইজ AND এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>BitAndAssign</code></td></tr>
+<tr><td style="text-align: left"><code>&amp;&amp;</code></td><td style="text-align: left"><code>expr &amp;&amp; expr</code></td><td style="text-align: left">শর্ট-সার্কিটিং লজিক্যাল AND</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>*</code></td><td style="text-align: left"><code>expr * expr</code></td><td style="text-align: left">গাণিতিক গুণ</td><td style="text-align: left"><code>Mul</code></td></tr>
+<tr><td style="text-align: left"><code>*=</code></td><td style="text-align: left"><code>var *= expr</code></td><td style="text-align: left">গাণিতিক গুণ এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>MulAssign</code></td></tr>
+<tr><td style="text-align: left"><code>*</code></td><td style="text-align: left"><code>*expr</code></td><td style="text-align: left">ডিরেফারেন্স</td><td style="text-align: left"><code>Deref</code></td></tr>
+<tr><td style="text-align: left"><code>*</code></td><td style="text-align: left"><code>*const type</code>, <code>*mut type</code></td><td style="text-align: left">র পয়েন্টার</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>+</code></td><td style="text-align: left"><code>trait + trait</code>, <code>'a + trait</code></td><td style="text-align: left">যৌগিক টাইপ কনস্ট্রেইন্ট</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>+</code></td><td style="text-align: left"><code>expr + expr</code></td><td style="text-align: left">গাণিতিক যোগ</td><td style="text-align: left"><code>Add</code></td></tr>
+<tr><td style="text-align: left"><code>+=</code></td><td style="text-align: left"><code>var += expr</code></td><td style="text-align: left">গাণিতিক যোগ এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>AddAssign</code></td></tr>
+<tr><td style="text-align: left"><code>,</code></td><td style="text-align: left"><code>expr, expr</code></td><td style="text-align: left">আর্গুমেন্ট এবং এলিমেন্ট বিভাজক</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>-</code></td><td style="text-align: left"><code>- expr</code></td><td style="text-align: left">গাণিতিক নেগেশন</td><td style="text-align: left"><code>Neg</code></td></tr>
+<tr><td style="text-align: left"><code>-</code></td><td style="text-align: left"><code>expr - expr</code></td><td style="text-align: left">গাণিতিক বিয়োগ</td><td style="text-align: left"><code>Sub</code></td></tr>
+<tr><td style="text-align: left"><code>-=</code></td><td style="text-align: left"><code>var -= expr</code></td><td style="text-align: left">গাণিতিক বিয়োগ এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>SubAssign</code></td></tr>
+<tr><td style="text-align: left"><code>-&gt;</code></td><td style="text-align: left"><code>fn(...) -&gt; type</code>, `</td><td style="text-align: left">...</td><td style="text-align: left">-&gt; type`</td></tr>
+<tr><td style="text-align: left"><code>.</code></td><td style="text-align: left"><code>expr.ident</code></td><td style="text-align: left">ফিল্ড অ্যাক্সেস</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>.</code></td><td style="text-align: left"><code>expr.ident(expr, ...)</code></td><td style="text-align: left">মেথড কল</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>.</code></td><td style="text-align: left"><code>expr.0</code>, <code>expr.1</code>, ইত্যাদি</td><td style="text-align: left">টাপল ইনডেক্সিং</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>..</code></td><td style="text-align: left"><code>..</code>, <code>expr..</code>, <code>..expr</code>, <code>expr..expr</code></td><td style="text-align: left">ডান-এক্সক্লুসিভ রেঞ্জ লিটারাল</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>..=</code></td><td style="text-align: left"><code>..=expr</code>, <code>expr..=expr</code></td><td style="text-align: left">ডান-ইনক্লুসিভ রেঞ্জ লিটারাল</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>..</code></td><td style="text-align: left"><code>..expr</code></td><td style="text-align: left">স্ট্রাকট লিটারাল আপডেট সিনট্যাক্স</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>..</code></td><td style="text-align: left"><code>variant(x, ..)</code>, <code>struct_type { x, .. }</code></td><td style="text-align: left">“এবং বাকিটা” প্যাটার্ন বাইন্ডিং</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>...</code></td><td style="text-align: left"><code>expr...expr</code></td><td style="text-align: left">(অপ্রচলিত, এর পরিবর্তে <code>..=</code> ব্যবহার করুন) একটি প্যাটার্নে: ইনক্লুসিভ রেঞ্জ প্যাটার্ন</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>/</code></td><td style="text-align: left"><code>expr / expr</code></td><td style="text-align: left">গাণিতিক ভাগ</td><td style="text-align: left"><code>Div</code></td></tr>
+<tr><td style="text-align: left"><code>/=</code></td><td style="text-align: left"><code>var /= expr</code></td><td style="text-align: left">গাণিতিক ভাগ এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>DivAssign</code></td></tr>
+<tr><td style="text-align: left"><code>:</code></td><td style="text-align: left"><code>pat: type</code>, <code>ident: type</code></td><td style="text-align: left">কনস্ট্রেইন্ট</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>:</code></td><td style="text-align: left"><code>ident: expr</code></td><td style="text-align: left">স্ট্রাকট ফিল্ড ইনিশিয়ালাইজার</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>:</code></td><td style="text-align: left"><code>'a: loop {...}</code></td><td style="text-align: left">লুপ লেবেল</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>;</code></td><td style="text-align: left"><code>expr;</code></td><td style="text-align: left">স্টেটমেন্ট এবং আইটেম টার্মিনেটর</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>;</code></td><td style="text-align: left"><code>[...; len]</code></td><td style="text-align: left">ফিক্সড-সাইজ অ্যারে সিনট্যাক্সের অংশ</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>&lt;&lt;</code></td><td style="text-align: left"><code>expr &lt;&lt; expr</code></td><td style="text-align: left">লেফট-শিফট</td><td style="text-align: left"><code>Shl</code></td></tr>
+<tr><td style="text-align: left"><code>&lt;&lt;=</code></td><td style="text-align: left"><code>var &lt;&lt;= expr</code></td><td style="text-align: left">লেফট-শিফট এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>ShlAssign</code></td></tr>
+<tr><td style="text-align: left"><code>&lt;</code></td><td style="text-align: left"><code>expr &lt; expr</code></td><td style="text-align: left">ছোট তুলনা</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>&lt;=</code></td><td style="text-align: left"><code>expr &lt;= expr</code></td><td style="text-align: left">ছোট বা সমান তুলনা</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>=</code></td><td style="text-align: left"><code>var = expr</code>, <code>ident = type</code></td><td style="text-align: left">অ্যাসাইনমেন্ট/সমতা</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>==</code></td><td style="text-align: left"><code>expr == expr</code></td><td style="text-align: left">সমতা তুলনা</td><td style="text-align: left"><code>PartialEq</code></td></tr>
+<tr><td style="text-align: left"><code>=&gt;</code></td><td style="text-align: left"><code>pat =&gt; expr</code></td><td style="text-align: left">ম্যাচ আর্ম সিনট্যাক্সের অংশ</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>&gt;</code></td><td style="text-align: left"><code>expr &gt; expr</code></td><td style="text-align: left">বড় তুলনা</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>&gt;=</code></td><td style="text-align: left"><code>expr &gt;= expr</code></td><td style="text-align: left">বড় বা সমান তুলনা</td><td style="text-align: left"><code>PartialOrd</code></td></tr>
+<tr><td style="text-align: left"><code>&gt;&gt;</code></td><td style="text-align: left"><code>expr &gt;&gt; expr</code></td><td style="text-align: left">রাইট-শিফট</td><td style="text-align: left"><code>Shr</code></td></tr>
+<tr><td style="text-align: left"><code>&gt;&gt;=</code></td><td style="text-align: left"><code>var &gt;&gt;= expr</code></td><td style="text-align: left">রাইট-শিফট এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>ShrAssign</code></td></tr>
+<tr><td style="text-align: left"><code>@</code></td><td style="text-align: left"><code>ident @ pat</code></td><td style="text-align: left">প্যাটার্ন বাইন্ডিং</td><td style="text-align: left"></td></tr>
+<tr><td style="text-align: left"><code>^</code></td><td style="text-align: left"><code>expr ^ expr</code></td><td style="text-align: left">বিটওয়াইজ এক্সক্লুসিভ OR</td><td style="text-align: left"><code>BitXor</code></td></tr>
+<tr><td style="text-align: left"><code>^=</code></td><td style="text-align: left"><code>var ^= expr</code></td><td style="text-align: left">বিটওয়াইজ এক্সক্লুসিভ OR এবং অ্যাসাইনমেন্ট</td><td style="text-align: left"><code>BitXorAssign</code></td></tr>
+<tr><td style="text-align: left">`</td><td style="text-align: left">`</td><td style="text-align: left">`pat</td><td style="text-align: left">pat`</td></tr>
+<tr><td style="text-align: left">`</td><td style="text-align: left">`</td><td style="text-align: left">`expr</td><td style="text-align: left">expr`</td></tr>
+<tr><td style="text-align: left">`</td><td style="text-align: left">=`</td><td style="text-align: left">`var</td><td style="text-align: left">= expr`</td></tr>
+<tr><td style="text-align: left">`</td><td style="text-align: left"></td><td style="text-align: left">`</td><td style="text-align: left">`expr</td></tr>
+<tr><td style="text-align: left"><code>?</code></td><td style="text-align: left"><code>expr?</code></td><td style="text-align: left">এরর প্রোপাগেশন</td><td style="text-align: left"></td></tr>
+</tbody></table>
+</div>
+<h3 id="নন-অপারেটর-পরতীক"><a class="header" href="#নন-অপারেটর-পরতীক">নন-অপারেটর প্রতীক</a></h3>
+<p>নিচের তালিকায় এমন সব প্রতীক রয়েছে যা অপারেটর হিসেবে কাজ করে না; অর্থাৎ, তারা কোনো ফাংশন বা মেথড কলের মতো আচরণ করে না।</p>
+<p>সারণী খ-২ এ এমন প্রতীক দেখানো হয়েছে যা নিজে থেকেই উপস্থিত হয় এবং বিভিন্ন স্থানে বৈধ।</p>
+<p><span class="caption">সারণী খ-২: স্বতন্ত্র সিনট্যাক্স</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>'ident</code></td><td style="text-align: left">নামযুক্ত লাইফটাইম বা লুপ লেবেল</td></tr>
+<tr><td style="text-align: left"><code>u8</code>, <code>i32</code>, <code>f64</code>, <code>usize</code>, ইত্যাদি দ্বারা অবিলম্বে অনুসরণ করা সংখ্যা</td><td style="text-align: left">নির্দিষ্ট টাইপের নিউমেরিক লিটারাল</td></tr>
+<tr><td style="text-align: left"><code>"..."</code></td><td style="text-align: left">স্ট্রিং লিটারাল</td></tr>
+<tr><td style="text-align: left"><code>r"..."</code>, <code>r#"..."#</code>, <code>r##"..."##</code>, ইত্যাদি</td><td style="text-align: left">র স্ট্রিং লিটারাল, এস্কেপ ক্যারেক্টার প্রসেস করা হয় না</td></tr>
+<tr><td style="text-align: left"><code>b"..."</code></td><td style="text-align: left">বাইট স্ট্রিং লিটারাল; স্ট্রিং এর পরিবর্তে বাইটের একটি অ্যারে তৈরি করে</td></tr>
+<tr><td style="text-align: left"><code>br"..."</code>, <code>br#"..."#</code>, <code>br##"..."##</code>, ইত্যাদি</td><td style="text-align: left">র বাইট স্ট্রিং লিটারাল, র এবং বাইট স্ট্রিং লিটারালের সংমিশ্রণ</td></tr>
+<tr><td style="text-align: left"><code>'...'</code></td><td style="text-align: left">ক্যারেক্টার লিটারাল</td></tr>
+<tr><td style="text-align: left"><code>b'...'</code></td><td style="text-align: left">ASCII বাইট লিটারাল</td></tr>
+<tr><td style="text-align: left">`</td><td style="text-align: left">...</td></tr>
+<tr><td style="text-align: left"><code>!</code></td><td style="text-align: left">ডাইভার্জিং ফাংশনের জন্য সর্বদা খালি বটম টাইপ</td></tr>
+<tr><td style="text-align: left"><code>_</code></td><td style="text-align: left">"উপেক্ষিত" প্যাটার্ন বাইন্ডিং; ইন্টিজার লিটারালকে পঠনযোগ্য করতেও ব্যবহৃত হয়</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৩ এ এমন প্রতীক দেখানো হয়েছে যা মডিউল হায়ারার্কির মাধ্যমে একটি আইটেমের পাথের প্রসঙ্গে উপস্থিত হয়।</p>
+<p><span class="caption">সারণী খ-৩: পাথ-সম্পর্কিত সিনট্যাক্স</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>ident::ident</code></td><td style="text-align: left">নেমস্পেস পাথ</td></tr>
+<tr><td style="text-align: left"><code>::path</code></td><td style="text-align: left">extern prelude-এর সাপেক্ষে পাথ, যেখানে অন্য সব ক্রেট রুট করা হয় (অর্থাৎ, ক্রেটের নামসহ একটি স্পষ্টভাবে অ্যাবসোলিউট পাথ)</td></tr>
+<tr><td style="text-align: left"><code>self::path</code></td><td style="text-align: left">বর্তমান মডিউলের সাপেক্ষে পাথ (অর্থাৎ, একটি স্পষ্টভাবে রিলেটিভ পাথ)</td></tr>
+<tr><td style="text-align: left"><code>super::path</code></td><td style="text-align: left">বর্তমান মডিউলের প্যারেন্টের সাপেক্ষে পাথ</td></tr>
+<tr><td style="text-align: left"><code>type::ident</code>, <code>&lt;type as trait&gt;::ident</code></td><td style="text-align: left">অ্যাসোসিয়েটেড কনস্ট্যান্ট, ফাংশন, এবং টাইপ</td></tr>
+<tr><td style="text-align: left"><code>&lt;type&gt;::...</code></td><td style="text-align: left">এমন একটি টাইপের জন্য অ্যাসোসিয়েটেড আইটেম যা সরাসরি নাম দেওয়া যায় না (যেমন, <code>&lt;&amp;T&gt;::...</code>, <code>&lt;[T]&gt;::...</code>, ইত্যাদি)</td></tr>
+<tr><td style="text-align: left"><code>trait::method(...)</code></td><td style="text-align: left">মেথড কলকে দ্ব্যর্থহীন করা, যে ট্রেইটটি এটি ডিফাইন করে তার নাম দিয়ে</td></tr>
+<tr><td style="text-align: left"><code>type::method(...)</code></td><td style="text-align: left">মেথড কলকে দ্ব্যর্থহীন করা, যে টাইপের জন্য এটি ডিফাইন করা হয়েছে তার নাম দিয়ে</td></tr>
+<tr><td style="text-align: left"><code>&lt;type as trait&gt;::method(...)</code></td><td style="text-align: left">ট্রেইট এবং টাইপের নাম দিয়ে মেথড কলকে দ্ব্যর্থহীন করা</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৪ এ এমন প্রতীক দেখানো হয়েছে যা জেনেরিক টাইপ প্যারামিটার ব্যবহারের প্রসঙ্গে উপস্থিত হয়।</p>
+<p><span class="caption">সারণী খ-৪: জেনেরিক</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>path&lt;...&gt;</code></td><td style="text-align: left">একটি টাইপে জেনেরিক টাইপের জন্য প্যারামিটার নির্দিষ্ট করে (যেমন, <code>Vec&lt;u8&gt;</code>)</td></tr>
+<tr><td style="text-align: left"><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td style="text-align: left">একটি এক্সপ্রেশনে জেনেরিক টাইপ, ফাংশন, বা মেথডের জন্য প্যারামিটার নির্দিষ্ট করে; প্রায়শই টার্বোফিশ হিসাবে উল্লেখ করা হয় (যেমন, <code>"42".parse::&lt;i32&gt;()</code>)</td></tr>
+<tr><td style="text-align: left"><code>fn ident&lt;...&gt; ...</code></td><td style="text-align: left">জেনেরিক ফাংশন ডিফাইন করে</td></tr>
+<tr><td style="text-align: left"><code>struct ident&lt;...&gt; ...</code></td><td style="text-align: left">জেনেরিক স্ট্রাকচার ডিফাইন করে</td></tr>
+<tr><td style="text-align: left"><code>enum ident&lt;...&gt; ...</code></td><td style="text-align: left">জেনেরিক ইনুমারেশন ডিফাইন করে</td></tr>
+<tr><td style="text-align: left"><code>impl&lt;...&gt; ...</code></td><td style="text-align: left">জেনেরিক ইমপ্লিমেন্টেশন ডিফাইন করে</td></tr>
+<tr><td style="text-align: left"><code>for&lt;...&gt; type</code></td><td style="text-align: left">হায়ার-র‍্যাঙ্কড লাইফটাইম বাউন্ড</td></tr>
+<tr><td style="text-align: left"><code>type&lt;ident=type&gt;</code></td><td style="text-align: left">একটি জেনেরিক টাইপ যেখানে এক বা একাধিক অ্যাসোসিয়েটেড টাইপের নির্দিষ্ট অ্যাসাইনমেন্ট থাকে (যেমন, <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৫ এ এমন প্রতীক দেখানো হয়েছে যা জেনেরিক টাইপ প্যারামিটারকে ট্রেইট বাউন্ড দিয়ে সীমাবদ্ধ করার প্রসঙ্গে উপস্থিত হয়।</p>
+<p><span class="caption">সারণী খ-৫: ট্রেইট বাউন্ড কনস্ট্রেইন্ট</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>T: U</code></td><td style="text-align: left">জেনেরিক প্যারামিটার <code>T</code>, <code>U</code> ইমপ্লিমেন্ট করে এমন টাইপগুলিতে সীমাবদ্ধ</td></tr>
+<tr><td style="text-align: left"><code>T: 'a</code></td><td style="text-align: left">জেনেরিক টাইপ <code>T</code> অবশ্যই <code>'a</code> লাইফটাইমকে আউটলাইভ করবে (অর্থাৎ টাইপটিতে ট্রানজিটিভভাবে <code>'a</code> এর চেয়ে ছোট লাইফটাইম সহ কোনো রেফারেন্স থাকতে পারে না)</td></tr>
+<tr><td style="text-align: left"><code>T: 'static</code></td><td style="text-align: left">জেনেরিক টাইপ <code>T</code>-তে <code>'static</code> ছাড়া অন্য কোনো ধার করা রেফারেন্স নেই</td></tr>
+<tr><td style="text-align: left"><code>'b: 'a</code></td><td style="text-align: left">জেনেরিক লাইফটাইম <code>'b</code> অবশ্যই <code>'a</code> লাইফটাইমকে আউটলাইভ করবে</td></tr>
+<tr><td style="text-align: left"><code>T: ?Sized</code></td><td style="text-align: left">জেনেরিক টাইপ প্যারামিটারকে ডাইনামিক্যালি সাইজড টাইপ হতে অনুমতি দেয়</td></tr>
+<tr><td style="text-align: left"><code>'a + trait</code>, <code>trait + trait</code></td><td style="text-align: left">যৌগিক টাইপ কনস্ট্রেইন্ট</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৬ এ এমন প্রতীক দেখানো হয়েছে যা ম্যাক্রো কল বা ডিফাইন করার এবং একটি আইটেমের উপর অ্যাট্রিবিউট নির্দিষ্ট করার প্রসঙ্গে উপস্থিত হয়।</p>
+<p><span class="caption">সারণী খ-৬: ম্যাক্রো এবং অ্যাট্রিবিউট</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>#[meta]</code></td><td style="text-align: left">আউটার অ্যাট্রিবিউট</td></tr>
+<tr><td style="text-align: left"><code>#![meta]</code></td><td style="text-align: left">ইনার অ্যাট্রিবিউট</td></tr>
+<tr><td style="text-align: left"><code>$ident</code></td><td style="text-align: left">ম্যাক্রো সাবস্টিটিউশন</td></tr>
+<tr><td style="text-align: left"><code>$ident:kind</code></td><td style="text-align: left">ম্যাক্রো মেটাভেরিয়েবল</td></tr>
+<tr><td style="text-align: left"><code>$(...)...</code></td><td style="text-align: left">ম্যাক্রো রিপিটিশন</td></tr>
+<tr><td style="text-align: left"><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td style="text-align: left">ম্যাক্রো ইনভোকেশন</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৭ এ এমন প্রতীক দেখানো হয়েছে যা কমেন্ট তৈরি করে।</p>
+<p><span class="caption">সারণী খ-৭: কমেন্ট</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>//</code></td><td style="text-align: left">লাইন কমেন্ট</td></tr>
+<tr><td style="text-align: left"><code>//!</code></td><td style="text-align: left">ইনার লাইন ডক কমেন্ট</td></tr>
+<tr><td style="text-align: left"><code>///</code></td><td style="text-align: left">আউটার লাইন ডক কমেন্ট</td></tr>
+<tr><td style="text-align: left"><code>/*...*/</code></td><td style="text-align: left">ব্লক কমেন্ট</td></tr>
+<tr><td style="text-align: left"><code>/*!...*/</code></td><td style="text-align: left">ইনার ব্লক ডক কমেন্ট</td></tr>
+<tr><td style="text-align: left"><code>/**...*/</code></td><td style="text-align: left">আউটার ব্লক ডক কমেন্ট</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৮ এ সেইসব প্রসঙ্গ দেখানো হয়েছে যেখানে প্রথম বন্ধনী (parentheses) ব্যবহৃত হয়।</p>
+<p><span class="caption">সারণী খ-৮: প্রথম বন্ধনী</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রতীক</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>()</code></td><td style="text-align: left">খালি টাপল (একে ইউনিটও বলা হয়), লিটারাল এবং টাইপ উভয়ই</td></tr>
+<tr><td style="text-align: left"><code>(expr)</code></td><td style="text-align: left">প্যারেন্থেসাইজড এক্সপ্রেশন</td></tr>
+<tr><td style="text-align: left"><code>(expr,)</code></td><td style="text-align: left">একক-উপাদান টাপল এক্সপ্রেশন</td></tr>
+<tr><td style="text-align: left"><code>(type,)</code></td><td style="text-align: left">একক-উপাদান টাপল টাইপ</td></tr>
+<tr><td style="text-align: left"><code>(expr, ...)</code></td><td style="text-align: left">টাপল এক্সপ্রেশন</td></tr>
+<tr><td style="text-align: left"><code>(type, ...)</code></td><td style="text-align: left">টাপল টাইপ</td></tr>
+<tr><td style="text-align: left"><code>expr(expr, ...)</code></td><td style="text-align: left">ফাংশন কল এক্সপ্রেশন; টাপল <code>struct</code> এবং টাপল <code>enum</code> ভ্যারিয়েন্ট ইনিশিয়ালাইজ করতেও ব্যবহৃত হয়</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-৯ এ সেইসব প্রসঙ্গ দেখানো হয়েছে যেখানে কোঁকড়া বন্ধনী (curly braces) ব্যবহৃত হয়।</p>
+<p><span class="caption">সারণী খ-৯: কোঁকড়া বন্ধনী</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রসঙ্গ</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>{...}</code></td><td style="text-align: left">ব্লক এক্সপ্রেশন</td></tr>
+<tr><td style="text-align: left"><code>Type {...}</code></td><td style="text-align: left">স্ট্রাকট লিটারাল</td></tr>
+</tbody></table>
+</div>
+<p>সারণী খ-১০ এ সেইসব প্রসঙ্গ দেখানো হয়েছে যেখানে বর্গাকার বন্ধনী (square brackets) ব্যবহৃত হয়।</p>
+<p><span class="caption">সারণী খ-১০: বর্গাকার বন্ধনী</span></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">প্রসঙ্গ</th><th style="text-align: left">ব্যাখ্যা</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>[...]</code></td><td style="text-align: left">অ্যারে লিটারাল</td></tr>
+<tr><td style="text-align: left"><code>[expr; len]</code></td><td style="text-align: left"><code>expr</code> এর <code>len</code> সংখ্যক কপি সহ অ্যারে লিটারাল</td></tr>
+<tr><td style="text-align: left"><code>[type; len]</code></td><td style="text-align: left"><code>type</code> এর <code>len</code> সংখ্যক ইনস্ট্যান্স সহ অ্যারে টাইপ</td></tr>
+<tr><td style="text-align: left"><code>expr[expr]</code></td><td style="text-align: left">কালেকশন ইন্ডেক্সিং। ওভারলোডযোগ্য (<code>Index</code>, <code>IndexMut</code>)</td></tr>
+<tr><td style="text-align: left"><code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code></td><td style="text-align: left">কালেকশন ইন্ডেক্সিং যা কালেকশন স্লাইসিং এর মতো কাজ করে, "ইনডেক্স" হিসেবে <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code>, বা <code>RangeFull</code> ব্যবহার করে</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="appendix-01-keywords.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="appendix-03-derivable-traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="appendix-01-keywords.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="appendix-03-derivable-traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

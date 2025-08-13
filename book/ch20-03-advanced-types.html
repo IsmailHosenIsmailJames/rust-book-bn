@@ -1,0 +1,449 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>অ্যাডভান্সড টাইপ - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="অযাডভানসড-টাইপ-advanced-types"><a class="header" href="#অযাডভানসড-টাইপ-advanced-types">অ্যাডভান্সড টাইপ (Advanced Types)</a></h2>
+<p>রাস্ট টাইপ সিস্টেমের কিছু ফিচার আছে যা আমরা এখন পর্যন্ত উল্লেখ করেছি কিন্তু আলোচনা করিনি। আমরা প্রথমে নিউটাইপ (newtype) নিয়ে সাধারণভাবে আলোচনা করে শুরু করব এবং দেখব কেন নিউটাইপ টাইপ হিসেবে উপযোগী। এরপর আমরা টাইপ অ্যালিয়াস (type alias) নিয়ে আলোচনা করব, যা নিউটাইপের মতোই একটি ফিচার কিন্তু এর শব্দার্থ কিছুটা ভিন্ন। আমরা <code>!</code> টাইপ এবং ডায়নামিক্যালি সাইজড টাইপ (dynamically sized types) নিয়েও আলোচনা করব।</p>
+<h3 id="টাইপ-সেফটি-এবং-অযাবসটরযাকশনের-জনয-নিউটাইপ-পযাটারন-বযবহার-করা-using-the-newtype-pattern-for-type-safety-and-abstraction"><a class="header" href="#টাইপ-সেফটি-এবং-অযাবসটরযাকশনের-জনয-নিউটাইপ-পযাটারন-বযবহার-করা-using-the-newtype-pattern-for-type-safety-and-abstraction">টাইপ সেফটি এবং অ্যাবস্ট্র্যাকশনের জন্য নিউটাইপ প্যাটার্ন ব্যবহার করা (Using the Newtype Pattern for Type Safety and Abstraction)</a></h3>
+<p>এই বিভাগটি পড়ার আগে ধরে নেওয়া হচ্ছে যে আপনি পূর্ববর্তী <a href="ch20-02-advanced-traits.html#using-the-newtype-pattern-to-implement-external-traits">"Using the Newtype Pattern to Implement External Traits"</a><!-- ignore --> বিভাগটি পড়েছেন। নিউটাইপ প্যাটার্নটি আমরা এখন পর্যন্ত যা আলোচনা করেছি তার বাইরেও অন্যান্য কাজের জন্য উপযোগী, যার মধ্যে রয়েছে স্ট্যাটিক্যালি নিশ্চিত করা যে মানগুলো কখনো বিভ্রান্ত হবে না এবং একটি মানের একক (unit) নির্দেশ করা। আপনি লিস্টিং ২০-১৬-তে একক নির্দেশ করার জন্য নিউটাইপ ব্যবহারের একটি উদাহরণ দেখেছেন: মনে করুন <code>Millimeters</code> এবং <code>Meters</code> struct দুটি <code>u32</code> মানকে একটি নিউটাইপে র‍্যাপ (wrap) করেছিল। যদি আমরা <code>Millimeters</code> টাইপের একটি প্যারামিটারসহ একটি ফাংশন লিখতাম, তাহলে আমরা এমন কোনো প্রোগ্রাম কম্পাইল করতে পারতাম না যা ভুলবশত <code>Meters</code> টাইপের একটি মান বা একটি সাধারণ <code>u32</code> দিয়ে সেই ফাংশনটি কল করার চেষ্টা করত।</p>
+<p>আমরা একটি টাইপের কিছু ইমপ্লিমেন্টেশন ডিটেইলস অ্যাবস্ট্রাক্ট করার জন্যও নিউটাইপ প্যাটার্ন ব্যবহার করতে পারি: নতুন টাইপটি একটি পাবলিক API প্রকাশ করতে পারে যা প্রাইভেট ইনার টাইপের API থেকে ভিন্ন।</p>
+<p>নিউটাইপ অভ্যন্তরীণ ইমপ্লিমেন্টেশন লুকাতেও পারে। উদাহরণস্বরূপ, আমরা একটি <code>People</code> টাইপ সরবরাহ করতে পারি যা একটি <code>HashMap&lt;i32, String&gt;</code>-কে র‍্যাপ করে, যা একজন ব্যক্তির নামের সাথে সম্পর্কিত তার আইডি সংরক্ষণ করে। <code>People</code> ব্যবহারকারী কোড শুধুমাত্র আমাদের সরবরাহ করা পাবলিক API-এর সাথে ইন্টারঅ্যাক্ট করবে, যেমন <code>People</code> কালেকশনে একটি নাম স্ট্রিং যোগ করার একটি মেথড; সেই কোডকে জানতে হবে না যে আমরা অভ্যন্তরীণভাবে নামগুলিতে একটি <code>i32</code> আইডি বরাদ্দ করি। নিউটাইপ প্যাটার্নটি এনক্যাপসুলেশন (encapsulation) অর্জনের একটি হালকা উপায়, যা আমরা চ্যাপ্টার ১৮-এর <a href="ch18-01-what-is-oo.html#encapsulation-that-hides-implementation-details">"Encapsulation that Hides Implementation Details"</a><!-- ignore -->-এ আলোচনা করেছি।</p>
+<h3 id="টাইপ-অযালিয়াস-দিয়ে-টাইপের-সমারথক-নাম-তৈরি-করা-creating-type-synonyms-with-type-aliases"><a class="header" href="#টাইপ-অযালিয়াস-দিয়ে-টাইপের-সমারথক-নাম-তৈরি-করা-creating-type-synonyms-with-type-aliases">টাইপ অ্যালিয়াস দিয়ে টাইপের সমার্থক নাম তৈরি করা (Creating Type Synonyms with Type Aliases)</a></h3>
+<p>রাস্ট একটি বিদ্যমান টাইপকে অন্য নাম দেওয়ার জন্য একটি <em>টাইপ অ্যালিয়াস</em> (type alias) ঘোষণা করার সুবিধা প্রদান করে। এর জন্য আমরা <code>type</code> কীওয়ার্ড ব্যবহার করি। উদাহরণস্বরূপ, আমরা <code>i32</code>-এর জন্য <code>Kilometers</code> অ্যালিয়াসটি এভাবে তৈরি করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Kilometers = i32;
+<span class="boring">
+</span><span class="boring">    let x: i32 = 5;
+</span><span class="boring">    let y: Kilometers = 5;
+</span><span class="boring">
+</span><span class="boring">    println!("x + y = {}", x + y);
+</span><span class="boring">}</span></code></pre></pre>
+<p>এখন <code>Kilometers</code> অ্যালিয়াসটি <code>i32</code>-এর একটি <em>সমার্থক নাম</em> (synonym); লিস্টিং ২০-১৬-তে তৈরি করা <code>Millimeters</code> এবং <code>Meters</code> টাইপের মতো নয়, <code>Kilometers</code> একটি পৃথক, নতুন টাইপ নয়। <code>Kilometers</code> টাইপের মানগুলোকে <code>i32</code> টাইপের মানের মতোই ব্যবহার করা হবে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Kilometers = i32;
+
+    let x: i32 = 5;
+    let y: Kilometers = 5;
+
+    println!("x + y = {}", x + y);
+<span class="boring">}</span></code></pre></pre>
+<p>যেহেতু <code>Kilometers</code> এবং <code>i32</code> একই টাইপ, আমরা উভয় টাইপের মান যোগ করতে পারি এবং আমরা <code>i32</code> প্যারামিটার গ্রহণকারী ফাংশনগুলিতে <code>Kilometers</code> মান পাস করতে পারি। তবে, এই পদ্ধতি ব্যবহার করে, আমরা আগে আলোচনা করা নিউটাইপ প্যাটার্ন থেকে প্রাপ্ত টাইপ-চেকিং সুবিধাগুলো পাই না। অন্য কথায়, যদি আমরা কোথাও <code>Kilometers</code> এবং <code>i32</code> মান মিশিয়ে ফেলি, কম্পাইলার আমাদের কোনো এরর দেবে না।</p>
+<p>টাইপ সিনোনিমের প্রধান ব্যবহার হলো পুনরাবৃত্তি কমানো। উদাহরণস্বরূপ, আমাদের এরকম একটি দীর্ঘ টাইপ থাকতে পারে:</p>
+<pre><code class="language-rust ignore">Box&lt;dyn Fn() + Send + 'static&gt;</code></pre>
+<p>ফাংশন সিগনেচারে এবং কোডের সর্বত্র টাইপ অ্যানোটেশন হিসেবে এই দীর্ঘ টাইপটি লেখা ক্লান্তিকর এবং ভুলপ্রবণ হতে পারে। লিস্টিং ২০-২৫-এর মতো কোডে পূর্ণ একটি প্রজেক্ট কল্পনা করুন।</p>
+<Listing number="20-25" caption="অনেক জায়গায় একটি দীর্ঘ টাইপ ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let f: Box&lt;dyn Fn() + Send + 'static&gt; = Box::new(|| println!("hi"));
+
+    fn takes_long_type(f: Box&lt;dyn Fn() + Send + 'static&gt;) {
+        // --snip--
+    }
+
+    fn returns_long_type() -&gt; Box&lt;dyn Fn() + Send + 'static&gt; {
+        // --snip--
+<span class="boring">        Box::new(|| ())
+</span>    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>একটি টাইপ অ্যালিয়াস পুনরাবৃত্তি কমিয়ে এই কোডটিকে আরও পরিচালনাযোগ্য করে তোলে। লিস্টিং ২০-২৬-এ, আমরা দীর্ঘ টাইপের জন্য <code>Thunk</code> নামে একটি অ্যালিয়াস চালু করেছি এবং টাইপের সমস্ত ব্যবহারকে সংক্ষিপ্ত অ্যালিয়াস <code>Thunk</code> দিয়ে প্রতিস্থাপন করতে পারি।</p>
+<Listing number="20-26" caption=" পুনরাবৃত্তি কমাতে একটি টাইপ অ্যালিয়াস, `Thunk`, চালু করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    type Thunk = Box&lt;dyn Fn() + Send + 'static&gt;;
+
+    let f: Thunk = Box::new(|| println!("hi"));
+
+    fn takes_long_type(f: Thunk) {
+        // --snip--
+    }
+
+    fn returns_long_type() -&gt; Thunk {
+        // --snip--
+<span class="boring">        Box::new(|| ())
+</span>    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডটি পড়া এবং লেখা অনেক সহজ! একটি টাইপ অ্যালিয়াসের জন্য একটি অর্থপূর্ণ নাম নির্বাচন করা আপনার উদ্দেশ্য প্রকাশ করতেও সাহায্য করতে পারে (<em>thunk</em> শব্দটি এমন কোডের জন্য ব্যবহৃত হয় যা পরে মূল্যায়ন করা হবে, তাই এটি একটি ক্লোজারের জন্য একটি উপযুক্ত নাম যা সংরক্ষণ করা হয়)।</p>
+<p>টাইপ অ্যালিয়াসগুলো পুনরাবৃত্তি কমানোর জন্য <code>Result&lt;T, E&gt;</code> টাইপের সাথেও সাধারণভাবে ব্যবহৃত হয়। স্ট্যান্ডার্ড লাইব্রেরির <code>std::io</code> মডিউলটি বিবেচনা করুন। I/O অপারেশনগুলো প্রায়শই একটি <code>Result&lt;T, E&gt;</code> রিটার্ন করে যখন অপারেশনগুলো কাজ করতে ব্যর্থ হয় তখন তা পরিচালনা করার জন্য। এই লাইব্রেরিতে একটি <code>std::io::Error</code> struct আছে যা সমস্ত সম্ভাব্য I/O ত্রুটির প্রতিনিধিত্ব করে। <code>std::io</code>-এর অনেক ফাংশন <code>Result&lt;T, E&gt;</code> রিটার্ন করবে যেখানে <code>E</code> হলো <code>std::io::Error</code>, যেমন <code>Write</code> trait-এর এই ফাংশনগুলো:</p>
+<pre><code class="language-rust noplayground">use std::fmt;
+use std::io::Error;
+
+pub trait Write {
+    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize, Error&gt;;
+    fn flush(&amp;mut self) -&gt; Result&lt;(), Error&gt;;
+
+    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;(), Error&gt;;
+    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;(), Error&gt;;
+}</code></pre>
+<p><code>Result&lt;..., Error&gt;</code> অনেকবার পুনরাবৃত্তি হয়। তাই, <code>std::io</code>-তে এই টাইপ অ্যালিয়াস ঘোষণাটি রয়েছে:</p>
+<pre><code class="language-rust noplayground"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span>type Result&lt;T&gt; = std::result::Result&lt;T, std::io::Error&gt;;
+<span class="boring">
+</span><span class="boring">pub trait Write {
+</span><span class="boring">    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize&gt;;
+</span><span class="boring">    fn flush(&amp;mut self) -&gt; Result&lt;()&gt;;
+</span><span class="boring">
+</span><span class="boring">    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
+</span><span class="boring">    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
+</span><span class="boring">}</span></code></pre>
+<p>যেহেতু এই ঘোষণাটি <code>std::io</code> মডিউলে রয়েছে, আমরা সম্পূর্ণ কোয়ালিফাইড অ্যালিয়াস <code>std::io::Result&lt;T&gt;</code> ব্যবহার করতে পারি; অর্থাৎ, একটি <code>Result&lt;T, E&gt;</code> যেখানে <code>E</code>-কে <code>std::io::Error</code> হিসেবে পূরণ করা হয়েছে। <code>Write</code> trait ফাংশন সিগনেচারগুলো শেষ পর্যন্ত এরকম দেখায়:</p>
+<pre><code class="language-rust noplayground"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span><span class="boring">type Result&lt;T&gt; = std::result::Result&lt;T, std::io::Error&gt;;
+</span><span class="boring">
+</span>pub trait Write {
+    fn write(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;usize&gt;;
+    fn flush(&amp;mut self) -&gt; Result&lt;()&gt;;
+
+    fn write_all(&amp;mut self, buf: &amp;[u8]) -&gt; Result&lt;()&gt;;
+    fn write_fmt(&amp;mut self, fmt: fmt::Arguments) -&gt; Result&lt;()&gt;;
+}</code></pre>
+<p>টাইপ অ্যালিয়াস দুটি উপায়ে সাহায্য করে: এটি কোড লেখা সহজ করে <em>এবং</em> এটি আমাদের <code>std::io</code> জুড়ে একটি সামঞ্জস্যপূর্ণ ইন্টারফেস দেয়। যেহেতু এটি একটি অ্যালিয়াস, এটি কেবল আরেকটি <code>Result&lt;T, E&gt;</code>, যার মানে আমরা <code>Result&lt;T, E&gt;</code>-তে কাজ করে এমন যেকোনো মেথড এর সাথে ব্যবহার করতে পারি, সেইসাথে <code>?</code> অপারেটরের মতো বিশেষ সিনট্যাক্সও।</p>
+<h3 id="the-never-type-যা-কখনো-রিটারন-করে-না"><a class="header" href="#the-never-type-যা-কখনো-রিটারন-করে-না">The Never Type যা কখনো রিটার্ন করে না</a></h3>
+<p>রাস্টের <code>!</code> নামে একটি বিশেষ টাইপ রয়েছে যা টাইপ থিওরির ভাষায় <em>এম্পটি টাইপ</em> (empty type) নামে পরিচিত কারণ এর কোনো মান নেই। আমরা এটিকে <em>নেভার টাইপ</em> (never type) বলতে পছন্দ করি কারণ এটি সেই রিটার্ন টাইপের জায়গায় বসে যখন একটি ফাংশন কখনো রিটার্ন করবে না। এখানে একটি উদাহরণ:</p>
+<pre><code class="language-rust noplayground">fn bar() -&gt; ! {
+    // --snip--
+<span class="boring">    panic!();
+</span>}</code></pre>
+<p>এই কোডটি এভাবে পড়া হয়: "ফাংশন <code>bar</code> কখনো রিটার্ন করে না।" যে ফাংশনগুলো কখনো রিটার্ন করে না তাদের <em>ডাইভারজিং ফাংশন</em> (diverging functions) বলা হয়। আমরা <code>!</code> টাইপের মান তৈরি করতে পারি না, তাই <code>bar</code> কখনো রিটার্ন করতে পারে না।</p>
+<p>কিন্তু এমন একটি টাইপের কী ব্যবহার যার জন্য আপনি কখনো মান তৈরি করতে পারবেন না? লিস্টিং ২-৫ থেকে সংখ্যা-অনুমান খেলার কোডটি মনে করুন; আমরা এর কিছুটা এখানে লিস্টিং ২০-২৭-এ পুনরুৎপাদন করেছি।</p>
+<Listing number="20-27" caption="`continue` দিয়ে শেষ হওয়া একটি arm সহ একটি `match`">
+<pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">use rand::Rng;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    loop {
+</span><span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        // --snip--
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span>        let guess: u32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+<span class="boring">
+</span><span class="boring">        println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">        // --snip--
+</span><span class="boring">
+</span><span class="boring">        match guess.cmp(&amp;secret_number) {
+</span><span class="boring">            Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">            Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">            Ordering::Equal =&gt; {
+</span><span class="boring">                println!("You win!");
+</span><span class="boring">                break;
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>তখন আমরা এই কোডের কিছু বিবরণ এড়িয়ে গিয়েছিলাম। চ্যাপ্টার ৬-এর <a href="ch06-02-match.html#the-match-control-flow-construct">"The <code>match</code> Control Flow Construct"</a><!-- ignore -->-এ আমরা আলোচনা করেছি যে <code>match</code> arm-গুলোকে অবশ্যই একই টাইপ রিটার্ন করতে হবে। তাই, উদাহরণস্বরূপ, নিম্নলিখিত কোডটি কাজ করে না:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let guess = "3";
+</span>    let guess = match guess.trim().parse() {
+        Ok(_) =&gt; 5,
+        Err(_) =&gt; "hello",
+    };
+<span class="boring">}</span></code></pre>
+<p>এই কোডে <code>guess</code>-এর টাইপ একটি ইন্টিজার <em>এবং</em> একটি স্ট্রিং হতে হতো, এবং রাস্টের প্রয়োজন যে <code>guess</code>-এর কেবল একটি টাইপ থাকবে। তাহলে <code>continue</code> কী রিটার্ন করে? লিস্টিং ২০-২৭-এ আমরা কীভাবে একটি arm থেকে একটি <code>u32</code> রিটার্ন করার অনুমতি পেয়েছিলাম এবং অন্য একটি arm <code>continue</code> দিয়ে শেষ হয়েছিল?</p>
+<p>যেমন আপনি অনুমান করতে পারেন, <code>continue</code>-এর একটি <code>!</code> মান রয়েছে। অর্থাৎ, যখন রাস্ট <code>guess</code>-এর টাইপ গণনা করে, তখন এটি উভয় ম্যাচ arm দেখে, আগেরটি <code>u32</code> মান সহ এবং পরেরটি <code>!</code> মান সহ। যেহেতু <code>!</code>-এর কখনো কোনো মান থাকতে পারে না, রাস্ট সিদ্ধান্ত নেয় যে <code>guess</code>-এর টাইপ হলো <code>u32</code>।</p>
+<p>এই আচরণের আনুষ্ঠানিক বর্ণনা হলো যে <code>!</code> টাইপের এক্সপ্রেশনগুলোকে অন্য যেকোনো টাইপে coerce করা যেতে পারে। আমরা এই <code>match</code> arm-টি <code>continue</code> দিয়ে শেষ করার অনুমতি পেয়েছি কারণ <code>continue</code> একটি মান রিটার্ন করে না; পরিবর্তে, এটি নিয়ন্ত্রণকে লুপের শীর্ষে ফিরিয়ে নিয়ে যায়, তাই <code>Err</code> ক্ষেত্রে, আমরা কখনো <code>guess</code>-এ একটি মান অ্যাসাইন করি না।</p>
+<p>নেভার টাইপটি <code>panic!</code> ম্যাক্রোর সাথেও উপযোগী। <code>Option&lt;T&gt;</code> মানের উপর আমরা <code>unwrap</code> ফাংশনটি কল করি, যা একটি মান তৈরি করে বা এই সংজ্ঞা সহ প্যানিক করে:</p>
+<pre><code class="language-rust ignore"><span class="boring">enum Option&lt;T&gt; {
+</span><span class="boring">    Some(T),
+</span><span class="boring">    None,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">use crate::Option::*;
+</span><span class="boring">
+</span>impl&lt;T&gt; Option&lt;T&gt; {
+    pub fn unwrap(self) -&gt; T {
+        match self {
+            Some(val) =&gt; val,
+            None =&gt; panic!("called `Option::unwrap()` on a `None` value"),
+        }
+    }
+}</code></pre>
+<p>এই কোডে, লিস্টিং ২০-২৭-এর <code>match</code>-এর মতোই একই জিনিস ঘটে: রাস্ট দেখে যে <code>val</code>-এর টাইপ <code>T</code> এবং <code>panic!</code>-এর টাইপ <code>!</code>, তাই সামগ্রিক <code>match</code> এক্সপ্রেশনের ফলাফল <code>T</code>। এই কোডটি কাজ করে কারণ <code>panic!</code> একটি মান তৈরি করে না; এটি প্রোগ্রামটি শেষ করে দেয়। <code>None</code> ক্ষেত্রে, আমরা <code>unwrap</code> থেকে একটি মান রিটার্ন করব না, তাই এই কোডটি বৈধ।</p>
+<p>শেষ একটি এক্সপ্রেশন যার টাইপ <code>!</code> হলো একটি <code>loop</code>:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span>    print!("forever ");
+
+    loop {
+        print!("and ever ");
+    }
+<span class="boring">}</span></code></pre>
+<p>এখানে, লুপটি কখনো শেষ হয় না, তাই <code>!</code> হলো এক্সপ্রেশনের মান। তবে, যদি আমরা একটি <code>break</code> অন্তর্ভুক্ত করতাম তবে এটি সত্য হতো না, কারণ লুপটি <code>break</code>-এ পৌঁছলে শেষ হয়ে যেত।</p>
+<h3 id="ডায়নামিকযালি-সাইজড-টাইপ-এবং-sized-trait"><a class="header" href="#ডায়নামিকযালি-সাইজড-টাইপ-এবং-sized-trait">ডায়নামিক্যালি সাইজড টাইপ এবং <code>Sized</code> Trait</a></h3>
+<p>রাস্টকে তার টাইপ সম্পর্কে নির্দিষ্ট কিছু বিবরণ জানতে হয়, যেমন একটি নির্দিষ্ট টাইপের মানের জন্য কতটা জায়গা বরাদ্দ করতে হবে। এটি তার টাইপ সিস্টেমের একটি কোণকে প্রথমে কিছুটা বিভ্রান্তিকর করে তোলে: <em>ডায়নামিক্যালি সাইজড টাইপ</em> (dynamically sized types) এর ধারণা। কখনও কখনও <em>DSTs</em> বা <em>আনসাইজড টাইপ</em> (unsized types) হিসাবে উল্লেখ করা হয়, এই টাইপগুলো আমাদের এমন মান ব্যবহার করে কোড লিখতে দেয় যার আকার আমরা কেবল রানটাইমে জানতে পারি।</p>
+<p>আসুন <code>str</code> নামক একটি ডায়নামিক্যালি সাইজড টাইপের বিবরণে প্রবেশ করি, যা আমরা বই জুড়ে ব্যবহার করে আসছি। হ্যাঁ, ঠিকই, <code>&amp;str</code> নয়, বরং <code>str</code> নিজেই একটি DST। অনেক ক্ষেত্রে, যেমন ব্যবহারকারীর দ্বারা প্রবেশ করা টেক্সট সংরক্ষণ করার সময়, আমরা স্ট্রিংটি কত দীর্ঘ তা রানটাইম পর্যন্ত জানতে পারি না। এর মানে হলো আমরা <code>str</code> টাইপের একটি ভেরিয়েবল তৈরি করতে পারি না, বা <code>str</code> টাইপের একটি আর্গুমেন্ট নিতে পারি না। নিম্নলিখিত কোডটি বিবেচনা করুন, যা কাজ করে না:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s1: str = "Hello there!";
+    let s2: str = "How's it going?";
+<span class="boring">}</span></code></pre>
+<p>রাস্টকে জানতে হয় যে একটি নির্দিষ্ট টাইপের যেকোনো মানের জন্য কতটা মেমরি বরাদ্দ করতে হবে, এবং একটি টাইপের সমস্ত মান অবশ্যই একই পরিমাণ মেমরি ব্যবহার করবে। যদি রাস্ট আমাদের এই কোডটি লিখতে দিত, তাহলে এই দুটি <code>str</code> মানকে একই পরিমাণ জায়গা নিতে হতো। কিন্তু তাদের দৈর্ঘ্য ভিন্ন: <code>s1</code>-এর জন্য ১২ বাইট স্টোরেজ প্রয়োজন এবং <code>s2</code>-এর জন্য ১৫ বাইট। এই কারণেই একটি ডায়নামিক্যালি সাইজড টাইপ ধারণকারী একটি ভেরিয়েবল তৈরি করা সম্ভব নয়।</p>
+<p>তাহলে আমরা কী করব? এই ক্ষেত্রে, আপনি ইতিমধ্যে উত্তরটি জানেন: আমরা <code>s1</code> এবং <code>s2</code>-এর টাইপকে <code>str</code>-এর পরিবর্তে <code>&amp;str</code> করি। চ্যাপ্টার ৪-এর <a href="ch04-03-slices.html#string-slices">"String Slices"</a><!-- ignore --> থেকে মনে করুন যে স্লাইস ডেটা স্ট্রাকচারটি কেবল স্লাইসের শুরুর অবস্থান এবং দৈর্ঘ্য সংরক্ষণ করে। তাই, যদিও একটি <code>&amp;T</code> একটি একক মান যা <code>T</code> কোথায় অবস্থিত তার মেমরি ঠিকানা সংরক্ষণ করে, একটি <code>&amp;str</code> হলো <em>দুটি</em> মান: <code>str</code>-এর ঠিকানা এবং তার দৈর্ঘ্য। এভাবে, আমরা কম্পাইল টাইমে একটি <code>&amp;str</code> মানের আকার জানতে পারি: এটি একটি <code>usize</code>-এর দৈর্ঘ্যের দ্বিগুণ। অর্থাৎ, আমরা সর্বদা একটি <code>&amp;str</code>-এর আকার জানি, এটি যে স্ট্রিংটিকে নির্দেশ করে তা যত দীর্ঘই হোক না কেন। সাধারণভাবে, রাস্টে ডায়নামিক্যালি সাইজড টাইপগুলো এভাবেই ব্যবহৃত হয়: তাদের একটি অতিরিক্ত মেটাডেটা থাকে যা ডায়নামিক তথ্যের আকার সংরক্ষণ করে। ডায়নামিক্যালি সাইজড টাইপের গোল্ডেন রুল হলো যে আমাদের সর্বদা ডায়নামিক্যালি সাইজড টাইপের মানগুলোকে কোনো না কোনো পয়েন্টারের পিছনে রাখতে হবে।</p>
+<p>আমরা <code>str</code>-কে সব ধরনের পয়েন্টারের সাথে একত্রিত করতে পারি: উদাহরণস্বরূপ, <code>Box&lt;str&gt;</code> বা <code>Rc&lt;str&gt;</code>। আসলে, আপনি এটি আগে একটি ভিন্ন ডায়নামিক্যালি সাইজড টাইপের সাথে দেখেছেন: traits। প্রতিটি trait একটি ডায়নামিক্যালি সাইজড টাইপ যা আমরা trait-এর নাম ব্যবহার করে উল্লেখ করতে পারি। চ্যাপ্টার ১৮-এর <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">"Using Trait Objects to Abstract over Shared Behavior"</a><!-- ignore -->-এ আমরা উল্লেখ করেছি যে trait-গুলোকে trait object হিসেবে ব্যবহার করতে হলে, আমাদের সেগুলোকে একটি পয়েন্টারের পিছনে রাখতে হবে, যেমন <code>&amp;dyn Trait</code> বা <code>Box&lt;dyn Trait&gt;</code> (<code>Rc&lt;dyn Trait&gt;</code>-ও কাজ করবে)।</p>
+<p>DST-এর সাথে কাজ করার জন্য, রাস্ট <code>Sized</code> trait প্রদান করে যা নির্ধারণ করে যে কোনো টাইপের আকার কম্পাইল টাইমে জানা যায় কি না। এই trait-টি স্বয়ংক্রিয়ভাবে সেই সবকিছুর জন্য ইমপ্লিমেন্ট করা হয় যার আকার কম্পাইল টাইমে জানা যায়। উপরন্তু, রাস্ট প্রতিটি জেনেরিক ফাংশনে <code>Sized</code>-এর উপর একটি বাউন্ড (bound) অন্তর্নিহিতভাবে যোগ করে। অর্থাৎ, একটি জেনেরিক ফাংশন সংজ্ঞা যেমন এটি:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T&gt;(t: T) {
+    // --snip--
+}</code></pre>
+<p>আসলে এমনভাবে ব্যবহার করা হয় যেন আমরা এটি লিখেছি:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T: Sized&gt;(t: T) {
+    // --snip--
+}</code></pre>
+<p>ডিফল্টরূপে, জেনেরিক ফাংশনগুলো কেবল সেইসব টাইপের উপর কাজ করবে যাদের কম্পাইল টাইমে একটি পরিচিত আকার রয়েছে। তবে, আপনি এই সীমাবদ্ধতা শিথিল করতে নিম্নলিখিত বিশেষ সিনট্যাক্স ব্যবহার করতে পারেন:</p>
+<pre><code class="language-rust ignore">fn generic&lt;T: ?Sized&gt;(t: &amp;T) {
+    // --snip--
+}</code></pre>
+<p><code>?Sized</code>-এর উপর একটি trait bound-এর অর্থ হলো "<code>T</code> <code>Sized</code> হতেও পারে বা নাও হতে পারে" এবং এই নোটেশনটি ডিফল্টকে ওভাররাইড করে যে জেনেরিক টাইপগুলোর কম্পাইল টাইমে একটি পরিচিত আকার থাকতে হবে। <code>?Trait</code> সিনট্যাক্সটি এই অর্থে শুধুমাত্র <code>Sized</code>-এর জন্য উপলব্ধ, অন্য কোনো trait-এর জন্য নয়।</p>
+<p>আরও লক্ষ্য করুন যে আমরা <code>t</code> প্যারামিটারের টাইপ <code>T</code> থেকে <code>&amp;T</code>-তে পরিবর্তন করেছি। যেহেতু টাইপটি <code>Sized</code> নাও হতে পারে, আমাদের এটিকে কোনো না কোনো পয়েন্টারের পিছনে ব্যবহার করতে হবে। এই ক্ষেত্রে, আমরা একটি রেফারেন্স বেছে নিয়েছি।</p>
+<p>পরবর্তীতে, আমরা ফাংশন এবং ক্লোজার নিয়ে কথা বলব!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch20-02-advanced-traits.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch20-04-advanced-functions-and-closures.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch20-02-advanced-traits.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch20-04-advanced-functions-and-closures.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

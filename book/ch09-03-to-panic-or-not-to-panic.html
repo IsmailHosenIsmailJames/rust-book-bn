@@ -1,0 +1,344 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>panic! করা বা না করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="panic-করা-নাকি-না-করা-to-panic-or-not-to-panic"><a class="header" href="#panic-করা-নাকি-না-করা-to-panic-or-not-to-panic"><code>panic!</code> করা নাকি না করা (To <code>panic!</code> or Not to <code>panic!</code>)</a></h2>
+<p>তাহলে আপনি কীভাবে সিদ্ধান্ত নেবেন কখন <code>panic!</code> কল করা উচিত এবং কখন <code>Result</code> রিটার্ন করা উচিত? যখন কোড প্যানিক করে, তখন পুনরুদ্ধার (recover) করার কোনো উপায় থাকে না। আপনি যেকোনো এরর পরিস্থিতিতে <code>panic!</code> কল করতে পারেন, چاہے পুনরুদ্ধারের কোনো সম্ভাব্য উপায় থাকুক বা না থাকুক, কিন্তু সেক্ষেত্রে আপনি কলিং কোডের পক্ষে সিদ্ধান্ত নিচ্ছেন যে পরিস্থিতিটি অপুনরুদ্ধারযোগ্য। যখন আপনি একটি <code>Result</code> ভ্যালু রিটার্ন করতে বেছে নেন, আপনি কলিং কোডকে বিকল্প (options) দেন। কলিং কোড তার পরিস্থিতির জন্য উপযুক্ত উপায়ে পুনরুদ্ধার করার চেষ্টা করতে পারে, অথবা এটি সিদ্ধান্ত নিতে পারে যে এই ক্ষেত্রে একটি <code>Err</code> ভ্যালু অপুনরুদ্ধারযোগ্য, তাই এটি <code>panic!</code> কল করতে পারে এবং আপনার পুনরুদ্ধারযোগ্য এররকে অপুনরুদ্ধারযোগ্য এররে পরিণত করতে পারে। অতএব, যখন আপনি এমন একটি ফাংশন ডিফাইন করছেন যা ব্যর্থ হতে পারে, তখন <code>Result</code> রিটার্ন করা একটি ভালো ডিফল্ট পছন্দ।</p>
+<p>উদাহরণ, প্রোটোটাইপ কোড এবং টেস্টের মতো পরিস্থিতিতে, <code>Result</code> রিটার্ন করার পরিবর্তে প্যানিক করে এমন কোড লেখা বেশি উপযুক্ত। চলুন探讨 করি কেন, তারপর সেই পরিস্থিতিগুলো নিয়ে আলোচনা করি যেখানে কম্পাইলার বলতে পারে না যে ব্যর্থতা অসম্ভব, কিন্তু আপনি একজন মানুষ হিসেবে তা পারেন। অধ্যায়টি লাইব্রেরি কোডে প্যানিক করার সিদ্ধান্ত নেওয়ার বিষয়ে কিছু সাধারণ নির্দেশিকা দিয়ে শেষ হবে।</p>
+<h3 id="উদাহরণ-পরোটোটাইপ-কোড-এবং-টেসট-examples-prototype-code-and-tests"><a class="header" href="#উদাহরণ-পরোটোটাইপ-কোড-এবং-টেসট-examples-prototype-code-and-tests">উদাহরণ, প্রোটোটাইপ কোড এবং টেস্ট (Examples, Prototype Code, and Tests)</a></h3>
+<p>যখন আপনি কোনো ধারণা ব্যাখ্যা করার জন্য একটি উদাহরণ লিখছেন, তখন শক্তিশালী এরর-হ্যান্ডলিং কোড অন্তর্ভুক্ত করলে উদাহরণটি কম স্পষ্ট হতে পারে। উদাহরণগুলিতে, এটা বোঝা যায় যে <code>unwrap</code>-এর মতো একটি মেথডের কল, যা প্যানিক করতে পারে, তা আপনার অ্যাপ্লিকেশন যেভাবে এরর হ্যান্ডেল করতে চায় তার জন্য একটি স্থানধারক (placeholder) হিসাবে বোঝানো হয়েছে, যা আপনার বাকি কোড কী করছে তার উপর ভিত্তি করে ভিন্ন হতে পারে।</p>
+<p>একইভাবে, প্রোটোটাইপিংয়ের সময় <code>unwrap</code> এবং <code>expect</code> মেথডগুলি খুব সুবিধাজনক, যখন আপনি এরর কীভাবে হ্যান্ডেল করবেন তা সিদ্ধান্ত নিতে প্রস্তুত নন। আপনি যখন আপনার প্রোগ্রামকে আরও শক্তিশালী করতে প্রস্তুত হবেন, তখন এগুলি আপনার কোডে স্পষ্ট চিহ্ন রেখে যায়।</p>
+<p>যদি একটি টেস্টে কোনো মেথড কল ব্যর্থ হয়, আপনি চাইবেন পুরো টেস্টটিই ব্যর্থ হোক, এমনকি যদি সেই মেথডটি পরীক্ষার অধীনে থাকা কার্যকারিতা না হয়। যেহেতু <code>panic!</code> হলো একটি টেস্টকে ব্যর্থ হিসাবে চিহ্নিত করার উপায়, তাই <code>unwrap</code> বা <code>expect</code> কল করাই ঠিক যা হওয়া উচিত।</p>
+<h3 id="এমন-কষেতর-যেখানে-আপনার-কাছে-কমপাইলারের-চেযে-বেশি-তথয-আছে"><a class="header" href="#এমন-কষেতর-যেখানে-আপনার-কাছে-কমপাইলারের-চেযে-বেশি-তথয-আছে">এমন ক্ষেত্র যেখানে আপনার কাছে কম্পাইলারের চেয়ে বেশি তথ্য আছে</a></h3>
+<p><code>expect</code> কল করাও উপযুক্ত হবে যখন আপনার কাছে অন্য কোনো যুক্তি থাকে যা নিশ্চিত করে যে <code>Result</code>-এর একটি <code>Ok</code> ভ্যালু থাকবে, কিন্তু সেই যুক্তিটি কম্পাইলার বুঝতে পারে না। আপনার কাছে এখনও একটি <code>Result</code> ভ্যালু থাকবে যা আপনাকে হ্যান্ডেল করতে হবে: আপনি যে অপারেশনটি কল করছেন তার সাধারণভাবে ব্যর্থ হওয়ার সম্ভাবনা এখনও আছে, যদিও আপনার নির্দিষ্ট পরিস্থিতিতে এটি যৌক্তিকভাবে অসম্ভব। যদি আপনি ম্যানুয়ালি কোড পরিদর্শন করে নিশ্চিত করতে পারেন যে আপনার কাছে কখনই একটি <code>Err</code> ভ্যারিয়েন্ট থাকবে না, তবে <code>expect</code> কল করা এবং আর্গুমেন্ট টেক্সটে আপনি কেন মনে করেন যে আপনার কখনই একটি <code>Err</code> ভ্যারিয়েন্ট থাকবে না তার কারণ নথিভুক্ত করা সম্পূর্ণ গ্রহণযোগ্য। এখানে একটি উদাহরণ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::net::IpAddr;
+
+    let home: IpAddr = "127.0.0.1"
+        .parse()
+        .expect("Hardcoded IP address should be valid");
+<span class="boring">}</span></code></pre></pre>
+<p>আমরা একটি হার্ডকোডেড স্ট্রিং পার্স করে একটি <code>IpAddr</code> ইনস্ট্যান্স তৈরি করছি। আমরা দেখতে পাচ্ছি যে <code>127.0.0.1</code> একটি বৈধ আইপি অ্যাড্রেস, তাই এখানে <code>expect</code> ব্যবহার করা গ্রহণযোগ্য। তবে, একটি হার্ডকোডেড, বৈধ স্ট্রিং থাকা <code>parse</code> মেথডের রিটার্ন টাইপ পরিবর্তন করে না: আমরা এখনও একটি <code>Result</code> ভ্যালু পাই, এবং কম্পাইলার এখনও আমাদের <code>Result</code> হ্যান্ডেল করতে বাধ্য করবে যেন <code>Err</code> ভ্যারিয়েন্ট একটি সম্ভাবনা, কারণ কম্পাইলার যথেষ্ট স্মার্ট নয় যে দেখতে পারে এই স্ট্রিংটি সর্বদা একটি বৈধ আইপি অ্যাড্রেস। যদি আইপি অ্যাড্রেস স্ট্রিংটি প্রোগ্রামে হার্ডকোড না হয়ে ব্যবহারকারীর কাছ থেকে আসত এবং তাই ব্যর্থতার সম্ভাবনা থাকত, আমরা অবশ্যই <code>Result</code>-কে আরও শক্তিশালী উপায়ে হ্যান্ডেল করতে চাইতাম। এই আইপি অ্যাড্রেসটি হার্ডকোডেড এই অনুমানটি উল্লেখ করা আমাদের ভবিষ্যতে যদি অন্য কোনো উৎস থেকে আইপি অ্যাড্রেস পাওয়ার প্রয়োজন হয় তবে <code>expect</code>-কে আরও ভালো এরর-হ্যান্ডলিং কোডে পরিবর্তন করতে উৎসাহিত করবে।</p>
+<h3 id="এরর-হযানডলিংযের-জনয-নিরদেশিকা-guidelines-for-error-handling"><a class="header" href="#এরর-হযানডলিংযের-জনয-নিরদেশিকা-guidelines-for-error-handling">এরর হ্যান্ডলিংয়ের জন্য নির্দেশিকা (Guidelines for Error Handling)</a></h3>
+<p>আপনার কোড যখন একটি খারাপ অবস্থায় পড়তে পারে, তখন আপনার কোডকে প্যানিক করানো যুক্তিযুক্ত। এই প্রেক্ষাপটে, একটি <em>খারাপ অবস্থা</em> হলো যখন কোনো অনুমান, গ্যারান্টি, চুক্তি বা ইনভ্যারিয়েন্ট (invariant) ভেঙে যায়, যেমন যখন আপনার কোডে অবৈধ মান, পরস্পরবিরোধী মান বা অনুপস্থিত মান পাস করা হয়—এবং এর সাথে নিম্নলিখিত এক বা একাধিক বিষয় ঘটে:</p>
+<ul>
+<li>খারাপ অবস্থাটি অপ্রত্যাশিত কিছু, এমন কিছুর বিপরীতে যা সম্ভবত মাঝে মাঝে ঘটবে, যেমন একজন ব্যবহারকারীর ভুল বিন্যাসে ডেটা প্রবেশ করানো।</li>
+<li>এই বিন্দুর পরে আপনার কোডকে এই খারাপ অবস্থায় না থাকার উপর নির্ভর করতে হবে, প্রতিটি ধাপে সমস্যাটি পরীক্ষা করার পরিবর্তে।</li>
+<li>আপনি যে টাইপগুলি ব্যবহার করেন সেগুলিতে এই তথ্য এনকোড করার কোনো ভালো উপায় নেই। আমরা অধ্যায় ১৮-এর <a href="ch18-03-oo-design-patterns.html#encoding-states-and-behavior-as-types">“Encoding States and Behavior as Types”</a><!-- ignore -->-এ এর একটি উদাহরণ দেখব।</li>
+</ul>
+<p>যদি কেউ আপনার কোড কল করে এবং এমন মান পাস করে যা অর্থহীন, তবে যদি আপনি পারেন তবে একটি এরর রিটার্ন করাই ভালো যাতে লাইব্রেরির ব্যবহারকারী সিদ্ধান্ত নিতে পারে যে সেই ক্ষেত্রে তারা কী করতে চায়। তবে, যে ক্ষেত্রে চালিয়ে যাওয়া असुरक्षित বা ক্ষতিকারক হতে পারে, সেরা পছন্দ হতে পারে <code>panic!</code> কল করা এবং আপনার লাইব্রেরি ব্যবহারকারীকে তাদের কোডের বাগ সম্পর্কে সতর্ক করা যাতে তারা ডেভেলপমেন্টের সময় এটি ঠিক করতে পারে। একইভাবে, <code>panic!</code> প্রায়শই উপযুক্ত যদি আপনি আপনার নিয়ন্ত্রণের বাইরের এক্সটার্নাল কোড কল করছেন এবং এটি একটি অবৈধ অবস্থা রিটার্ন করে যা আপনার ঠিক করার কোনো উপায় নেই।</p>
+<p>তবে, যখন ব্যর্থতা প্রত্যাশিত হয়, তখন <code>panic!</code> কল করার চেয়ে <code>Result</code> রিটার্ন করা বেশি উপযুক্ত। উদাহরণগুলির মধ্যে রয়েছে একটি পার্সারকে ভুল ফরম্যাটের ডেটা দেওয়া বা একটি HTTP অনুরোধ এমন একটি স্ট্যাটাস রিটার্ন করা যা নির্দেশ করে যে আপনি একটি রেট লিমিটে পৌঁছেছেন। এই ক্ষেত্রে, একটি <code>Result</code> রিটার্ন করা নির্দেশ করে যে ব্যর্থতা একটি প্রত্যাশিত সম্ভাবনা যা কলিং কোডকে সিদ্ধান্ত নিতে হবে কীভাবে হ্যান্ডেল করতে হবে।</p>
+<p>যখন আপনার কোড এমন একটি অপারেশন সম্পাদন করে যা অবৈধ মান ব্যবহার করে কল করা হলে ব্যবহারকারীকে ঝুঁকির মধ্যে ফেলতে পারে, তখন আপনার কোডকে প্রথমে মানগুলি বৈধ কিনা তা যাচাই করা উচিত এবং মানগুলি বৈধ না হলে প্যানিক করা উচিত। এটি মূলত নিরাপত্তার কারণে: অবৈধ ডেটার উপর অপারেশন করার চেষ্টা আপনার কোডকে দুর্বলতার সম্মুখীন করতে পারে। এটিই প্রধান কারণ যে স্ট্যান্ডার্ড লাইব্রেরি <code>panic!</code> কল করবে যদি আপনি সীমার বাইরে মেমরি অ্যাক্সেসের চেষ্টা করেন: বর্তমান ডেটা স্ট্রাকচারের অন্তর্গত নয় এমন মেমরি অ্যাক্সেস করার চেষ্টা একটি সাধারণ নিরাপত্তা সমস্যা। ফাংশনগুলির প্রায়শই <em>চুক্তি</em> (contracts) থাকে: তাদের আচরণ শুধুমাত্র তখনই নিশ্চিত করা হয় যদি ইনপুটগুলি নির্দিষ্ট প্রয়োজনীয়তা পূরণ করে। চুক্তি লঙ্ঘন হলে প্যানিক করা অর্থপূর্ণ কারণ একটি চুক্তি লঙ্ঘন সর্বদা একটি কলার-সাইড বাগ নির্দেশ করে, এবং এটি এমন এক ধরনের এরর নয় যা আপনি চান কলিং কোডকে স্পষ্টভাবে হ্যান্ডেল করতে হোক। আসলে, কলিং কোডের পুনরুদ্ধার করার কোনো যুক্তিসঙ্গত উপায় নেই; কলিং <em>প্রোগ্রামারদের</em> কোড ঠিক করতে হবে। একটি ফাংশনের জন্য চুক্তি, বিশেষ করে যখন একটি লঙ্ঘন প্যানিক ঘটাবে, ফাংশনের জন্য API ডকুমেন্টেশনে ব্যাখ্যা করা উচিত।</p>
+<p>তবে, আপনার সমস্ত ফাংশনে প্রচুর এরর চেক থাকা দীর্ঘ এবং বিরক্তিকর হবে। সৌভাগ্যবশত, আপনি Rust-এর টাইপ সিস্টেম (এবং এইভাবে কম্পাইলার দ্বারা করা টাইপ চেকিং) ব্যবহার করে আপনার জন্য অনেক চেক করতে পারেন। যদি আপনার ফাংশনের একটি নির্দিষ্ট টাইপ প্যারামিটার হিসাবে থাকে, আপনি আপনার কোডের যুক্তি নিয়ে এগিয়ে যেতে পারেন এটা জেনে যে কম্পাইলার ইতিমধ্যে নিশ্চিত করেছে যে আপনার কাছে একটি বৈধ মান আছে। উদাহরণস্বরূপ, যদি আপনার কাছে একটি <code>Option</code>-এর পরিবর্তে একটি টাইপ থাকে, আপনার প্রোগ্রাম <em>কিছু না</em> থাকার পরিবর্তে <em>কিছু</em> থাকার আশা করে। আপনার কোডকে তখন <code>Some</code> এবং <code>None</code> ভ্যারিয়েন্টের জন্য দুটি কেস হ্যান্ডেল করতে হবে না: এটি শুধুমাত্র নিশ্চিতভাবে একটি মান থাকার জন্য একটি কেস থাকবে। আপনার ফাংশনে কিছুই পাস করার চেষ্টা করা কোড এমনকি কম্পাইলও হবে না, তাই আপনার ফাংশনকে রানটাইমে সেই কেসটি পরীক্ষা করতে হবে না। আরেকটি উদাহরণ হলো একটি আনসাইন্ড ইন্টিজার টাইপ যেমন <code>u32</code> ব্যবহার করা, যা নিশ্চিত করে যে প্যারামিটারটি কখনই নেতিবাচক নয়।</p>
+<h3 id="বৈধতা-যাচাইযের-জনয-কাসটম-টাইপ-তৈরি-করা-creating-custom-types-for-validation"><a class="header" href="#বৈধতা-যাচাইযের-জনয-কাসটম-টাইপ-তৈরি-করা-creating-custom-types-for-validation">বৈধতা যাচাইয়ের জন্য কাস্টম টাইপ তৈরি করা (Creating Custom Types for Validation)</a></h3>
+<p>আসুন আমরা একটি বৈধ মান নিশ্চিত করার জন্য Rust-এর টাইপ সিস্টেম ব্যবহার করার ধারণাটিকে এক ধাপ এগিয়ে নিয়ে যাই এবং বৈধতা যাচাইয়ের জন্য একটি কাস্টম টাইপ তৈরি করার দিকে নজর দিই। অধ্যায় ২-এর অনুমান করার গেমটি মনে করুন যেখানে আমাদের কোড ব্যবহারকারীকে ১ থেকে ১০০-এর মধ্যে একটি সংখ্যা অনুমান করতে বলেছিল। আমরা আমাদের গোপন সংখ্যার সাথে এটি পরীক্ষা করার আগে ব্যবহারকারীর অনুমানটি সেই সংখ্যাগুলির মধ্যে ছিল কিনা তা কখনই যাচাই করিনি; আমরা কেবল যাচাই করেছি যে অনুমানটি পজিটিভ ছিল। এই ক্ষেত্রে, পরিণতি খুব গুরুতর ছিল না: আমাদের "Too high" বা "Too low" আউটপুট এখনও সঠিক হতো। কিন্তু ব্যবহারকারীকে বৈধ অনুমানের দিকে পরিচালিত করা এবং ব্যবহারকারী যখন সীমার বাইরের একটি সংখ্যা অনুমান করে তার জন্য ভিন্ন আচরণ করা একটি দরকারী উন্নতি হবে, যখন ব্যবহারকারী, উদাহরণস্বরূপ, অক্ষরের পরিবর্তে অক্ষর টাইপ করে।</p>
+<p>এটি করার একটি উপায় হতে পারে অনুমানটিকে শুধুমাত্র একটি <code>u32</code> এর পরিবর্তে একটি <code>i32</code> হিসাবে পার্স করা যাতে সম্ভাব্য নেতিবাচক সংখ্যা அனுமதிக்க হয়, এবং তারপর সংখ্যাটি সীমার মধ্যে আছে কিনা তার জন্য একটি চেক যোগ করা, যেমন:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span>    loop {
+        // --snip--
+
+<span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span>        let guess: i32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
+
+        if guess &lt; 1 || guess &gt; 100 {
+            println!("The secret number will be between 1 and 100.");
+            continue;
+        }
+
+        match guess.cmp(&amp;secret_number) {
+            // --snip--
+<span class="boring">            Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">            Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">            Ordering::Equal =&gt; {
+</span><span class="boring">                println!("You win!");
+</span><span class="boring">                break;
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span>    }
+<span class="boring">}</span></code></pre>
+</Listing>
+<p><code>if</code> এক্সপ্রেশনটি পরীক্ষা করে যে আমাদের মান সীমার বাইরে কিনা, ব্যবহারকারীকে সমস্যা সম্পর্কে জানায়, এবং লুপের পরবর্তী পুনরাবৃত্তি শুরু করতে এবং আরেকটি অনুমানের জন্য জিজ্ঞাসা করতে <code>continue</code> কল করে। <code>if</code> এক্সপ্রেশনের পরে, আমরা <code>guess</code> এবং গোপন সংখ্যার মধ্যে তুলনা নিয়ে এগিয়ে যেতে পারি এটা জেনে যে <code>guess</code> ১ থেকে ১০০-এর মধ্যে রয়েছে।</p>
+<p>তবে, এটি একটি আদর্শ সমাধান নয়: যদি এটি একেবারে গুরুত্বপূর্ণ হতো যে প্রোগ্রামটি শুধুমাত্র ১ থেকে ১০০-এর মধ্যে মান নিয়ে কাজ করবে, এবং এটির এই প্রয়োজনীয়তা সহ অনেক ফাংশন থাকত, তবে প্রতিটি ফাংশনে এইরকম একটি চেক থাকা ক্লান্তিকর হতো (এবং পারফরম্যান্সের উপর প্রভাব ফেলতে পারতো)।</p>
+<p>পরিবর্তে, আমরা একটি ডেডিকেটেড মডিউলে একটি নতুন টাইপ তৈরি করতে পারি এবং বৈধতা যাচাইগুলি সর্বত্র পুনরাবৃত্তি করার পরিবর্তে টাইপের একটি ইনস্ট্যান্স তৈরি করার জন্য একটি ফাংশনে রাখতে পারি। এইভাবে, ফাংশনগুলির জন্য তাদের সিগনেচারে নতুন টাইপ ব্যবহার করা এবং তারা যে মানগুলি পায় তা আত্মবিশ্বাসের সাথে ব্যবহার করা নিরাপদ। লিস্টিং ৯-১৩ একটি <code>Guess</code> টাইপ সংজ্ঞায়িত করার একটি উপায় দেখায় যা শুধুমাত্র তখনই <code>Guess</code>-এর একটি ইনস্ট্যান্স তৈরি করবে যদি <code>new</code> ফাংশনটি ১ থেকে ১০০-এর মধ্যে একটি মান পায়।</p>
+<Listing number="9-13" caption="একটি `Guess` টাইপ যা শুধুমাত্র ১ থেকে ১০০-এর মধ্যে মান নিয়ে চলবে" file-name="src/guessing_game.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -&gt; Guess {
+        if value &lt; 1 || value &gt; 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+
+        Guess { value }
+    }
+
+    pub fn value(&amp;self) -&gt; i32 {
+        self.value
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>উল্লেখ্য যে <em>src/guessing_game.rs</em>-এর এই কোডটি <em>src/lib.rs</em>-এ একটি মডিউল ডিক্লারেশন <code>mod guessing_game;</code> যোগ করার উপর নির্ভর করে যা আমরা এখানে দেখাইনি। এই নতুন মডিউলের ফাইলের মধ্যে, আমরা সেই মডিউলে <code>Guess</code> নামে একটি struct সংজ্ঞায়িত করি যার একটি <code>value</code> নামের ফিল্ড আছে যা একটি <code>i32</code> ধারণ করে। এখানেই সংখ্যাটি সংরক্ষণ করা হবে।</p>
+<p>তারপর আমরা <code>Guess</code>-এর উপর <code>new</code> নামে একটি অ্যাসোসিয়েটেড ফাংশন ইমপ্লিমেন্ট করি যা <code>Guess</code> মানের ইনস্ট্যান্স তৈরি করে। <code>new</code> ফাংশনটি <code>value</code> নামে একটি প্যারামিটার থাকার জন্য সংজ্ঞায়িত করা হয়েছে যার টাইপ <code>i32</code> এবং একটি <code>Guess</code> রিটার্ন করার জন্য। <code>new</code> ফাংশনের বডির কোডটি <code>value</code> পরীক্ষা করে নিশ্চিত করে যে এটি ১ থেকে ১০০-এর মধ্যে আছে। যদি <code>value</code> এই পরীক্ষাটি পাস না করে, আমরা একটি <code>panic!</code> কল করি, যা কলিং কোড লিখছেন এমন প্রোগ্রামারকে সতর্ক করবে যে তাদের একটি বাগ আছে যা তাদের ঠিক করতে হবে, কারণ এই সীমার বাইরের একটি <code>value</code> দিয়ে একটি <code>Guess</code> তৈরি করা <code>Guess::new</code> যে চুক্তির উপর নির্ভর করছে তা লঙ্ঘন করবে। <code>Guess::new</code> যে শর্তে প্যানিক করতে পারে তা তার পাবলিক-ফেসিং API ডকুমেন্টেশনে আলোচনা করা উচিত; আমরা অধ্যায় ১৪-তে আপনার তৈরি করা API ডকুমেন্টেশনে একটি <code>panic!</code>-এর সম্ভাবনা নির্দেশকারী ডকুমেন্টেশন কনভেনশনগুলি কভার করব। যদি <code>value</code> পরীক্ষাটি পাস করে, আমরা একটি নতুন <code>Guess</code> তৈরি করি যার <code>value</code> ফিল্ড <code>value</code> প্যারামিটারে সেট করা হয় এবং <code>Guess</code> রিটার্ন করি।</p>
+<p>এর পরে, আমরা <code>value</code> নামে একটি মেথড ইমপ্লিমেন্ট করি যা <code>self</code> ধার নেয়, অন্য কোনো প্যারামিটার নেই, এবং একটি <code>i32</code> রিটার্ন করে। এই ধরনের মেথডকে কখনও কখনও <em>getter</em> বলা হয় কারণ এর উদ্দেশ্য হলো এর ফিল্ড থেকে কিছু ডেটা পাওয়া এবং তা রিটার্ন করা। এই পাবলিক মেথডটি প্রয়োজনীয় কারণ <code>Guess</code> struct-এর <code>value</code> ফিল্ডটি প্রাইভেট। এটা গুরুত্বপূর্ণ যে <code>value</code> ফিল্ডটি প্রাইভেট হোক যাতে <code>Guess</code> struct ব্যবহারকারী কোড সরাসরি <code>value</code> সেট করতে அனுமதிக்க না হয়: <code>guessing_game</code> মডিউলের বাইরের কোডকে একটি <code>Guess</code>-এর ইনস্ট্যান্স তৈরি করার জন্য <em>অবশ্যই</em> <code>Guess::new</code> ফাংশন ব্যবহার করতে হবে, যার ফলে নিশ্চিত করা হয় যে <code>Guess::new</code> ফাংশনের শর্ত দ্বারা পরীক্ষা করা হয়নি এমন কোনো <code>value</code> সহ একটি <code>Guess</code> থাকার কোনো উপায় নেই।</p>
+<p>একটি ফাংশন যার একটি প্যারামিটার আছে বা শুধুমাত্র ১ থেকে ১০০-এর মধ্যে সংখ্যা রিটার্ন করে, সে তার সিগনেচারে ঘোষণা করতে পারে যে এটি একটি <code>i32</code>-এর পরিবর্তে একটি <code>Guess</code> নেয় বা রিটার্ন করে এবং তার বডিতে কোনো অতিরিক্ত চেক করার প্রয়োজন হবে না।</p>
+<h2 id="সারাংশ-summary"><a class="header" href="#সারাংশ-summary">সারাংশ (Summary)</a></h2>
+<p>Rust-এর এরর-হ্যান্ডলিং ফিচারগুলি আপনাকে আরও শক্তিশালী কোড লিখতে সাহায্য করার জন্য ডিজাইন করা হয়েছে। <code>panic!</code> ম্যাক্রো সংকেত দেয় যে আপনার প্রোগ্রামটি এমন একটি অবস্থায় আছে যা এটি হ্যান্ডেল করতে পারে না এবং অবৈধ বা ভুল মান নিয়ে এগিয়ে যাওয়ার চেষ্টা করার পরিবর্তে আপনাকে প্রসেসটি বন্ধ করতে বলে। <code>Result</code> enum Rust-এর টাইপ সিস্টেম ব্যবহার করে নির্দেশ করে যে অপারেশনগুলি এমনভাবে ব্যর্থ হতে পারে যা থেকে আপনার কোড পুনরুদ্ধার করতে পারে। আপনি <code>Result</code> ব্যবহার করে আপনার কোড কলকারী কোডকে বলতে পারেন যে তাকেও সম্ভাব্য সফলতা বা ব্যর্থতা হ্যান্ডেল করতে হবে। উপযুক্ত পরিস্থিতিতে <code>panic!</code> এবং <code>Result</code> ব্যবহার করা আপনার কোডকে অনিবার্য সমস্যার মুখে আরও নির্ভরযোগ্য করে তুলবে।</p>
+<p>এখন যেহেতু আপনি দেখেছেন যে স্ট্যান্ডার্ড লাইব্রেরি <code>Option</code> এবং <code>Result</code> enum-এর সাথে জেনেরিকগুলি কীভাবে দরকারী উপায়ে ব্যবহার করে, আমরা আলোচনা করব জেনেরিকগুলি কীভাবে কাজ করে এবং আপনি কীভাবে সেগুলি আপনার কোডে ব্যবহার করতে পারেন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch09-02-recoverable-errors-with-result.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch10-00-generics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch09-02-recoverable-errors-with-result.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch10-00-generics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

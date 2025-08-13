@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>হ্যালো, ওয়ার্ল্ড! - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h2>
+<p>এখন যেহেতু আপনি রাস্ট ইনস্টল করেছেন, আপনার প্রথম রাস্ট প্রোগ্রাম লেখার সময় এসেছে। নতুন কোনো ভাষা শেখার সময় স্ক্রিনে <code>Hello, world!</code> টেক্সট প্রিন্ট করে এমন একটি ছোট প্রোগ্রাম লেখা একটি ঐতিহ্য, তাই আমরাও এখানে তাই করব!</p>
+<blockquote>
+<p>দ্রষ্টব্য: এই বইটিতে কমান্ড লাইনের সাথে প্রাথমিক পরিচিতি আছে বলে ধরে নেওয়া হয়েছে। রাস্ট আপনার এডিটিং, টুলিং বা আপনার কোড কোথায় থাকবে সে সম্পর্কে কোনো নির্দিষ্ট চাহিদা রাখে না, তাই আপনি যদি কমান্ড লাইনের পরিবর্তে একটি ইন্টিগ্রেটেড ডেভেলপমেন্ট এনভায়রনমেন্ট (IDE) ব্যবহার করতে পছন্দ করেন, তবে আপনার প্রিয় IDE ব্যবহার করতে পারেন। অনেক IDE-তেই এখন রাস্ট সাপোর্ট রয়েছে; বিস্তারিত জানতে IDE-এর ডকুমেন্টেশন দেখুন। রাস্ট টিম <code>rust-analyzer</code>-এর মাধ্যমে சிறந்த IDE সাপোর্ট সক্ষম করার দিকে মনোনিবেশ করেছে। আরও বিস্তারিত জানতে <a href="appendix-04-useful-development-tools.html">পরিশিষ্ট ডি</a><!-- ignore --> দেখুন।</p>
+</blockquote>
+<h3 id="একটি-পরজেকট-ডিরেকটরি-তৈরি-করা"><a class="header" href="#একটি-পরজেকট-ডিরেকটরি-তৈরি-করা">একটি প্রজেক্ট ডিরেক্টরি তৈরি করা</a></h3>
+<p>আপনি আপনার রাস্ট কোড সংরক্ষণ করার জন্য একটি ডিরেক্টরি তৈরি করে শুরু করবেন। আপনার কোড কোথায় থাকবে তা রাস্টের কাছে গুরুত্বপূর্ণ নয়, তবে এই বইয়ের অনুশীলন এবং প্রজেক্টগুলোর জন্য, আমরা আপনার হোম ডিরেক্টরিতে একটি <em>projects</em> ডিরেক্টরি তৈরি করার এবং আপনার সমস্ত প্রজেক্ট সেখানে রাখার পরামর্শ দিচ্ছি।</p>
+<p>একটি টার্মিনাল খুলুন এবং একটি <em>projects</em> ডিরেক্টরি এবং তার মধ্যে "Hello, world!" প্রজেক্টের জন্য একটি ডিরেক্টরি তৈরি করতে নিম্নলিখিত কমান্ডগুলো প্রবেশ করান।</p>
+<p>Linux, macOS এবং Windows-এর PowerShell-এর জন্য, এটি প্রবেশ করান:</p>
+<pre><code class="language-console">$ mkdir ~/projects
+$ cd ~/projects
+$ mkdir hello_world
+$ cd hello_world
+</code></pre>
+<p>Windows CMD-এর জন্য, এটি প্রবেশ করান:</p>
+<pre><code class="language-cmd">&gt; mkdir "%USERPROFILE%\projects"
+&gt; cd /d "%USERPROFILE%\projects"
+&gt; mkdir hello_world
+&gt; cd hello_world
+</code></pre>
+<h3 id="একটি-রাসট-পরোগরাম-লেখা-এবং-চালানো"><a class="header" href="#একটি-রাসট-পরোগরাম-লেখা-এবং-চালানো">একটি রাস্ট প্রোগ্রাম লেখা এবং চালানো</a></h3>
+<p>এরপর, একটি নতুন সোর্স ফাইল তৈরি করুন এবং এর নাম দিন <em>main.rs</em>। রাস্ট ফাইলগুলো সর্বদা <em>.rs</em> এক্সটেনশন দিয়ে শেষ হয়। আপনি যদি আপনার ফাইলের নামে একাধিক শব্দ ব্যবহার করেন, তবে সেগুলোকে আলাদা করার জন্য আন্ডারস্কোর ব্যবহার করার নিয়ম। উদাহরণস্বরূপ, <em>helloworld.rs</em> এর পরিবর্তে <em>hello_world.rs</em> ব্যবহার করুন।</p>
+<p>এখন আপনি যে <em>main.rs</em> ফাইলটি তৈরি করেছেন সেটি খুলুন এবং লিস্টিং ১-১ এর কোডটি প্রবেশ করান।</p>
+<Listing number="1-1" file-name="main.rs" caption="`Hello, world!` প্রিন্ট করে এমন একটি প্রোগ্রাম">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    println!("Hello, world!");
+}</code></pre></pre>
+</Listing>
+<p>ফাইলটি সংরক্ষণ করুন এবং <em>~/projects/hello_world</em> ডিরেক্টরিতে আপনার টার্মিনাল উইন্ডোতে ফিরে যান। Linux বা macOS-এ, ফাইলটি কম্পাইল এবং রান করতে নিম্নলিখিত কমান্ডগুলো প্রবেশ করান:</p>
+<pre><code class="language-console">$ rustc main.rs
+$ ./main
+Hello, world!
+</code></pre>
+<p>Windows-এ, <code>./main</code> এর পরিবর্তে <code>.\main</code> কমান্ডটি প্রবেশ করান:</p>
+<pre><code class="language-powershell">&gt; rustc main.rs
+&gt; .\main
+Hello, world!
+</code></pre>
+<p>আপনার অপারেটিং সিস্টেম নির্বিশেষে, <code>Hello, world!</code> স্ট্রিংটি টার্মিনালে প্রিন্ট হওয়া উচিত। আপনি যদি এই আউটপুটটি না দেখেন, তাহলে সাহায্যের জন্য ইনস্টলেশন বিভাগের <a href="ch01-01-installation.html#troubleshooting">"Troubleshooting"</a><!-- ignore --> অংশে ফিরে যান।</p>
+<p>যদি <code>Hello, world!</code> প্রিন্ট হয়ে থাকে, অভিনন্দন! আপনি আনুষ্ঠানিকভাবে একটি রাস্ট প্রোগ্রাম লিখেছেন। এটি আপনাকে একজন রাস্ট প্রোগ্রামার করে তুলেছে—স্বাগতম!</p>
+<h3 id="একটি-রাসট-পরোগরামের-অযানাটমি"><a class="header" href="#একটি-রাসট-পরোগরামের-অযানাটমি">একটি রাস্ট প্রোগ্রামের অ্যানাটমি</a></h3>
+<p>চলুন এই "Hello, world!" প্রোগ্রামটি বিস্তারিতভাবে পর্যালোচনা করি। এখানে পাজলের প্রথম অংশ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+
+}</code></pre></pre>
+<p>এই লাইনগুলো <code>main</code> নামে একটি ফাংশন সংজ্ঞায়িত করে। <code>main</code> ফাংশনটি বিশেষ: এটি প্রতিটি এক্সিকিউটেবল রাস্ট প্রোগ্রামে সর্বদা প্রথম কোড যা রান হয়। এখানে, প্রথম লাইনটি <code>main</code> নামে একটি ফাংশন ঘোষণা করে যার কোনো প্যারামিটার নেই এবং কিছুই রিটার্ন করে না। যদি প্যারামিটার থাকত, তবে সেগুলো <code>()</code> বন্ধনীর ভিতরে যেত।</p>
+<p>ফাংশন বডি <code>{}</code> দিয়ে মোড়ানো থাকে। রাস্টের সমস্ত ফাংশন বডির চারপাশে কার্লি ব্র্যাকেট প্রয়োজন। ফাংশন ঘোষণার একই লাইনে ওপেনিং কার্লি ব্র্যাকেট রাখা ভালো স্টাইল, এবং এর মধ্যে একটি স্পেস যোগ করা উচিত।</p>
+<blockquote>
+<p>দ্রষ্টব্য: আপনি যদি রাস্ট প্রজেক্ট জুড়ে একটি স্ট্যান্ডার্ড স্টাইল মেনে চলতে চান, তবে আপনি আপনার কোডকে একটি নির্দিষ্ট স্টাইলে ফর্ম্যাট করার জন্য <code>rustfmt</code> নামক একটি স্বয়ংক্রিয় ফর্মাটার টুল ব্যবহার করতে পারেন (<code>rustfmt</code> সম্পর্কে আরও জানতে <a href="appendix-04-useful-development-tools.html">পরিশিষ্ট ডি</a><!-- ignore --> দেখুন)। রাস্ট টিম এই টুলটিকে স্ট্যান্ডার্ড রাস্ট ডিস্ট্রিবিউশনের সাথে অন্তর্ভুক্ত করেছে, যেমন <code>rustc</code>, তাই এটি ইতিমধ্যে আপনার কম্পিউটারে ইনস্টল থাকা উচিত!</p>
+</blockquote>
+<p><code>main</code> ফাংশনের বডিতে নিম্নলিখিত কোডটি রয়েছে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("Hello, world!");
+<span class="boring">}</span></code></pre></pre>
+<p>এই লাইনটি এই ছোট প্রোগ্রামের সমস্ত কাজ করে: এটি স্ক্রিনে টেক্সট প্রিন্ট করে। এখানে তিনটি গুরুত্বপূর্ণ বিষয় লক্ষ্য করার আছে।</p>
+<p>প্রথমত, <code>println!</code> একটি রাস্ট ম্যাক্রো কল করে। যদি এটি একটি ফাংশন কল করত, তবে এটি <code>println</code> ( <code>!</code> ছাড়া) হিসাবে লেখা হতো। রাস্ট ম্যাক্রো হলো এমন কোড লেখার একটি উপায় যা রাস্ট সিনট্যাক্স প্রসারিত করার জন্য কোড তৈরি করে, এবং আমরা <a href="ch20-05-macros.html">অধ্যায় ২০</a><!-- ignore -->-এ এগুলি নিয়ে আরও বিস্তারিত আলোচনা করব। আপাতত, আপনার শুধু এটা জানা দরকার যে <code>!</code> ব্যবহার করার অর্থ হল আপনি একটি সাধারণ ফাংশনের পরিবর্তে একটি ম্যাক্রো কল করছেন এবং ম্যাক্রোগুলো সবসময় ফাংশনের মতো একই নিয়ম অনুসরণ করে না।</p>
+<p>দ্বিতীয়ত, আপনি <code>"Hello, world!"</code> স্ট্রিংটি দেখতে পাচ্ছেন। আমরা এই স্ট্রিংটি <code>println!</code>-এ একটি আর্গুমেন্ট হিসাবে পাস করি, এবং স্ট্রিংটি স্ক্রিনে প্রিন্ট হয়।</p>
+<p>তৃতীয়ত, আমরা লাইনটি একটি সেমিকোলন (<code>;</code>) দিয়ে শেষ করি, যা নির্দেশ করে যে এই এক্সপ্রেশনটি শেষ হয়েছে এবং পরবর্তীটি শুরু করার জন্য প্রস্তুত। রাস্ট কোডের বেশিরভাগ লাইন একটি সেমিকোলন দিয়ে শেষ হয়।</p>
+<h3 id="কমপাইল-এবং-রান-করা-দুটি-আলাদা-ধাপ"><a class="header" href="#কমপাইল-এবং-রান-করা-দুটি-আলাদা-ধাপ">কম্পাইল এবং রান করা দুটি আলাদা ধাপ</a></h3>
+<p>আপনি এইমাত্র একটি নতুন তৈরি করা প্রোগ্রাম রান করেছেন, তাই চলুন প্রক্রিয়ার প্রতিটি ধাপ পরীক্ষা করে দেখি।</p>
+<p>একটি রাস্ট প্রোগ্রাম রান করার আগে, আপনাকে অবশ্যই রাস্ট কম্পাইলার ব্যবহার করে এটি কম্পাইল করতে হবে, <code>rustc</code> কমান্ড প্রবেশ করিয়ে এবং আপনার সোর্স ফাইলের নাম পাস করে, যেমন:</p>
+<pre><code class="language-console">$ rustc main.rs
+</code></pre>
+<p>আপনার যদি C বা C++ ব্যাকগ্রাউন্ড থাকে, তাহলে আপনি লক্ষ্য করবেন যে এটি <code>gcc</code> বা <code>clang</code>-এর মতো। সফলভাবে কম্পাইল করার পর, রাস্ট একটি বাইনারি এক্সিকিউটেবল আউটপুট দেয়।</p>
+<p>Linux, macOS এবং Windows-এর PowerShell-এ, আপনি আপনার শেলে <code>ls</code> কমান্ড প্রবেশ করে এক্সিকিউটেবলটি দেখতে পারেন:</p>
+<pre><code class="language-console">$ ls
+main  main.rs
+</code></pre>
+<p>Linux এবং macOS-এ, আপনি দুটি ফাইল দেখতে পাবেন। Windows-এর PowerShell-এ, আপনি CMD ব্যবহার করে যে তিনটি ফাইল দেখতে পেতেন, সেই একই তিনটি ফাইল দেখতে পাবেন। Windows-এর CMD-তে, আপনি নিম্নলিখিতটি প্রবেশ করাবেন:</p>
+<pre><code class="language-cmd">&gt; dir /B %= the /B option says to only show the file names =%
+main.exe
+main.pdb
+main.rs
+</code></pre>
+<p>এটি <em>.rs</em> এক্সটেনশন সহ সোর্স কোড ফাইল, এক্সিকিউটেবল ফাইল (Windows-এ <em>main.exe</em>, কিন্তু অন্য সব প্ল্যাটফর্মে <em>main</em>), এবং Windows ব্যবহার করার সময়, <em>.pdb</em> এক্সটেনশন সহ ডিবাগিং তথ্য সম্বলিত একটি ফাইল দেখায়। এখান থেকে, আপনি <em>main</em> বা <em>main.exe</em> ফাইলটি চালান, এইভাবে:</p>
+<pre><code class="language-console">$ ./main # or .\main on Windows
+</code></pre>
+<p>যদি আপনার <em>main.rs</em> আপনার "Hello, world!" প্রোগ্রাম হয়, এই লাইনটি আপনার টার্মিনালে <code>Hello, world!</code> প্রিন্ট করবে।</p>
+<p>আপনি যদি রুবি, পাইথন বা জাভাস্ক্রিপ্টের মতো ডাইনামিক ল্যাঙ্গুয়েজের সাথে বেশি পরিচিত হন, তাহলে আপনি হয়তো একটি প্রোগ্রামকে আলাদা ধাপে কম্পাইল এবং রান করতে অভ্যস্ত নন। রাস্ট একটি <em>ahead-of-time compiled</em> ভাষা, যার মানে হল আপনি একটি প্রোগ্রাম কম্পাইল করে এক্সিকিউটেবলটি অন্য কাউকে দিতে পারেন, এবং তারা রাস্ট ইনস্টল না করেও এটি চালাতে পারবে। আপনি যদি কাউকে একটি <em>.rb</em>, <em>.py</em>, বা <em>.js</em> ফাইল দেন, তাদের যথাক্রমে রুবি, পাইথন বা জাভাস্ক্রিপ্ট ইমপ্লিমেন্টেশন ইনস্টল করা থাকতে হবে। কিন্তু সেই ভাষাগুলিতে, আপনার প্রোগ্রাম কম্পাইল এবং রান করার জন্য শুধুমাত্র একটি কমান্ড প্রয়োজন। ভাষার ডিজাইনে সবকিছুই একটি ট্রেড-অফ।</p>
+<p>সাধারণ প্রোগ্রামগুলির জন্য শুধু <code>rustc</code> দিয়ে কম্পাইল করাই ঠিক আছে, কিন্তু আপনার প্রজেক্ট বড় হওয়ার সাথে সাথে আপনি সমস্ত অপশন পরিচালনা করতে এবং আপনার কোড শেয়ার করা সহজ করতে চাইবেন। এরপর, আমরা আপনাকে কার্গো টুলের সাথে পরিচয় করিয়ে দেব, যা আপনাকে বাস্তব-বিশ্বের রাস্ট প্রোগ্রাম লিখতে সাহায্য করবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-01-installation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch01-03-hello-cargo.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-01-installation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch01-03-hello-cargo.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

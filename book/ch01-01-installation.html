@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ইনস্টলেশন - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<p>প্রথম ধাপ হল রাস্ট ইনস্টল করা। আমরা <code>rustup</code> এর মাধ্যমে রাস্ট ডাউনলোড করব, যা রাস্টের ভার্সন এবং সম্পর্কিত টুলগুলো পরিচালনা করার জন্য একটি কমান্ড লাইন টুল। ডাউনলোড করার জন্য আপনার একটি ইন্টারনেট সংযোগ প্রয়োজন হবে।</p>
+<blockquote>
+<p>দ্রষ্টব্য: আপনি যদি কোনো কারণে <code>rustup</code> ব্যবহার করতে না চান, তাহলে আরও বিকল্পের জন্য <a href="https://forge.rust-lang.org/infra/other-installation-methods.html">Other Rust Installation Methods পেজটি</a> দেখুন।</p>
+</blockquote>
+<p>নিচের পদক্ষেপগুলো রাস্ট কম্পাইলারের সর্বশেষ স্টেবল ভার্সন ইনস্টল করবে। রাস্টের স্ট্যাবিলিটি গ্যারান্টি নিশ্চিত করে যে এই বইয়ের সমস্ত উদাহরণ যা কম্পাইল হয়, তা রাস্টের নতুন ভার্সনগুলোর সাথেও কম্পাইল হতে থাকবে। ভার্সনভেদে আউটপুট সামান্য ভিন্ন হতে পারে কারণ রাস্ট প্রায়শই এরর মেসেজ এবং ওয়ার্নিং উন্নত করে। অর্থাৎ, এই পদক্ষেপগুলো ব্যবহার করে আপনি রাস্টের যেকোনো নতুন, স্টেবল ভার্সন ইনস্টল করলে তা এই বইয়ের বিষয়বস্তুর সাথে সঠিকভাবে কাজ করবে।</p>
+<blockquote>
+<h3 id="কমানড-লাইন-নোটেশন"><a class="header" href="#কমানড-লাইন-নোটেশন">কমান্ড লাইন নোটেশন</a></h3>
+<p>এই অধ্যায়ে এবং পুরো বই জুড়ে, আমরা টার্মিনালে ব্যবহৃত কিছু কমান্ড দেখাব। যে লাইনগুলো আপনার টার্মিনালে প্রবেশ করানো উচিত, সেগুলোর সবই <code>$</code> দিয়ে শুরু হয়। আপনার <code>$</code> চিহ্নটি টাইপ করার দরকার নেই; এটি কমান্ড লাইন প্রম্পট যা প্রতিটি কমান্ডের শুরু নির্দেশ করার জন্য দেখানো হয়। যে লাইনগুলো <code>$</code> দিয়ে শুরু হয় না, সেগুলো সাধারণত আগের কমান্ডের আউটপুট দেখায়। অতিরিক্তভাবে, PowerShell-এর জন্য নির্দিষ্ট উদাহরণগুলোতে <code>$</code> এর পরিবর্তে <code>&gt;</code> ব্যবহার করা হবে।</p>
+</blockquote>
+<h3 id="linux-বা-macos-এ-rustup-ইনসটল-করা"><a class="header" href="#linux-বা-macos-এ-rustup-ইনসটল-করা">Linux বা macOS-এ <code>rustup</code> ইনস্টল করা</a></h3>
+<p>আপনি যদি Linux বা macOS ব্যবহার করেন, তাহলে একটি টার্মিনাল খুলুন এবং নিম্নলিখিত কমান্ডটি প্রবেশ করান:</p>
+<pre><code class="language-console">$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+</code></pre>
+<p>এই কমান্ডটি একটি স্ক্রিপ্ট ডাউনলোড করে এবং <code>rustup</code> টুলের ইনস্টলেশন শুরু করে, যা রাস্টের সর্বশেষ স্টেবল ভার্সন ইনস্টল করে। আপনাকে আপনার পাসওয়ার্ডের জন্য অনুরোধ করা হতে পারে। ইনস্টলেশন সফল হলে, নিম্নলিখিত লাইনটি প্রদর্শিত হবে:</p>
+<pre><code class="language-text">Rust is installed now. Great!
+</code></pre>
+<p>আপনার একটি <em>linker</em>-এরও প্রয়োজন হবে, যা একটি প্রোগ্রাম এবং রাস্ট তার কম্পাইল করা আউটপুটগুলোকে একটি ফাইলে যুক্ত করতে এটি ব্যবহার করে। সম্ভবত আপনার কাছে ইতিমধ্যে একটি linker আছে। যদি আপনি linker errors পান, তবে আপনার একটি C compiler ইনস্টল করা উচিত, যার সাথে সাধারণত একটি linker অন্তর্ভুক্ত থাকে। একটি C compiler থাকা সুবিধাজনক কারণ কিছু সাধারণ রাস্ট প্যাকেজ C কোডের উপর নির্ভর করে এবং সেগুলোর জন্য একটি C compiler প্রয়োজন হবে।</p>
+<p>macOS-এ, আপনি নিম্নলিখিত কমান্ডটি চালিয়ে একটি C compiler পেতে পারেন:</p>
+<pre><code class="language-console">$ xcode-select --install
+</code></pre>
+<p>Linux ব্যবহারকারীদের সাধারণত তাদের ডিস্ট্রিবিউশনের ডকুমেন্টেশন অনুযায়ী GCC বা Clang ইনস্টল করা উচিত। উদাহরণস্বরূপ, আপনি যদি Ubuntu ব্যবহার করেন, তাহলে আপনি <code>build-essential</code> প্যাকেজটি ইনস্টল করতে পারেন।</p>
+<h3 id="windows-এ-rustup-ইনসটল-করা"><a class="header" href="#windows-এ-rustup-ইনসটল-করা">Windows-এ <code>rustup</code> ইনস্টল করা</a></h3>
+<p>Windows-এ, <a href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install</a> এ যান এবং রাস্ট ইনস্টল করার জন্য নির্দেশাবলী অনুসরণ করুন। ইনস্টলেশনের এক পর্যায়ে, আপনাকে Visual Studio ইনস্টল করার জন্য অনুরোধ জানানো হবে। এটি একটি linker এবং প্রোগ্রাম কম্পাইল করার জন্য প্রয়োজনীয় নেটিভ লাইব্রেরি সরবরাহ করে। এই ধাপে আপনার যদি আরও সাহায্যের প্রয়োজন হয়, তাহলে <a href="https://rust-lang.github.io/rustup/installation/windows-msvc.html">https://rust-lang.github.io/rustup/installation/windows-msvc.html</a> দেখুন।</p>
+<p>এই বইয়ের বাকি অংশে এমন কমান্ড ব্যবহার করা হয়েছে যা <em>cmd.exe</em> এবং PowerShell উভয় ক্ষেত্রেই কাজ করে। যদি কোনো নির্দিষ্ট পার্থক্য থাকে, আমরা ব্যাখ্যা করব কোনটি ব্যবহার করতে হবে।</p>
+<h3 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h3>
+<p>আপনার রাস্ট সঠিকভাবে ইনস্টল হয়েছে কিনা তা পরীক্ষা করতে, একটি শেল খুলুন এবং এই লাইনটি প্রবেশ করান:</p>
+<pre><code class="language-console">$ rustc --version
+</code></pre>
+<p>আপনার সর্বশেষ প্রকাশিত স্টেবল ভার্সনের ভার্সন নম্বর, কমিট হ্যাশ এবং কমিট তারিখ নিম্নলিখিত ফরম্যাটে দেখতে পাওয়া উচিত:</p>
+<pre><code class="language-text">rustc x.y.z (abcabcabc yyyy-mm-dd)
+</code></pre>
+<p>আপনি যদি এই তথ্য দেখতে পান, তাহলে আপনি সফলভাবে রাস্ট ইনস্টল করেছেন! যদি আপনি এই তথ্য দেখতে না পান, তাহলে রাস্ট আপনার <code>%PATH%</code> সিস্টেম ভেরিয়েবলে আছে কিনা তা নিম্নরূপ পরীক্ষা করুন।</p>
+<p>Windows CMD-তে, ব্যবহার করুন:</p>
+<pre><code class="language-console">&gt; echo %PATH%
+</code></pre>
+<p>PowerShell-এ, ব্যবহার করুন:</p>
+<pre><code class="language-powershell">&gt; echo $env:Path
+</code></pre>
+<p>Linux এবং macOS-এ, ব্যবহার করুন:</p>
+<pre><code class="language-console">$ echo $PATH
+</code></pre>
+<p>যদি সবকিছু ঠিক থাকে এবং রাস্ট এখনও কাজ না করে, তবে সাহায্য পাওয়ার জন্য বেশ কয়েকটি জায়গা আছে। অন্যান্য রাস্টেশিয়ানদের (একটি মজার ডাকনাম যা আমরা নিজেদেরকে বলি) সাথে কীভাবে যোগাযোগ করবেন তা জানতে <a href="https://www.rust-lang.org/community">কমিউনিটি পেজ</a> দেখুন।</p>
+<h3 id="আপডেট-এবং-আনইনসটল-করা"><a class="header" href="#আপডেট-এবং-আনইনসটল-করা">আপডেট এবং আনইনস্টল করা</a></h3>
+<p>একবার <code>rustup</code> এর মাধ্যমে রাস্ট ইনস্টল হয়ে গেলে, নতুন প্রকাশিত ভার্সনে আপডেট করা সহজ। আপনার শেল থেকে, নিম্নলিখিত আপডেট স্ক্রিপ্টটি চালান:</p>
+<pre><code class="language-console">$ rustup update
+</code></pre>
+<p>রাস্ট এবং <code>rustup</code> আনইনস্টল করতে, আপনার শেল থেকে নিম্নলিখিত আনইনস্টল স্ক্রিপ্টটি চালান:</p>
+<pre><code class="language-console">$ rustup self uninstall
+</code></pre>
+<h3 id="লোকাল-ডকুমেনটেশন"><a class="header" href="#লোকাল-ডকুমেনটেশন">লোকাল ডকুমেন্টেশন</a></h3>
+<p>রাস্ট ইনস্টলেশনের সাথে ডকুমেন্টেশনের একটি লোকাল কপিও অন্তর্ভুক্ত থাকে যাতে আপনি এটি অফলাইনে পড়তে পারেন। আপনার ব্রাউজারে লোকাল ডকুমেন্টেশন খুলতে <code>rustup doc</code> চালান।</p>
+<p>যখনই স্ট্যান্ডার্ড লাইব্রেরি দ্বারা কোনো টাইপ বা ফাংশন সরবরাহ করা হয় এবং আপনি নিশ্চিত নন যে এটি কী করে বা কীভাবে এটি ব্যবহার করতে হয়, তখন তা জানতে অ্যাপ্লিকেশন প্রোগ্রামিং ইন্টারফেস (API) ডকুমেন্টেশন ব্যবহার করুন!</p>
+<h3 id="টেকসট-এডিটর-এবং-ইনটিগরেটেড-ডেভেলপমেনট-এনভাযরনমেনট"><a class="header" href="#টেকসট-এডিটর-এবং-ইনটিগরেটেড-ডেভেলপমেনট-এনভাযরনমেনট">টেক্সট এডিটর এবং ইন্টিগ্রেটেড ডেভেলপমেন্ট এনভায়রনমেন্ট</a></h3>
+<p>এই বইটি আপনি রাস্ট কোড লেখার জন্য কোন টুল ব্যবহার করেন সে সম্পর্কে কোনো অনুমান করে না। প্রায় যেকোনো text editor দিয়েই কাজ চালানো যাবে! তবে, অনেক text editor এবং ইন্টিগ্রেটেড ডেভেলপমেন্ট এনভায়রনমেন্ট (IDE)-এর রাস্টের জন্য বিল্ট-ইন সাপোর্ট রয়েছে। আপনি সবসময় রাস্ট ওয়েবসাইটের <a href="https://www.rust-lang.org/tools">টুলস পেজে</a> অনেক এডিটর এবং IDE-এর একটি মোটামুটি আপ-টু-ডেট তালিকা খুঁজে পেতে পারেন।</p>
+<h3 id="এই-বইটির-সাথে-অফলাইনে-কাজ-করা"><a class="header" href="#এই-বইটির-সাথে-অফলাইনে-কাজ-করা">এই বইটির সাথে অফলাইনে কাজ করা</a></h3>
+<p>বেশ কিছু উদাহরণে, আমরা স্ট্যান্ডার্ড লাইব্রেরির বাইরের রাস্ট প্যাকেজ ব্যবহার করব। সেই উদাহরণগুলো নিয়ে কাজ করার জন্য, আপনার হয় একটি ইন্টারনেট সংযোগ প্রয়োজন হবে অথবা সেই dependency-গুলো আগে থেকে ডাউনলোড করে রাখতে হবে। Dependency-গুলো আগে থেকে ডাউনলোড করতে, আপনি নিম্নলিখিত কমান্ডগুলো চালাতে পারেন। (আমরা <code>cargo</code> কী এবং এই প্রতিটি কমান্ড কী করে তা পরে বিস্তারিতভাবে ব্যাখ্যা করব।)</p>
+<pre><code class="language-console">$ cargo new get-dependencies
+$ cd get-dependencies
+$ cargo add rand@0.8.5 trpl@0.2.0
+</code></pre>
+<p>এটি এই প্যাকেজগুলোর ডাউনলোড cache করবে যাতে আপনাকে পরে সেগুলো ডাউনলোড করতে না হয়। একবার আপনি এই কমান্ডটি চালালে, <code>get-dependencies</code> ফোল্ডারটি রাখার দরকার নেই। আপনি যদি এই কমান্ডটি চালিয়ে থাকেন, তাহলে বইয়ের বাকি অংশে সমস্ত <code>cargo</code> কমান্ডের সাথে <code>--offline</code> ফ্ল্যাগ ব্যবহার করে নেটওয়ার্ক ব্যবহার করার চেষ্টার পরিবর্তে এই cache করা ভার্সনগুলো ব্যবহার করতে পারবেন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-00-getting-started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch01-02-hello-world.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-00-getting-started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch01-02-hello-world.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

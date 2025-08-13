@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>use কীওয়ার্ড দিয়ে স্কোপে পাথ নিয়ে আসা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="use-কীওযারড-বযবহার-করে-সকোপে-পাথ-নিযে-আসা"><a class="header" href="#use-কীওযারড-বযবহার-করে-সকোপে-পাথ-নিযে-আসা"><code>use</code> কীওয়ার্ড ব্যবহার করে স্কোপে পাথ নিয়ে আসা</a></h2>
+<p>ফাংশন কল করার জন্য বারবার পুরো পাথ লেখাটা বেশ অসুবিধাজনক এবং পুনরাবৃত্তিমূলক মনে হতে পারে। Listing 7-7-এ, আমরা <code>add_to_waitlist</code> ফাংশনের জন্য অ্যাবসোলিউট বা রিলেটিভ পাথ যাই বেছে নিই না কেন, প্রতিবার <code>add_to_waitlist</code> কল করার সময় আমাদের <code>front_of_house</code> এবং <code>hosting</code>-ও নির্দিষ্ট করতে হয়েছিল। সৌভাগ্যবশত, এই প্রক্রিয়াটি সহজ করার একটি উপায় আছে: আমরা <code>use</code> কীওয়ার্ড দিয়ে একবার একটি পাথের শর্টকাট তৈরি করে নিতে পারি এবং তারপর স্কোপের অন্য সব জায়গায় ছোট নামটি ব্যবহার করতে পারি।</p>
+<p>Listing 7-11-এ, আমরা <code>crate::front_of_house::hosting</code> মডিউলটিকে <code>eat_at_restaurant</code> ফাংশনের স্কোপে নিয়ে এসেছি, তাই <code>eat_at_restaurant</code>-এর মধ্যে <code>add_to_waitlist</code> ফাংশনটি কল করার জন্য আমাদের কেবল <code>hosting::add_to_waitlist</code> নির্দিষ্ট করতে হবে।</p>
+<Listing number="7-11" file-name="src/lib.rs" caption="`use` ব্যবহার করে একটি মডিউলকে স্কোপের মধ্যে আনা">
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}</code></pre>
+</Listing>
+<p>একটি স্কোপে <code>use</code> এবং একটি পাথ যোগ করা ফাইলসিস্টেমে একটি সিম্বলিক লিঙ্ক তৈরি করার মতো। ক্রেট রুটে <code>use crate::front_of_house::hosting</code> যোগ করার মাধ্যমে, <code>hosting</code> এখন সেই স্কোপে একটি বৈধ নাম, ঠিক যেন <code>hosting</code> মডিউলটি ক্রেট রুটেই ডিফাইন করা হয়েছিল। <code>use</code> দিয়ে স্কোপে আনা পাথগুলোও অন্য যেকোনো পাথের মতোই প্রাইভেসি পরীক্ষা করে।</p>
+<p>মনে রাখবেন যে <code>use</code> শুধুমাত্র সেই নির্দিষ্ট স্কোপের জন্য শর্টকাট তৈরি করে যেখানে <code>use</code> ব্যবহার করা হয়েছে। Listing 7-12-এ <code>eat_at_restaurant</code> ফাংশনটিকে <code>customer</code> নামের একটি নতুন চাইল্ড মডিউলে সরানো হয়েছে, যা <code>use</code> স্টেটমেন্টের থেকে ভিন্ন একটি স্কোপ, তাই ফাংশনের বডি কম্পাইল হবে না।</p>
+<Listing number="7-12" file-name="src/lib.rs" caption="একটি `use` স্টেটমেন্ট শুধুমাত্র যে স্কোপে থাকে সেখানেই প্রযোজ্য হয়।">
+<pre><code class="language-rust noplayground test_harness does_not_compile ignore">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+mod customer {
+    pub fn eat_at_restaurant() {
+        hosting::add_to_waitlist();
+    }
+}</code></pre>
+</Listing>
+<p>কম্পাইলার এরর দেখায় যে শর্টকাটটি আর <code>customer</code> মডিউলের মধ্যে প্রযোজ্য নয়:</p>
+<pre><code class="language-console">$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0433]: failed to resolve: use of undeclared crate or module `hosting`
+  --&gt; src/lib.rs:11:9
+   |
+11 |         hosting::add_to_waitlist();
+   |         ^^^^^^^ use of undeclared crate or module `hosting`
+   |
+help: consider importing this module through its public re-export
+   |
+10 +     use crate::hosting;
+   |
+
+warning: unused import: `crate::front_of_house::hosting`
+ --&gt; src/lib.rs:7:5
+  |
+7 | use crate::front_of_house::hosting;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+For more information about this error, try `rustc --explain E0433`.
+warning: `restaurant` (lib) generated 1 warning
+error: could not compile `restaurant` (lib) due to 1 previous error; 1 warning emitted
+</code></pre>
+<p>লক্ষ্য করুন, একটি ওয়ার্নিংও রয়েছে যে <code>use</code> তার স্কোপে আর ব্যবহৃত হচ্ছে না! এই সমস্যাটি সমাধান করার জন্য, <code>use</code>-কে <code>customer</code> মডিউলের ভিতরেও সরিয়ে নিন, অথবা চাইল্ড <code>customer</code> মডিউলের মধ্যে প্যারেন্ট মডিউলের শর্টকাটটিকে <code>super::hosting</code> দিয়ে রেফারেন্স করুন।</p>
+<h3 id="পরচলিত-use-পাথ-তৈরি-করা"><a class="header" href="#পরচলিত-use-পাথ-তৈরি-করা">প্রচলিত <code>use</code> পাথ তৈরি করা</a></h3>
+<p>Listing 7-11-এ, আপনি হয়তো ভেবেছিলেন কেন আমরা <code>use crate::front_of_house::hosting</code> নির্দিষ্ট করেছি এবং তারপর <code>eat_at_restaurant</code>-এ <code>hosting::add_to_waitlist</code> কল করেছি, যেখানে আমরা <code>use</code> পাথটিকে <code>add_to_waitlist</code> ফাংশন পর্যন্ত প্রসারিত করে একই ফলাফল অর্জন করতে পারতাম, যেমনটি Listing 7-13-এ দেখানো হয়েছে।</p>
+<Listing number="7-13" file-name="src/lib.rs" caption="`use` দিয়ে `add_to_waitlist` ফাংশনটিকে স্কোপে আনা, যা প্রচলিত নয়">
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}</code></pre>
+</Listing>
+<p>যদিও Listing 7-11 এবং Listing 7-13 উভয়ই একই কাজ সম্পন্ন করে, <code>use</code> দিয়ে একটি ফাংশনকে স্কোপে আনার প্রচলিত (idiomatic) উপায় হলো Listing 7-11। <code>use</code> দিয়ে ফাংশনের প্যারেন্ট মডিউলকে স্কোপে আনার মানে হলো ফাংশনটি কল করার সময় আমাদের প্যারেন্ট মডিউলটি নির্দিষ্ট করতে হবে। ফাংশন কল করার সময় প্যারেন্ট মডিউল নির্দিষ্ট করা এটা স্পষ্ট করে যে ফাংশনটি স্থানীয়ভাবে ডিফাইন করা হয়নি, এবং একই সাথে সম্পূর্ণ পাথের পুনরাবৃত্তিও কমায়। Listing 7-13-এর কোডটি অস্পষ্ট কারণ <code>add_to_waitlist</code> কোথায় ডিফাইন করা হয়েছে তা বোঝা যায় না।</p>
+<p>অন্যদিকে, <code>use</code> দিয়ে struct, enum এবং অন্যান্য আইটেম আনার সময়, সম্পূর্ণ পাথ নির্দিষ্ট করাই প্রচলিত রীতি। Listing 7-14 স্ট্যান্ডার্ড লাইব্রেরির <code>HashMap</code> struct-কে একটি বাইনারি ক্রেটের স্কোপে আনার প্রচলিত উপায় দেখায়।</p>
+<Listing number="7-14" file-name="src/main.rs" caption="প্রচলিত উপায়ে `HashMap`-কে স্কোপে আনা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::collections::HashMap;
+
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}</code></pre></pre>
+</Listing>
+<p>এই রীতির পিছনে কোনো শক্তিশালী কারণ নেই: এটি কেবল একটি কনভেনশন যা সময়ের সাথে তৈরি হয়েছে, এবং লোকেরা এইভাবেই রাস্ট কোড পড়তে এবং লিখতে অভ্যস্ত হয়ে গেছে।</p>
+<p>এই রীতির ব্যতিক্রম হলো যদি আমরা <code>use</code> স্টেটমেন্ট ব্যবহার করে একই নামের দুটি আইটেমকে স্কোপে নিয়ে আসি, কারণ রাস্ট এটির অনুমতি দেয় না। Listing 7-15 দেখায় কিভাবে একই নামের কিন্তু ভিন্ন প্যারেন্ট মডিউলের দুটি <code>Result</code> টাইপকে স্কোপে আনা যায় এবং কীভাবে তাদের রেফার করতে হয়।</p>
+<Listing number="7-15" file-name="src/lib.rs" caption="একই নামের দুটি টাইপকে একই স্কোপে আনতে হলে তাদের প্যারেন্ট মডিউল ব্যবহার করতে হবে।">
+<pre><code class="language-rust noplayground">use std::fmt;
+use std::io;
+
+fn function1() -&gt; fmt::Result {
+    // --snip--
+<span class="boring">    Ok(())
+</span>}
+
+fn function2() -&gt; io::Result&lt;()&gt; {
+    // --snip--
+<span class="boring">    Ok(())
+</span>}</code></pre>
+</Listing>
+<p>আপনি দেখতে পাচ্ছেন, প্যারেন্ট মডিউল ব্যবহার করে দুটি <code>Result</code> টাইপকে আলাদা করা হয়েছে। যদি আমরা <code>use std::fmt::Result</code> এবং <code>use std::io::Result</code> নির্দিষ্ট করতাম, তাহলে আমাদের একই স্কোপে দুটি <code>Result</code> টাইপ থাকত, এবং যখন আমরা <code>Result</code> ব্যবহার করতাম, রাস্ট জানত না আমরা কোনটি বোঝাতে চাইছি।</p>
+<h3 id="as-কীওযারড-দিযে-নতুন-নাম-পরদান-করা"><a class="header" href="#as-কীওযারড-দিযে-নতুন-নাম-পরদান-করা"><code>as</code> কীওয়ার্ড দিয়ে নতুন নাম প্রদান করা</a></h3>
+<p><code>use</code> দিয়ে একই নামের দুটি টাইপকে একই স্কোপে আনার সমস্যার আরেকটি সমাধান আছে: পাথের পরে, আমরা <code>as</code> এবং টাইপের জন্য একটি নতুন স্থানীয় নাম বা <em>alias</em> নির্দিষ্ট করতে পারি। Listing 7-16-এ, Listing 7-15-এর কোডটি লেখার আরেকটি উপায় দেখানো হয়েছে, যেখানে <code>as</code> ব্যবহার করে দুটি <code>Result</code> টাইপের মধ্যে একটির নাম পরিবর্তন করা হয়েছে।</p>
+<Listing number="7-16" file-name="src/lib.rs" caption="`as` কীওয়ার্ড দিয়ে স্কোপে আনার সময় একটি টাইপের নাম পরিবর্তন করা">
+<pre><code class="language-rust noplayground">use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -&gt; Result {
+    // --snip--
+<span class="boring">    Ok(())
+</span>}
+
+fn function2() -&gt; IoResult&lt;()&gt; {
+    // --snip--
+<span class="boring">    Ok(())
+</span>}</code></pre>
+</Listing>
+<p>দ্বিতীয় <code>use</code> স্টেটমেন্টে, আমরা <code>std::io::Result</code> টাইপের জন্য নতুন নাম <code>IoResult</code> বেছে নিয়েছি, যা <code>std::fmt</code> থেকে আনা <code>Result</code>-এর সাথে冲突 করবে না, যেটিও আমরা স্কোপে নিয়ে এসেছি। Listing 7-15 এবং Listing 7-16 উভয়ই প্রচলিত হিসাবে বিবেচিত হয়, তাই পছন্দ আপনার!</p>
+<h3 id="pub-use-দিযে-নাম-পুনরায-একসপোরট-করা"><a class="header" href="#pub-use-দিযে-নাম-পুনরায-একসপোরট-করা"><code>pub use</code> দিয়ে নাম পুনরায়-এক্সপোর্ট করা</a></h3>
+<p>যখন আমরা <code>use</code> কীওয়ার্ড দিয়ে একটি নামকে স্কোপে নিয়ে আসি, তখন নামটি সেই স্কোপের জন্য প্রাইভেট থাকে যেখানে আমরা এটি ইম্পোর্ট করেছি। সেই স্কোপের বাইরের কোডকে সেই নামটি এমনভাবে রেফার করতে সক্ষম করার জন্য যেন এটি সেই স্কোপেই ডিফাইন করা হয়েছিল, আমরা <code>pub</code> এবং <code>use</code> একত্রিত করতে পারি। এই কৌশলটিকে <em>রি-এক্সপোর্টিং</em> (re-exporting) বলা হয় কারণ আমরা একটি আইটেমকে স্কোপে নিয়ে আসছি এবং একই সাথে সেই আইটেমটিকে অন্যদের তাদের স্কোপে আনার জন্য উপলব্ধ করে দিচ্ছি।</p>
+<p>Listing 7-17-এ Listing 7-11-এর কোডটি দেখানো হয়েছে যেখানে রুট মডিউলের <code>use</code>-কে <code>pub use</code>-এ পরিবর্তন করা হয়েছে।</p>
+<Listing number="7-17" file-name="src/lib.rs" caption="`pub use` দিয়ে একটি নামকে যেকোনো কোডের ব্যবহারের জন্য নতুন স্কোপ থেকে উপলব্ধ করা">
+<pre><code class="language-rust noplayground test_harness">mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}</code></pre>
+</Listing>
+<p>এই পরিবর্তনের আগে, এক্সটার্নাল কোডকে <code>restaurant::front_of_house::hosting::add_to_waitlist()</code> পাথ ব্যবহার করে <code>add_to_waitlist</code> ফাংশনটি কল করতে হতো, যার জন্য <code>front_of_house</code> মডিউলটিকেও <code>pub</code> হিসাবে চিহ্নিত করার প্রয়োজন হতো। এখন যেহেতু এই <code>pub use</code> রুট মডিউল থেকে <code>hosting</code> মডিউলটিকে রি-এক্সপোর্ট করেছে, এক্সটার্নাল কোড এর পরিবর্তে <code>restaurant::hosting::add_to_waitlist()</code> পাথ ব্যবহার করতে পারে।</p>
+<p>রি-এক্সপোর্টিং তখন উপযোগী যখন আপনার কোডের অভ্যন্তরীণ কাঠামো এবং আপনার কোড কল করা প্রোগ্রামাররা ডোমেইন সম্পর্কে যেভাবে চিন্তা করেন, তা ভিন্ন হয়। উদাহরণস্বরূপ, এই রেস্তোরাঁর রূপকে, রেস্তোরাঁ পরিচালনাকারী ব্যক্তিরা “ফ্রন্ট অফ হাউস” এবং “ব্যাক অফ হাউস” নিয়ে ভাবেন। কিন্তু রেস্তোরাঁয় আসা গ্রাহকরা সম্ভবত রেস্তোরাঁর অংশগুলো সম্পর্কে সেই পরিভাষায় ভাববেন না। <code>pub use</code>-এর মাধ্যমে, আমরা আমাদের কোড একটি কাঠামোতে লিখতে পারি কিন্তু একটি ভিন্ন কাঠামো এক্সপোজ করতে পারি। এটি করলে আমাদের লাইব্রেরিটি লাইব্রেরিতে কাজ করা প্রোগ্রামারদের জন্য এবং লাইব্রেরি কল করা প্রোগ্রামারদের জন্য সুসংগঠিত হয়। আমরা <code>pub use</code>-এর আরেকটি উদাহরণ এবং এটি কীভাবে আপনার ক্রেটের ডকুমেন্টেশনকে প্রভাবিত করে তা অধ্যায় ১৪-এর <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api-with-pub-use">“<code>pub use</code> দিয়ে একটি সুবিধাজনক পাবলিক API এক্সপোর্ট করা”</a><!-- ignore --> বিভাগে দেখব।</p>
+<h3 id="একসটারনাল-পযাকেজ-বযবহার-করা"><a class="header" href="#একসটারনাল-পযাকেজ-বযবহার-করা">এক্সটার্নাল প্যাকেজ ব্যবহার করা</a></h3>
+<p>দ্বিতীয় অধ্যায়ে, আমরা একটি গেসিং গেম প্রজেক্ট প্রোগ্রাম করেছিলাম যা র‍্যান্ডম নম্বর পেতে <code>rand</code> নামের একটি এক্সটার্নাল প্যাকেজ ব্যবহার করেছিল। আমাদের প্রজেক্টে <code>rand</code> ব্যবহার করার জন্য, আমরা <em>Cargo.toml</em>-এ এই লাইনটি যোগ করেছিলাম:</p>
+<!-- When updating the version of `rand` used, also update the version of
+`rand` used in these files so they all match:
+* ch02-00-guessing-game-tutorial.md
+* ch14-03-cargo-workspaces.md
+-->
+<Listing file-name="Cargo.toml">
+<pre><code class="language-toml">rand = "0.8.5"
+</code></pre>
+</Listing>
+<p><em>Cargo.toml</em>-এ <code>rand</code>-কে একটি ডিপেন্ডেন্সি হিসাবে যোগ করা কার্গোকে <a href="https://crates.io/">crates.io</a> থেকে <code>rand</code> প্যাকেজ এবং এর যেকোনো ডিপেন্ডেন্সি ডাউনলোড করতে এবং <code>rand</code> আমাদের প্রজেক্টের জন্য উপলব্ধ করতে বলে।</p>
+<p>তারপর, <code>rand</code> ডেফিনিশনগুলোকে আমাদের প্যাকেজের স্কোপে আনতে, আমরা ক্রেটের নাম, <code>rand</code> দিয়ে শুরু হওয়া একটি <code>use</code> লাইন যোগ করেছিলাম এবং যে আইটেমগুলো আমরা স্কোপে আনতে চেয়েছিলাম তা তালিকাভুক্ত করেছিলাম। মনে করুন যে দ্বিতীয় অধ্যায়ের <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">“একটি র‍্যান্ডম নম্বর জেনারেট করা”</a><!-- ignore --> অংশে, আমরা <code>Rng</code> ট্রেইটটিকে স্কোপে নিয়ে এসেছিলাম এবং <code>rand::thread_rng</code> ফাংশনটি কল করেছিলাম:</p>
+<pre><code class="language-rust ignore"><span class="boring">use std::io;
+</span><span class="boring">
+</span>use rand::Rng;
+
+fn main() {
+<span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span>    let secret_number = rand::thread_rng().gen_range(1..=100);
+<span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span>}</code></pre>
+<p>রাস্ট কমিউনিটির সদস্যরা <a href="https://crates.io/">crates.io</a>-তে অনেক প্যাকেজ উপলব্ধ করেছেন, এবং সেগুলোর যেকোনো একটিকে আপনার প্যাকেজে অন্তর্ভুক্ত করার জন্য এই একই পদক্ষেপগুলো অনুসরণ করতে হয়: সেগুলোকে আপনার প্যাকেজের <em>Cargo.toml</em> ফাইলে তালিকাভুক্ত করা এবং <code>use</code> ব্যবহার করে তাদের ক্রেট থেকে আইটেমগুলোকে স্কোপে আনা।</p>
+<p>মনে রাখবেন যে স্ট্যান্ডার্ড <code>std</code> লাইব্রেরিও একটি ক্রেট যা আমাদের প্যাকেজের জন্য এক্সটার্নাল। যেহেতু স্ট্যান্ডার্ড লাইব্রেরিটি রাস্ট ভাষার সাথে সরবরাহ করা হয়, তাই <code>std</code>-কে অন্তর্ভুক্ত করার জন্য আমাদের <em>Cargo.toml</em> পরিবর্তন করার প্রয়োজন নেই। কিন্তু সেখান থেকে আইটেমগুলোকে আমাদের প্যাকেজের স্কোপে আনতে আমাদের <code>use</code> দিয়ে এটিকে রেফার করতে হবে। উদাহরণস্বরূপ, <code>HashMap</code>-এর জন্য আমরা এই লাইনটি ব্যবহার করব:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::collections::HashMap;
+<span class="boring">}</span></code></pre></pre>
+<p>এটি একটি অ্যাবসোলিউট পাথ যা <code>std</code> দিয়ে শুরু হয়, যা স্ট্যান্ডার্ড লাইব্রেরি ক্রেটের নাম।</p>
+<h3 id="বড়-use-তালিকা-পরিষকার-করতে-নেসটেড-পাথ-বযবহার-করা"><a class="header" href="#বড়-use-তালিকা-পরিষকার-করতে-নেসটেড-পাথ-বযবহার-করা">বড় <code>use</code> তালিকা পরিষ্কার করতে নেস্টেড পাথ ব্যবহার করা</a></h3>
+<p>যদি আমরা একই ক্রেট বা একই মডিউলে ডিফাইন করা একাধিক আইটেম ব্যবহার করি, তবে প্রতিটি আইটেমকে তার নিজস্ব লাইনে তালিকাভুক্ত করলে আমাদের ফাইলগুলিতে অনেক উল্লম্ব স্থান (vertical space) নষ্ট হতে পারে। উদাহরণস্বরূপ, Listing 2-4-এর গেসিং গেমে আমাদের এই দুটি <code>use</code> স্টেটমেন্ট <code>std</code> থেকে আইটেমগুলোকে স্কোপে এনেছিল:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span>// --snip--
+use std::cmp::Ordering;
+use std::io;
+// --snip--
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">    match guess.cmp(&amp;secret_number) {
+</span><span class="boring">        Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">        Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এর পরিবর্তে, আমরা একই আইটেমগুলোকে এক লাইনে স্কোপে আনতে নেস্টেড পাথ ব্যবহার করতে পারি। আমরা এটি করি পাথের সাধারণ অংশ নির্দিষ্ট করে, তারপরে দুটি কোলন, এবং তারপর কোঁকড়া বন্ধনীর (curly brackets) মধ্যে পাথের বিভিন্ন অংশগুলির একটি তালিকা দিয়ে, যেমনটি Listing 7-18-এ দেখানো হয়েছে।</p>
+<Listing number="7-18" file-name="src/main.rs" caption="একই উপসর্গযুক্ত একাধিক আইটেমকে স্কোপে আনার জন্য একটি নেস্টেড পাথ নির্দিষ্ট করা">
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span>// --snip--
+use std::{cmp::Ordering, io};
+// --snip--
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span><span class="boring">    println!("The secret number is: {secret_number}");
+</span><span class="boring">
+</span><span class="boring">    println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">    let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">    io::stdin()
+</span><span class="boring">        .read_line(&amp;mut guess)
+</span><span class="boring">        .expect("Failed to read line");
+</span><span class="boring">
+</span><span class="boring">    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+</span><span class="boring">
+</span><span class="boring">    println!("You guessed: {guess}");
+</span><span class="boring">
+</span><span class="boring">    match guess.cmp(&amp;secret_number) {
+</span><span class="boring">        Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">        Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
+</span><span class="boring">    }
+</span><span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+বড় প্রোগ্রামগুলিতে, নেস্টেড পাথ ব্যবহার করে একই ক্রেট বা মডিউল থেকে অনেক আইটেম স্কোপে আনা পৃথক `use` স্টেটমেন্টের সংখ্যা অনেক কমাতে পারে!
+
+আমরা একটি পাথের যেকোনো স্তরে একটি নেস্টেড পাথ ব্যবহার করতে পারি, যা দুটি `use` স্টেটমেন্টকে একত্রিত করার সময় উপযোগী হয় যেগুলোর একটি সাবপাথ শেয়ার করা থাকে। উদাহরণস্বরূপ, Listing 7-19 দুটি `use` স্টেটমেন্ট দেখায়: একটি যা `std::io`-কে স্কোপে নিয়ে আসে এবং আরেকটি যা `std::io::Write`-কে স্কোপে নিয়ে আসে।
+
+&lt;Listing number="7-19" file-name="src/lib.rs" caption="দুটি `use` স্টেটমেন্ট যেখানে একটি অন্যটির সাবপাথ"&gt;
+
+```rust,noplayground
+use std::io;
+use std::io::Write;</code></pre>
+</Listing>
+<p>এই দুটি পাথের সাধারণ অংশ হলো <code>std::io</code>, এবং এটিই প্রথম সম্পূর্ণ পাথ। এই দুটি পাথকে একটি <code>use</code> স্টেটমেন্টে একত্রিত করতে, আমরা নেস্টেড পাথে <code>self</code> ব্যবহার করতে পারি, যেমনটি Listing 7-20-এ দেখানো হয়েছে।</p>
+<Listing number="7-20" file-name="src/lib.rs" caption="Listing 7-19-এর পাথগুলোকে একটি `use` স্টেটমেন্টে একত্রিত করা">
+<pre><code class="language-rust noplayground">use std::io::{self, Write};</code></pre>
+</Listing>
+<p>এই লাইনটি <code>std::io</code> এবং <code>std::io::Write</code>-কে স্কোপে নিয়ে আসে।</p>
+<h3 id="গলোব-অপারেটর"><a class="header" href="#গলোব-অপারেটর">গ্লোব অপারেটর</a></h3>
+<p>যদি আমরা একটি পাথে ডিফাইন করা <em>সমস্ত</em> পাবলিক আইটেমকে স্কোপে আনতে চাই, আমরা সেই পাথ এবং তারপরে <code>*</code> গ্লোব অপারেটরটি নির্দিষ্ট করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::collections::*;
+<span class="boring">}</span></code></pre></pre>
+<p>এই <code>use</code> স্টেটমেন্টটি <code>std::collections</code>-এ ডিফাইন করা সমস্ত পাবলিক আইটেমকে বর্তমান স্কোপে নিয়ে আসে। গ্লোব অপারেটর ব্যবহার করার সময় সতর্ক থাকুন! গ্লোব ব্যবহার করলে কোন নামগুলো স্কোপে আছে এবং আপনার প্রোগ্রামে ব্যবহৃত একটি নাম কোথা থেকে ডিফাইন করা হয়েছে তা বোঝা কঠিন হয়ে যেতে পারে। উপরন্তু, যদি ডিপেন্ডেন্সি তার ডেফিনিশন পরিবর্তন করে, তাহলে আপনি যা ইম্পোর্ট করেছেন তাও পরিবর্তিত হবে, যা ডিপেন্ডেন্সি আপগ্রেড করার সময় কম্পাইলার এররের কারণ হতে পারে, যদি ডিপেন্ডেন্সি আপনার একই স্কোপের কোনো ডেফিনিশনের মতো একই নামের একটি ডেফিনিশন যোগ করে, উদাহরণস্বরূপ।</p>
+<p>গ্লোব অপারেটরটি প্রায়শই টেস্টিংয়ের সময় <code>tests</code> মডিউলের মধ্যে পরীক্ষার অধীনে থাকা সমস্ত কিছু আনতে ব্যবহৃত হয়; আমরা এটি সম্পর্কে অধ্যায় ১১-এর <a href="ch11-01-writing-tests.html#how-to-write-tests">“কিভাবে টেস্ট লিখতে হয়”</a><!-- ignore --> অংশে কথা বলব। গ্লোব অপারেটরটি কখনও কখনও প্রিলিউড প্যাটার্নের অংশ হিসাবেও ব্যবহৃত হয়: সেই প্যাটার্ন সম্পর্কে আরও তথ্যের জন্য <a href="../std/prelude/index.html#other-preludes">স্ট্যান্ডার্ড লাইব্রেরির ডকুমেন্টেশন</a><!-- ignore --> দেখুন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch07-05-separating-modules-into-different-files.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch07-05-separating-modules-into-different-files.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

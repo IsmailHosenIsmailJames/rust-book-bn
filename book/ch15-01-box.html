@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>হিপের ডেটাতে পয়েন্ট করতে Box&lt;T&gt; ব্যবহার - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="heap-এ-ডেটা-point-করার-জনয-boxt-এর-বযবহার"><a class="header" href="#heap-এ-ডেটা-point-করার-জনয-boxt-এর-বযবহার">Heap-এ ডেটা Point করার জন্য <code>Box&lt;T&gt;</code>-এর ব্যবহার</a></h2>
+<p>সবচেয়ে সহজ smart pointer হলো box, যার টাইপ লেখা হয় <code>Box&lt;T&gt;</code>। <em>Boxes</em> আপনাকে স্ট্যাকের (stack) পরিবর্তে হিপ-এ (heap) ডেটা সংরক্ষণ করার সুযোগ দেয়। যা স্ট্যাকে অবশিষ্ট থাকে তা হলো হিপ ডেটার একটি pointer। স্ট্যাক এবং হিপের মধ্যে পার্থক্য পর্যালোচনা করতে Chapter 4 দেখুন।</p>
+<p>Box-এর ডেটা স্ট্যাকের পরিবর্তে হিপে সংরক্ষণ করা ছাড়া আর কোনো পারফরম্যান্স ওভারহেড নেই। তবে এদের খুব বেশি অতিরিক্ত ক্ষমতাও নেই। আপনি বেশিরভাগ সময়ে এই পরিস্থিতিগুলিতে এগুলি ব্যবহার করবেন:</p>
+<ul>
+<li>যখন আপনার কাছে এমন একটি টাইপ থাকে যার সাইজ কম্পাইল টাইমে জানা যায় না এবং আপনি সেই টাইপের একটি ভ্যালু এমন একটি কনটেক্সট-এ ব্যবহার করতে চান যেখানে একটি নির্দিষ্ট সাইজের প্রয়োজন হয়।</li>
+<li>যখন আপনার কাছে প্রচুর পরিমাণে ডেটা থাকে এবং আপনি ownership হস্তান্তর করতে চান কিন্তু নিশ্চিত করতে চান যে ডেটা কপি হবে না।</li>
+<li>যখন আপনি একটি ভ্যালুর owner হতে চান এবং আপনি শুধু চান যে এটি একটি নির্দিষ্ট ট্রেইট (trait) ইমপ্লিমেন্ট করে, কোনো নির্দিষ্ট টাইপের না হয়ে।</li>
+</ul>
+<p>আমরা প্রথম পরিস্থিতিটি দেখাব <a href="#enabling-recursive-types-with-boxes">"Recursive Types with Boxes"</a> অংশে। দ্বিতীয় ক্ষেত্রে, বিপুল পরিমাণ ডেটার ownership হস্তান্তর করতে অনেক সময় লাগতে পারে কারণ ডেটা স্ট্যাকের উপর কপি করা হয়। এই পরিস্থিতিতে পারফরম্যান্স উন্নত করতে, আমরা বিপুল পরিমাণ ডেটা একটি box-এ করে হিপ-এ সংরক্ষণ করতে পারি। তারপরে, শুধুমাত্র অল্প পরিমাণ pointer ডেটা স্ট্যাকের উপর কপি করা হয়, যখন এটি যে ডেটাকে নির্দেশ করে তা হিপের এক জায়গায় থাকে। তৃতীয় ক্ষেত্রটি একটি <em>trait object</em> হিসাবে পরিচিত, এবং Chapter 18-এর ["Using Trait Objects That Allow for Values of Different Types,"][trait-objects] অংশটি এই বিষয়ে উৎসর্গীকৃত। সুতরাং আপনি এখানে যা শিখবেন তা সেই অংশে আবার প্রয়োগ করবেন!</p>
+<h3 id="heap-এ-ডেটা-সংরকষণের-জনয-boxt-বযবহার-করা"><a class="header" href="#heap-এ-ডেটা-সংরকষণের-জনয-boxt-বযবহার-করা">Heap-এ ডেটা সংরক্ষণের জন্য <code>Box&lt;T&gt;</code> ব্যবহার করা</a></h3>
+<p><code>Box&lt;T&gt;</code>-এর হিপ স্টোরেজ ব্যবহার নিয়ে আলোচনা করার আগে, আমরা এর সিনট্যাক্স এবং <code>Box&lt;T&gt;</code>-এর মধ্যে সংরক্ষিত ভ্যালুগুলোর সাথে কীভাবে ইন্টারঅ্যাক্ট করতে হয় তা দেখব।</p>
+<p>Listing 15-1 দেখাচ্ছে কীভাবে একটি box ব্যবহার করে একটি <code>i32</code> ভ্যালু হিপ-এ সংরক্ষণ করা যায়।</p>
+<Listing number="15-1" file-name="src/main.rs" caption="একটি box ব্যবহার করে হিপ-এ `i32` ভ্যালু সংরক্ষণ করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let b = Box::new(5);
+    println!("b = {b}");
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>b</code> ভেরিয়েবলটিকে <code>5</code> ভ্যালুর একটি <code>Box</code>-এর মান হিসাবে সংজ্ঞায়িত করি, যা হিপ-এ allocate করা হয়েছে। এই প্রোগ্রামটি <code>b = 5</code> প্রিন্ট করবে; এক্ষেত্রে, আমরা box-এর ডেটা অ্যাক্সেস করতে পারি ঠিক সেভাবে যেভাবে আমরা করতাম যদি এই ডেটা স্ট্যাকে থাকতো। যেকোনো owned ভ্যালুর মতোই, যখন একটি box স্কোপের বাইরে চলে যায়, যেমন <code>b</code> <code>main</code>-এর শেষে চলে যাচ্ছে, এটি ডিঅ্যালোকেট (deallocated) হয়ে যাবে। ডিঅ্যালোকেশনটি box (যা স্ট্যাকে সংরক্ষিত) এবং এটি যে ডেটাকে নির্দেশ করে (যা হিপ-এ সংরক্ষিত) উভয়ের জন্যই ঘটে।</p>
+<p>হিপ-এ একটিমাত্র ভ্যালু রাখা খুব একটা কাজের না, তাই আপনি সাধারণত এভাবে box ব্যবহার করবেন না। বেশিরভাগ পরিস্থিতিতে, একটি <code>i32</code> এর মতো ভ্যালু স্ট্যাকের উপর রাখাই বেশি উপযুক্ত, যেখানে ডিফল্টভাবে সেগুলি সংরক্ষণ করা হয়। চলুন এমন একটি ক্ষেত্র দেখি যেখানে box আমাদের এমন টাইপ সংজ্ঞায়িত করার অনুমতি দেয় যা box ছাড়া আমরা সংজ্ঞায়িত করতে পারতাম না।</p>
+<h3 id="box-বযবহার-করে-recursive-type-সকরিয-করা"><a class="header" href="#box-বযবহার-করে-recursive-type-সকরিয-করা">Box ব্যবহার করে Recursive Type সক্রিয় করা</a></h3>
+<p>একটি <em>recursive type</em>-এর ভ্যালু নিজের একটি অংশ হিসেবে একই টাইপের আরেকটি ভ্যালু রাখতে পারে। Recursive type একটি সমস্যা তৈরি করে কারণ রাস্টকে কম্পাইল টাইমে জানতে হয় একটি টাইপ কতটুকু জায়গা নেয়। কিন্তু, recursive type-এর ভ্যালুগুলোর নেস্টিং (nesting) তাত্ত্বিকভাবে অসীম পর্যন্ত চলতে পারে, তাই রাস্ট জানতে পারে না ভ্যালুটির জন্য কতটুকু জায়গা প্রয়োজন। যেহেতু box-এর একটি নির্দিষ্ট সাইজ আছে, তাই আমরা recursive type-এর সংজ্ঞায় একটি box যোগ করে recursive type সক্রিয় করতে পারি।</p>
+<p>একটি recursive type-এর উদাহরণ হিসেবে, আসুন আমরা <em>cons list</em> দেখি। এটি একটি ডেটা টাইপ যা সাধারণত ফাংশনাল প্রোগ্রামিং ভাষায় পাওয়া যায়। আমরা যে cons list টাইপটি সংজ্ঞায়িত করব তা recursion ছাড়া খুবই সহজ; তাই, আমরা যে উদাহরণটি নিয়ে কাজ করব তার ধারণাগুলো যেকোনো সময় যখন আপনি recursive type জড়িত আরও জটিল পরিস্থিতিতে পড়বেন তখন কার্যকর হবে।</p>
+<h4 id="cons-list-সমপরকে-আরও-তথয"><a class="header" href="#cons-list-সমপরকে-আরও-তথয">Cons List সম্পর্কে আরও তথ্য</a></h4>
+<p>একটি <em>cons list</em> হলো একটি ডেটা স্ট্রাকচার যা Lisp প্রোগ্রামিং ভাষা এবং এর উপভাষা থেকে এসেছে, এটি নেস্টেড পেয়ার (nested pairs) দ্বারা গঠিত এবং এটি লিঙ্কড লিস্টের (linked list) Lisp সংস্করণ। এর নাম Lisp-এর <code>cons</code> ফাংশন (যা <em>construct function</em>-এর সংক্ষিপ্ত রূপ) থেকে এসেছে, যা তার দুটি আর্গুমেন্ট থেকে একটি নতুন পেয়ার তৈরি করে। একটি ভ্যালু এবং আরেকটি পেয়ার নিয়ে গঠিত একটি পেয়ারের উপর <code>cons</code> কল করে, আমরা রিকার্সিভ পেয়ার দ্বারা গঠিত cons list তৈরি করতে পারি।</p>
+<p>উদাহরণস্বরূপ, এখানে <code>1, 2, 3</code> লিস্ট ধারণকারী একটি cons list-এর একটি स्यूडोकोड (pseudocode) উপস্থাপনা রয়েছে, যেখানে প্রতিটি পেয়ার বন্ধনীতে রয়েছে:</p>
+<pre><code class="language-text">(1, (2, (3, Nil)))
+</code></pre>
+<p>একটি cons list-এর প্রতিটি আইটেমে দুটি উপাদান থাকে: বর্তমান আইটেমের ভ্যালু এবং পরবর্তী আইটেম। লিস্টের শেষ আইটেমে শুধু <code>Nil</code> নামক একটি ভ্যালু থাকে এবং কোনো পরবর্তী আইটেম থাকে না। একটি cons list রিকার্সিভভাবে <code>cons</code> ফাংশন কল করে তৈরি করা হয়। রিকার্সনের বেস কেস (base case) বোঝানোর জন্য প্রমিত নাম হল <code>Nil</code>। মনে রাখবেন যে এটি Chapter 6-এ আলোচিত "null" বা "nil" ধারণার মতো নয়, যা একটি অবৈধ বা অনুপস্থিত ভ্যালু।</p>
+<p>Cons list রাস্ট-এ একটি সাধারণভাবে ব্যবহৃত ডেটা স্ট্রাকচার নয়। রাস্ট-এ যখন আপনার কাছে আইটেমের একটি তালিকা থাকে, তখন <code>Vec&lt;T&gt;</code> ব্যবহার করা একটি ভালো পছন্দ। অন্যান্য, আরও জটিল রিকার্সিভ ডেটা টাইপ বিভিন্ন পরিস্থিতিতে কার্যকর, কিন্তু এই অধ্যায়ে cons list দিয়ে শুরু করে, আমরা দেখতে পারি কীভাবে box আমাদের খুব বেশি বিভ্রান্তি ছাড়াই একটি রিকার্সিভ ডেটা টাইপ সংজ্ঞায়িত করতে দেয়।</p>
+<p>Listing 15-2-তে একটি cons list-এর জন্য একটি enum সংজ্ঞা রয়েছে। মনে রাখবেন যে এই কোডটি এখনও কম্পাইল হবে না কারণ <code>List</code> টাইপের কোনো নির্দিষ্ট সাইজ নেই, যা আমরা দেখাব।</p>
+<Listing number="15-2" file-name="src/main.rs" caption="`i32` মানের একটি cons list ডেটা স্ট্রাকচার উপস্থাপনের জন্য একটি enum সংজ্ঞায়িত করার প্রথম প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">enum List {
+    Cons(i32, List),
+    Nil,
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+</Listing>
+<blockquote>
+<p>দ্রষ্টব্য: আমরা এই উদাহরণের উদ্দেশ্যে কেবল <code>i32</code> ভ্যালু ধারণকারী একটি cons list ইমপ্লিমেন্ট করছি। আমরা Chapter 10-এ আলোচনা করা জেনেরিক ব্যবহার করে এটি ইমপ্লিমেন্ট করতে পারতাম, যাতে যেকোনো টাইপের ভ্যালু সংরক্ষণ করতে পারে এমন একটি cons list টাইপ সংজ্ঞায়িত করা যায়।</p>
+</blockquote>
+<p><code>1, 2, 3</code> লিস্ট সংরক্ষণ করার জন্য <code>List</code> টাইপ ব্যবহার করা Listing 15-3-এর কোডের মতো দেখাবে।</p>
+<Listing number="15-3" file-name="src/main.rs" caption="`1, 2, 3` লিস্ট সংরক্ষণ করতে `List` enum ব্যবহার করা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">enum List {
+</span><span class="boring">    Cons(i32, List),
+</span><span class="boring">    Nil,
+</span><span class="boring">}
+</span><span class="boring">
+</span>// --snip--
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let list = Cons(1, Cons(2, Cons(3, Nil)));
+}</code></pre>
+</Listing>
+<p>প্রথম <code>Cons</code> ভ্যালুটি <code>1</code> এবং আরেকটি <code>List</code> ভ্যালু ধারণ করে। এই <code>List</code> ভ্যালুটি আরেকটি <code>Cons</code> ভ্যালু যা <code>2</code> এবং আরেকটি <code>List</code> ভ্যালু ধারণ করে। এই <code>List</code> ভ্যালুটি আরও একটি <code>Cons</code> ভ্যালু যা <code>3</code> এবং একটি <code>List</code> ভ্যালু ধারণ করে, যা অবশেষে <code>Nil</code>, নন-রিকার্সিভ ভ্যারিয়েন্ট যা লিস্টের সমাপ্তি নির্দেশ করে।</p>
+<p>যদি আমরা Listing 15-3-এর কোডটি কম্পাইল করার চেষ্টা করি, আমরা Listing 15-4-এ দেখানো এররটি পাই।</p>
+<Listing number="15-4" caption="একটি রিকার্সিভ enum সংজ্ঞায়িত করার চেষ্টা করার সময় আমরা যে এররটি পাই">
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+error[E0072]: recursive type `List` has infinite size
+ --&gt; src/main.rs:1:1
+  |
+1 | enum List {
+  | ^^^^^^^^^
+2 |     Cons(i32, List),
+  |               ---- recursive without indirection
+  |
+help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cycle
+  |
+2 |     Cons(i32, Box&lt;List&gt;),
+  |               ++++    +
+
+error[E0391]: cycle detected when computing when `List` needs drop
+ --&gt; src/main.rs:1:1
+  |
+1 | enum List {
+  | ^^^^^^^^^
+  |
+  = note: ...which immediately requires computing when `List` needs drop again
+  = note: cycle used when computing whether `List` needs drop
+  = note: see https://rustc-dev-guide.rust-lang.org/overview.html#queries and https://rustc-dev-guide.rust-lang.org/query.html for more information
+
+Some errors have detailed explanations: E0072, E0391.
+For more information about an error, try `rustc --explain E0072`.
+error: could not compile `cons-list` (bin "cons-list") due to 2 previous errors
+</code></pre>
+</Listing>
+<p>এররটি দেখায় যে এই টাইপের "সাইজ অসীম"। কারণ হল আমরা <code>List</code>-কে একটি ভ্যারিয়েন্ট দিয়ে সংজ্ঞায়িত করেছি যা রিকার্সিভ: এটি সরাসরি নিজের আরেকটি ভ্যালু ধারণ করে। ফলস্বরূপ, রাস্ট বের করতে পারে না যে একটি <code>List</code> ভ্যালু সংরক্ষণ করতে তার কতটুকু জায়গা প্রয়োজন। আসুন আমরা ভেঙে দেখি কেন আমরা এই এররটি পাই। প্রথমে আমরা দেখব কীভাবে রাস্ট সিদ্ধান্ত নেয় যে একটি নন-রিকার্সিভ টাইপের ভ্যালু সংরক্ষণ করতে তার কতটুকু জায়গা প্রয়োজন।</p>
+<h4 id="একটি-নন-রিকারসিভ-টাইপের-সাইজ-গণনা-করা"><a class="header" href="#একটি-নন-রিকারসিভ-টাইপের-সাইজ-গণনা-করা">একটি নন-রিকার্সিভ টাইপের সাইজ গণনা করা</a></h4>
+<p>স্মরণ করুন Chapter 6-এ enum সংজ্ঞা নিয়ে আলোচনা করার সময় আমরা Listing 6-2-তে যে <code>Message</code> enum সংজ্ঞায়িত করেছিলাম:</p>
+<pre><pre class="playground"><code class="language-rust edition2024">enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+<p>একটি <code>Message</code> ভ্যালুর জন্য কতটুকু জায়গা বরাদ্দ করতে হবে তা নির্ধারণ করতে, রাস্ট প্রতিটি ভ্যারিয়েন্টের মধ্যে দিয়ে যায় তা দেখতে কোন ভ্যারিয়েন্টের সবচেয়ে বেশি জায়গা প্রয়োজন। রাস্ট দেখে যে <code>Message::Quit</code>-এর কোনো জায়গার প্রয়োজন নেই, <code>Message::Move</code>-এর দুটি <code>i32</code> ভ্যালু সংরক্ষণ করার জন্য যথেষ্ট জায়গার প্রয়োজন, এবং আরও অনেক কিছু। যেহেতু কেবল একটি ভ্যারিয়েন্ট ব্যবহার করা হবে, একটি <code>Message</code> ভ্যালুর জন্য সর্বাধিক যে জায়গার প্রয়োজন হবে তা হল এর বৃহত্তম ভ্যারিয়েন্টটি সংরক্ষণ করতে যে জায়গা লাগবে।</p>
+<p>এর সাথে তুলনা করুন কী ঘটে যখন রাস্ট Listing 15-2-এর <code>List</code> enum-এর মতো একটি রিকার্সিভ টাইপের জন্য কতটুকু জায়গা প্রয়োজন তা নির্ধারণ করার চেষ্টা করে। কম্পাইলার <code>Cons</code> ভ্যারিয়েন্টটি দেখে শুরু করে, যা <code>i32</code> টাইপের একটি ভ্যালু এবং <code>List</code> টাইপের একটি ভ্যালু ধারণ করে। অতএব, <code>Cons</code>-এর জন্য একটি <code>i32</code>-এর সাইজ এবং একটি <code>List</code>-এর সাইজের সমান জায়গার প্রয়োজন। <code>List</code> টাইপের জন্য কত মেমরি প্রয়োজন তা বের করতে, কম্পাইলার ভ্যারিয়েন্টগুলো দেখে, <code>Cons</code> ভ্যারিয়েন্ট দিয়ে শুরু করে। <code>Cons</code> ভ্যারিয়েন্ট <code>i32</code> টাইপের একটি ভ্যালু এবং <code>List</code> টাইপের একটি ভ্যালু ধারণ করে, এবং এই প্রক্রিয়াটি অসীমভাবে চলতে থাকে, যেমনটি Figure 15-1-এ দেখানো হয়েছে।</p>
+<img alt="একটি অসীম Cons list: একটি 'Cons' লেবেলযুক্ত আয়তক্ষেত্র যা দুটি ছোট আয়তক্ষেত্রে বিভক্ত। প্রথম ছোট আয়তক্ষেত্রটিতে 'i32' লেবেল রয়েছে, এবং দ্বিতীয় ছোট আয়তক্ষেত্রটিতে 'Cons' লেবেল এবং বাইরের 'Cons' আয়তক্ষেত্রের একটি ছোট সংস্করণ রয়েছে। 'Cons' আয়তক্ষেত্রগুলো নিজেদের ছোট থেকে ছোট সংস্করণ ধারণ করতে থাকে যতক্ষণ না সবচেয়ে ছোট আকারের আয়তক্ষেত্রটি একটি অসীম চিহ্ন ধারণ করে, যা নির্দেশ করে যে এই পুনরাবৃত্তি চিরকাল চলতে থাকে।" src="img/trpl15-01.svg" class="center" style="width: 50%;" />
+<p><span class="caption">Figure 15-1: অসীম <code>Cons</code> ভ্যারিয়েন্ট নিয়ে গঠিত একটি অসীম <code>List</code></span></p>
+<h4 id="একটি-নিরদিষট-সাইজের-রিকারসিভ-টাইপ-পেতে-boxt-বযবহার-করা"><a class="header" href="#একটি-নিরদিষট-সাইজের-রিকারসিভ-টাইপ-পেতে-boxt-বযবহার-করা">একটি নির্দিষ্ট সাইজের রিকার্সিভ টাইপ পেতে <code>Box&lt;T&gt;</code> ব্যবহার করা</a></h4>
+<p>যেহেতু রাস্ট রিকার্সিভভাবে সংজ্ঞায়িত টাইপের জন্য কতটুকু জায়গা বরাদ্দ করতে হবে তা বের করতে পারে না, তাই কম্পাইলার এই সহায়ক পরামর্শ সহ একটি এরর দেয়:</p>
+<!-- manual-regeneration
+after doing automatic regeneration, look at listings/ch15-smart-pointers/listing-15-03/output.txt and copy the relevant line
+-->
+<pre><code class="language-text">help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cycle
+  |
+2 |     Cons(i32, Box&lt;List&gt;),
+  |               ++++    +
+</code></pre>
+<p>এই পরামর্শে, <em>indirection</em> মানে হল একটি ভ্যালু সরাসরি সংরক্ষণ করার পরিবর্তে, আমাদের ডেটা স্ট্রাকচারটি পরিবর্তন করে ভ্যালুটির একটি pointer সংরক্ষণ করে পরোক্ষভাবে ভ্যালুটি সংরক্ষণ করা উচিত।</p>
+<p>যেহেতু একটি <code>Box&lt;T&gt;</code> একটি pointer, রাস্ট সবসময় জানে একটি <code>Box&lt;T&gt;</code>-এর জন্য কতটুকু জায়গা প্রয়োজন: একটি pointer-এর সাইজ এটি যে পরিমাণ ডেটাকে নির্দেশ করছে তার উপর ভিত্তি করে পরিবর্তন হয় না। এর মানে হল আমরা <code>Cons</code> ভ্যারিয়েন্টের ভিতরে সরাসরি আরেকটি <code>List</code> ভ্যালুর পরিবর্তে একটি <code>Box&lt;T&gt;</code> রাখতে পারি। <code>Box&lt;T&gt;</code> পরবর্তী <code>List</code> ভ্যালুটিকে নির্দেশ করবে যা <code>Cons</code> ভ্যারিয়েন্টের ভিতরে না থেকে হিপ-এ থাকবে। ধারণাগতভাবে, আমাদের এখনও একটি লিস্ট আছে, যা অন্য লিস্ট ধারণকারী লিস্ট দিয়ে তৈরি, কিন্তু এই ইমপ্লিমেন্টেশনটি এখন আইটেমগুলোকে একে অপরের ভিতরে রাখার চেয়ে একে অপরের পাশে রাখার মতো।</p>
+<p>আমরা Listing 15-2-এর <code>List</code> enum-এর সংজ্ঞা এবং Listing 15-3-এর <code>List</code>-এর ব্যবহার পরিবর্তন করে Listing 15-5-এর কোডে পরিণত করতে পারি, যা কম্পাইল হবে।</p>
+<Listing number="15-5" file-name="src/main.rs" caption="`List`-এর সংজ্ঞা যা `Box<T>` ব্যবহার করে যাতে একটি নির্দিষ্ট সাইজ থাকে">
+<pre><pre class="playground"><code class="language-rust edition2024">enum List {
+    Cons(i32, Box&lt;List&gt;),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+
+fn main() {
+    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+}</code></pre></pre>
+</Listing>
+<p><code>Cons</code> ভ্যারিয়েন্টের জন্য একটি <code>i32</code>-এর সাইজ এবং box-এর pointer ডেটা সংরক্ষণ করার জন্য জায়গার প্রয়োজন। <code>Nil</code> ভ্যারিয়েন্ট কোনো ভ্যালু সংরক্ষণ করে না, তাই এটির জন্য <code>Cons</code> ভ্যারিয়েন্টের চেয়ে স্ট্যাক-এ কম জায়গা প্রয়োজন। আমরা এখন জানি যে কোনো <code>List</code> ভ্যালু একটি <code>i32</code>-এর সাইজ এবং একটি box-এর pointer ডেটার সাইজ গ্রহণ করবে। একটি box ব্যবহার করে, আমরা অসীম, রিকার্সিভ চেইনটি ভেঙে দিয়েছি, তাই কম্পাইলার একটি <code>List</code> ভ্যালু সংরক্ষণ করার জন্য প্রয়োজনীয় সাইজ বের করতে পারে। Figure 15-2 দেখাচ্ছে <code>Cons</code> ভ্যারিয়েন্টটি এখন কেমন দেখায়।</p>
+<img alt="একটি 'Cons' লেবেলযুক্ত আয়তক্ষেত্র যা দুটি ছোট আয়তক্ষেত্রে বিভক্ত। প্রথম ছোট আয়তক্ষেত্রটিতে 'i32' লেবেল রয়েছে, এবং দ্বিতীয় ছোট আয়তক্ষেত্রটিতে 'Box' লেবেল এবং একটি অভ্যন্তরীণ আয়তক্ষেত্র রয়েছে যা 'usize' লেবেল ধারণ করে, যা box-এর pointer-এর সসীম সাইজকে প্রতিনিধিত্ব করে।" src="img/trpl15-02.svg" class="center" />
+<p><span class="caption">Figure 15-2: একটি <code>List</code> যা অসীম আকারের নয় কারণ <code>Cons</code> একটি <code>Box</code> ধারণ করে</span></p>
+<p>Box শুধুমাত্র indirection এবং heap allocation প্রদান করে; তাদের অন্য কোনো বিশেষ ক্ষমতা নেই, যেমনটি আমরা অন্যান্য smart pointer টাইপের সাথে দেখব। তাদের সেই বিশেষ ক্ষমতাগুলির কারণে যে পারফরম্যান্স ওভারহেড হয় তাও তাদের নেই, তাই তারা cons list-এর মতো ক্ষেত্রে উপযোগী হতে পারে যেখানে indirection-ই আমাদের একমাত্র প্রয়োজন। আমরা Chapter 18-এ box-এর আরও ব্যবহারের ক্ষেত্র দেখব।</p>
+<p><code>Box&lt;T&gt;</code> টাইপটি একটি smart pointer কারণ এটি <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করে, যা <code>Box&lt;T&gt;</code> ভ্যালুগুলোকে reference-এর মতো ব্যবহার করার অনুমতি দেয়। যখন একটি <code>Box&lt;T&gt;</code> ভ্যালু স্কোপের বাইরে চলে যায়, তখন box যে হিপ ডেটাকে নির্দেশ করছে সেটিও <code>Drop</code> ট্রেইট ইমপ্লিমেন্টেশনের কারণে পরিষ্কার হয়ে যায়। এই দুটি ট্রেইট এই অধ্যায়ের বাকি অংশে আমরা যে অন্যান্য smart pointer টাইপগুলো নিয়ে আলোচনা করব তাদের কার্যকারিতার জন্য আরও বেশি গুরুত্বপূর্ণ হবে। আসুন আমরা এই দুটি ট্রেইট আরও বিস্তারিতভাবে দেখি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch15-00-smart-pointers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch15-02-deref.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch15-00-smart-pointers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch15-02-deref.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

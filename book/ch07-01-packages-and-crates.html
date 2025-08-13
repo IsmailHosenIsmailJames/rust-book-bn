@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>প্যাকেজ এবং ক্রেট - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পযাকেজ-এবং-করেট"><a class="header" href="#পযাকেজ-এবং-করেট">প্যাকেজ এবং ক্রেট</a></h2>
+<p>মডিউল সিস্টেমের প্রথম যে অংশগুলো নিয়ে আমরা আলোচনা করব তা হলো প্যাকেজ এবং ক্রেট।</p>
+<p>একটি <em>ক্রেট</em> (crate) হলো কোডের সবচেয়ে ছোট অংশ যা রাস্ট কম্পাইলার একবারে বিবেচনা করে। এমনকি যদি আপনি <code>cargo</code>-র পরিবর্তে <code>rustc</code> রান করেন এবং একটি মাত্র সোর্স কোড ফাইল পাস করেন (যেমনটা আমরা প্রথম অধ্যায়ের “একটি রাস্ট প্রোগ্রাম লেখা এবং রান করা” অংশে করেছিলাম), কম্পাইলার সেই ফাইলটিকে একটি ক্রেট হিসেবে বিবেচনা করে। ক্রেট-এর মধ্যে মডিউল থাকতে পারে, এবং সেই মডিউলগুলো অন্য ফাইলে ডিফাইন করা থাকতে পারে যা ক্রেটের সাথে কম্পাইল হয়, যা আমরা পরবর্তী বিভাগগুলিতে দেখব।</p>
+<p>একটি ক্রেট দুই ধরনের হতে পারে: একটি বাইনারি ক্রেট অথবা একটি লাইব্রেরি ক্রেট। <em>বাইনারি ক্রেট</em> (Binary crates) হলো এমন প্রোগ্রাম যা আপনি একটি এক্সিকিউটেবল (executable) হিসেবে কম্পাইল করতে পারেন, যেমন একটি কমান্ড লাইন প্রোগ্রাম বা একটি সার্ভার। প্রতিটিতে অবশ্যই <code>main</code> নামের একটি ফাংশন থাকতে হবে যা এক্সিকিউটেবল রান হলে কী ঘটবে তা নির্ধারণ করে। আমরা এখন পর্যন্ত যতগুলো ক্রেট তৈরি করেছি তার সবই বাইনারি ক্রেট।</p>
+<p><em>লাইব্রেরি ক্রেট</em> (Library crates)-এর কোনো <code>main</code> ফাংশন নেই এবং এগুলো এক্সিকিউটেবল হিসেবে কম্পাইল হয় না। এর পরিবর্তে, তারা এমন ফাংশনালিটি ডিফাইন করে যা একাধিক প্রজেক্টের সাথে শেয়ার করার জন্য তৈরি। উদাহরণস্বরূপ, আমরা <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">দ্বিতীয় অধ্যায়ে</a><!-- ignore --> যে <code>rand</code> ক্রেট ব্যবহার করেছি, তা র‍্যান্ডম নম্বর জেনারেট করার ফাংশনালিটি প্রদান করে। বেশিরভাগ সময় যখন Rustacean-রা “ক্রেট” বলেন, তখন তারা লাইব্রেরি ক্রেটকেই বোঝান, এবং তারা “ক্রেট” শব্দটিকে সাধারণ প্রোগ্রামিং ধারণা “লাইব্রেরি”-র সমার্থক হিসেবে ব্যবহার করেন।</p>
+<p><em>ক্রেট রুট</em> (crate root) হলো একটি সোর্স ফাইল যেখান থেকে রাস্ট কম্পাইলার কাজ শুরু করে এবং যা আপনার ক্রেটের রুট মডিউল তৈরি করে (আমরা মডিউল সম্পর্কে বিস্তারিতভাবে <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">“স্কোপ এবং প্রাইভেসি নিয়ন্ত্রণের জন্য মডিউল ডিফাইন করা”</a><!-- ignore --> বিভাগে ব্যাখ্যা করব)।</p>
+<p>একটি <em>প্যাকেজ</em> (package) হলো এক বা একাধিক ক্রেটের একটি বান্ডিল যা একটি নির্দিষ্ট সেট অফ ফাংশনালিটি প্রদান করে। একটি প্যাকেজে একটি <em>Cargo.toml</em> ফাইল থাকে যা বর্ণনা করে কিভাবে সেই ক্রেটগুলো বিল্ড করতে হবে। কার্গো (Cargo) নিজেও আসলে একটি প্যাকেজ যা আপনার কোড বিল্ড করার জন্য ব্যবহৃত কমান্ড লাইন টুলের বাইনারি ক্রেট ধারণ করে। কার্গো প্যাকেজে একটি লাইব্রেরি ক্রেটও রয়েছে যার উপর বাইনারি ক্রেটটি নির্ভর করে। অন্যান্য প্রজেক্টগুলো কার্গো কমান্ড লাইন টুলের মতো একই লজিক ব্যবহার করার জন্য কার্গো লাইব্রেরি ক্রেটের উপর নির্ভর করতে পারে।</p>
+<p>একটি প্যাকেজে আপনার ইচ্ছামত যত খুশি বাইনারি ক্রেট থাকতে পারে, কিন্তু সর্বোচ্চ একটি লাইব্রেরি ক্রেট থাকতে পারে। একটি প্যাকেজে অবশ্যই কমপক্ষে একটি ক্রেট থাকতে হবে, তা লাইব্রেরি হোক বা বাইনারি।</p>
+<p>চলুন দেখি একটি প্যাকেজ তৈরি করলে কী ঘটে। প্রথমে আমরা <code>cargo new my-project</code> কমান্ডটি প্রবেশ করাই:</p>
+<pre><code class="language-console">$ cargo new my-project
+     Created binary (application) `my-project` package
+$ ls my-project
+Cargo.toml
+src
+$ ls my-project/src
+main.rs
+</code></pre>
+<p><code>cargo new my-project</code> চালানোর পর, কার্গো কী তৈরি করেছে তা দেখার জন্য আমরা <code>ls</code> ব্যবহার করি। প্রজেক্ট ডিরেক্টরিতে, একটি <em>Cargo.toml</em> ফাইল রয়েছে, যা আমাদের একটি প্যাকেজ দেয়। এছাড়াও একটি <em>src</em> ডিরেক্টরি রয়েছে যার মধ্যে <em>main.rs</em> ফাইলটি আছে। আপনার টেক্সট এডিটরে <em>Cargo.toml</em> খুলুন, এবং লক্ষ্য করুন যে সেখানে <em>src/main.rs</em> সম্পর্কে কোনো উল্লেখ নেই। কার্গো এই কনভেনশন অনুসরণ করে যে, <em>src/main.rs</em> হলো প্যাকেজের নামের সাথে মিলিয়ে একটি বাইনারি ক্রেটের ক্রেট রুট। একইভাবে, কার্গো জানে যে যদি প্যাকেজ ডিরেক্টরিতে <em>src/lib.rs</em> থাকে, তাহলে প্যাকেজটিতে প্যাকেজের নামের সাথে মিলিয়ে একটি লাইব্রেরি ক্রেট রয়েছে, এবং <em>src/lib.rs</em> হলো তার ক্রেট রুট। কার্গো লাইব্রেরি বা বাইনারি বিল্ড করার জন্য ক্রেট রুট ফাইলগুলো <code>rustc</code>-কে পাস করে।</p>
+<p>এখানে, আমাদের একটি প্যাকেজ আছে যাতে শুধুমাত্র <em>src/main.rs</em> রয়েছে, যার অর্থ হলো এটিতে শুধুমাত্র <code>my-project</code> নামের একটি বাইনারি ক্রেট আছে। যদি একটি প্যাকেজে <em>src/main.rs</em> এবং <em>src/lib.rs</em> উভয়ই থাকে, তবে এটির দুটি ক্রেট রয়েছে: একটি বাইনারি এবং একটি লাইব্রেরি, এবং উভয়ের নামই প্যাকেজের নামের সমান হয়। একটি প্যাকেজে একাধিক বাইনারি ক্রেট থাকতে পারে <em>src/bin</em> ডিরেক্টরিতে ফাইল রাখার মাধ্যমে: প্রতিটি ফাইল একটি পৃথক বাইনারি ক্রেট হবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch07-02-defining-modules-to-control-scope-and-privacy.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch07-00-managing-growing-projects-with-packages-crates-and-modules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch07-02-defining-modules-to-control-scope-and-privacy.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

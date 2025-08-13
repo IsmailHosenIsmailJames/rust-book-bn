@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>অ্যাসিঙ্কের জন্য ট্রেইটগুলোর দিকে একটি গভীর দৃষ্টি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="অযাসিঙক-async-এর-জনয-বযবহৃত-টরেইটগুলির-একটি-নিবিড-পরযবেকষণ"><a class="header" href="#অযাসিঙক-async-এর-জনয-বযবহৃত-টরেইটগুলির-একটি-নিবিড-পরযবেকষণ">অ্যাসিঙ্ক (Async)-এর জন্য ব্যবহৃত ট্রেইটগুলির একটি নিবিড় পর্যবেক্ষণ</a></h2>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="digging-into-the-traits-for-async"></a></p>
+<p>অধ্যায় জুড়ে, আমরা বিভিন্ন উপায়ে <code>Future</code>, <code>Pin</code>, <code>Unpin</code>, <code>Stream</code>, এবং <code>StreamExt</code> ট্রেইটগুলি ব্যবহার করেছি। এখন পর্যন্ত, আমরা এগুলি কীভাবে কাজ করে বা কীভাবে একসাথে খাপ খায় তার বিস্তারিত বিবরণে খুব বেশি যাইনি, যা আপনার দৈনন্দিন রাস্ট কোডিংয়ের জন্য বেশিরভাগ সময় ঠিক আছে। তবে কখনও কখনও, আপনি এমন পরিস্থিতির মুখোমুখি হবেন যেখানে আপনাকে এই বিবরণগুলির আরও কয়েকটি বুঝতে হবে। এই বিভাগে, আমরা সেই পরিস্থিতিগুলিতে সাহায্য করার জন্য যথেষ্ট গভীরে যাব, তবে <em>সত্যিকারের</em> গভীর আলোচনা অন্যান্য ডকুমেন্টেশনের জন্য রেখে দেব।</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="future"></a></p>
+<h3 id="future-টরেইট"><a class="header" href="#future-টরেইট"><code>Future</code> ট্রেইট</a></h3>
+<p>আসুন <code>Future</code> ট্রেইটটি কীভাবে কাজ করে তা আরও নিবিড়ভাবে দেখে শুরু করি। রাস্ট এটি যেভাবে সংজ্ঞায়িত করে তা এখানে দেওয়া হলো:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::pin::Pin;
+use std::task::{Context, Poll};
+
+pub trait Future {
+    type Output;
+
+    fn poll(self: Pin&lt;&amp;mut Self&gt;, cx: &amp;mut Context&lt;'_&gt;) -&gt; Poll&lt;Self::Output&gt;;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>এই ট্রেইট সংজ্ঞায় একগুচ্ছ নতুন টাইপ এবং এমন কিছু সিনট্যাক্স রয়েছে যা আমরা আগে দেখিনি, তাই আসুন ধাপে ধাপে সংজ্ঞাটি পর্যালোচনা করি।</p>
+<p>প্রথমত, <code>Future</code>-এর অ্যাসোসিয়েটেড টাইপ <code>Output</code> বলে যে ফিউচারটি কিসে রিজলভ (resolve) হবে। এটি <code>Iterator</code> ট্রেইটের <code>Item</code> অ্যাসোসিয়েটেড টাইপের অনুরূপ। দ্বিতীয়ত, <code>Future</code>-এর <code>poll</code> মেথডও রয়েছে, যা এর <code>self</code> প্যারামিটারের জন্য একটি বিশেষ <code>Pin</code> রেফারেন্স এবং একটি <code>Context</code> টাইপের মিউটেবল রেফারেন্স নেয়, এবং একটি <code>Poll&lt;Self::Output&gt;</code> রিটার্ন করে। আমরা কিছুক্ষণ পরে <code>Pin</code> এবং <code>Context</code> সম্পর্কে আরও কথা বলব। আপাতত, আসুন মেথডটি যা রিটার্ন করে, সেই <code>Poll</code> টাইপের উপর মনোযোগ দিই:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Poll&lt;T&gt; {
+    Ready(T),
+    Pending,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>এই <code>Poll</code> টাইপটি একটি <code>Option</code>-এর মতো। এর একটি ভ্যারিয়েন্ট রয়েছে যার একটি মান আছে, <code>Ready(T)</code>, এবং একটি যার নেই, <code>Pending</code>। তবে <code>Poll</code>-এর অর্থ <code>Option</code> থেকে বেশ ভিন্ন! <code>Pending</code> ভ্যারিয়েন্টটি নির্দেশ করে যে ফিউচারের এখনও কাজ বাকি আছে, তাই কলারকে পরে আবার পরীক্ষা করতে হবে। <code>Ready</code> ভ্যারিয়েন্টটি নির্দেশ করে যে ফিউচারটি তার কাজ শেষ করেছে এবং <code>T</code> মানটি উপলব্ধ।</p>
+<blockquote>
+<p>দ্রষ্টব্য: বেশিরভাগ ফিউচারের ক্ষেত্রে, ফিউচারটি <code>Ready</code> রিটার্ন করার পরে কলারের আবার <code>poll</code> কল করা উচিত নয়। অনেক ফিউচার রেডি (ready) হওয়ার পরে আবার পোল করা হলে প্যানিক (panic) করবে। যে ফিউচারগুলি আবার পোল করা নিরাপদ, সেগুলি তাদের ডকুমেন্টেশনে স্পষ্টভাবে উল্লেখ করবে। এটি <code>Iterator::next</code> যেভাবে আচরণ করে তার অনুরূপ।</p>
+</blockquote>
+<p>যখন আপনি <code>await</code> ব্যবহার করে কোড দেখেন, তখন রাস্ট পর্দার আড়ালে এটিকে <code>poll</code> কল করে এমন কোডে কম্পাইল করে। আপনি যদি লিস্টিং ১৭-৪-এ ফিরে তাকান, যেখানে আমরা একটি একক URL-এর পেজ টাইটেল রিজলভ হওয়ার পরে প্রিন্ট করেছিলাম, রাস্ট এটিকে প্রায় (যদিও ঠিক নয়) এইরকম কিছুতে কম্পাইল করে:</p>
+<pre><code class="language-rust ignore">match page_title(url).poll() {
+    Ready(page_title) =&gt; match page_title {
+        Some(title) =&gt; println!("The title for {url} was {title}"),
+        None =&gt; println!("{url} had no title"),
+    }
+    Pending =&gt; {
+        // কিন্তু এখানে কী হবে?
+    }
+}</code></pre>
+<p>ফিউচারটি যখন এখনও <code>Pending</code> থাকে তখন আমাদের কী করা উচিত? আমাদের আবার, এবং আবার, এবং আবার চেষ্টা করার কোনো উপায় দরকার, যতক্ষণ না ফিউচারটি অবশেষে রেডি হয়। অন্য কথায়, আমাদের একটি লুপ দরকার:</p>
+<pre><code class="language-rust ignore">let mut page_title_fut = page_title(url);
+loop {
+    match page_title_fut.poll() {
+        Ready(value) =&gt; match page_title {
+            Some(title) =&gt; println!("The title for {url} was {title}"),
+            None =&gt; println!("{url} had no title"),
+        }
+        Pending =&gt; {
+            // continue
+        }
+    }
+}</code></pre>
+<p>তবে যদি রাস্ট এটিকে ঠিক সেই কোডে কম্পাইল করত, তবে প্রতিটি <code>await</code> ব্লকিং হয়ে যেত—আমরা যা চেয়েছিলাম তার ঠিক বিপরীত! পরিবর্তে, রাস্ট নিশ্চিত করে যে লুপটি এমন কিছুর কাছে নিয়ন্ত্রণ হস্তান্তর করতে পারে যা এই ফিউচারের কাজ পজ (pause) করে অন্য ফিউচারগুলিতে কাজ করতে পারে এবং তারপরে এটিকে আবার পরীক্ষা করতে পারে। যেমন আমরা দেখেছি, সেই কিছু হলো একটি async runtime, এবং এই সময়সূচী এবং সমন্বয়ের কাজটি এর অন্যতম প্রধান কাজ।</p>
+<p>অধ্যায়ের শুরুতে, আমরা <code>rx.recv</code>-এর জন্য অপেক্ষা করার বর্ণনা দিয়েছিলাম। <code>recv</code> কল একটি ফিউচার রিটার্ন করে, এবং ফিউচারটি await করা এটিকে পোল করে। আমরা উল্লেখ করেছি যে একটি রানটাইম ফিউচারটিকে পজ করবে যতক্ষণ না এটি <code>Some(message)</code> বা চ্যানেল বন্ধ হয়ে গেলে <code>None</code>-এর সাথে রেডি হয়। <code>Future</code> ট্রেইট এবং বিশেষ করে <code>Future::poll</code> সম্পর্কে আমাদের গভীর বোঝার সাথে, আমরা দেখতে পাচ্ছি এটি কীভাবে কাজ করে। রানটাইম জানে যে ফিউচারটি রেডি নয় যখন এটি <code>Poll::Pending</code> রিটার্ন করে। বিপরীতভাবে, রানটাইম জানে যে ফিউচারটি <em>রেডি</em> এবং <code>poll</code> যখন <code>Poll::Ready(Some(message))</code> বা <code>Poll::Ready(None)</code> রিটার্ন করে তখন এটিকে এগিয়ে নিয়ে যায়।</p>
+<p>একটি রানটাইম কীভাবে এটি করে তার সঠিক বিবরণ এই বইয়ের সুযোগের বাইরে, কিন্তু মূল বিষয় হলো ফিউচারের মৌলিক মেকানিক্স দেখা: একটি রানটাইম তার দায়িত্বে থাকা প্রতিটি ফিউচারকে <em>পোল</em> করে, যখন এটি এখনও রেডি না হয় তখন ফিউচারটিকে ঘুমাতে পাঠায়।</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="pinning-and-the-pin-and-unpin-traits"></a></p>
+<h3 id="pin-এবং-unpin-টরেইট"><a class="header" href="#pin-এবং-unpin-টরেইট"><code>Pin</code> এবং <code>Unpin</code> ট্রেইট</a></h3>
+<p>যখন আমরা লিস্টিং ১৭-১৬-এ পিনিং (pinning)-এর ধারণাটি উপস্থাপন করেছিলাম, তখন আমরা একটি খুব জটিল ত্রুটি বার্তার সম্মুখীন হয়েছিলাম। এখানে এর প্রাসঙ্গিক অংশটি আবার দেওয়া হলো:</p>
+<!-- manual-regeneration
+cd listings/ch17-async-await/listing-17-16
+cargo build
+copy *only* the final `error` block from the errors
+-->
+<pre><code class="language-text">error[E0277]: `{async block@src/main.rs:10:23: 10:33}` cannot be unpinned
+  --&gt; src/main.rs:48:33
+   |
+48 |         trpl::join_all(futures).await;
+   |                                 ^^^^^ the trait `Unpin` is not implemented for `{async block@src/main.rs:10:23: 10:33}`
+   |
+   = note: consider using the `pin!` macro
+           consider using `Box::pin` if you need to access the pinned value outside of the current scope
+   = note: required for `Box&lt;{async block@src/main.rs:10:23: 10:33}&gt;` to implement `Future`
+note: required by a bound in `futures_util::future::join_all::JoinAll`
+  --&gt; file:///home/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-util-0.3.30/src/future/join_all.rs:29:8
+   |
+27 | pub struct JoinAll&lt;F&gt;
+   |            ------- required by a bound in this struct
+28 | where
+29 |     F: Future,
+   |        ^^^^^^ required by this bound in `JoinAll`
+</code></pre>
+<p>এই ত্রুটি বার্তাটি আমাদের কেবল এটিই বলে না যে আমাদের মানগুলি পিন করতে হবে, বরং পিনিং কেন প্রয়োজন তাও বলে। <code>trpl::join_all</code> ফাংশনটি <code>JoinAll</code> নামে একটি struct রিটার্ন করে। সেই struct-টি <code>F</code> টাইপের উপর জেনেরিক, যা <code>Future</code> ট্রেইট ইমপ্লিমেন্ট করার জন্য সীমাবদ্ধ। <code>await</code> দিয়ে সরাসরি একটি ফিউচার await করা ফিউচারটিকে অন্তর্নিহিতভাবে পিন করে। একারণে আমাদের যেখানেই ফিউচার await করতে চাই সেখানে <code>pin!</code> ব্যবহার করার প্রয়োজন হয় না।</p>
+<p>যাইহোক, আমরা এখানে সরাসরি একটি ফিউচার await করছি না। পরিবর্তে, আমরা <code>join_all</code> ফাংশনে ফিউচারের একটি কালেকশন পাস করে একটি নতুন ফিউচার, <code>JoinAll</code> তৈরি করছি। <code>join_all</code>-এর সিগনেচার প্রয়োজন করে যে কালেকশনের আইটেমগুলির টাইপগুলি সবই <code>Future</code> ট্রেইট ইমপ্লিমেন্ট করে, এবং <code>Box&lt;T&gt;</code> কেবল তখনই <code>Future</code> ইমপ্লিমেন্ট করে যদি এটি যে <code>T</code>-কে র‍্যাপ (wrap) করে তা <code>Unpin</code> ট্রেইট ইমপ্লিমেন্ট করা একটি ফিউচার হয়।</p>
+<p>এটি হজম করার জন্য অনেক কিছু! এটি সত্যিই বুঝতে হলে, আসুন <code>Future</code> ট্রেইটটি আসলে কীভাবে কাজ করে, বিশেষ করে <em>পিনিং</em> এর আশেপাশে, সে সম্পর্কে আরও গভীরে যাই।</p>
+<p><code>Future</code> ট্রেইটের সংজ্ঞায় আবার দেখুন:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::pin::Pin;
+use std::task::{Context, Poll};
+
+pub trait Future {
+    type Output;
+
+    // Required method
+    fn poll(self: Pin&lt;&amp;mut Self&gt;, cx: &amp;mut Context&lt;'_&gt;) -&gt; Poll&lt;Self::Output&gt;;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>cx</code> প্যারামিটার এবং এর <code>Context</code> টাইপ হলো একটি রানটাইম কীভাবে অলস থেকেও যেকোনো প্রদত্ত ফিউচার কখন পরীক্ষা করতে হবে তা জানে তার চাবিকাঠি। আবারও, এটি কীভাবে কাজ করে তার বিবরণ এই অধ্যায়ের সুযোগের বাইরে, এবং আপনাকে সাধারণত কেবল একটি কাস্টম <code>Future</code> ইমপ্লিমেন্টেশন লেখার সময় এটি নিয়ে ভাবতে হবে। আমরা পরিবর্তে <code>self</code>-এর জন্য টাইপের উপর মনোযোগ দেব, কারণ এটিই প্রথমবার যখন আমরা এমন একটি মেথড দেখেছি যেখানে <code>self</code>-এর একটি টাইপ অ্যানোটেশন রয়েছে। <code>self</code>-এর জন্য একটি টাইপ অ্যানোটেশন অন্যান্য ফাংশন প্যারামিটারের জন্য টাইপ অ্যানোটেশনের মতোই কাজ করে, তবে দুটি মূল পার্থক্য রয়েছে:</p>
+<ul>
+<li>এটি রাস্টকে বলে যে মেথডটি কল করার জন্য <code>self</code> কোন টাইপের হতে হবে।</li>
+<li>এটি যেকোনো টাইপ হতে পারে না। এটি যে টাইপের উপর মেথডটি ইমপ্লিমেন্ট করা হয়েছে, সেই টাইপের একটি রেফারেন্স বা স্মার্ট পয়েন্টার, বা সেই টাইপের একটি রেফারেন্সকে র‍্যাপ করা একটি <code>Pin</code>-এর মধ্যে সীমাবদ্ধ।</li>
+</ul>
+<p>আমরা <a href="ch18-00-oop.html">চ্যাপ্টার ১৮</a><!-- ignore -->-এ এই সিনট্যাক্স সম্পর্কে আরও দেখব। আপাতত, এটি জানাই যথেষ্ট যে যদি আমরা একটি ফিউচার পোল করতে চাই এটি <code>Pending</code> নাকি <code>Ready(Output)</code> তা পরীক্ষা করার জন্য, আমাদের টাইপের একটি <code>Pin</code>-র‍্যাপ করা মিউটেবল রেফারেন্স প্রয়োজন।</p>
+<p><code>Pin</code> হলো <code>&amp;</code>, <code>&amp;mut</code>, <code>Box</code>, এবং <code>Rc</code>-এর মতো পয়েন্টার-সদৃশ টাইপের জন্য একটি র‍্যাপার। (টেকনিক্যালি, <code>Pin</code> <code>Deref</code> বা <code>DerefMut</code> ট্রেইট ইমপ্লিমেন্ট করা টাইপের সাথে কাজ করে, তবে এটি কার্যকরভাবে কেবল পয়েন্টারের সাথে কাজ করার সমতুল্য।) <code>Pin</code> নিজে কোনো পয়েন্টার নয় এবং এর নিজস্ব কোনো আচরণ নেই যেমন <code>Rc</code> এবং <code>Arc</code>-এর রেফারেন্স কাউন্টিংয়ের সাথে আছে; এটি সম্পূর্ণরূপে একটি টুল যা কম্পাইলার পয়েন্টার ব্যবহারের উপর সীমাবদ্ধতা আরোপ করতে ব্যবহার করতে পারে।</p>
+<p><code>await</code>-কে <code>poll</code> কলের মাধ্যমে ইমপ্লিমেন্ট করা হয়েছে মনে করলে, আমরা আগে যে ত্রুটি বার্তাটি দেখেছিলাম তা ব্যাখ্যা করা শুরু হয়, কিন্তু সেটি ছিল <code>Unpin</code>-এর ক্ষেত্রে, <code>Pin</code>-এর নয়। তাহলে <code>Pin</code> কীভাবে <code>Unpin</code>-এর সাথে সম্পর্কিত, এবং <code>poll</code> কল করার জন্য <code>Future</code>-এর <code>self</code>-কে একটি <code>Pin</code> টাইপের মধ্যে থাকতে হবে কেন?</p>
+<p>এই অধ্যায়ের শুরুতে মনে করুন, একটি ফিউচারের মধ্যে একাধিক await পয়েন্ট একটি স্টেট মেশিনে কম্পাইল হয়, এবং কম্পাইলার নিশ্চিত করে যে সেই স্টেট মেশিনটি রাস্টের স্বাভাবিক নিরাপত্তা নিয়মগুলি, যার মধ্যে borrowing এবং ownership রয়েছে, অনুসরণ করে। এটি কাজ করানোর জন্য, রাস্ট দেখে যে একটি await পয়েন্ট এবং পরবর্তী await পয়েন্ট বা async ব্লকের শেষের মধ্যে কোন ডেটা প্রয়োজন। তারপরে এটি কম্পাইল করা স্টেট মেশিনে একটি সংশ্লিষ্ট ভ্যারিয়েন্ট তৈরি করে। প্রতিটি ভ্যারিয়েন্ট সোর্স কোডের সেই বিভাগে ব্যবহৃত ডেটাতে প্রয়োজনীয় অ্যাক্সেস পায়, হয় সেই ডেটার মালিকানা নিয়ে অথবা এর একটি মিউটেবল বা অপরিবর্তনীয় রেফারেন্স পেয়ে।</p>
+<p>এখন পর্যন্ত, সব ঠিক আছে: যদি আমরা একটি নির্দিষ্ট async ব্লকে মালিকানা বা রেফারেন্স সম্পর্কে কোনো ভুল করি, borrow checker আমাদের বলে দেবে। যখন আমরা সেই ব্লকের সাথে সঙ্গতিপূর্ণ ফিউচারটি সরাতে চাই—যেমন <code>join_all</code>-এ পাস করার জন্য এটিকে একটি <code>Vec</code>-এ সরানো—তখন জিনিসগুলি আরও জটিল হয়ে যায়।</p>
+<p>যখন আমরা একটি ফিউচার সরাই—সেটি <code>join_all</code>-এর সাথে ইটারেটর হিসাবে ব্যবহার করার জন্য একটি ডেটা স্ট্রাকচারে পুশ করে হোক বা একটি ফাংশন থেকে এটি রিটার্ন করে হোক—এর অর্থ আসলে রাস্ট আমাদের জন্য যে স্টেট মেশিন তৈরি করে তা সরানো। এবং রাস্টের বেশিরভাগ অন্যান্য টাইপের থেকে ভিন্ন, async ব্লকের জন্য রাস্ট যে ফিউচারগুলি তৈরি করে সেগুলি যেকোনো প্রদত্ত ভ্যারিয়েন্টের ফিল্ডে নিজেদের রেফারেন্স দিয়ে শেষ হতে পারে, যেমনটি চিত্র ১৭-৪-এর সরলীকৃত চিত্রে দেখানো হয়েছে।</p>
+<figure>
+<img alt="একটি ফিউচার, fut1, যা একটি একক-কলাম, তিন-সারি টেবিল হিসাবে প্রতিনিধিত্ব করা হয়েছে, যার প্রথম দুটি সারিতে ডেটা মান 0 এবং 1 রয়েছে এবং তৃতীয় সারি থেকে দ্বিতীয় সারিতে একটি তীর ফিরে নির্দেশ করছে, যা ফিউচারের মধ্যে একটি অভ্যন্তরীণ রেফারেন্স প্রতিনিধিত্ব করে।" src="img/trpl17-04.svg" class="center" />
+<figcaption>চিত্র ১৭-৪: একটি সেলফ-রেফারেনশিয়াল ডেটা টাইপ।</figcaption>
+</figure>
+<p>ডিফল্টরূপে, যে কোনো অবজেক্ট যার নিজের কাছে একটি রেফারেন্স আছে তা সরানো অনিরাপদ, কারণ রেফারেন্সগুলি সর্বদা তাদের উল্লেখ করা জিনিসের আসল মেমরি ঠিকানায় নির্দেশ করে (চিত্র ১৭-৫ দেখুন)। আপনি যদি ডেটা স্ট্রাকচারটি নিজেই সরান, তবে সেই অভ্যন্তরীণ রেফারেন্সগুলি পুরানো অবস্থানে নির্দেশ করতে থাকবে। যাইহোক, সেই মেমরি অবস্থানটি এখন অবৈধ। একটি কারণ হলো, আপনি ডেটা স্ট্রাকচারে পরিবর্তন করলে এর মান আপডেট হবে না। আরেকটি—আরও গুরুত্বপূর্ণ—কারণ হলো, কম্পিউটার এখন সেই মেমরিটি অন্যান্য উদ্দেশ্যে পুনরায় ব্যবহার করতে স্বাধীন! আপনি পরে সম্পূর্ণ সম্পর্কহীন ডেটা পড়তে পারেন।</p>
+<figure>
+<img alt="দুটি টেবিল, দুটি ফিউচার, fut1 এবং fut2 চিত্রিত করছে, প্রতিটির একটি কলাম এবং তিনটি সারি রয়েছে, যা fut1 থেকে fut2-তে একটি ফিউচার সরানোর ফলাফল প্রতিনিধিত্ব করে। প্রথমটি, fut1, ধূসর রঙের, প্রতিটি ইনডেক্সে একটি প্রশ্ন চিহ্ন সহ, যা অজানা মেমরি প্রতিনিধিত্ব করে। দ্বিতীয়টি, fut2, প্রথম এবং দ্বিতীয় সারিতে 0 এবং 1 রয়েছে এবং এর তৃতীয় সারি থেকে fut1-এর দ্বিতীয় সারিতে একটি তীর ফিরে নির্দেশ করছে, যা একটি পয়েন্টার প্রতিনিধিত্ব করে যা ফিউচারটি সরানোর আগে মেমরিতে পুরানো অবস্থানে রেফারেন্স করছে।" src="img/trpl17-05.svg" class="center" />
+<figcaption>চিত্র ১৭-৫: একটি সেলফ-রেফারেনশিয়াল ডেটা টাইপ সরানোর অনিরাপদ ফলাফল।</figcaption>
+</figure>
+<p>তাত্ত্বিকভাবে, রাস্ট কম্পাইলার যখনই কোনো অবজেক্ট সরানো হয় তখন সেটির প্রতিটি রেফারেন্স আপডেট করার চেষ্টা করতে পারত, কিন্তু এটি অনেক পারফরম্যান্স ওভারহেড যোগ করতে পারত, বিশেষ করে যদি রেফারেন্সের পুরো একটি জাল আপডেট করার প্রয়োজন হয়। যদি আমরা পরিবর্তে নিশ্চিত করতে পারতাম যে প্রশ্নবিদ্ধ ডেটা স্ট্রাকচারটি <em>মেমরিতে নড়াচড়া করে না</em>, তাহলে আমাদের কোনো রেফারেন্স আপডেট করতে হতো না। রাস্টের borrow checker ঠিক এটাই প্রয়োজন করে: নিরাপদ কোডে, এটি আপনাকে এমন কোনো আইটেম সরাতে বাধা দেয় যার কাছে একটি সক্রিয় রেফারেন্স রয়েছে।</p>
+<p><code>Pin</code> এর উপর ভিত্তি করে আমাদের ঠিক সেই গ্যারান্টি দেয় যা আমাদের প্রয়োজন। যখন আমরা একটি মানকে <em>পিন</em> করি সেই মানের একটি পয়েন্টারকে <code>Pin</code>-এ র‍্যাপ করে, তখন এটি আর নড়াচড়া করতে পারে না। সুতরাং, যদি আপনার <code>Pin&lt;Box&lt;SomeType&gt;&gt;</code> থাকে, আপনি আসলে <code>SomeType</code> মানটি পিন করেন, <em><code>Box</code> পয়েন্টারটি নয়</em>। চিত্র ১৭-৬ এই প্রক্রিয়াটি চিত্রিত করে।</p>
+<figure>
+<p>&lt;img alt="পাশাপাশি রাখা তিনটি বক্স। প্রথমটির লেবেল "Pin", দ্বিতীয়টির "b1", এবং তৃতীয়টির "pinned"। "pinned"-এর মধ্যে একটি টেবিল রয়েছে যার লেবেল "fut", একটি একক কলাম সহ; এটি ডেটা স্ট্রাকচারের প্রতিটি অংশের জন্য সেল সহ একটি ফিউচার প্রতিনিধিত্ব করে। এর প্রথম সেলে "0" মান রয়েছে, এর দ্বিতীয় সেল থেকে একটি তীর বেরিয়ে চতুর্থ এবং শেষ সেলে নির্দেশ করছে, যার মধ্যে "1" মান রয়েছে, এবং তৃতীয় সেলে ড্যাশড লাইন এবং একটি এলিপসিস রয়েছে যা নির্দেশ করে যে ডেটা স্ট্রাকচারের অন্যান্য অংশ থাকতে পারে। সব মিলিয়ে, "fut" টেবিলটি একটি ফিউচার প্রতিনিধিত্ব করে যা সেলফ-রেফারেনশিয়াল। "Pin" লেবেলযুক্ত বক্স থেকে একটি তীর বেরিয়ে, "b1" বক্সের মধ্য দিয়ে গিয়ে "pinned" বক্সের ভিতরে "fut" টেবিলে শেষ হয়।" src="img/trpl17-06.svg" class="center" /&gt;</p>
+<figcaption>চিত্র ১৭-৬: একটি সেলফ-রেফারেনশিয়াল ফিউচার টাইপের দিকে নির্দেশকারী একটি `Box`-কে পিন করা।</figcaption>
+</figure>
+<p>আসলে, <code>Box</code> পয়েন্টারটি এখনও অবাধে নড়াচড়া করতে পারে। মনে রাখবেন: আমরা নিশ্চিত করতে চাই যে অবশেষে রেফারেন্স করা ডেটা জায়গায় থাকে। যদি একটি পয়েন্টার নড়াচড়া করে, <em>কিন্তু এটি যে ডেটার দিকে নির্দেশ করে তা একই জায়গায় থাকে</em>, যেমন চিত্র ১৭-৭-এ, কোনো সম্ভাব্য সমস্যা নেই। একটি স্বতন্ত্র অনুশীলন হিসাবে, টাইপগুলির ডকুমেন্টেশন এবং <code>std::pin</code> মডিউল দেখুন এবং একটি <code>Pin</code> র‍্যাপিং <code>Box</code>-এর সাথে এটি কীভাবে করবেন তা বের করার চেষ্টা করুন।) মূল বিষয় হলো সেলফ-রেফারেনশিয়াল টাইপটি নিজে নড়াচড়া করতে পারে না, কারণ এটি এখনও পিন করা আছে।</p>
+<figure>
+<p>&lt;img alt="তিনটি মোটামুটি কলামে রাখা চারটি বক্স, যা পূর্ববর্তী ডায়াগ্রামের মতোই তবে দ্বিতীয় কলামে একটি পরিবর্তন সহ। এখন দ্বিতীয় কলামে দুটি বক্স আছে, "b1" এবং "b2" লেবেলযুক্ত, "b1" ধূসর রঙের, এবং "Pin" থেকে তীরটি "b1"-এর পরিবর্তে "b2"-এর মধ্য দিয়ে যায়, যা নির্দেশ করে যে পয়েন্টারটি "b1" থেকে "b2"-তে সরে গেছে, কিন্তু "pinned"-এর ডেটা সরেনি।" src="img/trpl17-07.svg" class="center" /&gt;</p>
+<figcaption>চিত্র ১৭-৭: একটি সেলফ-রেফারেনশিয়াল ফিউচার টাইপের দিকে নির্দেশকারী একটি `Box`-কে সরানো।</figcaption>
+</figure>
+<p>যাইহোক, বেশিরভাগ টাইপই চারপাশে সরানো পুরোপুরি নিরাপদ, এমনকি যদি সেগুলি একটি <code>Pin</code> র‍্যাপারের পিছনে থাকে। আমাদের কেবল তখনই পিনিং সম্পর্কে ভাবতে হবে যখন আইটেমগুলির অভ্যন্তরীণ রেফারেন্স থাকে। সংখ্যা এবং বুলিয়ানের মতো আদিম মানগুলি নিরাপদ কারণ তাদের স্পষ্টতই কোনো অভ্যন্তরীণ রেফারেন্স নেই। রাস্টে আপনি সাধারণত যে বেশিরভাগ টাইপের সাথে কাজ করেন সেগুলিও নেই। আপনি উদাহরণস্বরূপ, একটি <code>Vec</code> চারপাশে সরাতে পারেন, কোনো চিন্তা ছাড়াই। আমরা এখন পর্যন্ত যা দেখেছি তা দিয়ে, যদি আপনার একটি <code>Pin&lt;Vec&lt;String&gt;&gt;</code> থাকে, তবে আপনাকে <code>Pin</code> দ্বারা প্রদত্ত নিরাপদ কিন্তু সীমাবদ্ধ API-এর মাধ্যমে সবকিছু করতে হতো, যদিও একটি <code>Vec&lt;String&gt;</code> সর্বদা সরানো নিরাপদ যদি এর অন্য কোনো রেফারেন্স না থাকে। আমাদের কম্পাইলারকে বলার একটি উপায় প্রয়োজন যে এই ধরনের ক্ষেত্রে আইটেমগুলি চারপাশে সরানো ঠিক আছে—এবং এখানেই <code>Unpin</code> কাজে আসে।</p>
+<p><code>Unpin</code> একটি মার্কার ট্রেইট, যা আমরা চ্যাপ্টার ১৬-তে দেখা <code>Send</code> এবং <code>Sync</code> ট্রেইটের মতো, এবং তাই এর নিজস্ব কোনো কার্যকারিতা নেই। মার্কার ট্রেইটগুলি কেবল কম্পাইলারকে বলার জন্য বিদ্যমান যে একটি নির্দিষ্ট প্রসঙ্গে একটি প্রদত্ত ট্রেইট ইমপ্লিমেন্ট করা টাইপ ব্যবহার করা নিরাপদ। <code>Unpin</code> কম্পাইলারকে জানায় যে একটি প্রদত্ত টাইপকে মানটি নিরাপদে সরানো যায় কিনা সে সম্পর্কে কোনো গ্যারান্টি বজায় রাখার <em>প্রয়োজন নেই</em>।</p>
+<!--
+  The inline `<code>` in the next block is to allow the inline `<em>` inside it,
+  matching what NoStarch does style-wise, and emphasizing within the text here
+  that it is something distinct from a normal type.
+-->
+<p><code>Send</code> এবং <code>Sync</code>-এর মতোই, কম্পাইলার স্বয়ংক্রিয়ভাবে সমস্ত টাইপের জন্য <code>Unpin</code> ইমপ্লিমেন্ট করে যেখানে এটি প্রমাণ করতে পারে যে এটি নিরাপদ। একটি বিশেষ ক্ষেত্র, আবার <code>Send</code> এবং <code>Sync</code>-এর মতো, যেখানে একটি টাইপের জন্য <code>Unpin</code> ইমপ্লিমেন্ট করা <em>হয় না</em>। এর জন্য নোটেশন হলো <code>impl !Unpin for <em>SomeType</em></code>, যেখানে <code><em>SomeType</em></code> হলো এমন একটি টাইপের নাম যা সেই গ্যারান্টিগুলি বজায় রাখার <em>প্রয়োজন</em> করে যখন সেই টাইপের একটি পয়েন্টার একটি <code>Pin</code>-এ ব্যবহৃত হয়।</p>
+<p>অন্য কথায়, <code>Pin</code> এবং <code>Unpin</code>-এর মধ্যে সম্পর্ক সম্পর্কে দুটি জিনিস মনে রাখতে হবে। প্রথমত, <code>Unpin</code> হলো "স্বাভাবিক" ক্ষেত্র, এবং <code>!Unpin</code> হলো বিশেষ ক্ষেত্র। দ্বিতীয়ত, একটি টাইপ <code>Unpin</code> নাকি <code>!Unpin</code> ইমপ্লিমেন্ট করে তা <em>কেবলমাত্র</em> তখনই গুরুত্বপূর্ণ যখন আপনি সেই টাইপের একটি পিন করা পয়েন্টার ব্যবহার করছেন যেমন <code>Pin&lt;&amp;mut <em>SomeType</em>&gt;</code>।</p>
+<p>এটি সুনির্দিষ্ট করতে, একটি <code>String</code> সম্পর্কে ভাবুন: এর একটি দৈর্ঘ্য এবং ইউনিকোড অক্ষর রয়েছে যা এটিকে তৈরি করে। আমরা একটি <code>String</code>-কে <code>Pin</code>-এ র‍্যাপ করতে পারি, যেমন চিত্র ১৭-৮-এ দেখা গেছে। যাইহোক, <code>String</code> স্বয়ংক্রিয়ভাবে <code>Unpin</code> ইমপ্লিমেন্ট করে, যেমন রাস্টের বেশিরভাগ অন্যান্য টাইপ করে।</p>
+<figure>
+<img alt="একটি String পিন করা; ডটেড লাইনটি নির্দেশ করে যে Stringটি Unpin ট্রেইট ইমপ্লিমেন্ট করে, এবং তাই পিন করা নয়।" src="img/trpl17-08.svg" class="center" />
+<figcaption>চিত্র ১৭-৮: একটি `String` পিন করা; ডটেড লাইনটি নির্দেশ করে যে `String`টি `Unpin` ট্রেইট ইমপ্লিমেন্ট করে, এবং তাই পিন করা নয়।</figcaption>
+</figure>
+<p>ফলস্বরূপ, আমরা এমন কিছু করতে পারি যা অবৈধ হতো যদি <code>String</code> <code>!Unpin</code> ইমপ্লিমেন্ট করত, যেমন মেমরিতে ঠিক একই স্থানে একটি স্ট্রিংকে অন্য একটি দিয়ে প্রতিস্থাপন করা, যেমন চিত্র ১৭-৯-এ। এটি <code>Pin</code> চুক্তি লঙ্ঘন করে না, কারণ <code>String</code>-এর কোনো অভ্যন্তরীণ রেফারেন্স নেই যা এটিকে চারপাশে সরানো অনিরাপদ করে! ঠিক একারণেই এটি <code>!Unpin</code>-এর পরিবর্তে <code>Unpin</code> ইমপ্লিমেন্ট করে।</p>
+<figure>
+<img alt="মেমরিতে সম্পূর্ণ ভিন্ন একটি String দিয়ে Stringটি প্রতিস্থাপন করা।" src="img/trpl17-09.svg" class="center" />
+<figcaption>চিত্র ১৭-৯: মেমরিতে `String`-টিকে সম্পূর্ণ ভিন্ন একটি `String` দিয়ে প্রতিস্থাপন করা।</figcaption>
+</figure>
+<p>এখন আমরা লিস্টিং ১৭-১৭ থেকে সেই <code>join_all</code> কলের জন্য রিপোর্ট করা ত্রুটিগুলি বোঝার জন্য যথেষ্ট জানি। আমরা মূলত async ব্লক দ্বারা উৎপাদিত ফিউচারগুলিকে একটি <code>Vec&lt;Box&lt;dyn Future&lt;Output = ()&gt;&gt;&gt;</code>-এ সরানোর চেষ্টা করেছিলাম, কিন্তু যেমন আমরা দেখেছি, সেই ফিউচারগুলির অভ্যন্তরীণ রেফারেন্স থাকতে পারে, তাই তারা <code>Unpin</code> ইমপ্লিমেন্ট করে না। তাদের পিন করা দরকার, এবং তারপরে আমরা <code>Pin</code> টাইপটিকে <code>Vec</code>-এ পাস করতে পারি, আত্মবিশ্বাসী যে ফিউচারের অন্তর্নিহিত ডেটা <em>সরানো হবে না</em>।</p>
+<p><code>Pin</code> এবং <code>Unpin</code> বেশিরভাগই নিম্ন-স্তরের লাইব্রেরি তৈরির জন্য, অথবা যখন আপনি নিজে একটি রানটাইম তৈরি করছেন, দৈনন্দিন রাস্ট কোডের জন্য ততটা গুরুত্বপূর্ণ নয়। তবে যখন আপনি ত্রুটি বার্তাগুলিতে এই ট্রেইটগুলি দেখেন, এখন আপনার কোড কীভাবে ঠিক করতে হবে সে সম্পর্কে আরও ভালো ধারণা থাকবে!</p>
+<blockquote>
+<p>দ্রষ্টব্য: <code>Pin</code> এবং <code>Unpin</code>-এর এই সংমিশ্রণটি রাস্টে এক শ্রেণীর জটিল টাইপ নিরাপদে ইমপ্লিমেন্ট করা সম্ভব করে তোলে যা অন্যথায় চ্যালেঞ্জিং প্রমাণিত হতো কারণ সেগুলি সেলফ-রেফারেনশিয়াল। যে টাইপগুলির <code>Pin</code> প্রয়োজন সেগুলি আজ async রাস্টে সবচেয়ে বেশি দেখা যায়, তবে মাঝে মাঝে, আপনি সেগুলিকে অন্যান্য প্রসঙ্গেও দেখতে পারেন।</p>
+<p><code>Pin</code> এবং <code>Unpin</code> কীভাবে কাজ করে, এবং তাদের যে নিয়মগুলি বজায় রাখতে হয়, সেগুলি <code>std::pin</code>-এর জন্য API ডকুমেন্টেশনে ব্যাপকভাবে আচ্ছাদিত, তাই আপনি যদি আরও শিখতে আগ্রহী হন, তবে এটি শুরু করার জন্য একটি দুর্দান্ত জায়গা।</p>
+<p>আপনি যদি পর্দার আড়ালে জিনিসগুলি কীভাবে কাজ করে তা আরও বিস্তারিতভাবে বুঝতে চান, <a href="https://rust-lang.github.io/async-book/"><em>Asynchronous Programming in Rust</em></a>-এর <a href="https://rust-lang.github.io/async-book/02_execution/01_chapter.html">২</a> এবং <a href="https://rust-lang.github.io/async-book/04_pinning/01_chapter.html">৪</a> অধ্যায় দেখুন।</p>
+</blockquote>
+<h3 id="stream-টরেইট"><a class="header" href="#stream-টরেইট"><code>Stream</code> ট্রেইট</a></h3>
+<p>এখন যেহেতু আপনার <code>Future</code>, <code>Pin</code>, এবং <code>Unpin</code> ট্রেইটগুলির উপর গভীর ধারণা আছে, আমরা <code>Stream</code> ট্রেইটের দিকে আমাদের মনোযোগ ফেরাতে পারি। যেমন আপনি অধ্যায়ের শুরুতে শিখেছেন, স্ট্রীমগুলি অ্যাসিঙ্ক্রোনাস ইটারেটরের মতো। <code>Iterator</code> এবং <code>Future</code>-এর থেকে ভিন্ন, <code>Stream</code>-এর এই লেখার সময় স্ট্যান্ডার্ড লাইব্রেরিতে কোনো সংজ্ঞা নেই, তবে <code>futures</code> ক্রেট থেকে একটি খুব সাধারণ সংজ্ঞা রয়েছে যা ইকোসিস্টেম জুড়ে ব্যবহৃত হয়।</p>
+<p>আসুন <code>Iterator</code> এবং <code>Future</code> ট্রেইটগুলির সংজ্ঞা পর্যালোচনা করি একটি <code>Stream</code> ট্রেইট কীভাবে সেগুলিকে একত্রিত করতে পারে তা দেখার আগে। <code>Iterator</code> থেকে, আমাদের কাছে একটি ক্রমের ধারণা রয়েছে: এর <code>next</code> মেথড একটি <code>Option&lt;Self::Item&gt;</code> সরবরাহ করে। <code>Future</code> থেকে, আমাদের কাছে সময়ের সাথে সাথে প্রস্তুতির ধারণা রয়েছে: এর <code>poll</code> মেথড একটি <code>Poll&lt;Self::Output&gt;</code> সরবরাহ করে। সময়ের সাথে সাথে প্রস্তুত হওয়া আইটেমগুলির একটি ক্রম উপস্থাপন করতে, আমরা একটি <code>Stream</code> ট্রেইট সংজ্ঞায়িত করি যা সেই বৈশিষ্ট্যগুলিকে একত্রিত করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::pin::Pin;
+use std::task::{Context, Poll};
+
+trait Stream {
+    type Item;
+
+    fn poll_next(
+        self: Pin&lt;&amp;mut Self&gt;,
+        cx: &amp;mut Context&lt;'_&gt;
+    ) -&gt; Poll&lt;Option&lt;Self::Item&gt;&gt;;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>Stream</code> ট্রেইটটি স্ট্রীম দ্বারা উৎপাদিত আইটেমগুলির টাইপের জন্য <code>Item</code> নামে একটি অ্যাসোসিয়েটেড টাইপ সংজ্ঞায়িত করে। এটি <code>Iterator</code>-এর মতো, যেখানে শূন্য থেকে অনেক আইটেম থাকতে পারে, এবং <code>Future</code>-এর থেকে ভিন্ন, যেখানে সর্বদা একটি একক <code>Output</code> থাকে, এমনকি যদি এটি ইউনিট টাইপ <code>()</code> হয়।</p>
+<p><code>Stream</code>-এর সেই আইটেমগুলি পাওয়ার জন্য একটি মেথডও সংজ্ঞায়িত করে। আমরা এটিকে <code>poll_next</code> বলি, এটি স্পষ্ট করার জন্য যে এটি <code>Future::poll</code>-এর মতোই পোল করে এবং <code>Iterator::next</code>-এর মতোই আইটেমের একটি ক্রম তৈরি করে। এর রিটার্ন টাইপ <code>Poll</code>-কে <code>Option</code>-এর সাথে একত্রিত করে। বাইরের টাইপটি <code>Poll</code>, কারণ এটি প্রস্তুতির জন্য পরীক্ষা করতে হবে, ঠিক একটি ফিউচারের মতো। ভেতরের টাইপটি <code>Option</code>, কারণ এটি আরও বার্তা আছে কিনা তা সংকেত দিতে হবে, ঠিক একটি ইটারেটরের মতো।</p>
+<p>এরকম কিছু সংজ্ঞা সম্ভবত রাস্টের স্ট্যান্ডার্ড লাইব্রেরির অংশ হিসাবে শেষ হবে। এর মধ্যে, এটি বেশিরভাগ রানটাইমের টুলকিটের অংশ, তাই আপনি এটির উপর নির্ভর করতে পারেন, এবং আমরা পরবর্তীতে যা কিছু কভার করব তা সাধারণত প্রযোজ্য হবে!</p>
+<p>স্ট্রিমিং সম্পর্কিত বিভাগে আমরা যে উদাহরণটি দেখেছি, সেখানে আমরা <code>poll_next</code> <em>বা</em> <code>Stream</code> ব্যবহার করিনি, বরং <code>next</code> এবং <code>StreamExt</code> ব্যবহার করেছি। আমরা অবশ্যই <code>poll_next</code> API-এর ভিত্তিতে সরাসরি কাজ করতে পারতাম, আমাদের নিজস্ব <code>Stream</code> স্টেট মেশিন হাতে লিখে, ঠিক যেমন আমরা ফিউচারের সাথে সরাসরি তাদের <code>poll</code> মেথডের মাধ্যমে কাজ করতে <em>পারতাম</em>। তবে <code>await</code> ব্যবহার করা অনেক সুন্দর, এবং <code>StreamExt</code> ট্রেইট <code>next</code> মেথড সরবরাহ করে যাতে আমরা ঠিক তাই করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use std::pin::Pin;
+</span><span class="boring">use std::task::{Context, Poll};
+</span><span class="boring">
+</span><span class="boring">trait Stream {
+</span><span class="boring">    type Item;
+</span><span class="boring">    fn poll_next(
+</span><span class="boring">        self: Pin&lt;&amp;mut Self&gt;,
+</span><span class="boring">        cx: &amp;mut Context&lt;'_&gt;,
+</span><span class="boring">    ) -&gt; Poll&lt;Option&lt;Self::Item&gt;&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span>trait StreamExt: Stream {
+    async fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;
+    where
+        Self: Unpin;
+
+    // other methods...
+}
+<span class="boring">}</span></code></pre></pre>
+<!--
+TODO: update this if/when tokio/etc. update their MSRV and switch to using async functions
+in traits, since the lack thereof is the reason they do not yet have this.
+-->
+<blockquote>
+<p>দ্রষ্টব্য: আমরা অধ্যায়ের শুরুতে যে প্রকৃত সংজ্ঞাটি ব্যবহার করেছি তা এর থেকে কিছুটা ভিন্ন দেখায়, কারণ এটি রাস্টের এমন সংস্করণগুলিকে সমর্থন করে যেগুলিতে এখনও ট্রেইটে async ফাংশন ব্যবহার করার সমর্থন ছিল না। ফলস্বরূপ, এটি এইরকম দেখায়:</p>
+<pre><code class="language-rust ignore">fn next(&amp;mut self) -&gt; Next&lt;'_, Self&gt; where Self: Unpin;</code></pre>
+<p>সেই <code>Next</code> টাইপটি হলো একটি <code>struct</code> যা <code>Future</code> ইমপ্লিমেন্ট করে এবং আমাদের <code>self</code>-এর রেফারেন্সের লাইফটাইমকে <code>Next&lt;'_, Self&gt;</code> দিয়ে নামকরণ করার অনুমতি দেয়, যাতে <code>await</code> এই মেথডের সাথে কাজ করতে পারে।</p>
+</blockquote>
+<p><code>StreamExt</code> ট্রেইটটি স্ট্রীমের সাথে ব্যবহার করার জন্য উপলব্ধ সমস্ত আকর্ষণীয় মেথডেরও হোম। <code>StreamExt</code> স্বয়ংক্রিয়ভাবে প্রতিটি টাইপের জন্য ইমপ্লিমেন্ট করা হয় যা <code>Stream</code> ইমপ্লিমেন্ট করে, তবে এই ট্রেইটগুলি আলাদাভাবে সংজ্ঞায়িত করা হয়েছে যাতে কমিউনিটি ফাউন্ডেশনাল ট্রেইটকে প্রভাবিত না করে সুবিধাজনক API-গুলির উপর পুনরাবৃত্তি করতে পারে।</p>
+<p><code>trpl</code> ক্রেটে ব্যবহৃত <code>StreamExt</code>-এর সংস্করণে, ট্রেইটটি কেবল <code>next</code> মেথড সংজ্ঞায়িত করে না, বরং <code>next</code>-এর একটি ডিফল্ট ইমপ্লিমেন্টেশনও সরবরাহ করে যা <code>Stream::poll_next</code> কল করার বিবরণগুলি সঠিকভাবে পরিচালনা করে। এর মানে হলো এমনকি যখন আপনার নিজের স্ট্রিমিং ডেটা টাইপ লিখতে হবে, তখন আপনাকে <em>কেবলমাত্র</em> <code>Stream</code> ইমপ্লিমেন্ট করতে হবে, এবং তারপরে যে কেউ আপনার ডেটা টাইপ ব্যবহার করে সে স্বয়ংক্রিয়ভাবে <code>StreamExt</code> এবং এর মেথডগুলি ব্যবহার করতে পারবে।</p>
+<p>এই ট্রেইটগুলির নিম্ন-স্তরের বিবরণ সম্পর্কে আমরা কেবল এটুকুই কভার করব। শেষ করার জন্য, আসুন বিবেচনা করি কীভাবে ফিউচার (স্ট্রীম সহ), টাস্ক এবং থ্রেড সব একসাথে খাপ খায়!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch17-04-streams.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch17-06-futures-tasks-threads.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch17-04-streams.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch17-06-futures-tasks-threads.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

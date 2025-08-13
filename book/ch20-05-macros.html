@@ -1,0 +1,461 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ম্যাক্রো - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="মযাকরো-macros"><a class="header" href="#মযাকরো-macros">ম্যাক্রো (Macros)</a></h2>
+<p>আমরা এই বই জুড়ে <code>println!</code>-এর মতো ম্যাক্রো ব্যবহার করেছি, কিন্তু একটি ম্যাক্রো কী এবং এটি কীভাবে কাজ করে তা আমরা পুরোপুরিভাবে আলোচনা করিনি। <em>ম্যাক্রো</em> শব্দটি রাস্টের বিভিন্ন ফিচারের একটি পরিবারকে বোঝায়: <code>macro_rules!</code> সহ <em>ডিক্লারেটিভ</em> ম্যাক্রো এবং তিন ধরনের <em>প্রসিডিউরাল</em> ম্যাক্রো:</p>
+<ul>
+<li>কাস্টম <code>#[derive]</code> ম্যাক্রো যা struct এবং enum-এ ব্যবহৃত <code>derive</code> অ্যাট্রিবিউটের সাথে যোগ করা কোড নির্দিষ্ট করে।</li>
+<li>অ্যাট্রিবিউট-লাইক ম্যাক্রো যা যেকোনো আইটেমে ব্যবহারযোগ্য কাস্টম অ্যাট্রিবিউট সংজ্ঞায়িত করে।</li>
+<li>ফাংশন-লাইক ম্যাক্রো যা ফাংশন কলের মতো দেখায় কিন্তু তাদের আর্গুমেন্ট হিসেবে নির্দিষ্ট করা টোকেনগুলোর উপর কাজ করে।</li>
+</ul>
+<p>আমরা একে একে প্রতিটি নিয়ে আলোচনা করব, কিন্তু প্রথমে, চলুন দেখি যখন আমাদের কাছে ফাংশন আছে তখন আমাদের ম্যাক্রোর প্রয়োজন কেন।</p>
+<h3 id="মযাকরো-এবং-ফাংশনের-মধযে-পারথকয"><a class="header" href="#মযাকরো-এবং-ফাংশনের-মধযে-পারথকয">ম্যাক্রো এবং ফাংশনের মধ্যে পার্থক্য</a></h3>
+<p>মৌলিকভাবে, ম্যাক্রোগুলো হলো এমন কোড লেখার একটি উপায় যা অন্য কোড লেখে, যা <em>মেটাপ্রোগ্রামিং</em> (metaprogramming) নামে পরিচিত। পরিশিষ্ট সি-তে, আমরা <code>derive</code> অ্যাট্রিবিউট নিয়ে আলোচনা করি, যা আপনার জন্য বিভিন্ন trait-এর একটি ইমপ্লিমেন্টেশন তৈরি করে। আমরা বই জুড়ে <code>println!</code> এবং <code>vec!</code> ম্যাক্রোগুলোও ব্যবহার করেছি। এই সমস্ত ম্যাক্রোগুলো আপনার ম্যানুয়ালি লেখা কোডের চেয়ে বেশি কোড তৈরি করতে <em>এক্সপ্যান্ড</em> (expand) হয়।</p>
+<p>মেটাপ্রোগ্রামিং আপনাকে যে পরিমাণ কোড লিখতে এবং রক্ষণাবেক্ষণ করতে হয় তা কমানোর জন্য দরকারী, যা ফাংশনেরও একটি ভূমিকা। তবে, ম্যাক্রোগুলোর কিছু অতিরিক্ত ক্ষমতা রয়েছে যা ফাংশনের নেই।</p>
+<p>একটি ফাংশন সিগনেচারকে অবশ্যই ফাংশনের প্যারামিটারের সংখ্যা এবং টাইপ ঘোষণা করতে হয়। অন্যদিকে, ম্যাক্রোগুলো পরিবর্তনশীল সংখ্যক প্যারামিটার নিতে পারে: আমরা <code>println!("hello")</code> একটি আর্গুমেন্ট দিয়ে অথবা <code>println!("hello {}", name)</code> দুটি আর্গুমেন্ট দিয়ে কল করতে পারি। এছাড়াও, কম্পাইলার কোডের অর্থ ব্যাখ্যা করার আগে ম্যাক্রোগুলো এক্সপ্যান্ড হয়, তাই একটি ম্যাক্রো, উদাহরণস্বরূপ, একটি প্রদত্ত টাইপের উপর একটি trait ইমপ্লিমেন্ট করতে পারে। একটি ফাংশন তা করতে পারে না, কারণ এটি রানটাইমে কল করা হয় এবং একটি trait কম্পাইল টাইমে ইমপ্লিমেন্ট করা প্রয়োজন।</p>
+<p>একটি ফাংশনের পরিবর্তে একটি ম্যাক্রো ইমপ্লিমেন্ট করার অসুবিধা হলো ম্যাক্রো সংজ্ঞা ফাংশন সংজ্ঞার চেয়ে বেশি জটিল কারণ আপনি রাস্ট কোড লিখছেন যা রাস্ট কোড লেখে। এই পরোক্ষতার কারণে, ম্যাক্রো সংজ্ঞা সাধারণত ফাংশন সংজ্ঞার চেয়ে পড়া, বোঝা এবং রক্ষণাবেক্ষণ করা বেশি কঠিন।</p>
+<p>ম্যাক্রো এবং ফাংশনের মধ্যে আরেকটি গুরুত্বপূর্ণ পার্থক্য হলো আপনাকে অবশ্যই একটি ফাইলে কল করার <em>আগে</em> ম্যাক্রোগুলোকে সংজ্ঞায়িত করতে হবে বা স্কোপে আনতে হবে, ফাংশনের বিপরীতে যা আপনি যেকোনো জায়গায় সংজ্ঞায়িত করতে এবং যেকোনো জায়গায় কল করতে পারেন।</p>
+<h3 id="সাধারণ-মেটাপরোগরামিংযের-জনয-macro_rules-সহ-ডিকলারেটিভ-মযাকরো"><a class="header" href="#সাধারণ-মেটাপরোগরামিংযের-জনয-macro_rules-সহ-ডিকলারেটিভ-মযাকরো">সাধারণ মেটাপ্রোগ্রামিংয়ের জন্য <code>macro_rules!</code> সহ ডিক্লারেটিভ ম্যাক্রো</a></h3>
+<p>রাস্টে সবচেয়ে বহুল ব্যবহৃত ম্যাক্রোর রূপ হলো <em>ডিক্লারেটিভ ম্যাক্রো</em> (declarative macro)। এগুলোকে কখনও কখনও "macros by example", "<code>macro_rules!</code> macros", বা শুধু "macros" বলা হয়। তাদের মূল ভিত্তি হলো, ডিক্লারেটিভ ম্যাক্রোগুলো আপনাকে রাস্টের <code>match</code> এক্সপ্রেশনের মতো কিছু লেখার সুযোগ দেয়। চ্যাপ্টার ৬-এ যেমন আলোচনা করা হয়েছে, <code>match</code> এক্সপ্রেশনগুলো হলো কন্ট্রোল স্ট্রাকচার যা একটি এক্সপ্রেশন নেয়, এক্সপ্রেশনের ফলস্বরূপ মানকে প্যাটার্নের সাথে তুলনা করে, এবং তারপর ম্যাচিং প্যাটার্নের সাথে যুক্ত কোড চালায়। ম্যাক্রোগুলোও একটি মানকে নির্দিষ্ট কোডের সাথে যুক্ত প্যাটার্নের সাথে তুলনা করে: এই পরিস্থিতিতে, মানটি হলো ম্যাক্রোতে পাস করা আক্ষরিক রাস্ট সোর্স কোড; প্যাটার্নগুলো সেই সোর্স কোডের কাঠামোর সাথে তুলনা করা হয়; এবং প্রতিটি প্যাটার্নের সাথে যুক্ত কোড, ম্যাচ হলে, ম্যাক্রোতে পাস করা কোডকে প্রতিস্থাপন করে। এই সবকিছু কম্পাইলেশনের সময় ঘটে।</p>
+<p>একটি ম্যাক্রো সংজ্ঞায়িত করতে, আপনি <code>macro_rules!</code> কনস্ট্রাক্ট ব্যবহার করেন। চলুন <code>vec!</code> ম্যাক্রোটি কীভাবে সংজ্ঞায়িত করা হয় তা দেখে <code>macro_rules!</code> কীভাবে ব্যবহার করতে হয় তা অন্বেষণ করি। চ্যাপ্টার ৮-এ আমরা দেখেছি কীভাবে আমরা নির্দিষ্ট মান সহ একটি নতুন ভেক্টর তৈরি করতে <code>vec!</code> ম্যাক্রো ব্যবহার করতে পারি। উদাহরণস্বরূপ, নিম্নলিখিত ম্যাক্রোটি তিনটি ইন্টিজার ধারণকারী একটি নতুন ভেক্টর তৈরি করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let v: Vec&lt;u32&gt; = vec![1, 2, 3];
+<span class="boring">}</span></code></pre></pre>
+<p>আমরা <code>vec!</code> ম্যাক্রোটি দুটি ইন্টিজারের ভেক্টর বা পাঁচটি স্ট্রিং স্লাইসের ভেক্টর তৈরি করতেও ব্যবহার করতে পারতাম। আমরা একই কাজ করার জন্য একটি ফাংশন ব্যবহার করতে পারতাম না কারণ আমরা আগে থেকে মানের সংখ্যা বা টাইপ জানতাম না।</p>
+<p>লিস্টিং ২০-৩৫ <code>vec!</code> ম্যাক্রোর একটি সামান্য সরলীকৃত সংজ্ঞা দেখায়।</p>
+<Listing number="20-35" file-name="src/lib.rs" caption="`vec!` ম্যাক্রো সংজ্ঞার একটি সরলীকৃত সংস্করণ">
+<pre><code class="language-rust noplayground">#[macro_export]
+macro_rules! vec {
+    ( $( $x:expr ),* ) =&gt; {
+        {
+            let mut temp_vec = Vec::new();
+            $(
+                temp_vec.push($x);
+            )*
+            temp_vec
+        }
+    };
+}</code></pre>
+</Listing>
+<blockquote>
+<p>দ্রষ্টব্য: স্ট্যান্ডার্ড লাইব্রেরিতে <code>vec!</code> ম্যাক্রোর আসল সংজ্ঞায় আগে থেকে সঠিক পরিমাণ মেমরি প্রি-অ্যালোকেট করার কোড অন্তর্ভুক্ত রয়েছে। সেই কোডটি একটি অপ্টিমাইজেশন যা আমরা এখানে উদাহরণটি সহজ করার জন্য অন্তর্ভুক্ত করিনি।</p>
+</blockquote>
+<p><code>#[macro_export]</code> অ্যানোটেশনটি নির্দেশ করে যে এই ম্যাক্রোটি যখনই ম্যাক্রোটি সংজ্ঞায়িত করা ক্রেটটি স্কোপে আনা হবে তখনই উপলব্ধ করা উচিত। এই অ্যানোটেশন ছাড়া, ম্যাক্রোটি স্কোপে আনা যায় না।</p>
+<p>এরপর আমরা <code>macro_rules!</code> এবং আমরা যে ম্যাক্রোটি সংজ্ঞায়িত করছি তার নাম <em>ছাড়া</em> বিস্ময় চিহ্ন দিয়ে ম্যাক্রো সংজ্ঞা শুরু করি। নামটি, এই ক্ষেত্রে <code>vec</code>, এর পরে কোঁকড়া বন্ধনী (curly brackets) থাকে যা ম্যাক্রো সংজ্ঞার বডি বোঝায়।</p>
+<p><code>vec!</code> বডির গঠনটি একটি <code>match</code> এক্সপ্রেশনের গঠনের মতোই। এখানে আমাদের একটি আর্ম আছে যার প্যাটার্ন <code>( $( $x:expr ),* )</code>, এর পরে <code>=&gt;</code> এবং এই প্যাটার্নের সাথে যুক্ত কোডের ব্লক। যদি প্যাটার্নটি ম্যাচ করে, তবে সংশ্লিষ্ট কোডের ব্লকটি নির্গত হবে। যেহেতু এটি এই ম্যাক্রোতে একমাত্র প্যাটার্ন, তাই ম্যাচ করার একমাত্র বৈধ উপায় আছে; অন্য কোনো প্যাটার্ন একটি ত্রুটির কারণ হবে। আরও জটিল ম্যাক্রোগুলোর একাধিক আর্ম থাকবে।</p>
+<p>ম্যাক্রো সংজ্ঞায় বৈধ প্যাটার্ন সিনট্যাক্স চ্যাপ্টার ১৯-এ কভার করা প্যাটার্ন সিনট্যাক্স থেকে ভিন্ন কারণ ম্যাক্রো প্যাটার্নগুলো মানের পরিবর্তে রাস্ট কোড কাঠামোর সাথে ম্যাচ করা হয়। চলুন লিস্টিং ২০-২৯-এর প্যাটার্নের অংশগুলোর অর্থ কী তা দেখি; সম্পূর্ণ ম্যাক্রো প্যাটার্ন সিনট্যাক্সের জন্য, <a href="../reference/macros-by-example.html">রাস্ট রেফারেন্স</a> দেখুন।</p>
+<p>প্রথমে আমরা পুরো প্যাটার্নটি ঘিরে রাখার জন্য একজোড়া বন্ধনী ব্যবহার করি। আমরা ম্যাক্রো সিস্টেমে একটি ভেরিয়েবল ঘোষণা করার জন্য একটি ডলার চিহ্ন (<code>$</code>) ব্যবহার করি যা প্যাটার্নের সাথে ম্যাচ করা রাস্ট কোড ধারণ করবে। ডলার চিহ্নটি স্পষ্ট করে দেয় যে এটি একটি ম্যাক্রো ভেরিয়েবল, একটি সাধারণ রাস্ট ভেরিয়েবল নয়। এর পরে একজোড়া বন্ধনী আসে যা প্রতিস্থাপন কোডে ব্যবহারের জন্য বন্ধনীর মধ্যে থাকা প্যাটার্নের সাথে ম্যাচ করা মানগুলো ক্যাপচার করে। <code>$()</code>-এর মধ্যে <code>$x:expr</code> রয়েছে, যা যেকোনো রাস্ট এক্সপ্রেশনের সাথে ম্যাচ করে এবং এক্সপ্রেশনটিকে <code>$x</code> নাম দেয়।</p>
+<p><code>$()</code>-এর পরে থাকা কমাটি নির্দেশ করে যে <code>$()</code>-এর মধ্যে থাকা কোডের সাথে ম্যাচ করা কোডের প্রতিটি ইনস্ট্যান্সের মধ্যে একটি আক্ষরিক কমা বিভাজক অক্ষর অবশ্যই উপস্থিত থাকতে হবে। <code>*</code> নির্দিষ্ট করে যে প্যাটার্নটি <code>*</code>-এর আগে যা কিছু আছে তার শূন্য বা তার বেশি সংখ্যার সাথে ম্যাচ করে।</p>
+<p>যখন আমরা <code>vec![1, 2, 3];</code> দিয়ে এই ম্যাক্রোটি কল করি, <code>$x</code> প্যাটার্নটি তিনটি এক্সপ্রেশন <code>1</code>, <code>2</code>, এবং <code>3</code>-এর সাথে তিনবার ম্যাচ করে।</p>
+<p>এখন আসুন এই আর্মের সাথে যুক্ত কোডের বডিতে প্যাটার্নটি দেখি: <code>$()*</code>-এর মধ্যে <code>temp_vec.push()</code> প্যাটার্নে <code>$()</code>-এর সাথে ম্যাচ করা প্রতিটি অংশের জন্য তৈরি হয়, প্যাটার্নটি কতবার ম্যাচ করে তার উপর নির্ভর করে শূন্য বা তার বেশিবার। <code>$x</code> প্রতিটি ম্যাচ করা এক্সপ্রেশন দিয়ে প্রতিস্থাপিত হয়। যখন আমরা <code>vec![1, 2, 3];</code> দিয়ে এই ম্যাক্রোটি কল করি, তখন এই ম্যাক্রো কলটি প্রতিস্থাপনকারী কোডটি নিম্নলিখিত হবে:</p>
+<pre><code class="language-rust ignore">{
+    let mut temp_vec = Vec::new();
+    temp_vec.push(1);
+    temp_vec.push(2);
+    temp_vec.push(3);
+    temp_vec
+}</code></pre>
+<p>আমরা এমন একটি ম্যাক্রো সংজ্ঞায়িত করেছি যা যেকোনো সংখ্যক আর্গুমেন্ট যেকোনো টাইপের নিতে পারে এবং নির্দিষ্ট উপাদান ধারণকারী একটি ভেক্টর তৈরি করার জন্য কোড তৈরি করতে পারে।</p>
+<p>ম্যাক্রো কীভাবে লিখতে হয় সে সম্পর্কে আরও জানতে, অনলাইন ডকুমেন্টেশন বা অন্যান্য রিসোর্স, যেমন ড্যানিয়েল কিপ দ্বারা শুরু করা এবং লুকাস ওয়ার্থ দ্বারা চালিত <a href="https://veykril.github.io/tlborm/">"The Little Book of Rust Macros"</a> দেখুন।</p>
+<h3 id="অযাটরিবিউট-থেকে-কোড-জেনারেট-করার-জনয-পরসিডিউরাল-মযাকরো"><a class="header" href="#অযাটরিবিউট-থেকে-কোড-জেনারেট-করার-জনয-পরসিডিউরাল-মযাকরো">অ্যাট্রিবিউট থেকে কোড জেনারেট করার জন্য প্রসিডিউরাল ম্যাক্রো</a></h3>
+<p>ম্যাক্রোর দ্বিতীয় রূপটি হলো প্রসিডিউরাল ম্যাক্রো, যা একটি ফাংশনের মতো কাজ করে (এবং এটি এক ধরণের প্রসিডিউর)। <em>প্রসিডিউরাল ম্যাক্রো</em> (Procedural macros) ইনপুট হিসাবে কিছু কোড গ্রহণ করে, সেই কোডের উপর কাজ করে এবং প্যাটার্নের সাথে ম্যাচ করে কোডকে অন্য কোড দিয়ে প্রতিস্থাপন করার পরিবর্তে আউটপুট হিসাবে কিছু কোড তৈরি করে, যেমনটা ডিক্লারেটিভ ম্যাক্রোগুলো করে। তিন ধরণের প্রসিডিউরাল ম্যাক্রো হলো কাস্টম <code>derive</code>, অ্যাট্রিবিউট-লাইক এবং ফাংশন-লাইক, এবং সবগুলোই একই রকমভাবে কাজ করে।</p>
+<p>প্রসিডিউরাল ম্যাক্রো তৈরি করার সময়, সংজ্ঞাগুলো অবশ্যই একটি বিশেষ ক্রেট টাইপ সহ তাদের নিজস্ব ক্রেটে থাকতে হবে। এটি জটিল প্রযুক্তিগত কারণে যা আমরা ভবিষ্যতে দূর করার আশা করি। লিস্টিং ২০-৩৬-এ, আমরা দেখাই কীভাবে একটি প্রসিডিউরাল ম্যাক্রো সংজ্ঞায়িত করতে হয়, যেখানে <code>some_attribute</code> একটি নির্দিষ্ট ম্যাক্রো ভ্যারাইটি ব্যবহারের জন্য একটি প্লেসহোল্ডার।</p>
+<Listing number="20-36" file-name="src/lib.rs" caption="একটি প্রসিডিউরাল ম্যাক্রো সংজ্ঞায়িত করার একটি উদাহরণ">
+<pre><code class="language-rust ignore">use proc_macro;
+
+#[some_attribute]
+pub fn some_name(input: TokenStream) -&gt; TokenStream {
+}</code></pre>
+</Listing>
+<p>যে ফাংশনটি একটি প্রসিডিউরাল ম্যাক্রো সংজ্ঞায়িত করে তা ইনপুট হিসাবে একটি <code>TokenStream</code> নেয় এবং আউটপুট হিসাবে একটি <code>TokenStream</code> তৈরি করে। <code>TokenStream</code> টাইপটি <code>proc_macro</code> ক্রেট দ্বারা সংজ্ঞায়িত করা হয়েছে যা রাস্টের সাথে অন্তর্ভুক্ত এবং টোকেনের একটি ক্রম প্রতিনিধিত্ব করে। এটি ম্যাক্রোর মূল: যে সোর্স কোডের উপর ম্যাক্রোটি কাজ করছে তা ইনপুট <code>TokenStream</code> তৈরি করে, এবং ম্যাক্রো যে কোড তৈরি করে তা আউটপুট <code>TokenStream</code>। ফাংশনটির সাথে একটি অ্যাট্রিবিউটও সংযুক্ত থাকে যা নির্দিষ্ট করে যে আমরা কোন ধরণের প্রসিডিউরাল ম্যাক্রো তৈরি করছি। আমরা একই ক্রেটে একাধিক ধরণের প্রসিডিউরাল ম্যাক্রো রাখতে পারি।</p>
+<p>আসুন বিভিন্ন ধরণের প্রসিডিউরাল ম্যাক্রোগুলো দেখি। আমরা একটি কাস্টম <code>derive</code> ম্যাক্রো দিয়ে শুরু করব এবং তারপর ছোটখাটো ভিন্নতাগুলো ব্যাখ্যা করব যা অন্যান্য রূপগুলোকে ভিন্ন করে তোলে।</p>
+<h3 id="কীভাবে-একটি-কাসটম-derive-মযাকরো-লিখবেন"><a class="header" href="#কীভাবে-একটি-কাসটম-derive-মযাকরো-লিখবেন">কীভাবে একটি কাস্টম <code>derive</code> ম্যাক্রো লিখবেন</a></h3>
+<p>আসুন <code>hello_macro</code> নামে একটি ক্রেট তৈরি করি যা <code>HelloMacro</code> নামে একটি trait সংজ্ঞায়িত করে যার একটি associated function <code>hello_macro</code> আছে। আমাদের ব্যবহারকারীদের তাদের প্রতিটি টাইপের জন্য <code>HelloMacro</code> trait ইমপ্লিমেন্ট করতে বাধ্য করার পরিবর্তে, আমরা একটি প্রসিডিউরাল ম্যাক্রো সরবরাহ করব যাতে ব্যবহারকারীরা <code>#[derive(HelloMacro)]</code> দিয়ে তাদের টাইপকে অ্যানোটেট করে <code>hello_macro</code> ফাংশনের একটি ডিফল্ট ইমপ্লিমেন্টেশন পেতে পারে। ডিফল্ট ইমপ্লিমেন্টেশনটি <code>Hello, Macro! My name is TypeName!</code> প্রিন্ট করবে যেখানে <code>TypeName</code> হলো সেই টাইপের নাম যার উপর এই trait-টি সংজ্ঞায়িত করা হয়েছে। অন্য কথায়, আমরা এমন একটি ক্রেট লিখব যা অন্য প্রোগ্রামারকে আমাদের ক্রেট ব্যবহার করে লিস্টিং ২০-৩৭-এর মতো কোড লিখতে সক্ষম করবে।</p>
+<Listing number="20-37" file-name="src/main.rs" caption="আমাদের ক্রেটের ব্যবহারকারী আমাদের প্রসিডিউরাল ম্যাক্রো ব্যবহার করার সময় যে কোড লিখতে পারবে">
+<pre><code class="language-rust ignore does_not_compile">use hello_macro::HelloMacro;
+use hello_macro_derive::HelloMacro;
+
+#[derive(HelloMacro)]
+struct Pancakes;
+
+fn main() {
+    Pancakes::hello_macro();
+}</code></pre>
+</Listing>
+<p>এই কোডটি যখন আমরা শেষ করব তখন <code>Hello, Macro! My name is Pancakes!</code> প্রিন্ট করবে। প্রথম ধাপ হলো একটি নতুন লাইব্রেরি ক্রেট তৈরি করা, এইভাবে:</p>
+<pre><code class="language-console">$ cargo new hello_macro --lib
+</code></pre>
+<p>এরপরে, লিস্টিং ২০-৩৮-এ, আমরা <code>HelloMacro</code> trait এবং এর associated function সংজ্ঞায়িত করব।</p>
+<Listing file-name="src/lib.rs" number="20-38" caption="একটি সাধারণ trait যা আমরা `derive` ম্যাক্রোর সাথে ব্যবহার করব">
+<pre><code class="language-rust noplayground">pub trait HelloMacro {
+    fn hello_macro();
+}</code></pre>
+</Listing>
+<p>আমাদের একটি trait এবং তার ফাংশন আছে। এই মুহূর্তে, আমাদের ক্রেট ব্যবহারকারী কাঙ্ক্ষিত কার্যকারিতা অর্জনের জন্য trait-টি ইমপ্লিমেন্ট করতে পারে, যেমনটি লিস্টিং ২০-৩৯-এ দেখানো হয়েছে।</p>
+<Listing number="20-39" file-name="src/main.rs" caption="ব্যবহারকারীরা `HelloMacro` trait-এর একটি ম্যানুয়াল ইমপ্লিমেন্টেশন লিখলে এটি কেমন দেখাবে">
+<pre><code class="language-rust ignore">use hello_macro::HelloMacro;
+
+struct Pancakes;
+
+impl HelloMacro for Pancakes {
+    fn hello_macro() {
+        println!("Hello, Macro! My name is Pancakes!");
+    }
+}
+
+fn main() {
+    Pancakes::hello_macro();
+}</code></pre>
+</Listing>
+<p>তবে, তাদের প্রতিটি টাইপের জন্য ইমপ্লিমেন্টেশন ব্লক লিখতে হতো যা তারা <code>hello_macro</code>-এর সাথে ব্যবহার করতে চায়; আমরা তাদের এই কাজটি করা থেকে বাঁচাতে চাই।</p>
+<p>উপরন্তু, আমরা এখনও <code>hello_macro</code> ফাংশনটিকে ডিফল্ট ইমপ্লিমেন্টেশন দিয়ে সরবরাহ করতে পারি না যা trait-টি ইমপ্লিমেন্ট করা টাইপের নাম প্রিন্ট করবে: রাস্টের রিফ্লেকশন ক্ষমতা নেই, তাই এটি রানটাইমে টাইপের নাম দেখতে পারে না। আমাদের কম্পাইল টাইমে কোড জেনারেট করার জন্য একটি ম্যাক্রো প্রয়োজন।</p>
+<p>পরবর্তী ধাপ হলো প্রসিডিউরাল ম্যাক্রো সংজ্ঞায়িত করা। এই লেখার সময়, প্রসিডিউরাল ম্যাক্রোগুলোকে তাদের নিজস্ব ক্রেটে থাকতে হবে। অবশেষে, এই সীমাবদ্ধতা তুলে নেওয়া হতে পারে। ক্রেট এবং ম্যাক্রো ক্রেট কাঠামো করার প্রথাটি নিম্নরূপ: <code>foo</code> নামের একটি ক্রেটের জন্য, একটি কাস্টম <code>derive</code> প্রসিডিউরাল ম্যাক্রো ক্রেটকে <code>foo_derive</code> বলা হয়। চলুন আমাদের <code>hello_macro</code> প্রজেক্টের ভিতরে <code>hello_macro_derive</code> নামে একটি নতুন ক্রেট শুরু করি:</p>
+<pre><code class="language-console">$ cargo new hello_macro_derive --lib
+</code></pre>
+<p>আমাদের দুটি ক্রেট ঘনিষ্ঠভাবে সম্পর্কিত, তাই আমরা আমাদের <code>hello_macro</code> ক্রেটের ডিরেক্টরির মধ্যে প্রসিডিউরাল ম্যাক্রো ক্রেট তৈরি করি। যদি আমরা <code>hello_macro</code>-তে trait সংজ্ঞা পরিবর্তন করি, আমাদের <code>hello_macro_derive</code>-এ প্রসিডিউরাল ম্যাক্রোর ইমপ্লিমেন্টেশনও পরিবর্তন করতে হবে। দুটি ক্রেটকে আলাদাভাবে প্রকাশ করতে হবে, এবং এই ক্রেটগুলো ব্যবহারকারী প্রোগ্রামারদের উভয়কেই নির্ভরতা হিসাবে যোগ করতে হবে এবং উভয়কেই স্কোপে আনতে হবে। আমরা পরিবর্তে <code>hello_macro</code> ক্রেটকে <code>hello_macro_derive</code>-কে একটি নির্ভরতা হিসাবে ব্যবহার করতে এবং প্রসিডিউরাল ম্যাক্রো কোডটি পুনরায় এক্সপোর্ট করতে পারতাম। তবে, আমরা যেভাবে প্রজেক্টটি কাঠামো করেছি তা প্রোগ্রামারদের <code>hello_macro</code> ব্যবহার করা সম্ভব করে তোলে এমনকি যদি তারা <code>derive</code> কার্যকারিতা না চায়।</p>
+<p>আমাদের <code>hello_macro_derive</code> ক্রেটটিকে একটি প্রসিডিউরাল ম্যাক্রো ক্রেট হিসাবে ঘোষণা করতে হবে। আমাদের <code>syn</code> এবং <code>quote</code> ক্রেট থেকেও কার্যকারিতার প্রয়োজন হবে, যেমন আপনি এক মুহূর্তের মধ্যে দেখতে পাবেন, তাই আমাদের সেগুলোকে নির্ভরতা হিসাবে যোগ করতে হবে। <code>hello_macro_derive</code>-এর জন্য <em>Cargo.toml</em> ফাইলে নিম্নলিখিতটি যোগ করুন:</p>
+<Listing file-name="hello_macro_derive/Cargo.toml">
+<pre><code class="language-toml">[lib]
+proc-macro = true
+
+[dependencies]
+syn = "2.0"
+quote = "1.0"
+</code></pre>
+</Listing>
+<p>প্রসিডিউরাল ম্যাক্রো সংজ্ঞায়িত করা শুরু করতে, লিস্টিং ২০-৪০-এর কোডটি আপনার <code>hello_macro_derive</code> ক্রেটের জন্য <em>src/lib.rs</em> ফাইলে রাখুন। লক্ষ্য করুন যে এই কোডটি যতক্ষণ না আমরা <code>impl_hello_macro</code> ফাংশনের জন্য একটি সংজ্ঞা যোগ করি ততক্ষণ কম্পাইল হবে না।</p>
+<Listing number="20-40" file-name="hello_macro_derive/src/lib.rs" caption="রাস্ট কোড প্রক্রিয়া করার জন্য বেশিরভাগ প্রসিডিউরাল ম্যাক্রো ক্রেটের প্রয়োজন হবে এমন কোড">
+<pre><code class="language-rust ignore does_not_compile">use proc_macro::TokenStream;
+use quote::quote;
+
+#[proc_macro_derive(HelloMacro)]
+pub fn hello_macro_derive(input: TokenStream) -&gt; TokenStream {
+    // Construct a representation of Rust code as a syntax tree
+    // that we can manipulate.
+    let ast = syn::parse(input).unwrap();
+
+    // Build the trait implementation.
+    impl_hello_macro(&amp;ast)
+}</code></pre>
+</Listing>
+<p>লক্ষ্য করুন যে আমরা কোডটিকে <code>hello_macro_derive</code> ফাংশনে বিভক্ত করেছি, যা <code>TokenStream</code> পার্স করার জন্য দায়ী, এবং <code>impl_hello_macro</code> ফাংশনে, যা সিনট্যাক্স ট্রি রূপান্তর করার জন্য দায়ী: এটি একটি প্রসিডিউরাল ম্যাক্রো লেখা আরও সুবিধাজনক করে তোলে। বাইরের ফাংশনের কোড (<code>hello_macro_derive</code> এই ক্ষেত্রে) প্রায় প্রতিটি প্রসিডিউরাল ম্যাক্রো ক্রেটের জন্য একই হবে যা আপনি দেখেন বা তৈরি করেন। ভিতরের ফাংশনের বডিতে আপনি যে কোড নির্দিষ্ট করেন (<code>impl_hello_macro</code> এই ক্ষেত্রে) আপনার প্রসিডিউরাল ম্যাক্রোর উদ্দেশ্যের উপর নির্ভর করে ভিন্ন হবে।</p>
+<p>আমরা তিনটি নতুন ক্রেট চালু করেছি: <code>proc_macro</code>, <a href="https://crates.io/crates/syn"><code>syn</code></a><!--ignore -->, এবং <a href="https://crates.io/crates/quote"><code>quote</code></a><!-- ignore -->। <code>proc_macro</code> ক্রেটটি রাস্টের সাথে আসে, তাই আমাদের সেটিকে <em>Cargo.toml</em>-এর নির্ভরতাগুলিতে যোগ করার প্রয়োজন ছিল না। <code>proc_macro</code> ক্রেটটি হলো কম্পাইলারের API যা আমাদের আমাদের কোড থেকে রাস্ট কোড পড়তে এবং ম্যানিপুলেট করতে দেয়।</p>
+<p><code>syn</code> ক্রেটটি একটি স্ট্রিং থেকে রাস্ট কোডকে একটি ডেটা স্ট্রাকচারে পার্স করে যার উপর আমরা অপারেশন করতে পারি। <code>quote</code> ক্রেটটি <code>syn</code> ডেটা স্ট্রাকচারগুলোকে আবার রাস্ট কোডে পরিণত করে। এই ক্রেটগুলো আমাদের যে কোনো ধরণের রাস্ট কোড পার্স করা অনেক সহজ করে তোলে যা আমরা হ্যান্ডেল করতে চাইতে পারি: রাস্ট কোডের জন্য একটি সম্পূর্ণ পার্সার লেখা কোনো সহজ কাজ নয়।</p>
+<p><code>hello_macro_derive</code> ফাংশনটি তখন কল করা হবে যখন আমাদের লাইব্রেরির একজন ব্যবহারকারী একটি টাইপের উপর <code>#[derive(HelloMacro)]</code> নির্দিষ্ট করবে। এটি সম্ভব কারণ আমরা এখানে <code>hello_macro_derive</code> ফাংশনটিকে <code>proc_macro_derive</code> দিয়ে অ্যানোটেট করেছি এবং <code>HelloMacro</code> নামটি নির্দিষ্ট করেছি, যা আমাদের trait নামের সাথে মেলে; এটি বেশিরভাগ প্রসিডিউরাল ম্যাক্রোর অনুসরণ করা প্রথা।</p>
+<p><code>hello_macro_derive</code> ফাংশনটি প্রথমে <code>input</code>-কে একটি <code>TokenStream</code> থেকে একটি ডেটা স্ট্রাকচারে রূপান্তর করে যা আমরা তখন ব্যাখ্যা করতে এবং অপারেশন করতে পারি। এখানেই <code>syn</code> কাজে আসে। <code>syn</code>-এর <code>parse</code> ফাংশনটি একটি <code>TokenStream</code> নেয় এবং পার্স করা রাস্ট কোড প্রতিনিধিত্বকারী একটি <code>DeriveInput</code> struct রিটার্ন করে। লিস্টিং ২০-৪১ <code>struct Pancakes;</code> স্ট্রিং পার্স করে আমরা যে <code>DeriveInput</code> struct পাই তার প্রাসঙ্গিক অংশগুলো দেখায়।</p>
+<Listing number="20-41" caption="লিস্টিং ২০-৩৭-এ ম্যাক্রোর অ্যাট্রিবিউট থাকা কোড পার্স করার সময় আমরা যে `DeriveInput` ইনস্ট্যান্স পাই">
+<pre><code class="language-rust ignore">DeriveInput {
+    // --snip--
+
+    ident: Ident {
+        ident: "Pancakes",
+        span: #0 bytes(95..103)
+    },
+    data: Struct(
+        DataStruct {
+            struct_token: Struct,
+            fields: Unit,
+            semi_token: Some(
+                Semi
+            )
+        }
+    )
+}</code></pre>
+</Listing>
+<p>এই struct-এর ফিল্ডগুলো দেখায় যে আমরা যে রাস্ট কোডটি পার্স করেছি তা <code>ident</code> (<code>identifier</code>, অর্থাৎ নাম) <code>Pancakes</code> সহ একটি ইউনিট struct। এই struct-এ সব ধরণের রাস্ট কোড বর্ণনা করার জন্য আরও ফিল্ড রয়েছে; আরও তথ্যের জন্য <a href="https://docs.rs/syn/2.0/syn/struct.DeriveInput.html"><code>syn</code> ডকুমেন্টেশনে <code>DeriveInput</code></a> দেখুন।</p>
+<p>শীঘ্রই আমরা <code>impl_hello_macro</code> ফাংশনটি সংজ্ঞায়িত করব, যেখানে আমরা যে নতুন রাস্ট কোডটি অন্তর্ভুক্ত করতে চাই তা তৈরি করব। কিন্তু তার আগে, লক্ষ্য করুন যে আমাদের <code>derive</code> ম্যাক্রোর আউটপুটও একটি <code>TokenStream</code>। ফেরত দেওয়া <code>TokenStream</code>-টি আমাদের ক্রেট ব্যবহারকারীদের লেখা কোডে যোগ করা হয়, তাই যখন তারা তাদের ক্রেট কম্পাইল করে, তারা পরিবর্তিত <code>TokenStream</code>-এ আমাদের সরবরাহ করা অতিরিক্ত কার্যকারিতা পাবে।</p>
+<p>আপনি হয়তো লক্ষ্য করেছেন যে আমরা <code>unwrap</code> কল করছি যাতে <code>syn::parse</code> ফাংশনে কল ব্যর্থ হলে <code>hello_macro_derive</code> ফাংশনটি প্যানিক করে। আমাদের প্রসিডিউরাল ম্যাক্রোর ত্রুটির উপর প্যানিক করা প্রয়োজন কারণ <code>proc_macro_derive</code> ফাংশনগুলোকে প্রসিডিউরাল ম্যাক্রো API-এর সাথে সামঞ্জস্যপূর্ণ হওয়ার জন্য <code>Result</code>-এর পরিবর্তে <code>TokenStream</code> রিটার্ন করতে হবে। আমরা <code>unwrap</code> ব্যবহার করে এই উদাহরণটি সহজ করেছি; প্রোডাকশন কোডে, আপনার <code>panic!</code> বা <code>expect</code> ব্যবহার করে কী ভুল হয়েছে সে সম্পর্কে আরও নির্দিষ্ট ত্রুটির বার্তা সরবরাহ করা উচিত।</p>
+<p>এখন যেহেতু আমাদের কাছে অ্যানোটেটেড রাস্ট কোডটিকে একটি <code>TokenStream</code> থেকে একটি <code>DeriveInput</code> ইনস্ট্যান্সে পরিণত করার কোড রয়েছে, আসুন অ্যানোটেটেড টাইপের উপর <code>HelloMacro</code> trait ইমপ্লিমেন্ট করে এমন কোড জেনারেট করি, যেমনটি লিস্টিং ২০-৪২-এ দেখানো হয়েছে।</p>
+<Listing number="20-42" file-name="hello_macro_derive/src/lib.rs" caption="পার্স করা রাস্ট কোড ব্যবহার করে `HelloMacro` trait ইমপ্লিমেন্ট করা">
+<pre><code class="language-rust ignore"><span class="boring">use proc_macro::TokenStream;
+</span><span class="boring">use quote::quote;
+</span><span class="boring">
+</span><span class="boring">#[proc_macro_derive(HelloMacro)]
+</span><span class="boring">pub fn hello_macro_derive(input: TokenStream) -&gt; TokenStream {
+</span><span class="boring">    // Construct a representation of Rust code as a syntax tree
+</span><span class="boring">    // that we can manipulate
+</span><span class="boring">    let ast = syn::parse(input).unwrap();
+</span><span class="boring">
+</span><span class="boring">    // Build the trait implementation
+</span><span class="boring">    impl_hello_macro(&amp;ast)
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn impl_hello_macro(ast: &amp;syn::DeriveInput) -&gt; TokenStream {
+    let name = &amp;ast.ident;
+    let generated = quote! {
+        impl HelloMacro for #name {
+            fn hello_macro() {
+                println!("Hello, Macro! My name is {}!", stringify!(#name));
+            }
+        }
+    };
+    generated.into()
+}</code></pre>
+</Listing>
+<p>আমরা <code>ast.ident</code> ব্যবহার করে অ্যানোটেটেড টাইপের নাম (আইডেন্টিফায়ার) ধারণকারী একটি <code>Ident</code> struct ইনস্ট্যান্স পাই। লিস্টিং ২০-৪১-এর structটি দেখায় যে যখন আমরা লিস্টিং ২০-৩৭-এর কোডের উপর <code>impl_hello_macro</code> ফাংশনটি চালাই, তখন আমরা যে <code>ident</code> পাব তার <code>ident</code> ফিল্ডে <code>"Pancakes"</code> মান থাকবে। সুতরাং লিস্টিং ২০-৪২-এর <code>name</code> ভেরিয়েবলে একটি <code>Ident</code> struct ইনস্ট্যান্স থাকবে যা প্রিন্ট করলে <code>"Pancakes"</code> স্ট্রিংটি হবে, যা লিস্টিং ২০-৩৭-এর struct-এর নাম।</p>
+<p><code>quote!</code> ম্যাক্রো আমাদের সেই রাস্ট কোড সংজ্ঞায়িত করতে দেয় যা আমরা রিটার্ন করতে চাই। কম্পাইলার <code>quote!</code> ম্যাক্রোর এক্সিকিউশনের সরাসরি ফলাফলের চেয়ে ভিন্ন কিছু আশা করে, তাই আমাদের এটিকে একটি <code>TokenStream</code>-এ রূপান্তর করতে হবে। আমরা এটি <code>into</code> মেথড কল করে করি, যা এই মধ্যবর্তী উপস্থাপনাটি গ্রহণ করে এবং প্রয়োজনীয় <code>TokenStream</code> টাইপের একটি মান রিটার্ন করে।</p>
+<p><code>quote!</code> ম্যাক্রো কিছু খুব চমৎকার টেমপ্লেটিং মেকানিক্সও সরবরাহ করে: আমরা <code>#name</code> প্রবেশ করাতে পারি, এবং <code>quote!</code> এটিকে <code>name</code> ভেরিয়েবলের মান দিয়ে প্রতিস্থাপন করবে। আপনি এমনকি নিয়মিত ম্যাক্রোগুলো যেভাবে কাজ করে তার মতো কিছু পুনরাবৃত্তিও করতে পারেন। একটি পুঙ্খানুপুঙ্খ পরিচিতির জন্য <a href="https://docs.rs/quote"> <code>quote</code> ক্রেটের ডক্স</a> দেখুন।</p>
+<p>আমরা চাই আমাদের প্রসিডিউরাল ম্যাক্রো ব্যবহারকারীর অ্যানোটেট করা টাইপের জন্য আমাদের <code>HelloMacro</code> trait-এর একটি ইমপ্লিমেন্টেশন জেনারেট করুক, যা আমরা <code>#name</code> ব্যবহার করে পেতে পারি। trait ইমপ্লিমেন্টেশনের একটি ফাংশন <code>hello_macro</code> আছে, যার বডিতে আমরা যে কার্যকারিতা সরবরাহ করতে চাই তা রয়েছে: <code>Hello, Macro! My name is</code> প্রিন্ট করা এবং তারপর অ্যানোটেটেড টাইপের নাম।</p>
+<p>এখানে ব্যবহৃত <code>stringify!</code> ম্যাক্রোটি রাস্টের মধ্যে বিল্ট-ইন। এটি একটি রাস্ট এক্সপ্রেশন নেয়, যেমন <code>1 + 2</code>, এবং কম্পাইল টাইমে এক্সপ্রেশনটিকে একটি স্ট্রিং লিটারাল, যেমন <code>"1 + 2"</code>-তে পরিণত করে। এটি <code>format!</code> বা <code>println!</code> ম্যাক্রোগুলো থেকে ভিন্ন, যা এক্সপ্রেশনটি মূল্যায়ন করে এবং তারপর ফলাফলটিকে একটি <code>String</code>-এ পরিণত করে। এমন একটি সম্ভাবনা রয়েছে যে <code>#name</code> ইনপুটটি আক্ষরিকভাবে প্রিন্ট করার জন্য একটি এক্সপ্রেশন হতে পারে, তাই আমরা <code>stringify!</code> ব্যবহার করি। <code>stringify!</code> ব্যবহার করা কম্পাইল টাইমে <code>#name</code>-কে একটি স্ট্রিং লিটারালে রূপান্তর করে একটি অ্যালোকেশনও বাঁচায়।</p>
+<p>এই মুহূর্তে, <code>cargo build</code> <code>hello_macro</code> এবং <code>hello_macro_derive</code> উভয় ক্ষেত্রেই সফলভাবে সম্পন্ন হওয়া উচিত। চলুন এই ক্রেটগুলোকে লিস্টিং ২০-৩৭-এর কোডের সাথে সংযুক্ত করে প্রসিডিউরাল ম্যাক্রোটি কার্যকর দেখি! আপনার <em>projects</em> ডিরেক্টরিতে <code>cargo new pancakes</code> ব্যবহার করে একটি নতুন বাইনারি প্রজেক্ট তৈরি করুন। আমাদের <code>pancakes</code> ক্রেটের <em>Cargo.toml</em>-এ <code>hello_macro</code> এবং <code>hello_macro_derive</code>-কে নির্ভরতা হিসেবে যোগ করতে হবে। যদি আপনি আপনার <code>hello_macro</code> এবং <code>hello_macro_derive</code>-এর সংস্করণ <a href="https://crates.io/">crates.io</a><!-- ignore -->-তে প্রকাশ করেন, তবে সেগুলি নিয়মিত নির্ভরতা হবে; যদি না হয়, আপনি সেগুলোকে <code>path</code> নির্ভরতা হিসেবে নির্দিষ্ট করতে পারেন নিম্নরূপ:</p>
+<pre><code class="language-toml">[dependencies]
+hello_macro = { path = "../hello_macro" }
+hello_macro_derive = { path = "../hello_macro/hello_macro_derive" }
+</code></pre>
+<p><em>src/main.rs</em>-এ লিস্টিং ২০-৩৭-এর কোডটি রাখুন, এবং <code>cargo run</code> চালান: এটি <code>Hello, Macro! My name is Pancakes!</code> প্রিন্ট করা উচিত। <code>pancakes</code> ক্রেটকে ইমপ্লিমেন্ট করার প্রয়োজন ছাড়াই প্রসিডিউরাল ম্যাক্রো থেকে <code>HelloMacro</code> trait-এর ইমপ্লিমেন্টেশন অন্তর্ভুক্ত করা হয়েছিল; <code>#[derive(HelloMacro)]</code> trait ইমপ্লিমেন্টেশনটি যোগ করেছে।</p>
+<p>এরপরে, চলুন দেখি অন্যান্য ধরণের প্রসিডিউরাল ম্যাক্রোগুলো কাস্টম <code>derive</code> ম্যাক্রো থেকে কীভাবে ভিন্ন।</p>
+<h3 id="অযাটরিবিউট-লাইক-মযাকরো-attribute-like-macros"><a class="header" href="#অযাটরিবিউট-লাইক-মযাকরো-attribute-like-macros">অ্যাট্রিবিউট-লাইক ম্যাক্রো (Attribute-Like Macros)</a></h3>
+<p>অ্যাট্রিবিউট-লাইক ম্যাক্রোগুলো কাস্টম <code>derive</code> ম্যাক্রোর মতোই, কিন্তু <code>derive</code> অ্যাট্রিবিউটের জন্য কোড জেনারেট করার পরিবর্তে, তারা আপনাকে নতুন অ্যাট্রিবিউট তৈরি করার সুযোগ দেয়। এগুলি আরও নমনীয়: <code>derive</code> শুধুমাত্র struct এবং enum-এর জন্য কাজ করে; অ্যাট্রিবিউটগুলো অন্যান্য আইটেম, যেমন ফাংশন-এর উপরও প্রয়োগ করা যেতে পারে। এখানে একটি অ্যাট্রিবিউট-লাইক ম্যাক্রো ব্যবহারের একটি উদাহরণ। ধরুন আপনার <code>route</code> নামে একটি অ্যাট্রিবিউট আছে যা একটি ওয়েব অ্যাপ্লিকেশন ফ্রেমওয়ার্ক ব্যবহার করার সময় ফাংশনগুলোকে অ্যানোটেট করে:</p>
+<pre><code class="language-rust ignore">#[route(GET, "/")]
+fn index() {</code></pre>
+<p>এই <code>#[route]</code> অ্যাট্রিবিউটটি ফ্রেমওয়ার্ক দ্বারা একটি প্রসিডিউরাল ম্যাক্রো হিসাবে সংজ্ঞায়িত করা হবে। ম্যাক্রো সংজ্ঞা ফাংশনের সিগনেচারটি এইরকম দেখাবে:</p>
+<pre><code class="language-rust ignore">#[proc_macro_attribute]
+pub fn route(attr: TokenStream, item: TokenStream) -&gt; TokenStream {</code></pre>
+<p>এখানে, আমাদের <code>TokenStream</code> টাইপের দুটি প্যারামিটার রয়েছে। প্রথমটি অ্যাট্রিবিউটের বিষয়বস্তুর জন্য: <code>GET, "/"</code> অংশ। দ্বিতীয়টি হলো সেই আইটেমের বডি যার সাথে অ্যাট্রিবিউটটি সংযুক্ত: এই ক্ষেত্রে, <code>fn index() {}</code> এবং ফাংশনের বডির বাকি অংশ।</p>
+<p>এছাড়া, অ্যাট্রিবিউট-লাইক ম্যাক্রোগুলো কাস্টম <code>derive</code> ম্যাক্রোর মতোই কাজ করে: আপনি <code>proc-macro</code> ক্রেট টাইপ সহ একটি ক্রেট তৈরি করেন এবং আপনি যে কোড জেনারেট করতে চান তার জন্য একটি ফাংশন ইমপ্লিমেন্ট করেন!</p>
+<h3 id="ফাংশন-লাইক-মযাকরো-function-like-macros"><a class="header" href="#ফাংশন-লাইক-মযাকরো-function-like-macros">ফাংশন-লাইক ম্যাক্রো (Function-Like Macros)</a></h3>
+<p>ফাংশন-লাইক ম্যাক্রোগুলো এমন ম্যাক্রো সংজ্ঞায়িত করে যা ফাংশন কলের মতো দেখায়। <code>macro_rules!</code> ম্যাক্রোর মতোই, এগুলি ফাংশনের চেয়ে বেশি নমনীয়; উদাহরণস্বরূপ, তারা একটি অজানা সংখ্যক আর্গুমেন্ট নিতে পারে। তবে, <code>macro_rules!</code> ম্যাক্রোগুলো শুধুমাত্র ম্যাচ-লাইক সিনট্যাক্স ব্যবহার করে সংজ্ঞায়িত করা যেতে পারে যা আমরা আগে <a href="#declarative-macros-with-macro_rules-for-general-metaprogramming">“Declarative Macros with <code>macro_rules!</code> for General Metaprogramming”</a><!-- ignore -->-এ আলোচনা করেছি। ফাংশন-লাইক ম্যাক্রোগুলো একটি <code>TokenStream</code> প্যারামিটার নেয়, এবং তাদের সংজ্ঞা সেই <code>TokenStream</code>-কে রাস্ট কোড ব্যবহার করে ম্যানিপুলেট করে যেমনটি অন্য দুটি ধরণের প্রসিডিউরাল ম্যাক্রো করে। একটি ফাংশন-লাইক ম্যাক্রোর উদাহরণ হলো একটি <code>sql!</code> ম্যাক্রো যা এইভাবে কল করা হতে পারে:</p>
+<pre><code class="language-rust ignore">let sql = sql!(SELECT * FROM posts WHERE id=1);</code></pre>
+<p>এই ম্যাক্রোটি এর ভেতরের SQL স্টেটমেন্টটি পার্স করবে এবং এটি সিনট্যাক্টিক্যালি সঠিক কিনা তা পরীক্ষা করবে, যা একটি <code>macro_rules!</code> ম্যাক্রো যা করতে পারে তার চেয়ে অনেক বেশি জটিল প্রক্রিয়াকরণ। <code>sql!</code> ম্যাক্রোটি এইভাবে সংজ্ঞায়িত করা হবে:</p>
+<pre><code class="language-rust ignore">#[proc_macro]
+pub fn sql(input: TokenStream) -&gt; TokenStream {</code></pre>
+<p>এই সংজ্ঞাটি কাস্টম <code>derive</code> ম্যাক্রোর সিগনেচারের মতোই: আমরা বন্ধনীর ভেতরের টোকেনগুলো গ্রহণ করি এবং আমরা যে কোড জেনারেট করতে চেয়েছিলাম তা রিটার্ন করি।</p>
+<h2 id="সারাংশ-summary"><a class="header" href="#সারাংশ-summary">সারাংশ (Summary)</a></h2>
+<p>এখন আপনার টুলবক্সে কিছু রাস্ট ফিচার রয়েছে যা আপনি সম্ভবত প্রায়শই ব্যবহার করবেন না, তবে আপনি জানবেন যে খুব নির্দিষ্ট পরিস্থিতিতে সেগুলি উপলব্ধ রয়েছে। আমরা বেশ কয়েকটি জটিল বিষয় পরিচয় করিয়ে দিয়েছি যাতে আপনি যখন ত্রুটির বার্তার পরামর্শে বা অন্য লোকের কোডে সেগুলির সম্মুখীন হন, তখন আপনি এই ধারণা এবং সিনট্যাক্সগুলি চিনতে পারবেন। এই অধ্যায়টি আপনাকে সমাধানের দিকে পরিচালিত করার জন্য একটি রেফারেন্স হিসাবে ব্যবহার করুন।</p>
+<p>এরপরে, আমরা বই জুড়ে যা কিছু আলোচনা করেছি তা অনুশীলনে প্রয়োগ করব এবং আরও একটি প্রজেক্ট করব!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch20-04-advanced-functions-and-closures.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch21-00-final-project-a-web-server.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch20-04-advanced-functions-and-closures.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch21-00-final-project-a-web-server.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

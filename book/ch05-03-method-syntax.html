@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>মেথড সিনট্যাক্স - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="মেথড-সিনটযাকস-method-syntax"><a class="header" href="#মেথড-সিনটযাকস-method-syntax">মেথড সিনট্যাক্স (Method Syntax)</a></h2>
+<p><em>মেথড</em> (Methods) অনেকটা ফাংশনের মতোই: আমরা <code>fn</code> কীওয়ার্ড এবং একটি নাম দিয়ে এগুলো ডিক্লেয়ার করি, এগুলোর প্যারামিটার এবং একটি রিটার্ন ভ্যালু থাকতে পারে, এবং এগুলোর মধ্যে কিছু কোড থাকে যা অন্য কোথাও থেকে মেথডটি কল করা হলে রান হয়। ফাংশনের সাথে এর পার্থক্য হলো, মেথডগুলো একটি <code>struct</code> (অথবা একটি <code>enum</code> বা একটি <code>trait</code> অবজেক্ট, যা আমরা যথাক্রমে <a href="ch06-00-enums.html">অধ্যায় ৬</a><!-- ignore --> এবং <a href="ch18-02-trait-objects.html">অধ্যায় ১৮</a><!-- ignore -->-এ আলোচনা করব) এর কনটেক্সটে ডিফাইন করা হয়, এবং তাদের প্রথম প্যারামিটার সবসময় <code>self</code> হয়, যা <code>struct</code>-এর সেই ইনস্ট্যান্সটিকে প্রতিনিধিত্ব করে যার উপর মেথডটি কল করা হচ্ছে।</p>
+<h3 id="মেথড-ডিফাইন-করা-defining-methods"><a class="header" href="#মেথড-ডিফাইন-করা-defining-methods">মেথড ডিফাইন করা (Defining Methods)</a></h3>
+<p>আসুন <code>area</code> ফাংশনটিকে পরিবর্তন করি, যেটি একটি <code>Rectangle</code> ইনস্ট্যান্সকে প্যারামিটার হিসেবে নেয়, এবং এর পরিবর্তে <code>Rectangle</code> <code>struct</code>-এর উপর ডিফাইন করা একটি <code>area</code> মেথড তৈরি করি, যেমনটি তালিকা ৫-১৩-এ দেখানো হয়েছে।</p>
+<Listing number="5-13" file-name="src/main.rs" caption="`Rectangle` struct-এর উপর একটি `area` মেথড ডিফাইন করা">
+<pre><pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&amp;self) -&gt; u32 {
+        self.width * self.height
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect1.area()
+    );
+}</code></pre></pre>
+</Listing>
+<p><code>Rectangle</code>-এর কনটেক্সটে ফাংশনটি ডিফাইন করার জন্য, আমরা <code>Rectangle</code>-এর জন্য একটি <code>impl</code> (implementation) ব্লক শুরু করি। এই <code>impl</code> ব্লকের মধ্যে থাকা সবকিছু <code>Rectangle</code> টাইপের সাথে যুক্ত থাকবে। তারপর আমরা <code>area</code> ফাংশনটিকে <code>impl</code> কার্লি ব্র্যাকেটের মধ্যে নিয়ে যাই এবং সিগনেচারে এবং বডির সর্বত্র প্রথম (এবং এই ক্ষেত্রে, একমাত্র) প্যারামিটারটিকে <code>self</code> এ পরিবর্তন করি। <code>main</code> ফাংশনে, যেখানে আমরা <code>area</code> ফাংশন কল করেছিলাম এবং <code>rect1</code> কে আর্গুমেন্ট হিসাবে পাস করেছিলাম, তার পরিবর্তে আমরা আমাদের <code>Rectangle</code> ইনস্ট্যান্সের উপর <code>area</code> মেথড কল করার জন্য <em>মেথড সিনট্যাক্স</em> (method syntax) ব্যবহার করতে পারি। মেথড সিনট্যাক্স একটি ইনস্ট্যান্সের পরে বসে: আমরা একটি ডট এবং তারপরে মেথডের নাম, প্যারেন্থেসিস এবং যেকোনো আর্গুমেন্ট যোগ করি।</p>
+<p><code>area</code>-এর সিগনেচারে, আমরা <code>rectangle: &amp;Rectangle</code> এর পরিবর্তে <code>&amp;self</code> ব্যবহার করি। <code>&amp;self</code> আসলে <code>self: &amp;Self</code>-এর সংক্ষিপ্ত রূপ। একটি <code>impl</code> ব্লকের মধ্যে, <code>Self</code> টাইপটি সেই টাইপের একটি অ্যালিয়াস (alias) যার জন্য <code>impl</code> ব্লকটি তৈরি করা হয়েছে। মেথডগুলোর প্রথম প্যারামিটার হিসাবে <code>self</code> নামের একটি <code>Self</code> টাইপের প্যারামিটার থাকতে হয়, তাই রাস্ট আপনাকে প্রথম প্যারামিটারের স্থানে শুধুমাত্র <code>self</code> নামটি দিয়ে এটিকে সংক্ষিপ্ত করার অনুমতি দেয়। মনে রাখবেন যে আমাদের এখনও <code>self</code> শর্টহ্যান্ডের আগে <code>&amp;</code> ব্যবহার করতে হবে এটি বোঝাতে যে এই মেথডটি <code>Self</code> ইনস্ট্যান্সটিকে ধার (borrow) করে, ঠিক যেমনটি আমরা <code>rectangle: &amp;Rectangle</code>-এ করেছিলাম। মেথডগুলো <code>self</code>-এর মালিকানা নিতে পারে, <code>self</code>-কে অপরিবর্তনীয়ভাবে ধার করতে পারে, যেমনটি আমরা এখানে করেছি, অথবা <code>self</code>-কে পরিবর্তনীয়ভাবে ধার করতে পারে, ঠিক যেমনটি তারা অন্য যেকোনো প্যারামিটারের ক্ষেত্রে পারে।</p>
+<p>আমরা এখানে <code>&amp;self</code> বেছে নিয়েছি একই কারণে যে কারণে আমরা ফাংশন সংস্করণে <code>&amp;Rectangle</code> ব্যবহার করেছিলাম: আমরা মালিকানা নিতে চাই না, এবং আমরা কেবল <code>struct</code>-এর ডেটা পড়তে চাই, এতে লিখতে চাই না। যদি আমরা যে ইনস্ট্যান্সের উপর মেথডটি কল করেছি সেটিকে মেথডের কাজের অংশ হিসাবে পরিবর্তন করতে চাইতাম, তাহলে আমরা প্রথম প্যারামিটার হিসাবে <code>&amp;mut self</code> ব্যবহার করতাম। <code>self</code>-কে প্রথম প্যারামিটার হিসাবে ব্যবহার করে ইনস্ট্যান্সের মালিকানা নেওয়া একটি মেথড বিরল; এই কৌশলটি সাধারণত ব্যবহৃত হয় যখন মেথডটি <code>self</code>-কে অন্য কিছুতে রূপান্তরিত করে এবং আপনি চান যে রূপান্তরের পরে কলার মূল ইনস্ট্যান্সটি ব্যবহার করা থেকে বিরত থাকুক।</p>
+<p>মেথড সিনট্যাক্স সরবরাহ করা এবং প্রতিটি মেথডের সিগনেচারে <code>self</code>-এর টাইপ পুনরাবৃত্তি না করার পাশাপাশি, ফাংশনের পরিবর্তে মেথড ব্যবহারের মূল কারণ হলো অর্গানাইজেশন বা সংগঠন। আমরা একটি টাইপের ইনস্ট্যান্সের সাথে যা যা করা যায় তার সবকিছু একটি <code>impl</code> ব্লকের মধ্যে রেখেছি, যাতে আমাদের কোডের ভবিষ্যতের ব্যবহারকারীদেরকে আমাদের সরবরাহ করা লাইব্রেরির বিভিন্ন জায়গায় <code>Rectangle</code>-এর ক্ষমতা খুঁজতে না হয়।</p>
+<p>মনে রাখবেন যে আমরা একটি মেথডকে <code>struct</code>-এর একটি ফিল্ডের সমান নাম দিতে পারি। উদাহরণস্বরূপ, আমরা <code>Rectangle</code>-এর উপর <code>width</code> নামে একটি মেথড ডিফাইন করতে পারি:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Rectangle {
+    fn width(&amp;self) -&gt; bool {
+        self.width &gt; 0
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    if rect1.width() {
+        println!("The rectangle has a nonzero width; it is {}", rect1.width);
+    }
+}</code></pre></pre>
+</Listing>
+<p>এখানে, আমরা <code>width</code> মেথডটিকে <code>true</code> রিটার্ন করার জন্য তৈরি করছি যদি ইনস্ট্যান্সের <code>width</code> ফিল্ডের মান <code>0</code>-এর চেয়ে বড় হয় এবং <code>false</code> যদি মান <code>0</code> হয়: আমরা একই নামের একটি মেথডের মধ্যে একটি ফিল্ড যেকোনো উদ্দেশ্যে ব্যবহার করতে পারি। <code>main</code>-এ, যখন আমরা <code>rect1.width</code>-এর পরে প্যারেন্থেসিস ব্যবহার করি, রাস্ট জানে যে আমরা <code>width</code> মেথডটির কথা বলছি। যখন আমরা প্যারেন্থেসিস ব্যবহার করি না, রাস্ট জানে যে আমরা <code>width</code> ফিল্ডটির কথা বলছি।</p>
+<p>প্রায়শই, কিন্তু সবসময় নয়, যখন আমরা একটি মেথডকে একটি ফিল্ডের সমান নাম দিই তখন আমরা চাই এটি শুধুমাত্র ফিল্ডের মান রিটার্ন করুক এবং অন্য কিছু না করুক। এই ধরনের মেথডকে <em>গেটার</em> (getters) বলা হয়, এবং রাস্ট অন্য কিছু ভাষার মতো <code>struct</code> ফিল্ডের জন্য এগুলো স্বয়ংক্রিয়ভাবে ইমপ্লিমেন্ট করে না। গেটারগুলো দরকারী কারণ আপনি ফিল্ডটিকে প্রাইভেট কিন্তু মেথডটিকে পাবলিক করতে পারেন, এবং এইভাবে টাইপের পাবলিক API-এর অংশ হিসাবে সেই ফিল্ডে শুধুমাত্র-পড়ার (read-only) অ্যাক্সেস সক্ষম করতে পারেন। আমরা পাবলিক এবং প্রাইভেট কী এবং কীভাবে একটি ফিল্ড বা মেথডকে পাবলিক বা প্রাইভেট হিসাবে চিহ্নিত করতে হয় তা <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">অধ্যায় ৭</a><!-- ignore -->-এ আলোচনা করব।</p>
+<blockquote>
+<h3 id="--অপারেটরটি-কোথায"><a class="header" href="#--অপারেটরটি-কোথায"><code>-&gt;</code> অপারেটরটি কোথায়?</a></h3>
+<p>C এবং C++ এ, মেথড কল করার জন্য দুটি ভিন্ন অপারেটর ব্যবহৃত হয়: আপনি <code>.</code> ব্যবহার করেন যদি আপনি সরাসরি অবজেক্টের উপর একটি মেথড কল করেন এবং <code>-&gt;</code> ব্যবহার করেন যদি আপনি অবজেক্টের একটি পয়েন্টারের উপর মেথড কল করেন এবং প্রথমে পয়েন্টারটিকে ডি-রেফারেন্স করতে হয়। অন্য কথায়, যদি <code>object</code> একটি পয়েন্টার হয়, <code>object-&gt;something()</code> অনেকটা <code>(*object).something()</code>-এর মতো।</p>
+<p>রাস্টের <code>-&gt;</code> অপারেটরের সমতুল্য কিছু নেই; এর পরিবর্তে, রাস্টের একটি বৈশিষ্ট্য রয়েছে যার নাম <em>স্বয়ংক্রিয় রেফারেন্সিং এবং ডি-রেফারেন্সিং</em> (automatic referencing and dereferencing)। মেথড কল করা রাস্টের কয়েকটি জায়গার মধ্যে একটি যেখানে এই আচরণ রয়েছে।</p>
+<p>এটি যেভাবে কাজ করে: যখন আপনি <code>object.something()</code> দিয়ে একটি মেথড কল করেন, রাস্ট স্বয়ংক্রিয়ভাবে <code>&amp;</code>, <code>&amp;mut</code>, বা <code>*</code> যোগ করে দেয় যাতে <code>object</code> মেথডের সিগনেচারের সাথে মেলে। অন্য কথায়, নিম্নলিখিতগুলো একই:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug,Copy,Clone)]
+</span><span class="boring">struct Point {
+</span><span class="boring">    x: f64,
+</span><span class="boring">    y: f64,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Point {
+</span><span class="boring">   fn distance(&amp;self, other: &amp;Point) -&gt; f64 {
+</span><span class="boring">       let x_squared = f64::powi(other.x - self.x, 2);
+</span><span class="boring">       let y_squared = f64::powi(other.y - self.y, 2);
+</span><span class="boring">
+</span><span class="boring">       f64::sqrt(x_squared + y_squared)
+</span><span class="boring">   }
+</span><span class="boring">}
+</span><span class="boring">let p1 = Point { x: 0.0, y: 0.0 };
+</span><span class="boring">let p2 = Point { x: 5.0, y: 6.5 };
+</span>p1.distance(&amp;p2);
+(&amp;p1).distance(&amp;p2);
+<span class="boring">}</span></code></pre></pre>
+<p>প্রথমটি দেখতে অনেক পরিষ্কার। এই স্বয়ংক্রিয় রেফারেন্সিং আচরণটি কাজ করে কারণ মেথডগুলোর একটি স্পষ্ট রিসিভার (receiver) আছে—<code>self</code>-এর টাইপ। রিসিভার এবং একটি মেথডের নাম দেওয়া হলে, রাস্ট নির্দিষ্টভাবে বের করতে পারে যে মেথডটি পড়ছে (<code>&amp;self</code>), পরিবর্তন করছে (<code>&amp;mut self</code>), বা ব্যবহার করে ফেলছে (<code>self</code>)। রাস্ট যে মেথড রিসিভারের জন্য ধার করাকে উহ্য (implicit) করে তোলে তা বাস্তবে মালিকানাকে অর্গোনমিক (ergonomic) করার একটি বড় অংশ।</p>
+</blockquote>
+<h3 id="একাধিক-পযারামিটার-সহ-মেথড-methods-with-more-parameters"><a class="header" href="#একাধিক-পযারামিটার-সহ-মেথড-methods-with-more-parameters">একাধিক প্যারামিটার সহ মেথড (Methods with More Parameters)</a></h3>
+<p>আসুন <code>Rectangle</code> <code>struct</code>-এর উপর একটি দ্বিতীয় মেথড ইমপ্লিমেন্ট করে মেথড ব্যবহার করার অনুশীলন করি। এবার আমরা চাই <code>Rectangle</code>-এর একটি ইনস্ট্যান্স <code>Rectangle</code>-এর আরেকটি ইনস্ট্যান্স নিক এবং <code>true</code> রিটার্ন করুক যদি দ্বিতীয় <code>Rectangle</code>-টি <code>self</code>-এর (প্রথম <code>Rectangle</code>) মধ্যে সম্পূর্ণরূপে ফিট করতে পারে; অন্যথায়, এটি <code>false</code> রিটার্ন করবে। অর্থাৎ, একবার আমরা <code>can_hold</code> মেথডটি ডিফাইন করে ফেলার পর, আমরা তালিকা ৫-১৪-এ দেখানো প্রোগ্রামটি লিখতে চাই।</p>
+<Listing number="5-14" file-name="src/main.rs" caption="এখনও-না-লেখা `can_hold` মেথড ব্যবহার করা">
+<pre><code class="language-rust ignore">fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+    let rect2 = Rectangle {
+        width: 10,
+        height: 40,
+    };
+    let rect3 = Rectangle {
+        width: 60,
+        height: 45,
+    };
+
+    println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
+    println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
+}</code></pre>
+</Listing>
+<p>প্রত্যাশিত আউটপুট নিম্নলিখিতটির মতো হবে কারণ <code>rect2</code>-এর উভয় ডাইমেনশন <code>rect1</code>-এর ডাইমেনশনের চেয়ে ছোট, কিন্তু <code>rect3</code> <code>rect1</code>-এর চেয়ে চওড়া:</p>
+<pre><code class="language-text">Can rect1 hold rect2? true
+Can rect1 hold rect3? false
+</code></pre>
+<p>আমরা জানি আমরা একটি মেথড ডিফাইন করতে চাই, তাই এটি <code>impl Rectangle</code> ব্লকের মধ্যে থাকবে। মেথডের নাম হবে <code>can_hold</code>, এবং এটি অন্য একটি <code>Rectangle</code>-এর একটি অপরিবর্তনীয় ধার (immutable borrow) প্যারামিটার হিসাবে নেবে। আমরা প্যারামিটারের টাইপ কী হবে তা মেথড কল করা কোডটি দেখে বলতে পারি: <code>rect1.can_hold(&amp;rect2)</code> <code>&amp;rect2</code> পাস করে, যা <code>rect2</code>, একটি <code>Rectangle</code> ইনস্ট্যান্সের একটি অপরিবর্তনীয় ধার। এটি যৌক্তিক কারণ আমাদের কেবল <code>rect2</code> পড়তে হবে (লেখার পরিবর্তে, যার জন্য আমাদের একটি পরিবর্তনযোগ্য ধার প্রয়োজন হতো), এবং আমরা চাই <code>main</code> <code>rect2</code>-এর মালিকানা ধরে রাখুক যাতে আমরা <code>can_hold</code> মেথড কল করার পরেও এটি আবার ব্যবহার করতে পারি। <code>can_hold</code>-এর রিটার্ন ভ্যালু একটি বুলিয়ান হবে, এবং ইমপ্লিমেন্টেশনটি পরীক্ষা করবে যে <code>self</code>-এর প্রস্থ এবং উচ্চতা অন্য <code>Rectangle</code>-এর প্রস্থ এবং উচ্চতার চেয়ে বড় কিনা। আসুন নতুন <code>can_hold</code> মেথডটি তালিকা ৫-১৩ থেকে <code>impl</code> ব্লকে যোগ করি, যা তালিকা ৫-১৫-এ দেখানো হয়েছে।</p>
+<Listing number="5-15" file-name="src/main.rs" caption="`Rectangle`-এর উপর `can_hold` মেথড ইমপ্লিমেন্ট করা যা অন্য একটি `Rectangle` ইনস্ট্যান্সকে প্যারামিটার হিসাবে নেয়">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Rectangle {
+    fn area(&amp;self) -&gt; u32 {
+        self.width * self.height
+    }
+
+    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+        self.width &gt; other.width &amp;&amp; self.height &gt; other.height
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let rect1 = Rectangle {
+</span><span class="boring">        width: 30,
+</span><span class="boring">        height: 50,
+</span><span class="boring">    };
+</span><span class="boring">    let rect2 = Rectangle {
+</span><span class="boring">        width: 10,
+</span><span class="boring">        height: 40,
+</span><span class="boring">    };
+</span><span class="boring">    let rect3 = Rectangle {
+</span><span class="boring">        width: 60,
+</span><span class="boring">        height: 45,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
+</span><span class="boring">    println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>যখন আমরা এই কোডটি তালিকা ৫-১৪-এর <code>main</code> ফাংশন দিয়ে চালাই, আমরা আমাদের কাঙ্ক্ষিত আউটপুট পাব। মেথডগুলো <code>self</code> প্যারামিটারের পরে একাধিক প্যারামিটার নিতে পারে যা আমরা সিগনেচারে যোগ করি, এবং সেই প্যারামিটারগুলো ফাংশনের প্যারামিটারের মতোই কাজ করে।</p>
+<h3 id="অযাসোসিযেটেড-ফাংশন-associated-functions"><a class="header" href="#অযাসোসিযেটেড-ফাংশন-associated-functions">অ্যাসোসিয়েটেড ফাংশন (Associated Functions)</a></h3>
+<p>একটি <code>impl</code> ব্লকের মধ্যে ডিফাইন করা সমস্ত ফাংশনকে <em>অ্যাসোসিয়েটেড ফাংশন</em> (associated functions) বলা হয় কারণ সেগুলো <code>impl</code>-এর পরে নাম দেওয়া টাইপের সাথে যুক্ত। আমরা এমন অ্যাসোসিয়েটেড ফাংশন ডিফাইন করতে পারি যেগুলোর প্রথম প্যারামিটার <code>self</code> নয় (এবং এইভাবে সেগুলো মেথড নয়) কারণ সেগুলোর সাথে কাজ করার জন্য টাইপের একটি ইনস্ট্যান্সের প্রয়োজন হয় না। আমরা ইতিমধ্যে এই ধরনের একটি ফাংশন ব্যবহার করেছি: <code>String::from</code> ফাংশন যা <code>String</code> টাইপের উপর ডিফাইন করা আছে।</p>
+<p>যেসব অ্যাসোসিয়েটেড ফাংশন মেথড নয় সেগুলো প্রায়শই কনস্ট্রাক্টর (constructors) হিসাবে ব্যবহৃত হয় যা <code>struct</code>-এর একটি নতুন ইনস্ট্যান্স রিটার্ন করবে। এগুলোকে প্রায়শই <code>new</code> বলা হয়, কিন্তু <code>new</code> কোনো বিশেষ নাম নয় এবং এটি ভাষায় বিল্ট-ইন নয়। উদাহরণস্বরূপ, আমরা <code>square</code> নামে একটি অ্যাসোসিয়েটেড ফাংশন সরবরাহ করতে পারি যা একটি ডাইমেনশন প্যারামিটার নেবে এবং সেটিকে প্রস্থ এবং উচ্চতা উভয় হিসাবে ব্যবহার করবে, এইভাবে একটি বর্গক্ষেত্র <code>Rectangle</code> তৈরি করা সহজ করে তুলবে, একই মান দুবার নির্দিষ্ট করার পরিবর্তে:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Rectangle {
+    fn square(size: u32) -&gt; Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let sq = Rectangle::square(3);
+</span><span class="boring">}</span></code></pre></pre>
+<p>রিটার্ন টাইপ এবং ফাংশনের বডিতে <code>Self</code> কীওয়ার্ডগুলো সেই টাইপের অ্যালিয়াস যা <code>impl</code> কীওয়ার্ডের পরে আসে, যা এই ক্ষেত্রে <code>Rectangle</code>।</p>
+<p>এই অ্যাসোসিয়েটেড ফাংশনটি কল করার জন্য, আমরা <code>struct</code>-এর নামের সাথে <code>::</code> সিনট্যাক্স ব্যবহার করি; <code>let sq = Rectangle::square(3);</code> একটি উদাহরণ। এই ফাংশনটি <code>struct</code> দ্বারা নেমস্পেসড (namespaced) হয়: <code>::</code> সিনট্যাক্সটি অ্যাসোসিয়েটেড ফাংশন এবং মডিউল দ্বারা তৈরি নেমস্পেস উভয়ের জন্যই ব্যবহৃত হয়। আমরা <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">অধ্যায় ৭</a><!-- ignore -->-এ মডিউল নিয়ে আলোচনা করব।</p>
+<h3 id="একাধিক-impl-বলক-multiple-impl-blocks"><a class="header" href="#একাধিক-impl-বলক-multiple-impl-blocks">একাধিক <code>impl</code> ব্লক (Multiple <code>impl</code> Blocks)</a></h3>
+<p>প্রতিটি <code>struct</code>-এর একাধিক <code>impl</code> ব্লক থাকতে পারে। উদাহরণস্বরূপ, তালিকা ৫-১৫ তালিকা ৫-১৬-এ দেখানো কোডের সমতুল্য, যেখানে প্রতিটি মেথড তার নিজস্ব <code>impl</code> ব্লকে রয়েছে।</p>
+<Listing number="5-16" caption="একাধিক `impl` ব্লক ব্যবহার করে তালিকা ৫-১৫ পুনরায় লেখা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Rectangle {
+</span><span class="boring">    width: u32,
+</span><span class="boring">    height: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Rectangle {
+    fn area(&amp;self) -&gt; u32 {
+        self.width * self.height
+    }
+}
+
+impl Rectangle {
+    fn can_hold(&amp;self, other: &amp;Rectangle) -&gt; bool {
+        self.width &gt; other.width &amp;&amp; self.height &gt; other.height
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let rect1 = Rectangle {
+</span><span class="boring">        width: 30,
+</span><span class="boring">        height: 50,
+</span><span class="boring">    };
+</span><span class="boring">    let rect2 = Rectangle {
+</span><span class="boring">        width: 10,
+</span><span class="boring">        height: 40,
+</span><span class="boring">    };
+</span><span class="boring">    let rect3 = Rectangle {
+</span><span class="boring">        width: 60,
+</span><span class="boring">        height: 45,
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
+</span><span class="boring">    println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এখানে এই মেথডগুলোকে একাধিক <code>impl</code> ব্লকে বিভক্ত করার কোনো কারণ নেই, তবে এটি একটি বৈধ সিনট্যাক্স। আমরা অধ্যায় ১০-এ একটি কেস দেখব যেখানে একাধিক <code>impl</code> ব্লক দরকারী, যেখানে আমরা জেনেরিক টাইপ এবং ট্রেইট নিয়ে আলোচনা করব।</p>
+<h2 id="সারসংকষেপ-summary"><a class="header" href="#সারসংকষেপ-summary">সারসংক্ষেপ (Summary)</a></h2>
+<p><code>struct</code> আপনাকে আপনার ডোমেইনের জন্য অর্থপূর্ণ কাস্টম টাইপ তৈরি করতে দেয়। <code>struct</code> ব্যবহার করে, আপনি সম্পর্কিত ডেটার অংশগুলোকে একে অপরের সাথে সংযুক্ত রাখতে পারেন এবং আপনার কোডকে স্পষ্ট করার জন্য প্রতিটি অংশের নাম দিতে পারেন। <code>impl</code> ব্লকে, আপনি আপনার টাইপের সাথে যুক্ত ফাংশন ডিফাইন করতে পারেন, এবং মেথডগুলো এক ধরনের অ্যাসোসিয়েটেড ফাংশন যা আপনাকে আপনার <code>struct</code>-এর ইনস্ট্যান্সগুলোর আচরণ নির্দিষ্ট করতে দেয়।</p>
+<p>কিন্তু <code>struct</code> আপনার কাস্টম টাইপ তৈরি করার একমাত্র উপায় নয়: আসুন রাস্টের <code>enum</code> বৈশিষ্ট্যটির দিকে নজর দিই এবং আপনার টুলবক্সে আরেকটি টুল যোগ করি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch05-02-example-structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch06-00-enums.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch05-02-example-structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch06-00-enums.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

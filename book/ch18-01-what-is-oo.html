@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>অবজেক্ট-ওরিয়েন্টেড ল্যাঙ্গুয়েজের বৈশিষ্ট্য - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="অবজেকট-ওরিয়েনটেড-লযাঙগুয়েজের-বৈশিষটয-characteristics-of-object-oriented-languages"><a class="header" href="#অবজেকট-ওরিয়েনটেড-লযাঙগুয়েজের-বৈশিষটয-characteristics-of-object-oriented-languages">অবজেক্ট-ওরিয়েন্টেড ল্যাঙ্গুয়েজের বৈশিষ্ট্য (Characteristics of Object-Oriented Languages)</a></h2>
+<p>প্রোগ্রামিং কমিউনিটিতে কোনো একটি ল্যাঙ্গুয়েজকে অবজেক্ট-ওরিয়েন্টেড হিসেবে বিবেচনা করার জন্য তার কী কী বৈশিষ্ট্য থাকা আবশ্যক, সে বিষয়ে কোনো সর্বসম্মত মত নেই। Rust অনেকগুলো প্রোগ্রামিং প্যারাডাইম দ্বারা প্রভাবিত, যার মধ্যে OOP একটি; উদাহরণস্বরূপ, আমরা ১৩তম অধ্যায়ে ফাংশনাল প্রোগ্রামিং থেকে আসা বৈশিষ্ট্যগুলো দেখেছি। বলা যায়, OOP ল্যাঙ্গুয়েজগুলোর কিছু সাধারণ বৈশিষ্ট্য রয়েছে, যেমন—অবজেক্ট (objects), এনক্যাপসুলেশন (encapsulation), এবং ইনহেরিটেন্স (inheritance)। চলুন দেখি এই বৈশিষ্ট্যগুলোর প্রত্যেকটির অর্থ কী এবং Rust সেগুলোকে সমর্থন করে কিনা।</p>
+<h3 id="অবজেকটে-ডেটা-এবং-আচরণ-behavior-দুটোই-থাকে-objects-contain-data-and-behavior"><a class="header" href="#অবজেকটে-ডেটা-এবং-আচরণ-behavior-দুটোই-থাকে-objects-contain-data-and-behavior">অবজেক্টে ডেটা এবং আচরণ (Behavior) দুটোই থাকে (Objects Contain Data and Behavior)</a></h3>
+<p>এরিক গামা, রিচার্ড হেলম, রালফ জনসন এবং জন ভিসাইডসের লেখা <em>Design Patterns: Elements of Reusable Object-Oriented Software</em> (Addison-Wesley, 1994) বইটি, যা কথোপকথনে <em>"গ্যাং অফ ফোর" (The Gang of Four)</em> বই হিসাবে পরিচিত, অবজেক্ট-ওরিয়েন্টেড ডিজাইন প্যাটার্নের একটি ক্যাটালগ। এটি OOP-কে এভাবে সংজ্ঞায়িত করে:</p>
+<blockquote>
+<p>অবজেক্ট-ওরিয়েন্টেড প্রোগ্রামগুলো অবজেক্ট দিয়ে তৈরি। একটি <strong>অবজেক্ট</strong> ডেটা এবং সেই ডেটার উপর কাজ করে এমন প্রসিডিউর (procedure) উভয়কেই প্যাকেজ করে। এই প্রসিডিউরগুলোকে সাধারণত <strong>মেথড (methods)</strong> বা <strong>অপারেশন (operations)</strong> বলা হয়।</p>
+</blockquote>
+<p>এই সংজ্ঞা অনুসারে, Rust একটি অবজেক্ট-ওরিয়েন্টেড ল্যাঙ্গুয়েজ: <code>struct</code> এবং <code>enum</code>-এর মধ্যে ডেটা থাকে, এবং <code>impl</code> ব্লকগুলো <code>struct</code> ও <code>enum</code>-এর উপর মেথড সরবরাহ করে। যদিও মেথডসহ <code>struct</code> এবং <code>enum</code>-কে অবজেক্ট বলা হয় না, তবে "গ্যাং অফ ফোর"-এর সংজ্ঞা অনুসারে এগুলো একই কার্যকারিতা প্রদান করে।</p>
+<h3 id="এনকযাপসুলেশন-যা-ভেতরের-বিবরণ-লুকিযে-রাখে-encapsulation-that-hides-implementation-details"><a class="header" href="#এনকযাপসুলেশন-যা-ভেতরের-বিবরণ-লুকিযে-রাখে-encapsulation-that-hides-implementation-details">এনক্যাপসুলেশন যা ভেতরের বিবরণ লুকিয়ে রাখে (Encapsulation That Hides Implementation Details)</a></h3>
+<p>OOP-এর সাথে জড়িত আরেকটি সাধারণ ধারণা হলো <em>এনক্যাপসুলেশন</em> (encapsulation), যার মানে হলো একটি অবজেক্টের ভেতরের কার্যকারিতার বিবরণ (implementation details) সেই অবজেক্ট ব্যবহারকারী কোডের কাছে সরাসরি অ্যাক্সেসযোগ্য থাকে না। সুতরাং, একটি অবজেক্টের সাথে ইন্টারঅ্যাক্ট করার একমাত্র উপায় হলো তার পাবলিক API; অবজেক্ট ব্যবহারকারী কোডের উচিত নয় অবজেক্টের গভীরে প্রবেশ করে সরাসরি ডেটা বা আচরণ পরিবর্তন করা। এটি প্রোগ্রামারকে অবজেক্ট ব্যবহারকারী কোড পরিবর্তন না করেই অবজেক্টের ভেতরের অংশ পরিবর্তন এবং রিফ্যাক্টর করার সুযোগ দেয়।</p>
+<p>আমরা ৭ম অধ্যায়ে আলোচনা করেছি কীভাবে এনক্যাপসুলেশন নিয়ন্ত্রণ করতে হয়: আমরা <code>pub</code> কীওয়ার্ড ব্যবহার করে ঠিক করতে পারি যে আমাদের কোডের কোন মডিউল, টাইপ, ফাংশন এবং মেথড পাবলিক হবে, এবং ডিফল্টভাবে বাকি সবকিছু প্রাইভেট থাকে। উদাহরণস্বরূপ, আমরা একটি <code>AveragedCollection</code> struct সংজ্ঞায়িত করতে পারি যার একটি ফিল্ডে <code>i32</code> মানের একটি ভেক্টর থাকবে। এই struct-এ এমন একটি ফিল্ডও থাকতে পারে যেখানে ভেক্টরের মানগুলোর গড় সংরক্ষিত থাকবে, যার মানে হলো যখনই কারো গড়ের প্রয়োজন হবে, তখন আর নতুন করে গণনা করতে হবে না। অন্য কথায়, <code>AveragedCollection</code> আমাদের জন্য গণনা করা গড় ক্যাশ (cache) করে রাখবে। লিস্টিং ১৮-১ এ <code>AveragedCollection</code> struct-এর সংজ্ঞা দেওয়া হলো।</p>
+<Listing number="18-1" file-name="src/lib.rs" caption="একটি `AveragedCollection` struct যা পূর্ণসংখ্যার একটি তালিকা এবং সেই তালিকার আইটেমগুলোর গড় বজায় রাখে">
+<pre><code class="language-rust noplayground">pub struct AveragedCollection {
+    list: Vec&lt;i32&gt;,
+    average: f64,
+}</code></pre>
+</Listing>
+<p>Struct-টিকে <code>pub</code> হিসেবে চিহ্নিত করা হয়েছে যাতে অন্য কোড এটি ব্যবহার করতে পারে, কিন্তু struct-এর ভেতরের ফিল্ডগুলো প্রাইভেট থাকে। এক্ষেত্রে এটি গুরুত্বপূর্ণ কারণ আমরা নিশ্চিত করতে চাই যে যখনই তালিকা থেকে কোনো মান যোগ বা حذف করা হবে, তখন গড়ও আপডেট করা হবে। আমরা এটি করি struct-এর উপর <code>add</code>, <code>remove</code>, এবং <code>average</code> মেথড প্রয়োগ করে, যা লিস্টিং ১৮-২ এ দেখানো হয়েছে।</p>
+<Listing number="18-2" file-name="src/lib.rs" caption="`AveragedCollection`-এ পাবলিক `add`, `remove` ও `average` মেথডগুলোর ইমপ্লিমেন্টেশন">
+<pre><code class="language-rust noplayground"><span class="boring">pub struct AveragedCollection {
+</span><span class="boring">    list: Vec&lt;i32&gt;,
+</span><span class="boring">    average: f64,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl AveragedCollection {
+    pub fn add(&amp;mut self, value: i32) {
+        self.list.push(value);
+        self.update_average();
+    }
+
+    pub fn remove(&amp;mut self) -&gt; Option&lt;i32&gt; {
+        let result = self.list.pop();
+        match result {
+            Some(value) =&gt; {
+                self.update_average();
+                Some(value)
+            }
+            None =&gt; None,
+        }
+    }
+
+    pub fn average(&amp;self) -&gt; f64 {
+        self.average
+    }
+
+    fn update_average(&amp;mut self) {
+        let total: i32 = self.list.iter().sum();
+        self.average = total as f64 / self.list.len() as f64;
+    }
+}</code></pre>
+</Listing>
+<p>পাবলিক মেথড <code>add</code>, <code>remove</code>, এবং <code>average</code> হলো <code>AveragedCollection</code>-এর একটি ইনস্ট্যান্সের ডেটা অ্যাক্সেস বা পরিবর্তন করার একমাত্র উপায়। যখন <code>add</code> মেথড ব্যবহার করে <code>list</code>-এ একটি আইটেম যোগ করা হয় বা <code>remove</code> মেথড ব্যবহার করে حذف করা হয়, তখন প্রতিটির ইমপ্লিমেন্টেশন প্রাইভেট <code>update_average</code> মেথডকে কল করে, যা <code>average</code> ফিল্ড আপডেট করার কাজ করে।</p>
+<p>আমরা <code>list</code> এবং <code>average</code> ফিল্ড দুটিকে প্রাইভেট রেখেছি যাতে বাইরের কোনো কোড সরাসরি <code>list</code> ফিল্ডে আইটেম যোগ বা حذف করতে না পারে; অন্যথায়, <code>list</code> পরিবর্তন হলে <code>average</code> ফিল্ডটি অসামঞ্জস্যপূর্ণ (out of sync) হয়ে যেতে পারে। <code>average</code> মেথডটি <code>average</code> ফিল্ডের মান রিটার্ন করে, যা বাইরের কোডকে <code>average</code> পড়ার সুযোগ দেয় কিন্তু পরিবর্তন করার নয়।</p>
+<p>যেহেতু আমরা <code>AveragedCollection</code> struct-এর ভেতরের বিবরণ এনক্যাপসুলেট করেছি, তাই আমরা ভবিষ্যতে ডেটা স্ট্রাকচারের মতো বিভিন্ন দিক সহজেই পরিবর্তন করতে পারব। উদাহরণস্বরূপ, <code>list</code> ফিল্ডের জন্য <code>Vec&lt;i32&gt;</code>-এর পরিবর্তে <code>HashSet&lt;i32&gt;</code> ব্যবহার করতে পারি। যতক্ষণ পর্যন্ত <code>add</code>, <code>remove</code>, এবং <code>average</code> পাবলিক মেথডগুলোর সিগনেচার একই থাকবে, <code>AveragedCollection</code> ব্যবহারকারী কোড পরিবর্তন করার কোনো প্রয়োজন হবে না। যদি আমরা <code>list</code>-কে পাবলিক করতাম, তবে এটি সম্ভব হতো না: <code>HashSet&lt;i32&gt;</code> এবং <code>Vec&lt;i32&gt;</code>-তে আইটেম যোগ এবং حذف করার জন্য ভিন্ন ভিন্ন মেথড রয়েছে, তাই বাইরের কোড যদি সরাসরি <code>list</code> পরিবর্তন করত, তবে সম্ভবত সেটিও পরিবর্তন করতে হতো।</p>
+<p>যদি কোনো ল্যাঙ্গুয়েজকে অবজেক্ট-ওরিয়েন্টেড হিসেবে বিবেচনা করার জন্য এনক্যাপসুলেশন একটি প্রয়োজনীয় দিক হয়, তাহলে Rust সেই শর্ত পূরণ করে। কোডের বিভিন্ন অংশের জন্য <code>pub</code> ব্যবহার করার বা না করার বিকল্পটি ভেতরের বিবরণ এনক্যাপসুলেট করতে সক্ষম করে।</p>
+<h3 id="টাইপ-সিসটেম-এবং-কোড-শেযারিং-হিসাবে-ইনহেরিটেনস-inheritance-as-a-type-system-and-as-code-sharing"><a class="header" href="#টাইপ-সিসটেম-এবং-কোড-শেযারিং-হিসাবে-ইনহেরিটেনস-inheritance-as-a-type-system-and-as-code-sharing">টাইপ সিস্টেম এবং কোড শেয়ারিং হিসাবে ইনহেরিটেন্স (Inheritance as a Type System and as Code Sharing)</a></h3>
+<p><em>ইনহেরিটেন্স</em> (Inheritance) হলো এমন একটি প্রক্রিয়া যার মাধ্যমে একটি অবজেক্ট অন্য একটি অবজেক্টের সংজ্ঞা থেকে বিভিন্ন উপাদান উত্তরাধিকার সূত্রে পেতে পারে, ফলে প্যারেন্ট অবজেক্টের ডেটা এবং আচরণ পুনরায় কোড না লিখেই পাওয়া যায়।</p>
+<p>যদি কোনো ল্যাঙ্গুয়েজকে অবজেক্ট-ওরিয়েন্টেড হতে হলে ইনহেরিটেন্স থাকতেই হয়, তবে Rust সেই ধরনের ল্যাঙ্গুয়েজ নয়। ম্যাক্রো ব্যবহার না করে এমন কোনো struct সংজ্ঞায়িত করার উপায় নেই যা প্যারেন্ট struct-এর ফিল্ড এবং মেথড ইমপ্লিমেন্টেশন উত্তরাধিকার সূত্রে পাবে।</p>
+<p>তবে, আপনি যদি আপনার প্রোগ্রামিং টুলবক্সে ইনহেরিটেন্স ব্যবহারে অভ্যস্ত হন, তবে Rust-এ আপনি অন্য সমাধান ব্যবহার করতে পারেন, যা নির্ভর করবে আপনি কী কারণে ইনহেরিটেন্স ব্যবহার করতে চাইছেন তার উপর।</p>
+<p>আপনি মূলত দুটি প্রধান কারণে ইনহেরিটেন্স বেছে নেবেন। একটি হলো কোড পুনঃব্যবহার (reuse of code): আপনি একটি টাইপের জন্য নির্দিষ্ট আচরণ ইমপ্লিমেন্ট করতে পারেন এবং ইনহেরিটেন্স আপনাকে সেই ইমপ্লিমেন্টেশনটি অন্য একটি টাইপের জন্য পুনঃব্যবহারের সুযোগ দেয়। আপনি Rust কোডে ডিফল্ট ট্রেইট মেথড ইমপ্লিমেন্টেশন ব্যবহার করে সীমিত আকারে এটি করতে পারেন, যা আপনি লিস্টিং ১০-১৪-তে দেখেছেন যখন আমরা <code>Summary</code> trait-এ <code>summarize</code> মেথডের একটি ডিফল্ট ইমপ্লিমেন্টেশন যোগ করেছিলাম। <code>Summary</code> trait ইমপ্লিমেন্ট করা যেকোনো টাইপ কোনো অতিরিক্ত কোড ছাড়াই <code>summarize</code> মেথডটি ব্যবহার করতে পারবে। এটি অনেকটা একটি প্যারেন্ট ক্লাসের কোনো মেথডের ইমপ্লিমেন্টেশন থাকার মতো, যা উত্তরাধিকার সূত্রে পাওয়া চাইল্ড ক্লাসেও সেই মেথডটি থাকে। আমরা <code>Summary</code> trait ইমপ্লিমেন্ট করার সময় <code>summarize</code> মেথডের ডিফল্ট ইমপ্লিমেন্টেশনটি ওভাররাইডও করতে পারি, যা একটি চাইল্ড ক্লাসের প্যারেন্ট ক্লাস থেকে উত্তরাধিকার সূত্রে পাওয়া মেথডের ইমপ্লিমেন্টেশন ওভাররাইড করার মতো।</p>
+<p>ইনহেরিটেন্স ব্যবহারের অন্য কারণটি টাইপ সিস্টেমের সাথে সম্পর্কিত: একটি চাইল্ড টাইপকে প্যারেন্ট টাইপের জায়গায় ব্যবহার করতে সক্ষম করা। একে <em>পলিমরফিজম</em> (polymorphism) বলা হয়, যার মানে হলো আপনি রানটাইমে একাধিক অবজেক্টকে একে অপরের বিকল্প হিসেবে ব্যবহার করতে পারবেন যদি তাদের মধ্যে নির্দিষ্ট কিছু বৈশিষ্ট্য থাকে।</p>
+<blockquote>
+<h3 id="পলিমরফিজম-polymorphism"><a class="header" href="#পলিমরফিজম-polymorphism">পলিমরফিজম (Polymorphism)</a></h3>
+<p>অনেকের কাছে পলিমরফিজম এবং ইনহেরিটেন্স সমার্থক। কিন্তু এটি আসলে একটি আরও সাধারণ ধারণা যা এমন কোডকে বোঝায় যা একাধিক টাইপের ডেটা নিয়ে কাজ করতে পারে। ইনহেরিটেন্সের ক্ষেত্রে, এই টাইপগুলো সাধারণত সাব-ক্লাস (subclass) হয়।</p>
+<p>এর পরিবর্তে, Rust বিভিন্ন সম্ভাব্য টাইপের জন্য জেনেরিক (generics) ব্যবহার করে এবং সেই টাইপগুলোকে কী সরবরাহ করতে হবে তার উপর সীমাবদ্ধতা আরোপ করার জন্য ট্রেইট বাউন্ড (trait bounds) ব্যবহার করে। একে কখনও কখনও <em>বাউন্ডেড প্যারামেট্রিক পলিমরফিজম</em> (bounded parametric polymorphism) বলা হয়।</p>
+</blockquote>
+<p>ইনহেরিটেন্সের সুবিধা প্রদান না করে Rust ভিন্ন একটি পথ বেছে নিয়েছে। ইনহেরিটেন্স প্রায়শই প্রয়োজনের চেয়ে বেশি কোড শেয়ার করার ঝুঁকিতে থাকে। সাব-ক্লাসগুলোর সবসময় তাদের প্যারেন্ট ক্লাসের সমস্ত বৈশিষ্ট্য শেয়ার করা উচিত নয়, কিন্তু ইনহেরিটেন্সের মাধ্যমে তারা তা করে ফেলে। এটি একটি প্রোগ্রামের ডিজাইনকে কম নমনীয় করে তুলতে পারে। এটি সাব-ক্লাসের উপর এমন মেথড কল করার সম্ভাবনা তৈরি করে যা অর্থহীন বা ত্রুটির কারণ হতে পারে কারণ মেথডগুলো সাব-ক্লাসের জন্য প্রযোজ্য নয়। এছাড়াও, কিছু ল্যাঙ্গুয়েজ শুধুমাত্র <em>সিঙ্গেল ইনহেরিটেন্স</em> (single inheritance) অনুমোদন করে (অর্থাৎ একটি সাব-ক্লাস শুধুমাত্র একটি ক্লাস থেকে ইনহেরিট করতে পারে), যা একটি প্রোগ্রামের ডিজাইনের নমনীয়তাকে আরও সীমাবদ্ধ করে।</p>
+<p>এই কারণগুলোর জন্য, Rust পলিমরফিজম সক্ষম করার জন্য ইনহেরিটেন্সের পরিবর্তে ট্রেইট অবজেক্ট (trait objects) ব্যবহারের ভিন্ন পদ্ধতি গ্রহণ করে। চলুন দেখি ট্রেইট অবজেক্ট কীভাবে কাজ করে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch18-00-oop.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch18-02-trait-objects.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch18-00-oop.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch18-02-trait-objects.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

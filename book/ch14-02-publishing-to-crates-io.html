@@ -1,0 +1,520 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Crates.io-তে একটি ক্রেট প্রকাশ করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="cratesio-তে-একটি-করেট-পাবলিশ-করা"><a class="header" href="#cratesio-তে-একটি-করেট-পাবলিশ-করা">Crates.io-তে একটি ক্রেট পাবলিশ করা</a></h2>
+<p>আমরা আমাদের প্রজেক্টের ডিপেন্ডেন্সি হিসেবে <a href="https://crates.io/">crates.io</a>-থেকে প্যাকেজ ব্যবহার করেছি, কিন্তু আপনি আপনার নিজের প্যাকেজ পাবলিশ করে অন্যদের সাথে আপনার কোড শেয়ার করতে পারেন। <a href="https://crates.io/">crates.io</a>-এর ক্রেট রেজিস্ট্রি আপনার প্যাকেজের সোর্স কোড বিতরণ করে, তাই এটি মূলত ওপেন সোর্স কোড হোস্ট করে।</p>
+<p>Rust এবং কার্গোর এমন কিছু ফিচার রয়েছে যা আপনার পাবলিশ করা প্যাকেজকে মানুষের খুঁজে পেতে এবং ব্যবহার করতে সহজ করে তোলে। আমরা এই ফিচারগুলোর কয়েকটি নিয়ে আলোচনা করব এবং তারপরে একটি প্যাকেজ কীভাবে পাবলিশ করতে হয় তা ব্যাখ্যা করব।</p>
+<h3 id="দরকারি-ডকুমেনটেশন-কমেনট-তৈরি-করা"><a class="header" href="#দরকারি-ডকুমেনটেশন-কমেনট-তৈরি-করা">দরকারি ডকুমেন্টেশন কমেন্ট তৈরি করা</a></h3>
+<p>আপনার প্যাকেজগুলোকে সঠিকভাবে ডকুমেন্টেশন করা হলে অন্য ব্যবহারকারীরা জানতে পারবে কীভাবে এবং কখন সেগুলো ব্যবহার করতে হবে, তাই ডকুমেন্টেশন লেখার জন্য সময় ব্যয় করা সার্থক। অধ্যায় ৩-এ, আমরা দুটি স্ল্যাশ, <code>//</code> ব্যবহার করে কীভাবে Rust কোডে কমেন্ট করতে হয় তা আলোচনা করেছি। Rust-এর ডকুমেন্টেশনের জন্য একটি বিশেষ ধরনের কমেন্টও রয়েছে, যা সুবিধাজনকভাবে <em>ডকুমেন্টেশন কমেন্ট</em> (documentation comment) নামে পরিচিত, যা HTML ডকুমেন্টেশন তৈরি করবে। HTML ডকুমেন্টেশন পাবলিক API আইটেমগুলোর জন্য ডকুমেন্টেশন কমেন্টের বিষয়বস্তু প্রদর্শন করে, যা সেইসব প্রোগ্রামারদের জন্য তৈরি, যারা আপনার ক্রেট কীভাবে <em>বাস্তবায়ন</em> করা হয়েছে তার চেয়ে কীভাবে <em>ব্যবহার</em> করতে হয় তা জানতে আগ্রহী।</p>
+<p>ডকুমেন্টেশন কমেন্ট দুটির পরিবর্তে তিনটি স্ল্যাশ, <code>///</code> ব্যবহার করে এবং টেক্সট ফরম্যাট করার জন্য Markdown নোটেশন সমর্থন করে। যে আইটেমটি ডকুমেন্ট করা হচ্ছে তার ঠিক আগে ডকুমেন্টেশন কমেন্ট রাখুন। তালিকা ১৪-১-এ <code>my_crate</code> নামের একটি ক্রেটে <code>add_one</code> ফাংশনের জন্য ডকুমেন্টেশন কমেন্ট দেখানো হয়েছে।</p>
+<Listing number="14-1" file-name="src/lib.rs" caption="একটি ফাংশনের জন্য ডকুমেন্টেশন কমেন্ট">
+<pre><code class="language-rust ignore">/// Adds one to the number given.
+///
+/// # Examples
+///
+/// ```
+/// let arg = 5;
+/// let answer = my_crate::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -&gt; i32 {
+    x + 1
+}</code></pre>
+</Listing>
+<p>এখানে, আমরা <code>add_one</code> ফাংশনটি কী করে তার একটি বিবরণ দিচ্ছি, <code>Examples</code> শিরোনাম দিয়ে একটি সেকশন শুরু করছি, এবং তারপর <code>add_one</code> ফাংশনটি কীভাবে ব্যবহার করতে হয় তা প্রদর্শন করে এমন কোড প্রদান করছি। আমরা <code>cargo doc</code> চালিয়ে এই ডকুমেন্টেশন কমেন্ট থেকে HTML ডকুমেন্টেশন তৈরি করতে পারি। এই কমান্ডটি Rust-এর সাথে ডিস্ট্রিবিউট করা <code>rustdoc</code> টুলটি চালায় এবং জেনারেট করা HTML ডকুমেন্টেশনটি <em>target/doc</em> ডিরেক্টরিতে রাখে।</p>
+<p>সুবিধার জন্য, <code>cargo doc --open</code> চালালে আপনার বর্তমান ক্রেটের ডকুমেন্টেশনের জন্য HTML তৈরি হবে (পাশাপাশি আপনার ক্রেটের সমস্ত ডিপেন্ডেন্সির ডকুমেন্টেশনও) এবং ফলাফলটি একটি ওয়েব ব্রাউজারে খুলবে। <code>add_one</code> ফাংশনে নেভিগেট করুন এবং আপনি দেখতে পাবেন ডকুমেন্টেশন কমেন্টের টেক্সট কীভাবে রেন্ডার করা হয়েছে, যেমনটি চিত্র ১৪-১-এ দেখানো হয়েছে।</p>
+<img alt="my_crate-এর `add_one` ফাংশনের জন্য রেন্ডার করা HTML ডকুমেন্টেশন" src="img/trpl14-01.png" class="center" />
+<p><span class="caption">চিত্র ১৪-১: <code>add_one</code> ফাংশনের জন্য HTML ডকুমেন্টেশন</span></p>
+<h4 id="সাধারণত-বযবহৃত-সেকশন"><a class="header" href="#সাধারণত-বযবহৃত-সেকশন">সাধারণত ব্যবহৃত সেকশন</a></h4>
+<p>আমরা তালিকা ১৪-১-এ <code># Examples</code> Markdown শিরোনাম ব্যবহার করে HTML-এ "Examples" শিরোনাম সহ একটি সেকশন তৈরি করেছি। এখানে আরও কিছু সেকশন রয়েছে যা ক্রেট লেখকরা সাধারণত তাদের ডকুমেন্টেশনে ব্যবহার করেন:</p>
+<ul>
+<li><strong>Panics</strong>: যে পরিস্থিতিতে ডকুমেন্ট করা ফাংশনটি প্যানিক করতে পারে। ফাংশনের কলাররা যারা চান না তাদের প্রোগ্রাম প্যানিক করুক, তাদের নিশ্চিত করা উচিত যে তারা এই পরিস্থিতিতে ফাংশনটি কল না করে।</li>
+<li><strong>Errors</strong>: যদি ফাংশনটি একটি <code>Result</code> রিটার্ন করে, তাহলে কী ধরনের এরর ঘটতে পারে এবং কোন শর্তে সেই এররগুলো রিটার্ন হতে পারে তা বর্ণনা করা কলারদের জন্য সহায়ক হতে পারে, যাতে তারা বিভিন্ন ধরণের এরর বিভিন্ন উপায়ে হ্যান্ডেল করার জন্য কোড লিখতে পারে।</li>
+<li><strong>Safety</strong>: যদি ফাংশনটি কল করা <code>unsafe</code> হয় (আমরা অধ্যায় ২০-এ unsafe নিয়ে আলোচনা করব), তবে একটি সেকশন থাকা উচিত যা ব্যাখ্যা করে কেন ফাংশনটি unsafe এবং ফাংশনটি কলারদের কাছ থেকে কী কী ইনভ্যারিয়েন্ট আশা করে।</li>
+</ul>
+<p>বেশিরভাগ ডকুমেন্টেশন কমেন্টের জন্য এই সমস্ত সেকশনের প্রয়োজন হয় না, তবে এটি একটি ভালো চেকলিস্ট যা আপনাকে আপনার কোডের সেই দিকগুলো মনে করিয়ে দেবে যা ব্যবহারকারীরা জানতে আগ্রহী হবে।</p>
+<h4 id="ডকুমেনটেশন-কমেনটকে-টেসট-হিসাবে-বযবহার"><a class="header" href="#ডকুমেনটেশন-কমেনটকে-টেসট-হিসাবে-বযবহার">ডকুমেন্টেশন কমেন্টকে টেস্ট হিসাবে ব্যবহার</a></h4>
+<p>আপনার ডকুমেন্টেশন কমেন্টে উদাহরণ কোড ব্লক যোগ করা আপনার লাইব্রেরি কীভাবে ব্যবহার করতে হয় তা দেখাতে সাহায্য করতে পারে, এবং এটি করার একটি অতিরিক্ত বোনাস রয়েছে: <code>cargo test</code> চালালে আপনার ডকুমেন্টেশনের কোড উদাহরণগুলো টেস্ট হিসাবে চলবে! উদাহরণের সাথে ডকুমেন্টেশনের চেয়ে ভালো আর কিছু নেই। কিন্তু এমন উদাহরণের চেয়ে খারাপ আর কিছু নেই যা কাজ করে না কারণ ডকুমেন্টেশন লেখার পর কোড পরিবর্তন হয়েছে। যদি আমরা তালিকা ১৪-১ থেকে <code>add_one</code> ফাংশনের ডকুমেন্টেশন সহ <code>cargo test</code> চালাই, আমরা টেস্ট ফলাফলে একটি সেকশন দেখতে পাব যা এইরকম দেখায়:</p>
+<!-- manual-regeneration
+cd listings/ch14-more-about-cargo/listing-14-01/
+cargo test
+copy just the doc-tests section below
+-->
+<pre><code class="language-text">   Doc-tests my_crate
+
+running 1 test
+test src/lib.rs - add_one (line 5) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+</code></pre>
+<p>এখন, যদি আমরা ফাংশন বা উদাহরণটি এমনভাবে পরিবর্তন করি যাতে উদাহরণের <code>assert_eq!</code> প্যানিক করে, এবং আবার <code>cargo test</code> চালাই, আমরা দেখব যে ডক টেস্টগুলো ধরে ফেলেছে যে উদাহরণ এবং কোড একে অপরের সাথে সিঙ্কে নেই!</p>
+<h4 id="কনটেইনড-আইটেম-কমেনটিং"><a class="header" href="#কনটেইনড-আইটেম-কমেনটিং">কন্টেইনড আইটেম কমেন্টিং</a></h4>
+<p>ডক কমেন্টের <code>//!</code> স্টাইলটি কমেন্টের <em>পরবর্তী</em> আইটেমের পরিবর্তে যে আইটেমটি কমেন্টগুলো <em>ধারণ করে</em> তার ডকুমেন্টেশন যোগ করে। আমরা সাধারণত এই ডক কমেন্টগুলো ক্রেট রুট ফাইলে (প্রচলিতভাবে <em>src/lib.rs</em>) বা একটি মডিউলের ভিতরে ব্যবহার করি যাতে ক্রেট বা মডিউলটিকে সামগ্রিকভাবে ডকুমেন্ট করা যায়।</p>
+<p>উদাহরণস্বরূপ, <code>my_crate</code> ক্রেট, যা <code>add_one</code> ফাংশনটি ধারণ করে, তার উদ্দেশ্য বর্ণনা করে এমন ডকুমেন্টেশন যোগ করার জন্য, আমরা <code>//!</code> দিয়ে শুরু হওয়া ডকুমেন্টেশন কমেন্টগুলো <em>src/lib.rs</em> ফাইলের শুরুতে যোগ করি, যেমনটি তালিকা ১৪-২-এ দেখানো হয়েছে।</p>
+<Listing number="14-2" file-name="src/lib.rs" caption="`my_crate` ক্রেটের সামগ্রিক ডকুমেন্টেশন">
+<pre><code class="language-rust ignore">//! # My Crate
+//!
+//! `my_crate` is a collection of utilities to make performing certain
+//! calculations more convenient.
+
+/// Adds one to the number given.
+// --snip--
+<span class="boring">///
+</span><span class="boring">/// # Examples
+</span><span class="boring">///
+</span><span class="boring">/// ```
+</span><span class="boring">/// let arg = 5;
+</span><span class="boring">/// let answer = my_crate::add_one(arg);
+</span><span class="boring">///
+</span><span class="boring">/// assert_eq!(6, answer);
+</span><span class="boring">/// ```
+</span><span class="boring">pub fn add_one(x: i32) -&gt; i32 {
+</span><span class="boring">    x + 1
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>লক্ষ্য করুন, <code>//!</code> দিয়ে শুরু হওয়া শেষ লাইনের পরে কোনো কোড নেই। যেহেতু আমরা কমেন্টগুলো <code>///</code>-এর পরিবর্তে <code>//!</code> দিয়ে শুরু করেছি, আমরা এই কমেন্টের পরবর্তী আইটেমের পরিবর্তে এই কমেন্ট ধারণকারী আইটেমটিকে ডকুমেন্ট করছি। এই ক্ষেত্রে, সেই আইটেমটি হল <em>src/lib.rs</em> ফাইল, যা ক্রেট রুট। এই কমেন্টগুলো পুরো ক্রেটকে বর্ণনা করে।</p>
+<p>যখন আমরা <code>cargo doc --open</code> চালাই, তখন এই কমেন্টগুলো <code>my_crate</code>-এর ডকুমেন্টেশনের প্রথম পৃষ্ঠায়, ক্রেটের পাবলিক আইটেমের তালিকার উপরে প্রদর্শিত হবে, যেমনটি চিত্র ১৪-২-এ দেখানো হয়েছে।</p>
+<img alt="একটি কমেন্টসহ ক্রেটের সামগ্রিক রেন্ডার করা HTML ডকুমেন্টেশন" src="img/trpl14-02.png" class="center" />
+<p><span class="caption">চিত্র ১৪-২: <code>my_crate</code>-এর জন্য রেন্ডার করা ডকুমেন্টেশন, যা ক্রেটকে বর্ণনা করা সামগ্রিক কমেন্ট অন্তর্ভুক্ত করে</span></p>
+<p>আইটেমের মধ্যে ডকুমেন্টেশন কমেন্ট ক্রেট এবং মডিউল বর্ণনা করার জন্য বিশেষভাবে কার্যকর। আপনার ব্যবহারকারীদের ক্রেটের অর্গানাইজেশন বুঝতে সাহায্য করার জন্য কন্টেইনারের সামগ্রিক উদ্দেশ্য ব্যাখ্যা করতে এগুলো ব্যবহার করুন।</p>
+<h3 id="pub-use-দিযে-একটি-সুবিধাজনক-পাবলিক-api-একসপোরট-করা"><a class="header" href="#pub-use-দিযে-একটি-সুবিধাজনক-পাবলিক-api-একসপোরট-করা"><code>pub use</code> দিয়ে একটি সুবিধাজনক পাবলিক API এক্সপোর্ট করা</a></h3>
+<p>একটি ক্রেট পাবলিশ করার সময় আপনার পাবলিক API-এর গঠন একটি প্রধান বিবেচ্য বিষয়। যারা আপনার ক্রেট ব্যবহার করে তারা আপনার চেয়ে এর গঠনের সাথে কম পরিচিত এবং যদি আপনার ক্রেটের একটি বড় মডিউল হায়ারার্কি থাকে তবে তারা যে অংশগুলো ব্যবহার করতে চায় তা খুঁজে পেতে অসুবিধা হতে পারে।</p>
+<p>অধ্যায় ৭-এ, আমরা <code>pub</code> কীওয়ার্ড ব্যবহার করে কীভাবে আইটেম পাবলিক করতে হয় এবং <code>use</code> কীওয়ার্ড দিয়ে কীভাবে স্কোপে আইটেম আনতে হয় তা আলোচনা করেছি। যাইহোক, আপনি যখন একটি ক্রেট ডেভেলপ করছেন তখন যে গঠনটি আপনার কাছে যৌক্তিক মনে হতে পারে, তা আপনার ব্যবহারকারীদের জন্য খুব সুবিধাজনক নাও হতে পারে। আপনি আপনার struct-গুলোকে একাধিক স্তরের একটি হায়ারার্কিতে সাজাতে চাইতে পারেন, কিন্তু তারপর যারা হায়ারার্কির গভীরে আপনার সংজ্ঞায়িত একটি টাইপ ব্যবহার করতে চায় তাদের জন্য সেই টাইপটি যে বিদ্যমান তা খুঁজে বের করা কঠিন হতে পারে। <code>use my_crate::UsefulType;</code>-এর পরিবর্তে <code>use my_crate::some_module::another_module::UsefulType;</code> লিখতে বাধ্য হওয়ায় তারা বিরক্তও হতে পারে।</p>
+<p>ভালো খবর হল যে যদি গঠনটি অন্য লাইব্রেরি থেকে ব্যবহারের জন্য সুবিধাজনক <em>না</em> হয়, তবে আপনাকে আপনার অভ্যন্তরীণ অর্গানাইজেশন পুনর্বিন্যাস করতে হবে না: পরিবর্তে, আপনি <code>pub use</code> ব্যবহার করে আপনার ব্যক্তিগত গঠন থেকে ভিন্ন একটি পাবলিক গঠন তৈরি করতে আইটেমগুলো রি-এক্সপোর্ট করতে পারেন। <em>রি-এক্সপোর্ট করা</em> (Re-exporting) একটি স্থানের পাবলিক আইটেমকে নিয়ে অন্য একটি স্থানে পাবলিক করে, যেন এটি সেই অন্য স্থানে সংজ্ঞায়িত করা হয়েছিল।</p>
+<p>উদাহরণস্বরূপ, ধরা যাক আমরা শৈল্পিক ধারণা মডেল করার জন্য <code>art</code> নামে একটি লাইব্রেরি তৈরি করেছি। এই লাইব্রেরির মধ্যে দুটি মডিউল রয়েছে: একটি <code>kinds</code> মডিউল যাতে <code>PrimaryColor</code> এবং <code>SecondaryColor</code> নামে দুটি enum রয়েছে এবং একটি <code>utils</code> মডিউল যাতে <code>mix</code> নামে একটি ফাংশন রয়েছে, যেমনটি তালিকা ১৪-৩-এ দেখানো হয়েছে।</p>
+<Listing number="14-3" file-name="src/lib.rs" caption="একটি `art` লাইব্রেরি যার আইটেমগুলো `kinds` এবং `utils` মডিউলে সাজানো আছে">
+<pre><code class="language-rust noplayground test_harness">//! # Art
+//!
+//! A library for modeling artistic concepts.
+
+pub mod kinds {
+    /// The primary colors according to the RYB color model.
+    pub enum PrimaryColor {
+        Red,
+        Yellow,
+        Blue,
+    }
+
+    /// The secondary colors according to the RYB color model.
+    pub enum SecondaryColor {
+        Orange,
+        Green,
+        Purple,
+    }
+}
+
+pub mod utils {
+    use crate::kinds::*;
+
+    /// Combines two primary colors in equal amounts to create
+    /// a secondary color.
+    pub fn mix(c1: PrimaryColor, c2: PrimaryColor) -&gt; SecondaryColor {
+        // --snip--
+<span class="boring">        unimplemented!();
+</span>    }
+}</code></pre>
+</Listing>
+<p>চিত্র ১৪-৩ দেখায় যে <code>cargo doc</code> দ্বারা তৈরি এই ক্রেটের ডকুমেন্টেশনের প্রথম পাতাটি কেমন দেখাবে।</p>
+<img alt="`art` ক্রেটের রেন্ডার করা ডকুমেন্টেশন যা `kinds` এবং `utils` মডিউল তালিকাভুক্ত করে" src="img/trpl14-03.png" class="center" />
+<p><span class="caption">চিত্র ১৪-৩: <code>art</code>-এর ডকুমেন্টেশনের প্রথম পাতা যা <code>kinds</code> এবং <code>utils</code> মডিউল তালিকাভুক্ত করে</span></p>
+<p>লক্ষ্য করুন যে <code>PrimaryColor</code> এবং <code>SecondaryColor</code> টাইপগুলো প্রথম পৃষ্ঠায় তালিকাভুক্ত নয়, <code>mix</code> ফাংশনটিও নয়। তাদের দেখতে আমাদের <code>kinds</code> এবং <code>utils</code> এ ক্লিক করতে হবে।</p>
+<p>এই লাইব্রেরির উপর নির্ভরশীল অন্য একটি ক্রেটের <code>use</code> স্টেটমেন্টের প্রয়োজন হবে যা <code>art</code> থেকে আইটেমগুলোকে স্কোপে আনবে, বর্তমানে সংজ্ঞায়িত মডিউল কাঠামো উল্লেখ করে। তালিকা ১৪-৪ এমন একটি ক্রেটের উদাহরণ দেখায় যা <code>art</code> ক্রেট থেকে <code>PrimaryColor</code> এবং <code>mix</code> আইটেম ব্যবহার করে।</p>
+<Listing number="14-4" file-name="src/main.rs" caption="একটি ক্রেট যা `art` ক্রেটের আইটেমগুলো তার অভ্যন্তরীণ কাঠামো এক্সপোর্ট করে ব্যবহার করছে">
+<pre><code class="language-rust ignore">use art::kinds::PrimaryColor;
+use art::utils::mix;
+
+fn main() {
+    let red = PrimaryColor::Red;
+    let yellow = PrimaryColor::Yellow;
+    mix(red, yellow);
+}</code></pre>
+</Listing>
+<p>তালিকা ১৪-৪ এর কোডের লেখক, যিনি <code>art</code> ক্রেট ব্যবহার করছেন, তাকে বের করতে হয়েছে যে <code>PrimaryColor</code> <code>kinds</code> মডিউলে এবং <code>mix</code> <code>utils</code> মডিউলে রয়েছে। <code>art</code> ক্রেটের মডিউল কাঠামো <code>art</code> ক্রেটে কাজ করা ডেভেলপারদের জন্য বেশি প্রাসঙ্গিক, যারা এটি ব্যবহার করছে তাদের চেয়ে। অভ্যন্তরীণ কাঠামোটি <code>art</code> ক্রেট কীভাবে ব্যবহার করতে হয় তা বোঝার চেষ্টা করা কারো জন্য কোনো দরকারী তথ্য ধারণ করে না, বরং বিভ্রান্তি সৃষ্টি করে কারণ এটি ব্যবহারকারী ডেভেলপারদের কোথায় খুঁজতে হবে তা বের করতে হয় এবং <code>use</code> স্টেটমেন্টে মডিউলের নাম উল্লেখ করতে হয়।</p>
+<p>পাবলিক API থেকে অভ্যন্তরীণ অর্গানাইজেশন অপসারণ করতে, আমরা তালিকা ১৪-৩-এর <code>art</code> ক্রেট কোডটি পরিবর্তন করে <code>pub use</code> স্টেটমেন্ট যোগ করতে পারি যাতে আইটেমগুলো টপ লেভেলে রি-এক্সপোর্ট করা যায়, যেমনটি তালিকা ১৪-৫-এ দেখানো হয়েছে।</p>
+<Listing number="14-5" file-name="src/lib.rs" caption="আইটেম রি-এক্সপোর্ট করতে `pub use` স্টেটমেন্ট যোগ করা">
+<pre><code class="language-rust ignore">//! # Art
+//!
+//! A library for modeling artistic concepts.
+
+pub use self::kinds::PrimaryColor;
+pub use self::kinds::SecondaryColor;
+pub use self::utils::mix;
+
+pub mod kinds {
+    // --snip--
+<span class="boring">    /// The primary colors according to the RYB color model.
+</span><span class="boring">    pub enum PrimaryColor {
+</span><span class="boring">        Red,
+</span><span class="boring">        Yellow,
+</span><span class="boring">        Blue,
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    /// The secondary colors according to the RYB color model.
+</span><span class="boring">    pub enum SecondaryColor {
+</span><span class="boring">        Orange,
+</span><span class="boring">        Green,
+</span><span class="boring">        Purple,
+</span><span class="boring">    }
+</span>}
+
+pub mod utils {
+    // --snip--
+<span class="boring">    use crate::kinds::*;
+</span><span class="boring">
+</span><span class="boring">    /// Combines two primary colors in equal amounts to create
+</span><span class="boring">    /// a secondary color.
+</span><span class="boring">    pub fn mix(c1: PrimaryColor, c2: PrimaryColor) -&gt; SecondaryColor {
+</span><span class="boring">        SecondaryColor::Orange
+</span><span class="boring">    }
+</span>}</code></pre>
+</Listing>
+<p>এই ক্রেটের জন্য <code>cargo doc</code> যে API ডকুমেন্টেশন তৈরি করবে তা এখন প্রথম পৃষ্ঠায় রি-এক্সপোর্টগুলো তালিকাভুক্ত করবে এবং লিঙ্ক করবে, যেমনটি চিত্র ১৪-৪-এ দেখানো হয়েছে, যা <code>PrimaryColor</code> ও <code>SecondaryColor</code> টাইপ এবং <code>mix</code> ফাংশনটিকে খুঁজে পাওয়া সহজ করে তোলে।</p>
+<img alt="`art` ক্রেটের জন্য রেন্ডার করা ডকুমেন্টেশন যেখানে প্রথম পৃষ্ঠায় রি-এক্সপোর্টগুলো রয়েছে" src="img/trpl14-04.png" class="center" />
+<p><span class="caption">চিত্র ১৪-৪: <code>art</code>-এর ডকুমেন্টেশনের প্রথম পাতা যা রি-এক্সপোর্টগুলো তালিকাভুক্ত করে</span></p>
+<p><code>art</code> ক্রেট ব্যবহারকারীরা এখনও তালিকা ১৪-৩ থেকে অভ্যন্তরীণ কাঠামো দেখতে এবং ব্যবহার করতে পারেন যেমনটি তালিকা ১৪-৪-এ দেখানো হয়েছে, অথবা তারা তালিকা ১৪-৫-এর আরও সুবিধাজনক কাঠামো ব্যবহার করতে পারেন, যেমনটি তালিকা ১৪-৬-এ দেখানো হয়েছে।</p>
+<Listing number="14-6" file-name="src/main.rs" caption="`art` ক্রেট থেকে রি-এক্সপোর্ট করা আইটেম ব্যবহার করে একটি প্রোগ্রাম">
+<pre><code class="language-rust ignore">use art::PrimaryColor;
+use art::mix;
+
+fn main() {
+    // --snip--
+<span class="boring">    let red = PrimaryColor::Red;
+</span><span class="boring">    let yellow = PrimaryColor::Yellow;
+</span><span class="boring">    mix(red, yellow);
+</span>}</code></pre>
+</Listing>
+<p>যেখানে অনেকগুলো নেস্টেড মডিউল রয়েছে, সেখানে <code>pub use</code> দিয়ে টপ লেভেলে টাইপগুলো রি-এক্সপোর্ট করা ক্রেট ব্যবহারকারীদের অভিজ্ঞতায় একটি উল্লেখযোগ্য পার্থক্য আনতে পারে। <code>pub use</code>-এর আরেকটি সাধারণ ব্যবহার হল বর্তমান ক্রেটে একটি ডিপেনডেন্সির ডেফিনিশন রি-এক্সপোর্ট করা যাতে সেই ক্রেটের ডেফিনিশনগুলো আপনার ক্রেটের পাবলিক API-এর অংশ হয়ে যায়।</p>
+<p>একটি দরকারি পাবলিক API কাঠামো তৈরি করা বিজ্ঞানের চেয়ে বেশি শিল্প, এবং আপনি আপনার ব্যবহারকারীদের জন্য সবচেয়ে ভালো কাজ করে এমন API খুঁজে বের করার জন্য পুনরাবৃত্তি করতে পারেন। <code>pub use</code> বেছে নেওয়া আপনাকে আপনার ক্রেট অভ্যন্তরীণভাবে কীভাবে গঠন করবেন সে সম্পর্কে নমনীয়তা দেয় এবং সেই অভ্যন্তরীণ কাঠামোকে আপনি আপনার ব্যবহারকারীদের কাছে যা উপস্থাপন করেন তা থেকে বিচ্ছিন্ন করে। আপনি ইনস্টল করেছেন এমন কিছু ক্রেটের কোড দেখুন যে তাদের অভ্যন্তরীণ কাঠামো তাদের পাবলিক API থেকে ভিন্ন কিনা।</p>
+<h3 id="cratesio-অযাকাউনট-সেট-আপ-করা"><a class="header" href="#cratesio-অযাকাউনট-সেট-আপ-করা">Crates.io অ্যাকাউন্ট সেট আপ করা</a></h3>
+<p>আপনি কোনো ক্রেট পাবলিশ করার আগে, আপনাকে <a href="https://crates.io/">crates.io</a>-তে একটি অ্যাকাউন্ট তৈরি করতে হবে এবং একটি API টোকেন পেতে হবে। এটি করার জন্য, <a href="https://crates.io/">crates.io</a>-এর হোম পেজে যান এবং একটি GitHub অ্যাকাউন্টের মাধ্যমে লগ ইন করুন। (বর্তমানে GitHub অ্যাকাউন্ট একটি আবশ্যকতা, তবে ভবিষ্যতে সাইটটি অ্যাকাউন্ট তৈরির অন্যান্য উপায় সমর্থন করতে পারে।) একবার আপনি লগ ইন করলে, <a href="https://crates.io/me/">https://crates.io/me/</a>-এ আপনার অ্যাকাউন্ট সেটিংসে যান এবং আপনার API কী পুনরুদ্ধার করুন। তারপর <code>cargo login</code> কমান্ডটি চালান এবং অনুরোধ করা হলে আপনার API কী পেস্ট করুন, এরকম:</p>
+<pre><code class="language-console">$ cargo login
+abcdefghijklmnopqrstuvwxyz012345
+</code></pre>
+<p>এই কমান্ডটি কার্গোকে আপনার API টোকেন সম্পর্কে জানাবে এবং এটি স্থানীয়ভাবে <em>~/.cargo/credentials.toml</em>-এ সংরক্ষণ করবে। মনে রাখবেন যে এই টোকেনটি একটি <em>গোপনীয়</em> বিষয়: এটি অন্য কারো সাথে শেয়ার করবেন না। যদি আপনি কোনো কারণে এটি কারো সাথে শেয়ার করেন, তাহলে আপনার উচিত এটি প্রত্যাহার করা এবং <a href="https://crates.io/">crates.io</a>-তে একটি নতুন টোকেন তৈরি করা।</p>
+<h3 id="একটি-নতুন-করেটে-মেটাডেটা-যোগ-করা"><a class="header" href="#একটি-নতুন-করেটে-মেটাডেটা-যোগ-করা">একটি নতুন ক্রেটে মেটাডেটা যোগ করা</a></h3>
+<p>ধরা যাক আপনার একটি ক্রেট আছে যা আপনি পাবলিশ করতে চান। পাবলিশ করার আগে, আপনাকে ক্রেটের <em>Cargo.toml</em> ফাইলের <code>[package]</code> সেকশনে কিছু মেটাডেটা যোগ করতে হবে।</p>
+<p>আপনার ক্রেটের একটি ইউনিক নাম প্রয়োজন হবে। আপনি যখন স্থানীয়ভাবে একটি ক্রেটে কাজ করছেন, তখন আপনি ক্রেটের যা খুশি নাম দিতে পারেন। যাইহোক, <a href="https://crates.io/">crates.io</a>-তে ক্রেটের নাম ফার্স্ট-কাম, ফার্স্ট-সার্ভড ভিত্তিতে বরাদ্দ করা হয়। একবার একটি ক্রেটের নাম নেওয়া হয়ে গেলে, অন্য কেউ সেই নামে ক্রেট পাবলিশ করতে পারবে না। একটি ক্রেট পাবলিশ করার চেষ্টা করার আগে, আপনি যে নামটি ব্যবহার করতে চান তা সার্চ করুন। যদি নামটি ব্যবহার করা হয়ে থাকে, আপনাকে অন্য একটি নাম খুঁজে বের করতে হবে এবং পাবলিশ করার জন্য নতুন নামটি ব্যবহার করতে <em>Cargo.toml</em> ফাইলের <code>[package]</code> সেকশনের অধীনে <code>name</code> ফিল্ডটি এডিট করতে হবে, এভাবে:</p>
+<p><span class="filename">ফাইলের নাম: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = "guessing_game"
+</code></pre>
+<p>এমনকি যদি আপনি একটি ইউনিক নাম বেছে নিয়ে থাকেন, আপনি যখন এই সময়ে ক্রেটটি পাবলিশ করার জন্য <code>cargo publish</code> চালান, আপনি একটি ওয়ার্নিং এবং তারপর একটি এরর পাবেন:</p>
+<!-- manual-regeneration
+Create a new package with an unregistered name, making no further modifications
+  to the generated package, so it is missing the description and license fields.
+cargo publish
+copy just the relevant lines below
+-->
+<pre><code class="language-console">$ cargo publish
+    Updating crates.io index
+warning: manifest has no description, license, license-file, documentation, homepage or repository.
+See https://doc.rust-lang.org/cargo/reference/manifest.html#package-metadata for more info.
+--snip--
+error: failed to publish to registry at https://crates.io
+
+Caused by:
+  the remote server responded with an error (status 400 Bad Request): missing or empty metadata fields: description, license. Please see https://doc.rust-lang.org/cargo/reference/manifest.html for more information on configuring these fields
+</code></pre>
+<p>এর ফলে একটি এরর হয় কারণ আপনার কিছু গুরুত্বপূর্ণ তথ্য অনুপস্থিত: একটি বিবরণ এবং লাইসেন্স প্রয়োজন যাতে লোকেরা জানতে পারে আপনার ক্রেট কী করে এবং কোন শর্তে তারা এটি ব্যবহার করতে পারে। <em>Cargo.toml</em>-এ, একটি বিবরণ যোগ করুন যা মাত্র এক বা দুটি বাক্য, কারণ এটি সার্চ ফলাফলে আপনার ক্রেটের সাথে প্রদর্শিত হবে। <code>license</code> ফিল্ডের জন্য, আপনাকে একটি <em>লাইসেন্স আইডেন্টিফায়ার ভ্যালু</em> দিতে হবে। <a href="https://spdx.org/licenses/">লিনাক্স ফাউন্ডেশনের সফটওয়্যার প্যাকেজ ডেটা এক্সচেঞ্জ (SPDX)</a> আপনি এই মানের জন্য ব্যবহার করতে পারেন এমন আইডেন্টিফায়ারগুলো তালিকাভুক্ত করে। উদাহরণস্বরূপ, আপনি আপনার ক্রেটকে MIT লাইসেন্স ব্যবহার করে লাইসেন্স করেছেন তা নির্দিষ্ট করতে, <code>MIT</code> আইডেন্টিফায়ার যোগ করুন:</p>
+<p><span class="filename">ফাইলের নাম: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = "guessing_game"
+license = "MIT"
+</code></pre>
+<p>আপনি যদি এমন একটি লাইসেন্স ব্যবহার করতে চান যা SPDX-এ প্রদর্শিত হয় না, আপনাকে সেই লাইসেন্সের টেক্সট একটি ফাইলে রাখতে হবে, ফাইলটি আপনার প্রজেক্টে অন্তর্ভুক্ত করতে হবে এবং তারপর <code>license</code> কী ব্যবহার করার পরিবর্তে সেই ফাইলের নাম নির্দিষ্ট করতে <code>license-file</code> ব্যবহার করতে হবে।</p>
+<p>আপনার প্রজেক্টের জন্য কোন লাইসেন্স উপযুক্ত সে সম্পর্কে নির্দেশনা এই বইয়ের সুযোগের বাইরে। রাস্ট সম্প্রদায়ের অনেক লোক তাদের প্রজেক্টগুলোকে রাস্টের মতোই লাইসেন্স করে, <code>MIT OR Apache-2.0</code>-এর একটি দ্বৈত লাইসেন্স ব্যবহার করে। এই অনুশীলনটি দেখায় যে আপনি আপনার প্রজেক্টের জন্য একাধিক লাইসেন্স পেতে <code>OR</code> দ্বারা পৃথক করা একাধিক লাইসেন্স আইডেন্টিফায়ারও নির্দিষ্ট করতে পারেন।</p>
+<p>একটি ইউনিক নাম, সংস্করণ, আপনার বিবরণ এবং একটি লাইসেন্স যোগ করার পরে, পাবলিশ করার জন্য প্রস্তুত একটি প্রজেক্টের <em>Cargo.toml</em> ফাইলটি এইরকম দেখতে হতে পারে:</p>
+<p><span class="filename">ফাইলের নাম: Cargo.toml</span></p>
+<pre><code class="language-toml">[package]
+name = "guessing_game"
+version = "0.1.0"
+edition = "2024"
+description = "A fun game where you guess what number the computer has chosen."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+</code></pre>
+<p><a href="https://doc.rust-lang.org/cargo/">কার্গোর ডকুমেন্টেশন</a> অন্যান্য মেটাডেটা বর্ণনা করে যা আপনি নির্দিষ্ট করতে পারেন যাতে অন্যরা আপনার ক্রেট আরও সহজে আবিষ্কার করতে এবং ব্যবহার করতে পারে।</p>
+<h3 id="cratesio-তে-পাবলিশ-করা"><a class="header" href="#cratesio-তে-পাবলিশ-করা">Crates.io-তে পাবলিশ করা</a></h3>
+<p>এখন যেহেতু আপনি একটি অ্যাকাউন্ট তৈরি করেছেন, আপনার API টোকেন সংরক্ষণ করেছেন, আপনার ক্রেটের জন্য একটি নাম বেছে নিয়েছেন এবং প্রয়োজনীয় মেটাডেটা নির্দিষ্ট করেছেন, আপনি পাবলিশ করার জন্য প্রস্তুত! একটি ক্রেট পাবলিশ করা একটি নির্দিষ্ট সংস্করণ <a href="https://crates.io/">crates.io</a>-তে আপলোড করে যাতে অন্যরা এটি ব্যবহার করতে পারে।</p>
+<p>সাবধান থাকুন, কারণ একটি পাবলিশ <em>স্থায়ী</em>। সংস্করণটি কখনই ওভাররাইট করা যাবে না এবং কোডটি কিছু নির্দিষ্ট পরিস্থিতি ছাড়া ডিলিট করা যাবে না। Crates.io-এর একটি প্রধান লক্ষ্য হল কোডের একটি স্থায়ী আর্কাইভ হিসাবে কাজ করা যাতে <a href="https://crates.io/">crates.io</a>-থেকে ক্রেটের উপর নির্ভরশীল সমস্ত প্রজেক্টের বিল্ড কাজ করতে থাকে। সংস্করণ ডিলিট করার অনুমতি দিলে সেই লক্ষ্য পূরণ করা অসম্ভব হয়ে পড়বে। যাইহোক, আপনি কতগুলো ক্রেট সংস্করণ পাবলিশ করতে পারবেন তার কোনো সীমা নেই।</p>
+<p><code>cargo publish</code> কমান্ডটি আবার চালান। এটি এখন সফল হওয়া উচিত:</p>
+<!-- manual-regeneration
+go to some valid crate, publish a new version
+cargo publish
+copy just the relevant lines below
+-->
+<pre><code class="language-console">$ cargo publish
+    Updating crates.io index
+   Packaging guessing_game v0.1.0 (file:///projects/guessing_game)
+    Packaged 6 files, 1.2KiB (895.0B compressed)
+   Verifying guessing_game v0.1.0 (file:///projects/guessing_game)
+   Compiling guessing_game v0.1.0
+(file:///projects/guessing_game/target/package/guessing_game-0.1.0)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+   Uploading guessing_game v0.1.0 (file:///projects/guessing_game)
+    Uploaded guessing_game v0.1.0 to registry `crates-io`
+note: waiting for `guessing_game v0.1.0` to be available at registry
+`crates-io`.
+You may press ctrl-c to skip waiting; the crate should be available shortly.
+   Published guessing_game v0.1.0 at registry `crates-io`
+</code></pre>
+<p>অভিনন্দন! আপনি এখন রাস্ট সম্প্রদায়ের সাথে আপনার কোড শেয়ার করেছেন, এবং যে কেউ সহজেই আপনার ক্রেটকে তাদের প্রজেক্টের একটি ডিপেনডেন্সি হিসাবে যোগ করতে পারে।</p>
+<h3 id="একটি-বিদযমান-করেটের-নতুন-সংসকরণ-পাবলিশ-করা"><a class="header" href="#একটি-বিদযমান-করেটের-নতুন-সংসকরণ-পাবলিশ-করা">একটি বিদ্যমান ক্রেটের নতুন সংস্করণ পাবলিশ করা</a></h3>
+<p>আপনি যখন আপনার ক্রেটে পরিবর্তন করেছেন এবং একটি নতুন সংস্করণ রিলিজ করার জন্য প্রস্তুত, তখন আপনি আপনার <em>Cargo.toml</em> ফাইলে নির্দিষ্ট <code>version</code>-এর মান পরিবর্তন করুন এবং পুনরায় পাবলিশ করুন। আপনি কী ধরনের পরিবর্তন করেছেন তার উপর ভিত্তি করে একটি উপযুক্ত পরবর্তী সংস্করণ নম্বর কী হবে তা নির্ধারণ করতে <a href="https://semver.org/">Semantic Versioning rules</a> ব্যবহার করুন। তারপর নতুন সংস্করণ আপলোড করতে <code>cargo publish</code> চালান।</p>
+<!-- Old link, do not remove -->
+<p><a id="removing-versions-from-cratesio-with-cargo-yank"></a></p>
+<h3 id="cargo-yank-দিয়ে-cratesio-থেকে-সংসকরণ-অপসারণ-করা"><a class="header" href="#cargo-yank-দিয়ে-cratesio-থেকে-সংসকরণ-অপসারণ-করা"><code>cargo yank</code> দিয়ে Crates.io থেকে সংস্করণ অপসারণ করা</a></h3>
+<p>যদিও আপনি একটি ক্রেটের পূর্ববর্তী সংস্করণগুলো সরাতে পারবেন না, আপনি ভবিষ্যতের যেকোনো প্রজেক্টকে নতুন ডিপেনডেন্সি হিসেবে যোগ করা থেকে বিরত রাখতে পারেন। এটি তখন কার্যকর হয় যখন একটি ক্রেট সংস্করণ কোনো না কোনো কারণে ভাঙা থাকে। এই ধরনের পরিস্থিতিতে, কার্গো একটি ক্রেট সংস্করণকে yank করা সমর্থন করে।</p>
+<p>একটি সংস্করণকে <em>Yank করা</em> নতুন প্রজেক্টগুলোকে সেই সংস্করণের উপর নির্ভর করতে বাধা দেয় এবং এর উপর নির্ভরশীল সমস্ত বিদ্যমান প্রজেক্টকে চলতে দেয়। মূলত, একটি yank মানে হল যে <em>Cargo.lock</em> সহ সমস্ত প্রজেক্ট ভাঙবে না, এবং ভবিষ্যতে তৈরি করা কোনো <em>Cargo.lock</em> ফাইল yank করা সংস্করণটি ব্যবহার করবে না।</p>
+<p>একটি ক্রেটের একটি সংস্করণ yank করতে, আপনি পূর্বে পাবলিশ করেছেন এমন ক্রেটের ডিরেক্টরিতে, <code>cargo yank</code> চালান এবং আপনি কোন সংস্করণটি yank করতে চান তা নির্দিষ্ট করুন। উদাহরণস্বরূপ, যদি আমরা <code>guessing_game</code> নামের একটি ক্রেটের ১.০.১ সংস্করণ পাবলিশ করে থাকি এবং আমরা এটিকে yank করতে চাই, <code>guessing_game</code> এর প্রজেক্ট ডিরেক্টরিতে আমরা চালাব:</p>
+<!-- manual-regeneration:
+cargo yank carol-test --version 2.1.0
+cargo yank carol-test --version 2.1.0 --undo
+-->
+<pre><code class="language-console">$ cargo yank --vers 1.0.1
+    Updating crates.io index
+        Yank guessing_game@1.0.1
+</code></pre>
+<p>কমান্ডে <code>--undo</code> যোগ করে, আপনি একটি yank বাতিল করতে পারেন এবং প্রজেক্টগুলোকে আবার একটি সংস্করণের উপর নির্ভর করার অনুমতি দিতে পারেন:</p>
+<pre><code class="language-console">$ cargo yank --vers 1.0.1 --undo
+    Updating crates.io index
+      Unyank guessing_game@1.0.1
+</code></pre>
+<p>একটি yank কোনো কোড <em>ডিলিট করে না</em>। এটি, উদাহরণস্বরূপ, ভুলবশত আপলোড করা গোপন তথ্য ডিলিট করতে পারে না। যদি এমন হয়, তাহলে আপনাকে অবিলম্বে সেই গোপন তথ্যগুলো রিসেট করতে হবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch14-01-release-profiles.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch14-03-cargo-workspaces.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch14-01-release-profiles.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch14-03-cargo-workspaces.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

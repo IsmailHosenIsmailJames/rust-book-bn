@@ -1,0 +1,798 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>মডুলারিটি এবং এরর হ্যান্ডলিং উন্নত করতে রিফ্যাক্টরিং - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="মডুলারিটি-এবং-এরর-হযানডলিং-উননত-করার-জনয-রিফযাকটরিং-refactoring-to-improve-modularity-and-error-handling"><a class="header" href="#মডুলারিটি-এবং-এরর-হযানডলিং-উননত-করার-জনয-রিফযাকটরিং-refactoring-to-improve-modularity-and-error-handling">মডুলারিটি এবং এরর হ্যান্ডলিং উন্নত করার জন্য রিফ্যাক্টরিং (Refactoring to Improve Modularity and Error Handling)</a></h2>
+<p>আমাদের প্রোগ্রামের উন্নতির জন্য, আমরা চারটি সমস্যা সমাধান করব যা প্রোগ্রামের কাঠামো এবং সম্ভাব্য এরর হ্যান্ডলিং সম্পর্কিত। প্রথমত, আমাদের <code>main</code> ফাংশন এখন দুটি কাজ করছে: এটি আর্গুমেন্ট পার্স করে এবং ফাইল পড়ে। প্রোগ্রাম বড় হওয়ার সাথে সাথে <code>main</code> ফাংশনের কাজের সংখ্যা বাড়তে থাকবে। যখন একটি ফাংশনের দায়িত্ব বাড়ে, তখন এটি নিয়ে যুক্তি দিয়ে ভাবা, টেস্ট করা এবং এর কোনো অংশ নষ্ট না করে পরিবর্তন করা কঠিন হয়ে যায়। ফাংশনালিটি আলাদা করে দেওয়াই ভালো, যাতে প্রতিটি ফাংশন একটি কাজের জন্য দায়ী থাকে।</p>
+<p>এই বিষয়টি দ্বিতীয় সমস্যার সাথেও জড়িত: যদিও <code>query</code> এবং <code>file_path</code> আমাদের প্রোগ্রামের কনফিগারেশন ভেরিয়েবল, কিন্তু <code>contents</code>-এর মতো ভেরিয়েবলগুলো প্রোগ্রামের লজিক সম্পাদনের জন্য ব্যবহৃত হয়। <code>main</code> ফাংশন যত দীর্ঘ হবে, আমাদের তত বেশি ভেরিয়েবল স্কোপে আনতে হবে; স্কোপে যত বেশি ভেরিয়েবল থাকবে, প্রতিটির উদ্দেশ্য মনে রাখা তত কঠিন হবে। কনফিগারেশন ভেরিয়েবলগুলোকে একটি স্ট্রাকচারে একত্রিত করে তাদের উদ্দেশ্য পরিষ্কার করে তোলাই শ্রেয়।</p>
+<p>তৃতীয় সমস্যা হলো, ফাইল পড়তে ব্যর্থ হলে আমরা এরর মেসেজ প্রিন্ট করার জন্য <code>expect</code> ব্যবহার করেছি, কিন্তু এরর মেসেজটি শুধু <code>Should have been able to read the file</code> প্রিন্ট করে। একটি ফাইল পড়া বিভিন্ন কারণে ব্যর্থ হতে পারে: যেমন, ফাইলটি অনুপস্থিত থাকতে পারে, অথবা আমাদের কাছে এটি খোলার অনুমতি নাও থাকতে পারে। এখন, পরিস্থিতি যাই হোক না কেন, আমরা সবকিছুর জন্য একই এরর মেসেজ প্রিন্ট করব, যা ব্যবহারকারীকে কোনো তথ্য দেবে না!</p>
+<p>চতুর্থত, আমরা একটি এরর হ্যান্ডেল করার জন্য <code>expect</code> ব্যবহার করি, এবং যদি ব্যবহারকারী পর্যাপ্ত আর্গুমেন্ট নির্দিষ্ট না করে আমাদের প্রোগ্রাম চালান, তারা Rust থেকে একটি <code>index out of bounds</code> এরর পাবেন যা সমস্যাটি পরিষ্কারভাবে ব্যাখ্যা করে না। সমস্ত এরর-হ্যান্ডলিং কোড এক জায়গায় থাকলে সবচেয়ে ভালো হতো, যাতে ভবিষ্যতে যারা এটি রক্ষণাবেক্ষণ করবেন তাদের এরর-হ্যান্ডলিং লজিক পরিবর্তন করার প্রয়োজন হলে শুধুমাত্র একটি জায়গা দেখতে হয়। সমস্ত এরর-হ্যান্ডলিং কোড এক জায়গায় রাখলে এটিও নিশ্চিত হবে যে আমরা আমাদের এন্ড-ইউজারদের জন্য অর্থবহ মেসেজ প্রিন্ট করছি।</p>
+<p>চলুন আমাদের প্রজেক্ট রিফ্যাক্টর করে এই চারটি সমস্যা সমাধান করি।</p>
+<h3 id="বাইনারি-পরজেকটের-জনয-কাজের-দায়িতব-পৃথকীকরণ-separation-of-concerns-for-binary-projects"><a class="header" href="#বাইনারি-পরজেকটের-জনয-কাজের-দায়িতব-পৃথকীকরণ-separation-of-concerns-for-binary-projects">বাইনারি প্রজেক্টের জন্য কাজের দায়িত্ব পৃথকীকরণ (Separation of Concerns for Binary Projects)</a></h3>
+<p><code>main</code> ফাংশনে একাধিক কাজের দায়িত্ব অর্পণের সাংগঠনিক সমস্যাটি অনেক বাইনারি প্রজেক্টের জন্য সাধারণ। ফলস্বরূপ, অনেক Rust প্রোগ্রামার <code>main</code> ফাংশন বড় হতে শুরু করলে একটি বাইনারি প্রোগ্রামের পৃথক কাজগুলোকে বিভক্ত করা দরকারী বলে মনে করেন। এই প্রক্রিয়ার নিম্নলিখিত ধাপগুলো রয়েছে:</p>
+<ul>
+<li>আপনার প্রোগ্রামকে একটি <em>main.rs</em> এবং একটি <em>lib.rs</em> ফাইলে বিভক্ত করুন এবং আপনার প্রোগ্রামের লজিক <em>lib.rs</em>-এ সরিয়ে নিন।</li>
+<li>যতক্ষণ আপনার কমান্ড লাইন পার্সিং লজিক ছোট থাকে, ততক্ষণ এটি <code>main</code> ফাংশনে থাকতে পারে।</li>
+<li>যখন কমান্ড লাইন পার্সিং লজিক জটিল হতে শুরু করে, তখন এটিকে <code>main</code> ফাংশন থেকে অন্য ফাংশন বা টাইপে এক্সট্র্যাক্ট করুন।</li>
+</ul>
+<p>এই প্রক্রিয়ার পরে <code>main</code> ফাংশনে যে দায়িত্বগুলো থাকবে তা নিম্নলিখিতগুলির মধ্যে সীমাবদ্ধ থাকা উচিত:</p>
+<ul>
+<li>আর্গুমেন্ট ভ্যালুগুলো দিয়ে কমান্ড লাইন পার্সিং লজিক কল করা</li>
+<li>অন্যান্য যেকোনো কনফিগারেশন সেট আপ করা</li>
+<li><em>lib.rs</em>-এ একটি <code>run</code> ফাংশন কল করা</li>
+<li><code>run</code> ফাংশন এরর রিটার্ন করলে সেই এরর হ্যান্ডেল করা</li>
+</ul>
+<p>এই প্যাটার্নটি হলো কাজগুলোকে আলাদা অংশে ভাগ করা (separating concerns): <em>main.rs</em> প্রোগ্রাম চালানো পরিচালনা করে এবং <em>lib.rs</em> হাতের কাজটির সমস্ত লজিক পরিচালনা করে। যেহেতু আপনি সরাসরি <code>main</code> ফাংশন টেস্ট করতে পারবেন না, তাই এই কাঠামোটি আপনাকে আপনার প্রোগ্রামের সমস্ত লজিক <code>main</code> ফাংশন থেকে বের করে এনে টেস্ট করার সুযোগ দেয়। <code>main</code> ফাংশনে যে কোড অবশিষ্ট থাকবে তা পড়ে এর সঠিকতা যাচাই করার জন্য যথেষ্ট ছোট হবে। চলুন এই প্রক্রিয়া অনুসরণ করে আমাদের প্রোগ্রামটি পুনরায় সাজাই।</p>
+<h4 id="আরগুমেনট-পারসার-একসটরযাকট-করা"><a class="header" href="#আরগুমেনট-পারসার-একসটরযাকট-করা">আর্গুমেন্ট পার্সার এক্সট্র্যাক্ট করা</a></h4>
+<p>আমরা আর্গুমেন্ট পার্স করার ফাংশনালিটি একটি ফাংশনে এক্সট্র্যাক্ট করব যা <code>main</code> কল করবে। লিস্টিং ১২-৫ <code>main</code> ফাংশনের নতুন শুরু দেখাচ্ছে যা একটি নতুন ফাংশন <code>parse_config</code> কল করে, যা আমরা <em>src/main.rs</em>-এ ডিফাইন করব।</p>
+<Listing number="12-5" file-name="src/main.rs" caption="`main` থেকে একটি `parse_config` ফাংশন এক্সট্র্যাক্ট করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">
+</span>fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let (query, file_path) = parse_config(&amp;args);
+
+    // --snip--
+<span class="boring">
+</span><span class="boring">    println!("Searching for {query}");
+</span><span class="boring">    println!("In file {file_path}");
+</span><span class="boring">
+</span><span class="boring">    let contents = fs::read_to_string(file_path)
+</span><span class="boring">        .expect("Should have been able to read the file");
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span>}
+
+fn parse_config(args: &amp;[String]) -&gt; (&amp;str, &amp;str) {
+    let query = &amp;args[1];
+    let file_path = &amp;args[2];
+
+    (query, file_path)
+}</code></pre>
+</Listing>
+<p>আমরা এখনও কমান্ড লাইন আর্গুমেন্টগুলোকে একটি ভেক্টরে সংগ্রহ করছি, কিন্তু <code>main</code> ফাংশনের মধ্যে ইনডেক্স ১-এর আর্গুমেন্ট ভ্যালু <code>query</code> ভেরিয়েবলে এবং ইনডেক্স ২-এর আর্গুমেন্ট ভ্যালু <code>file_path</code> ভেরিয়েবলে অ্যাসাইন করার পরিবর্তে, আমরা পুরো ভেক্টরটি <code>parse_config</code> ফাংশনে পাস করছি। <code>parse_config</code> ফাংশনটি তখন সেই লজিক ধারণ করে যা নির্ধারণ করে কোন আর্গুমেন্ট কোন ভেরিয়েবলে যাবে এবং ভ্যালুগুলো <code>main</code>-এ ফেরত পাঠায়। আমরা এখনও <code>main</code>-এ <code>query</code> এবং <code>file_path</code> ভেরিয়েবল তৈরি করি, কিন্তু <code>main</code>-এর আর কমান্ড লাইন আর্গুমেন্ট এবং ভেরিয়েবলগুলো কীভাবে সম্পর্কিত তা নির্ধারণের দায়িত্ব নেই।</p>
+<p>আমাদের ছোট প্রোগ্রামের জন্য এই পরিবর্তনটি অতিরিক্ত মনে হতে পারে, কিন্তু আমরা ছোট, ক্রমবর্ধমান ধাপে রিফ্যাক্টরিং করছি। এই পরিবর্তন করার পরে, আর্গুমেন্ট পার্সিং এখনও কাজ করছে কিনা তা যাচাই করতে প্রোগ্রামটি আবার চালান। আপনার অগ্রগতি প্রায়শই পরীক্ষা করা ভালো, যাতে সমস্যা দেখা দিলে তার কারণ সনাক্ত করতে সাহায্য হয়।</p>
+<h4 id="কনফিগারেশন-ভযালুগুলোকে-গরুপ-করা"><a class="header" href="#কনফিগারেশন-ভযালুগুলোকে-গরুপ-করা">কনফিগারেশন ভ্যালুগুলোকে গ্রুপ করা</a></h4>
+<p>আমরা <code>parse_config</code> ফাংশনটিকে আরও উন্নত করতে আরও একটি ছোট পদক্ষেপ নিতে পারি। এই মুহূর্তে, আমরা একটি টাপল (tuple) রিটার্ন করছি, কিন্তু তারপরে আমরা অবিলম্বে সেই টাপলটিকে আবার পৃথক অংশে বিভক্ত করছি। এটি একটি লক্ষণ যে সম্ভবত আমাদের কাছে এখনও সঠিক অ্যাবস্ট্র্যাকশন নেই।</p>
+<p>আরেকটি সূচক যা দেখায় যে উন্নতির সুযোগ আছে তা হলো <code>parse_config</code>-এর <code>config</code> অংশটি, যা বোঝায় যে আমরা যে দুটি ভ্যালু রিটার্ন করি তা সম্পর্কিত এবং উভয়ই একটি কনফিগারেশন ভ্যালুর অংশ। আমরা বর্তমানে ডেটার কাঠামোতে এই অর্থটি প্রকাশ করছি না, শুধুমাত্র দুটি ভ্যালুকে একটি টাপলে গ্রুপ করা ছাড়া; আমরা এর পরিবর্তে দুটি ভ্যালুকে একটি <code>struct</code>-এ রাখব এবং প্রতিটি স্ট্রাকট ফিল্ডকে একটি অর্থবহ নাম দেব। এটি করলে এই কোডের ভবিষ্যতের রক্ষণাবেক্ষণকারীদের জন্য বিভিন্ন ভ্যালু কীভাবে একে অপরের সাথে সম্পর্কিত এবং তাদের উদ্দেশ্য কী তা বোঝা সহজ হবে।</p>
+<p>লিস্টিং ১২-৬ <code>parse_config</code> ফাংশনের উন্নতিগুলো দেখাচ্ছে।</p>
+<Listing number="12-6" file-name="src/main.rs" caption="`parse_config`-কে একটি `Config` স্ট্রাকটের ইনস্ট্যান্স রিটার্ন করার জন্য রিফ্যাক্টর করা">
+<pre><code class="language-rust should_panic noplayground"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">
+</span>fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let config = parse_config(&amp;args);
+
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.file_path);
+
+    let contents = fs::read_to_string(config.file_path)
+        .expect("Should have been able to read the file");
+
+    // --snip--
+<span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span>}
+
+struct Config {
+    query: String,
+    file_path: String,
+}
+
+fn parse_config(args: &amp;[String]) -&gt; Config {
+    let query = args[1].clone();
+    let file_path = args[2].clone();
+
+    Config { query, file_path }
+}</code></pre>
+</Listing>
+<p>আমরা <code>query</code> এবং <code>file_path</code> নামে ফিল্ড থাকার জন্য ডিফাইন করা <code>Config</code> নামে একটি <code>struct</code> যোগ করেছি। <code>parse_config</code>-এর সিগনেচার এখন নির্দেশ করে যে এটি একটি <code>Config</code> ভ্যালু রিটার্ন করে। <code>parse_config</code>-এর বডিতে, যেখানে আমরা আগে <code>args</code>-এ <code>String</code> ভ্যালুগুলোকে রেফারেন্স করে এমন স্ট্রিং স্লাইস রিটার্ন করতাম, সেখানে আমরা এখন <code>Config</code>-কে নিজস্ব <code>String</code> ভ্যালু ধারণ করার জন্য ডিফাইন করেছি। <code>main</code>-এর <code>args</code> ভেরিয়েবলটি আর্গুমেন্ট ভ্যালুগুলোর মালিক এবং শুধুমাত্র <code>parse_config</code> ফাংশনকে সেগুলো ধার করতে দিচ্ছে, যার মানে হলো যদি <code>Config</code> <code>args</code>-এর ভ্যালুগুলোর মালিকানা নেওয়ার চেষ্টা করত তবে আমরা Rust-এর borrowing rule লঙ্ঘন করতাম।</p>
+<p><code>String</code> ডেটা পরিচালনা করার অনেক উপায় আছে; সবচেয়ে সহজ, যদিও কিছুটা অদক্ষ, উপায় হলো ভ্যালুগুলোর উপর <code>clone</code> মেথড কল করা। এটি <code>Config</code> ইনস্ট্যান্সের মালিকানার জন্য ডেটার একটি সম্পূর্ণ কপি তৈরি করবে, যা স্ট্রিং ডেটার রেফারেন্স সংরক্ষণের চেয়ে বেশি সময় এবং মেমরি নেয়। যাইহোক, ডেটা ক্লোন করা আমাদের কোডকে খুব সহজবোধ্য করে তোলে কারণ আমাদের রেফারেন্সের লাইফটাইম পরিচালনা করতে হয় না; এই পরিস্থিতিতে, সরলতা অর্জনের জন্য সামান্য পারফরম্যান্স ত্যাগ করা একটি সার্থক ট্রেড-অফ।</p>
+<blockquote>
+<h3 id="clone-বযবহারের-টরেড-অফ"><a class="header" href="#clone-বযবহারের-টরেড-অফ"><code>clone</code> ব্যবহারের ট্রেড-অফ</a></h3>
+<p>অনেক রাস্টেশিয়ানদের (Rustaceans) মধ্যে <code>clone</code>-এর রানটাইম খরচের কারণে মালিকানা সমস্যা সমাধানের জন্য এটি ব্যবহার এড়ানোর একটি প্রবণতা রয়েছে। <a href="ch13-00-functional-features.html">অধ্যায় ১৩</a><!-- ignore -->-তে, আপনি এই ধরনের পরিস্থিতিতে আরও কার্যকর পদ্ধতি ব্যবহার করতে শিখবেন। কিন্তু আপাতত, কয়েকটি স্ট্রিং কপি করে অগ্রগতি চালিয়ে যাওয়া ঠিক আছে কারণ আপনি এই কপিগুলো শুধুমাত্র একবার করবেন এবং আপনার ফাইল পাথ এবং কোয়েরি স্ট্রিং খুব ছোট। আপনার প্রথম প্রয়াসে কোড হাইপার-অপ্টিমাইজ করার চেষ্টার চেয়ে একটি কার্যকরী প্রোগ্রাম যা কিছুটা অদক্ষ, তা থাকা ভালো। আপনি Rust-এর সাথে আরও অভিজ্ঞ হয়ে উঠলে, সবচেয়ে কার্যকর সমাধান দিয়ে শুরু করা সহজ হবে, কিন্তু আপাতত, <code>clone</code> কল করা পুরোপুরি গ্রহণযোগ্য।</p>
+</blockquote>
+<p>আমরা <code>main</code>-কে আপডেট করেছি যাতে এটি <code>parse_config</code> দ্বারা রিটার্ন করা <code>Config</code>-এর ইনস্ট্যান্সটিকে <code>config</code> নামের একটি ভেরিয়েবলে রাখে, এবং আমরা আগের কোড যা পৃথক <code>query</code> এবং <code>file_path</code> ভেরিয়েবল ব্যবহার করত তা আপডেট করেছি যাতে এটি এখন <code>Config</code> স্ট্রাকটের ফিল্ডগুলো ব্যবহার করে।</p>
+<p>এখন আমাদের কোড আরও পরিষ্কারভাবে বোঝায় যে <code>query</code> এবং <code>file_path</code> সম্পর্কিত এবং তাদের উদ্দেশ্য হলো প্রোগ্রামটি কীভাবে কাজ করবে তা কনফিগার করা। এই ভ্যালুগুলো ব্যবহার করে এমন যেকোনো কোড জানে যে তাদের <code>config</code> ইনস্ট্যান্সের মধ্যে তাদের উদ্দেশ্যের জন্য নামকরণ করা ফিল্ডগুলোতে খুঁজে পাওয়া যাবে।</p>
+<h4 id="config-এর-জনয-একটি-কনসটরাকটর-constructor-তৈরি-করা"><a class="header" href="#config-এর-জনয-একটি-কনসটরাকটর-constructor-তৈরি-করা"><code>Config</code>-এর জন্য একটি কনস্ট্রাকটর (Constructor) তৈরি করা</a></h4>
+<p>এখন পর্যন্ত, আমরা <code>main</code> থেকে কমান্ড লাইন আর্গুমেন্ট পার্স করার জন্য দায়ী লজিকটি <code>parse_config</code> ফাংশনে এক্সট্র্যাক্ট করেছি। এটি করতে গিয়ে আমরা দেখতে পেয়েছি যে <code>query</code> এবং <code>file_path</code> ভ্যালুগুলো সম্পর্কিত ছিল এবং এই সম্পর্কটি আমাদের কোডে প্রকাশ করা উচিত। এরপর আমরা <code>query</code> এবং <code>file_path</code>-এর সম্পর্কিত উদ্দেশ্যকে নাম দেওয়ার জন্য এবং <code>parse_config</code> ফাংশন থেকে ভ্যালুগুলোর নাম স্ট্রাকট ফিল্ডের নাম হিসেবে রিটার্ন করতে সক্ষম হওয়ার জন্য একটি <code>Config</code> স্ট্রাকট যোগ করেছি।</p>
+<p>এখন যেহেতু <code>parse_config</code> ফাংশনের উদ্দেশ্য একটি <code>Config</code> ইনস্ট্যান্স তৈরি করা, আমরা <code>parse_config</code>-কে একটি সাধারণ ফাংশন থেকে <code>Config</code> স্ট্রাকটের সাথে যুক্ত <code>new</code> নামের একটি ফাংশনে পরিবর্তন করতে পারি। এই পরিবর্তনটি কোডকে আরও ইডিওম্যাটিক (idiomatic) করে তুলবে। আমরা standard library-র টাইপের ইনস্ট্যান্স, যেমন <code>String</code>, <code>String::new</code> কল করে তৈরি করতে পারি। একইভাবে, <code>parse_config</code>-কে <code>Config</code>-এর সাথে যুক্ত একটি <code>new</code> ফাংশনে পরিবর্তন করে, আমরা <code>Config::new</code> কল করে <code>Config</code>-এর ইনস্ট্যান্স তৈরি করতে সক্ষম হব। লিস্টিং ১২-৭ দেখাচ্ছে আমাদের কী কী পরিবর্তন করতে হবে।</p>
+<Listing number="12-7" file-name="src/main.rs" caption="`parse_config`-কে `Config::new`-তে পরিবর্তন করা">
+<pre><code class="language-rust should_panic noplayground"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">
+</span>fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let config = Config::new(&amp;args);
+<span class="boring">
+</span><span class="boring">    println!("Searching for {}", config.query);
+</span><span class="boring">    println!("In file {}", config.file_path);
+</span><span class="boring">
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)
+</span><span class="boring">        .expect("Should have been able to read the file");
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span>
+    // --snip--
+}
+
+// --snip--
+
+<span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn new(args: &amp;[String]) -&gt; Config {
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        Config { query, file_path }
+    }
+}</code></pre>
+</Listing>
+<p>আমরা <code>main</code>-কে আপডেট করেছি যেখানে আমরা <code>parse_config</code> কল করছিলাম তার পরিবর্তে <code>Config::new</code> কল করার জন্য। আমরা <code>parse_config</code>-এর নাম পরিবর্তন করে <code>new</code> করেছি এবং এটিকে একটি <code>impl</code> ব্লকের মধ্যে সরিয়ে দিয়েছি, যা <code>new</code> ফাংশনটিকে <code>Config</code>-এর সাথে যুক্ত করে। এই কোডটি আবার কম্পাইল করে নিশ্চিত করুন যে এটি কাজ করে।</p>
+<h3 id="এরর-হযানডলিং-ঠিক-করা"><a class="header" href="#এরর-হযানডলিং-ঠিক-করা">এরর হ্যান্ডলিং ঠিক করা</a></h3>
+<p>এখন আমরা আমাদের এরর হ্যান্ডলিং ঠিক করার কাজ করব। মনে রাখবেন যে <code>args</code> ভেক্টরের ইনডেক্স ১ বা ইনডেক্স ২-এর ভ্যালু অ্যাক্সেস করার চেষ্টা করলে প্রোগ্রামটি প্যানিক করবে যদি ভেক্টরে তিনটির কম আইটেম থাকে। কোনো আর্গুমেন্ট ছাড়াই প্রোগ্রামটি চালানোর চেষ্টা করুন; এটি দেখতে এমন হবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep`
+
+thread 'main' panicked at src/main.rs:27:21:
+index out of bounds: the len is 1 but the index is 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p><code>index out of bounds: the len is 1 but the index is 1</code> লাইনটি প্রোগ্রামারদের জন্য একটি এরর মেসেজ। এটি আমাদের এন্ড-ইউজারদের বুঝতে সাহায্য করবে না যে তাদের পরিবর্তে কী করা উচিত। চলুন এখন এটি ঠিক করি।</p>
+<h4 id="এরর-মেসেজ-উননত-করা"><a class="header" href="#এরর-মেসেজ-উননত-করা">এরর মেসেজ উন্নত করা</a></h4>
+<p>লিস্টিং ১২-৮-এ, আমরা <code>new</code> ফাংশনে একটি চেক যোগ করছি যা ইনডেক্স ১ এবং ইনডেক্স ২ অ্যাক্সেস করার আগে স্লাইসটি যথেষ্ট দীর্ঘ কিনা তা যাচাই করবে। যদি স্লাইসটি যথেষ্ট দীর্ঘ না হয়, প্রোগ্রামটি প্যানিক করে এবং একটি ভালো এরর মেসেজ প্রদর্শন করে।</p>
+<Listing number="12-8" file-name="src/main.rs" caption="আর্গুমেন্টের সংখ্যার জন্য একটি চেক যোগ করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::new(&amp;args);
+</span><span class="boring">
+</span><span class="boring">    println!("Searching for {}", config.query);
+</span><span class="boring">    println!("In file {}", config.file_path);
+</span><span class="boring">
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)
+</span><span class="boring">        .expect("Should have been able to read the file");
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span>    // --snip--
+    fn new(args: &amp;[String]) -&gt; Config {
+        if args.len() &lt; 3 {
+            panic!("not enough arguments");
+        }
+        // --snip--
+<span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Config { query, file_path }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এই কোডটি <a href="ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation">লিস্টিং ৯-১৩-এ আমরা যে <code>Guess::new</code> ফাংশন লিখেছিলাম</a><!-- ignore --> তার মতোই, যেখানে <code>value</code> আর্গুমেন্টটি বৈধ মানের সীমার বাইরে থাকলে আমরা <code>panic!</code> কল করেছিলাম। এখানে মানের একটি পরিসর পরীক্ষা করার পরিবর্তে, আমরা পরীক্ষা করছি যে <code>args</code>-এর দৈর্ঘ্য কমপক্ষে <code>3</code> এবং ফাংশনের বাকি অংশ এই শর্তটি পূরণ হয়েছে এই অনুমানের অধীনে কাজ করতে পারে। যদি <code>args</code>-এর তিনটি আইটেমের কম থাকে, এই শর্তটি <code>true</code> হবে এবং আমরা প্রোগ্রামটি অবিলম্বে শেষ করার জন্য <code>panic!</code> ম্যাক্রো কল করি।</p>
+<p><code>new</code>-তে এই অতিরিক্ত কয়েকটি লাইন কোড দিয়ে, চলুন কোনো আর্গুমেন্ট ছাড়াই প্রোগ্রামটি আবার চালাই এবং দেখি এররটি এখন কেমন দেখায়:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep`
+
+thread 'main' panicked at src/main.rs:26:13:
+not enough arguments
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p>এই আউটপুটটি ভালো: আমাদের এখন একটি যুক্তিসঙ্গত এরর মেসেজ আছে। যাইহোক, আমাদের কাছে অপ্রয়োজনীয় তথ্যও রয়েছে যা আমরা আমাদের ব্যবহারকারীদের দিতে চাই না। সম্ভবত লিস্টিং ৯-১৩-এ আমরা যে কৌশলটি ব্যবহার করেছি তা এখানে ব্যবহার করার জন্য সেরা নয়: একটি <code>panic!</code> কল একটি ব্যবহারের সমস্যার চেয়ে একটি প্রোগ্রামিং সমস্যার জন্য বেশি উপযুক্ত, <a href="ch09-03-to-panic-or-not-to-panic.html#guidelines-for-error-handling">যেমনটি অধ্যায় ৯-এ আলোচনা করা হয়েছে</a><!-- ignore -->। পরিবর্তে, আমরা অধ্যায় ৯-এ আপনার শেখা অন্য কৌশলটি ব্যবহার করব—<a href="ch09-02-recoverable-errors-with-result.html">একটি <code>Result</code> রিটার্ন করা</a><!-- ignore --> যা হয় সাফল্য বা একটি এরর নির্দেশ করে।</p>
+<h4 id="panic-কল-করার-পরিবরতে-result-রিটারন-করা"><a class="header" href="#panic-কল-করার-পরিবরতে-result-রিটারন-করা"><code>panic!</code> কল করার পরিবর্তে <code>Result</code> রিটার্ন করা</a></h4>
+<p>আমরা পরিবর্তে একটি <code>Result</code> ভ্যালু রিটার্ন করতে পারি যা সফল ক্ষেত্রে একটি <code>Config</code> ইনস্ট্যান্স ধারণ করবে এবং এরর ক্ষেত্রে সমস্যাটি বর্ণনা করবে। আমরা ফাংশনের নাম <code>new</code> থেকে <code>build</code>-এ পরিবর্তন করতে যাচ্ছি কারণ অনেক প্রোগ্রামার আশা করেন যে <code>new</code> ফাংশনগুলো কখনই ব্যর্থ হবে না। যখন <code>Config::build</code> <code>main</code>-এর সাথে যোগাযোগ করছে, আমরা <code>Result</code> টাইপ ব্যবহার করে সংকেত দিতে পারি যে একটি সমস্যা ছিল। তারপরে আমরা <code>main</code>-কে একটি <code>Err</code> ভ্যারিয়েন্টকে আমাদের ব্যবহারকারীদের জন্য আরও ব্যবহারিক এররে রূপান্তর করতে পরিবর্তন করতে পারি, <code>thread 'main'</code> এবং <code>RUST_BACKTRACE</code> সম্পর্কিত পার্শ্ববর্তী টেক্সট ছাড়াই যা <code>panic!</code> কল করার কারণে ঘটে।</p>
+<p>লিস্টিং ১২-৯ দেখাচ্ছে যে ফাংশনের রিটার্ন ভ্যালুতে আমাদের কী কী পরিবর্তন করতে হবে, যাকে আমরা এখন <code>Config::build</code> বলছি, এবং ফাংশনের বডিতে <code>Result</code> রিটার্ন করার জন্য কী প্রয়োজন। মনে রাখবেন যে এটি <code>main</code> আপডেট না করা পর্যন্ত কম্পাইল হবে না, যা আমরা পরবর্তী লিস্টিং-এ করব।</p>
+<Listing number="12-9" file-name="src/main.rs" caption="`Config::build` থেকে একটি `Result` রিটার্ন করা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::new(&amp;args);
+</span><span class="boring">
+</span><span class="boring">    println!("Searching for {}", config.query);
+</span><span class="boring">    println!("In file {}", config.file_path);
+</span><span class="boring">
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)
+</span><span class="boring">        .expect("Should have been able to read the file");
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+        if args.len() &lt; 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+
+        Ok(Config { query, file_path })
+    }
+}</code></pre>
+</Listing>
+<p>আমাদের <code>build</code> ফাংশন সফল ক্ষেত্রে একটি <code>Config</code> ইনস্ট্যান্স সহ একটি <code>Result</code> এবং এরর ক্ষেত্রে একটি স্ট্রিং লিটারেল রিটার্ন করে। আমাদের এরর ভ্যালুগুলো সবসময় স্ট্রিং লিটারেল হবে যার <code>'static</code> লাইফটাইম আছে।</p>
+<p>আমরা ফাংশনের বডিতে দুটি পরিবর্তন করেছি: ব্যবহারকারী পর্যাপ্ত আর্গুমেন্ট পাস না করলে <code>panic!</code> কল করার পরিবর্তে, আমরা এখন একটি <code>Err</code> ভ্যালু রিটার্ন করি, এবং আমরা <code>Config</code> রিটার্ন ভ্যালুটিকে একটি <code>Ok</code>-এর মধ্যে র‍্যাপ করেছি। এই পরিবর্তনগুলো ফাংশনটিকে তার নতুন টাইপ সিগনেচারের সাথে সঙ্গতিপূর্ণ করে তোলে।</p>
+<p><code>Config::build</code> থেকে একটি <code>Err</code> ভ্যালু রিটার্ন করা <code>main</code> ফাংশনকে <code>build</code> ফাংশন থেকে রিটার্ন করা <code>Result</code> ভ্যালুটি হ্যান্ডেল করতে এবং এরর ক্ষেত্রে প্রসেসটি আরও পরিষ্কারভাবে প্রস্থান করতে দেয়।</p>
+<h4 id="configbuild-কল-করা-এবং-এরর-হযানডেল-করা"><a class="header" href="#configbuild-কল-করা-এবং-এরর-হযানডেল-করা"><code>Config::build</code> কল করা এবং এরর হ্যান্ডেল করা</a></h4>
+<p>এরর কেসটি হ্যান্ডেল করতে এবং একটি ব্যবহারকারী-বান্ধব মেসেজ প্রিন্ট করতে, আমাদের <code>Config::build</code> দ্বারা রিটার্ন করা <code>Result</code>-কে হ্যান্ডেল করার জন্য <code>main</code>-কে আপডেট করতে হবে, যেমনটি লিস্টিং ১২-১০-এ দেখানো হয়েছে। আমরা একটি নন-জিরো এরর কোড দিয়ে কমান্ড লাইন টুল থেকে প্রস্থান করার দায়িত্বটি <code>panic!</code> থেকে সরিয়ে নেব এবং পরিবর্তে এটি হাতে-কলমে বাস্তবায়ন করব। একটি নন-জিরো এক্সিট স্ট্যাটাস হলো আমাদের প্রোগ্রাম কল করা প্রসেসকে সংকেত দেওয়ার একটি কনভেনশন যে প্রোগ্রামটি একটি এরর স্টেট দিয়ে প্রস্থান করেছে।</p>
+<Listing number="12-10" file-name="src/main.rs" caption="একটি `Config` তৈরি করতে ব্যর্থ হলে একটি এরর কোড সহ প্রস্থান করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span>use std::process;
+
+fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    // --snip--
+<span class="boring">
+</span><span class="boring">    println!("Searching for {}", config.query);
+</span><span class="boring">    println!("In file {}", config.file_path);
+</span><span class="boring">
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)
+</span><span class="boring">        .expect("Should have been able to read the file");
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এই লিস্টিং-এ, আমরা এমন একটি মেথড ব্যবহার করেছি যা আমরা এখনও বিস্তারিতভাবে কভার করিনি: <code>unwrap_or_else</code>, যা standard library দ্বারা <code>Result&lt;T, E&gt;</code>-এর উপর ডিফাইন করা হয়েছে। <code>unwrap_or_else</code> ব্যবহার করে আমরা কিছু কাস্টম, নন-<code>panic!</code> এরর হ্যান্ডলিং ডিফাইন করতে পারি। যদি <code>Result</code> একটি <code>Ok</code> ভ্যালু হয়, এই মেথডের আচরণ <code>unwrap</code>-এর মতোই: এটি <code>Ok</code>-এর মধ্যে থাকা অভ্যন্তরীণ ভ্যালুটি রিটার্ন করে। যাইহোক, যদি ভ্যালুটি একটি <code>Err</code> ভ্যালু হয়, এই মেথডটি <em>ক্লোজার</em> (closure)-এর কোড কল করে, যা একটি অ্যানোনিমাস ফাংশন যা আমরা ডিফাইন করি এবং <code>unwrap_or_else</code>-এর আর্গুমেন্ট হিসেবে পাস করি। আমরা <a href="ch13-00-functional-features.html">অধ্যায় ১৩</a><!-- ignore -->-তে ক্লোজার সম্পর্কে আরও বিস্তারিতভাবে আলোচনা করব। আপাতত, আপনাকে শুধু জানতে হবে যে <code>unwrap_or_else</code> <code>Err</code>-এর অভ্যন্তরীণ ভ্যালুটি, যা এই ক্ষেত্রে লিস্টিং ১২-৯-এ যোগ করা স্ট্যাটিক স্ট্রিং <code>"not enough arguments"</code>, আমাদের ক্লোজারে ভার্টিকাল পাইপের মধ্যে থাকা <code>err</code> আর্গুমেন্টে পাস করবে। ক্লোজারের কোডটি তখন চলার সময় <code>err</code> ভ্যালুটি ব্যবহার করতে পারে।</p>
+<p>আমরা standard library থেকে <code>process</code> স্কোপে আনার জন্য একটি নতুন <code>use</code> লাইন যোগ করেছি। এরর ক্ষেত্রে যে ক্লোজারটি চালানো হবে তার কোডটি মাত্র দুই লাইনের: আমরা <code>err</code> ভ্যালুটি প্রিন্ট করি এবং তারপর <code>process::exit</code> কল করি। <code>process::exit</code> ফাংশনটি প্রোগ্রামটি অবিলম্বে বন্ধ করে দেবে এবং এক্সিট স্ট্যাটাস কোড হিসেবে পাস করা নম্বরটি রিটার্ন করবে। এটি লিস্টিং ১২-৮-এ আমরা ব্যবহৃত <code>panic!</code>-ভিত্তিক হ্যান্ডলিংয়ের মতোই, কিন্তু আমরা আর সমস্ত অতিরিক্ত আউটপুট পাই না। চলুন এটি চেষ্টা করি:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/minigrep`
+Problem parsing arguments: not enough arguments
+</code></pre>
+<p>চমৎকার! এই আউটপুটটি আমাদের ব্যবহারকারীদের জন্য অনেক বেশি বন্ধুত্বপূর্ণ।</p>
+<h3 id="main-ফাংশন-থেকে-লজিক-একসটরযাকট-করা"><a class="header" href="#main-ফাংশন-থেকে-লজিক-একসটরযাকট-করা"><code>main</code> ফাংশন থেকে লজিক এক্সট্র্যাক্ট করা</a></h3>
+<p>এখন যেহেতু আমরা কনফিগারেশন পার্সিং রিফ্যাক্টরিং শেষ করেছি, চলুন প্রোগ্রামের লজিকের দিকে মনোযোগ দিই। যেমনটি আমরা <a href="#separation-of-concerns-for-binary-projects">"বাইনারি প্রজেক্টের জন্য কাজের দায়িত্ব পৃথকীকরণ"</a><!-- ignore -->-এ উল্লেখ করেছি, আমরা <code>run</code> নামে একটি ফাংশন এক্সট্র্যাক্ট করব যা বর্তমানে <code>main</code> ফাংশনে থাকা সমস্ত লজিক ধারণ করবে যা কনফিগারেশন সেট আপ করা বা এরর হ্যান্ডেল করার সাথে জড়িত নয়। যখন আমরা শেষ করব, <code>main</code> ফাংশনটি সংক্ষিপ্ত এবং পরিদর্শনের মাধ্যমে যাচাই করা সহজ হবে, এবং আমরা অন্যান্য সমস্ত লজিকের জন্য টেস্ট লিখতে সক্ষম হব।</p>
+<p>লিস্টিং ১২-১১ একটি <code>run</code> ফাংশন এক্সট্র্যাক্ট করার ছোট, ক্রমবর্ধমান উন্নতি দেখাচ্ছে।</p>
+<Listing number="12-11" file-name="src/main.rs" caption="প্রোগ্রামের বাকি লজিক ধারণকারী একটি `run` ফাংশন এক্সট্র্যাক্ট করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span>fn main() {
+    // --snip--
+
+<span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span>    println!("Searching for {}", config.query);
+    println!("In file {}", config.file_path);
+
+    run(config);
+}
+
+fn run(config: Config) {
+    let contents = fs::read_to_string(config.file_path)
+        .expect("Should have been able to read the file");
+
+    println!("With text:\n{contents}");
+}
+
+// --snip--
+<span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p><code>run</code> ফাংশনটি এখন ফাইল পড়া থেকে শুরু করে <code>main</code> থেকে বাকি সমস্ত লজিক ধারণ করে। <code>run</code> ফাংশনটি <code>Config</code> ইনস্ট্যান্সটিকে একটি আর্গুমেন্ট হিসেবে নেয়।</p>
+<h4 id="run-ফাংশন-থেকে-এরর-রিটারন-করা"><a class="header" href="#run-ফাংশন-থেকে-এরর-রিটারন-করা"><code>run</code> ফাংশন থেকে এরর রিটার্ন করা</a></h4>
+<p>বাকি প্রোগ্রাম লজিক <code>run</code> ফাংশনে পৃথক করার সাথে সাথে, আমরা এরর হ্যান্ডলিং উন্নত করতে পারি, যেমনটি আমরা লিস্টিং ১২-৯-এ <code>Config::build</code>-এর সাথে করেছিলাম। <code>expect</code> কল করে প্রোগ্রামকে প্যানিক করার অনুমতি দেওয়ার পরিবর্তে, <code>run</code> ফাংশনটি কিছু ভুল হলে একটি <code>Result&lt;T, E&gt;</code> রিটার্ন করবে। এটি আমাদের এরর হ্যান্ডলিং সম্পর্কিত লজিককে <code>main</code>-এ আরও ব্যবহারকারী-বান্ধব উপায়ে একত্রিত করতে দেবে। লিস্টিং ১২-১২ দেখাচ্ছে যে <code>run</code>-এর সিগনেচার এবং বডিতে আমাদের কী কী পরিবর্তন করতে হবে।</p>
+<Listing number="12-12" file-name="src/main.rs" caption="`run` ফাংশনকে `Result` রিটার্ন করার জন্য পরিবর্তন করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span>use std::error::Error;
+
+// --snip--
+
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    println!("Searching for {}", config.query);
+</span><span class="boring">    println!("In file {}", config.file_path);
+</span><span class="boring">
+</span><span class="boring">    run(config);
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    println!("With text:\n{contents}");
+
+    Ok(())
+}
+<span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা এখানে তিনটি উল্লেখযোগ্য পরিবর্তন করেছি। প্রথমত, আমরা <code>run</code> ফাংশনের রিটার্ন টাইপ পরিবর্তন করে <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code> করেছি। এই ফাংশনটি আগে ইউনিট টাইপ, <code>()</code> রিটার্ন করত, এবং আমরা এটিকে <code>Ok</code> ক্ষেত্রে রিটার্ন করা ভ্যালু হিসেবে রাখি।</p>
+<p>এরর টাইপের জন্য, আমরা <em>ট্রেইট অবজেক্ট</em> <code>Box&lt;dyn Error&gt;</code> ব্যবহার করেছি (এবং আমরা উপরে একটি <code>use</code> স্টেটমেন্ট দিয়ে <code>std::error::Error</code>-কে স্কোপে নিয়ে এসেছি)। আমরা <a href="ch18-00-oop.html">অধ্যায় ১৮</a><!-- ignore -->-তে ট্রেইট অবজেক্ট নিয়ে আলোচনা করব। আপাতত, শুধু জেনে রাখুন যে <code>Box&lt;dyn Error&gt;</code> মানে ফাংশনটি এমন একটি টাইপ রিটার্ন করবে যা <code>Error</code> ট্রেইট ইমপ্লিমেন্ট করে, কিন্তু আমাদের নির্দিষ্ট করতে হবে না যে রিটার্ন ভ্যালুটি কোন নির্দিষ্ট টাইপের হবে। এটি আমাদের বিভিন্ন এরর ক্ষেত্রে বিভিন্ন টাইপের এরর ভ্যালু রিটার্ন করার নমনীয়তা দেয়। <code>dyn</code> কীওয়ার্ডটি <em>ডাইনামিক</em> (dynamic)-এর সংক্ষিপ্ত রূপ।</p>
+<p>দ্বিতীয়ত, আমরা <code>expect</code> কলটি সরিয়ে <code>?</code> অপারেটরের পক্ষে নিয়েছি, যেমনটি আমরা <a href="ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator">অধ্যায় ৯</a><!-- ignore -->-এ আলোচনা করেছি। একটি এররে <code>panic!</code> করার পরিবর্তে, <code>?</code> বর্তমান ফাংশন থেকে এরর ভ্যালুটি কলারের কাছে হ্যান্ডেল করার জন্য রিটার্ন করবে।</p>
+<p>তৃতীয়ত, <code>run</code> ফাংশনটি এখন সফল ক্ষেত্রে একটি <code>Ok</code> ভ্যালু রিটার্ন করে। আমরা <code>run</code> ফাংশনের সফল টাইপকে সিগনেচারে <code>()</code> হিসেবে ঘোষণা করেছি, যার মানে আমাদের ইউনিট টাইপ ভ্যালুটিকে <code>Ok</code> ভ্যালুর মধ্যে র‍্যাপ করতে হবে। এই <code>Ok(())</code> সিনট্যাক্সটি প্রথমে কিছুটা অদ্ভুত লাগতে পারে, কিন্তু এইভাবে <code>()</code> ব্যবহার করা একটি ইডিওম্যাটিক উপায় যা নির্দেশ করে যে আমরা <code>run</code>-কে শুধুমাত্র তার সাইড এফেক্টের জন্য কল করছি; এটি এমন কোনো ভ্যালু রিটার্ন করে না যা আমাদের প্রয়োজন।</p>
+<p>আপনি যখন এই কোডটি চালাবেন, এটি কম্পাইল হবে কিন্তু একটি সতর্কতা প্রদর্শন করবে:</p>
+<pre><code class="language-console">$ cargo run -- the poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+warning: unused `Result` that must be used
+  --&gt; src/main.rs:19:5
+   |
+19 |     run(config);
+   |     ^^^^^^^^^^^
+   |
+   = note: this `Result` may be an `Err` variant, which should be handled
+   = note: `#[warn(unused_must_use)]` on by default
+help: use `let _ = ...` to ignore the resulting value
+   |
+19 |     let _ = run(config);
+   |     +++++++
+
+warning: `minigrep` (bin "minigrep") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.71s
+     Running `target/debug/minigrep the poem.txt`
+Searching for the
+In file poem.txt
+With text:
+I'm nobody! Who are you?
+Are you nobody, too?
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
+
+How dreary to be somebody!
+How public, like a frog
+To tell your name the livelong day
+To an admiring bog!
+
+</code></pre>
+<p>Rust আমাদের বলছে যে আমাদের কোড <code>Result</code> ভ্যালুটিকে উপেক্ষা করেছে এবং <code>Result</code> ভ্যালুটি নির্দেশ করতে পারে যে একটি এরর ঘটেছে। কিন্তু আমরা পরীক্ষা করছি না যে কোনো এরর ছিল কি না, এবং কম্পাইলার আমাদের মনে করিয়ে দেয় যে আমরা সম্ভবত এখানে কিছু এরর-হ্যান্ডলিং কোড রাখতে চেয়েছিলাম! চলুন এখন সেই সমস্যাটি সমাধান করি।</p>
+<h4 id="main-এ-run-থেকে-রিটারন-করা-এরর-হযানডেল-করা"><a class="header" href="#main-এ-run-থেকে-রিটারন-করা-এরর-হযানডেল-করা"><code>main</code>-এ <code>run</code> থেকে রিটার্ন করা এরর হ্যান্ডেল করা</a></h4>
+<p>আমরা এরর পরীক্ষা করব এবং লিস্টিং ১২-১০-এ <code>Config::build</code>-এর সাথে ব্যবহৃত কৌশলের মতো একটি কৌশল ব্যবহার করে সেগুলো হ্যান্ডেল করব, কিন্তু সামান্য পার্থক্য সহ:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span>fn main() {
+    // --snip--
+
+<span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span>    println!("Searching for {}", config.query);
+    println!("In file {}", config.file_path);
+
+    if let Err(e) = run(config) {
+        println!("Application error: {e}");
+        process::exit(1);
+    }
+}
+<span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    println!("With text:\n{contents}");
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p>আমরা <code>unwrap_or_else</code>-এর পরিবর্তে <code>if let</code> ব্যবহার করি <code>run</code> একটি <code>Err</code> ভ্যালু রিটার্ন করেছে কিনা তা পরীক্ষা করতে এবং যদি করে তবে <code>process::exit(1)</code> কল করতে। <code>run</code> ফাংশনটি এমন কোনো ভ্যালু রিটার্ন করে না যা আমরা <code>unwrap</code> করতে চাই, যেভাবে <code>Config::build</code> <code>Config</code> ইনস্ট্যান্স রিটার্ন করে। যেহেতু <code>run</code> সফল ক্ষেত্রে <code>()</code> রিটার্ন করে, আমরা শুধুমাত্র একটি এরর সনাক্ত করতে আগ্রহী, তাই আমাদের <code>unwrap_or_else</code>-এর প্রয়োজন নেই আনর‍্যাপ করা ভ্যালু রিটার্ন করার জন্য, যা শুধুমাত্র <code>()</code> হবে।</p>
+<p><code>if let</code> এবং <code>unwrap_or_else</code> ফাংশনের বডি উভয় ক্ষেত্রেই একই: আমরা এরর প্রিন্ট করি এবং প্রস্থান করি।</p>
+<h3 id="কোডকে-একটি-লাইবরেরি-করেটে-বিভকত-করা"><a class="header" href="#কোডকে-একটি-লাইবরেরি-করেটে-বিভকত-করা">কোডকে একটি লাইব্রেরি ক্রেটে বিভক্ত করা</a></h3>
+<p>আমাদের <code>minigrep</code> প্রজেক্টটি এখন পর্যন্ত বেশ ভালো দেখাচ্ছে! এখন আমরা <em>src/main.rs</em> ফাইলটি বিভক্ত করব এবং কিছু কোড <em>src/lib.rs</em> ফাইলে রাখব। এইভাবে, আমরা কোডটি টেস্ট করতে পারব এবং একটি <em>src/main.rs</em> ফাইল রাখতে পারব যার দায়িত্ব কম।</p>
+<p>চলুন টেক্সট সার্চ করার জন্য দায়ী কোডটি <em>src/main.rs</em>-এর পরিবর্তে <em>src/lib.rs</em>-এ ডিফাইন করি, যা আমাদের (বা আমাদের <code>minigrep</code> লাইব্রেরি ব্যবহারকারী অন্য যে কাউকে) আমাদের <code>minigrep</code> বাইনারি ছাড়াও আরও অনেক কনটেক্সট থেকে সার্চিং ফাংশনটি কল করতে দেবে।</p>
+<p>প্রথমে, চলুন <em>src/lib.rs</em>-এ <code>search</code> ফাংশনের সিগনেচার ডিফাইন করি যেমনটি লিস্টিং ১২-১৩-এ দেখানো হয়েছে, যার বডিতে <code>unimplemented!</code> ম্যাক্রো কল করা হয়েছে। আমরা ইমপ্লিমেন্টেশন পূরণ করার সময় সিগনেচারটি আরও বিস্তারিতভাবে ব্যাখ্যা করব।</p>
+<Listing number="12-13" file-name="src/lib.rs" caption="*src/lib.rs*-এ `search` ফাংশন ডিফাইন করা">
+<pre><code class="language-rust ignore does_not_compile">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    unimplemented!();
+}</code></pre>
+</Listing>
+<p>আমরা <code>search</code>-কে আমাদের লাইব্রেরি ক্রেটের পাবলিক API-এর অংশ হিসেবে চিহ্নিত করার জন্য ফাংশন ডেফিনিশনে <code>pub</code> কীওয়ার্ড ব্যবহার করেছি। আমাদের এখন একটি লাইব্রেরি ক্রেট আছে যা আমরা আমাদের বাইনারি ক্রেট থেকে ব্যবহার করতে পারি এবং যা আমরা টেস্ট করতে পারি!</p>
+<p>এখন আমাদের <em>src/lib.rs</em>-এ ডিফাইন করা কোডটিকে <em>src/main.rs</em>-এর বাইনারি ক্রেটের স্কোপে আনতে হবে এবং এটিকে কল করতে হবে, যেমনটি লিস্টিং ১২-১৪-এ দেখানো হয়েছে।</p>
+<Listing number="12-14" file-name="src/main.rs" caption="*src/main.rs*-এ `minigrep` লাইব্রেরি ক্রেটের `search` ফাংশন ব্যবহার করা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span>// --snip--
+use minigrep::search;
+
+fn main() {
+    // --snip--
+<span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span>}
+
+// --snip--
+
+<span class="boring">
+</span><span class="boring">struct Config {
+</span><span class="boring">    query: String,
+</span><span class="boring">    file_path: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    for line in search(&amp;config.query, &amp;contents) {
+        println!("{line}");
+    }
+
+    Ok(())
+}</code></pre>
+</Listing>
+<p>আমরা লাইব্রেরি ক্রেট থেকে <code>search</code> ফাংশনটিকে বাইনারি ক্রেটের স্কোপে আনার জন্য একটি <code>use minigrep::search</code> লাইন যোগ করি। তারপর, <code>run</code> ফাংশনে, ফাইলের বিষয়বস্তু প্রিন্ট করার পরিবর্তে, আমরা <code>search</code> ফাংশনটি কল করি এবং <code>config.query</code> ভ্যালু এবং <code>contents</code> আর্গুমেন্ট হিসেবে পাস করি। তারপর <code>run</code> একটি <code>for</code> লুপ ব্যবহার করে <code>search</code> থেকে রিটার্ন করা প্রতিটি লাইন যা কোয়েরির সাথে মিলেছে তা প্রিন্ট করবে। এটি <code>main</code> ফাংশনে থাকা <code>println!</code> কলগুলো যা কোয়েরি এবং ফাইল পাথ প্রদর্শন করত তা সরিয়ে ফেলারও একটি ভালো সময়, যাতে আমাদের প্রোগ্রাম শুধুমাত্র সার্চ ফলাফল প্রিন্ট করে (যদি কোনো এরর না ঘটে)।</p>
+<p>মনে রাখবেন যে <code>search</code> ফাংশনটি কোনো প্রিন্টিং হওয়ার আগে সমস্ত ফলাফল একটি ভেক্টরে সংগ্রহ করে রিটার্ন করবে। বড় ফাইল সার্চ করার সময় ফলাফল প্রদর্শন করতে এই ইমপ্লিমেন্টেশনটি ধীর হতে পারে কারণ ফলাফলগুলো খুঁজে পাওয়ার সাথে সাথে প্রিন্ট হয় না; আমরা অধ্যায় ১৩-এ ইটারেটর ব্যবহার করে এটি ঠিক করার একটি সম্ভাব্য উপায় নিয়ে আলোচনা করব।</p>
+<p>অনেক কাজ হয়ে গেল! কিন্তু আমরা ভবিষ্যতের সাফল্যের জন্য নিজেদের প্রস্তুত করেছি। এখন এরর হ্যান্ডেল করা অনেক সহজ, এবং আমরা কোডকে আরও মডুলার করেছি। এখন থেকে আমাদের প্রায় সমস্ত কাজ <em>src/lib.rs</em>-এ করা হবে।</p>
+<p>চলুন এই নতুন মডুলারিটির সুবিধা নিয়ে এমন কিছু করি যা পুরোনো কোড দিয়ে করা কঠিন ছিল কিন্তু নতুন কোড দিয়ে সহজ: আমরা কিছু টেস্ট লিখব!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch12-02-reading-a-file.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch12-04-testing-the-librarys-functionality.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch12-02-reading-a-file.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch12-04-testing-the-librarys-functionality.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>রিফিউটেবিলিটি: কোনো প্যাটার্ন ম্যাচ করতে ব্যর্থ হতে পারে কিনা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="খণডনযোগযতা-একটি-পযাটারন-মযাচ-করতে-বযরথ-হতে-পারে-কিনা-refutability-whether-a-pattern-might-fail-to-match"><a class="header" href="#খণডনযোগযতা-একটি-পযাটারন-মযাচ-করতে-বযরথ-হতে-পারে-কিনা-refutability-whether-a-pattern-might-fail-to-match">খণ্ডনযোগ্যতা: একটি প্যাটার্ন ম্যাচ করতে ব্যর্থ হতে পারে কিনা (Refutability: Whether a Pattern Might Fail to Match)</a></h2>
+<p>প্যাটার্ন দুটি রূপে আসে: খণ্ডনযোগ্য (refutable) এবং অখণ্ডনযোগ্য (irrefutable)। যে প্যাটার্নগুলো পাস করা যেকোনো সম্ভাব্য মানের জন্য মিলবে, সেগুলো হলো <em>অখণ্ডনযোগ্য</em> (irrefutable)। একটি উদাহরণ হলো <code>let x = 5;</code> স্টেটমেন্টে <code>x</code>, কারণ <code>x</code> যেকোনো কিছুর সাথে মেলে এবং তাই ম্যাচ করতে ব্যর্থ হতে পারে না। যে প্যাটার্নগুলো কিছু সম্ভাব্য মানের জন্য ম্যাচ করতে ব্যর্থ হতে পারে, সেগুলো হলো <em>খণ্ডনযোগ্য</em> (refutable)। একটি উদাহরণ হলো <code>if let Some(x) = a_value</code> এক্সপ্রেশনে <code>Some(x)</code>, কারণ যদি <code>a_value</code> ভেরিয়েবলের মান <code>Some</code>-এর পরিবর্তে <code>None</code> হয়, তবে <code>Some(x)</code> প্যাটার্নটি মিলবে না।</p>
+<p>ফাংশন প্যারামিটার, <code>let</code> স্টেটমেন্ট এবং <code>for</code> লুপ কেবল অখণ্ডনযোগ্য প্যাটার্ন গ্রহণ করতে পারে, কারণ মানগুলো না মিললে প্রোগ্রামটি অর্থপূর্ণ কিছু করতে পারে না। <code>if let</code> এবং <code>while let</code> এক্সপ্রেশন এবং <code>let...else</code> স্টেটমেন্ট খণ্ডনযোগ্য এবং অখণ্ডনযোগ্য উভয় প্যাটার্ন গ্রহণ করে, কিন্তু কম্পাইলার অখণ্ডনযোগ্য প্যাটার্নের বিরুদ্ধে সতর্ক করে কারণ, সংজ্ঞা অনুসারে, এগুলো সম্ভাব্য ব্যর্থতা পরিচালনা করার জন্য উদ্দিষ্ট: একটি কন্ডিশনালের কার্যকারিতা তার সফলতা বা ব্যর্থতার উপর নির্ভর করে ভিন্নভাবে কাজ করার ক্ষমতার মধ্যে নিহিত।</p>
+<p>সাধারণত, আপনাকে খণ্ডনযোগ্য এবং অখণ্ডনযোগ্য প্যাটার্নের মধ্যে পার্থক্য নিয়ে চিন্তা করতে হবে না; তবে, খণ্ডনযোগ্যতার ধারণাটির সাথে আপনার পরিচিত থাকা প্রয়োজন যাতে আপনি যখন কোনো এরর মেসেজে এটি দেখেন তখন প্রতিক্রিয়া জানাতে পারেন। সেইসব ক্ষেত্রে, কোডের উদ্দিষ্ট আচরণের উপর নির্ভর করে আপনাকে হয় প্যাটার্ন বা আপনি যে কনস্ট্রাক্টটি প্যাটার্নের সাথে ব্যবহার করছেন তা পরিবর্তন করতে হবে।</p>
+<p>চলুন একটি উদাহরণ দেখি যখন আমরা একটি খণ্ডনযোগ্য প্যাটার্ন এমন জায়গায় ব্যবহার করার চেষ্টা করি যেখানে রাস্ট একটি অখণ্ডনযোগ্য প্যাটার্ন চায় এবং এর বিপরীতটি। লিস্টিং ১৯-৮ একটি <code>let</code> স্টেটমেন্ট দেখায়, কিন্তু প্যাটার্নের জন্য, আমরা <code>Some(x)</code> নির্দিষ্ট করেছি, যা একটি খণ্ডনযোগ্য প্যাটার্ন। যেমনটি আপনি আশা করতে পারেন, এই কোডটি কম্পাইল হবে না।</p>
+<Listing number="19-8" caption="`let` এর সাথে একটি খণ্ডনযোগ্য প্যাটার্ন ব্যবহার করার প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span><span class="boring">    let some_option_value: Option&lt;i32&gt; = None;
+</span>    let Some(x) = some_option_value;
+<span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+যদি `some_option_value` একটি `None` মান হতো, তবে এটি `Some(x)` প্যাটার্নের সাথে ম্যাচ করতে ব্যর্থ হতো, যার মানে প্যাটার্নটি খণ্ডনযোগ্য। তবে, `let` স্টেটমেন্ট কেবল একটি অখণ্ডনযোগ্য প্যাটার্ন গ্রহণ করতে পারে কারণ কোডের একটি `None` মান নিয়ে করার মতো বৈধ কিছু নেই। কম্পাইল টাইমে, রাস্ট অভিযোগ করবে যে আমরা একটি খণ্ডনযোগ্য প্যাটার্ন ব্যবহার করার চেষ্টা করেছি যেখানে একটি অখণ্ডনযোগ্য প্যাটার্ন প্রয়োজন:
+
+```console
+$ cargo run
+   Compiling patterns v0.1.0 (file:///projects/patterns)
+error[E0005]: refutable pattern in local binding
+ --&gt; src/main.rs:3:9
+  |
+3 |     let Some(x) = some_option_value;
+  |         ^^^^^^^ pattern `None` not covered
+  |
+  = note: `let` bindings require an "irrefutable pattern", like a `struct` or an `enum` with only one variant
+  = note: for more information, visit https://doc.rust-lang.org/book/ch19-02-refutability.html
+  = note: the matched value is of type `Option&lt;i32&gt;`
+help: you might want to use `let else` to handle the variant that isn't matched
+  |
+3 |     let Some(x) = some_option_value else { todo!() };
+  |                                     ++++++++++++++++
+
+For more information about this error, try `rustc --explain E0005`.
+error: could not compile `patterns` (bin "patterns") due to 1 previous error</code></pre>
+<p>যেহেতু আমরা <code>Some(x)</code> প্যাটার্ন দিয়ে প্রতিটি বৈধ মান কভার করিনি (এবং করতে পারতাম না!), তাই রাস্ট সঠিকভাবে একটি কম্পাইলার এরর তৈরি করে।</p>
+<p>যদি আমাদের এমন একটি খণ্ডনযোগ্য প্যাটার্ন থাকে যেখানে একটি অখণ্ডনযোগ্য প্যাটার্ন প্রয়োজন, আমরা প্যাটার্ন ব্যবহারকারী কোড পরিবর্তন করে এটি ঠিক করতে পারি: <code>let</code> ব্যবহার করার পরিবর্তে, আমরা <code>let else</code> ব্যবহার করতে পারি। তারপর, যদি প্যাটার্নটি না মেলে, কোডটি কেবল কোঁকড়া বন্ধনীর (curly brackets) ভেতরের কোডটি এড়িয়ে যাবে, যা এটিকে বৈধভাবে চালিয়ে যাওয়ার একটি উপায় দেয়। লিস্টিং ১৯-৯ দেখায় কীভাবে লিস্টিং ১৯-৮-এর কোডটি ঠিক করতে হয়।</p>
+<Listing number="19-9" caption="`let` এর পরিবর্তে `let...else` এবং খণ্ডনযোগ্য প্যাটার্ন সহ একটি ব্লক ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    let some_option_value: Option&lt;i32&gt; = None;
+</span>    let Some(x) = some_option_value else {
+        return;
+    };
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা কোডটিকে একটি মুক্তির পথ দিয়েছি! এই কোডটি সম্পূর্ণ বৈধ, যদিও এর মানে হলো আমরা একটি সতর্কতা না পেয়ে একটি অখণ্ডনযোগ্য প্যাটার্ন ব্যবহার করতে পারি না। যদি আমরা <code>let...else</code>-কে এমন একটি প্যাটার্ন দিই যা সর্বদা মিলবে, যেমন <code>x</code>, যেমনটি লিস্টিং ১৯-১০-এ দেখানো হয়েছে, কম্পাইলার একটি সতর্কতা দেবে।</p>
+<Listing number="19-10" caption="`let...else` এর সাথে একটি অখণ্ডনযোগ্য প্যাটার্ন ব্যবহার করার প্রচেষ্টা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 5 else {
+        return;
+    };
+<span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+রাস্ট অভিযোগ করে যে একটি অখণ্ডনযোগ্য প্যাটার্নের সাথে `let...else` ব্যবহার করা অর্থহীন:
+
+```console
+$ cargo run
+   Compiling patterns v0.1.0 (file:///projects/patterns)
+warning: irrefutable `let...else` pattern
+ --&gt; src/main.rs:2:5
+  |
+2 |     let x = 5 else {
+  |     ^^^^^^^^^
+  |
+  = note: this pattern will always match, so the `else` clause is useless
+  = help: consider removing the `else` clause
+  = note: `#[warn(irrefutable_let_patterns)]` on by default
+
+warning: `patterns` (bin "patterns") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s
+     Running `target/debug/patterns`</code></pre></pre>
+<p>এই কারণে, ম্যাচ arm-গুলোকে অবশ্যই খণ্ডনযোগ্য প্যাটার্ন ব্যবহার করতে হবে, শেষ arm ব্যতীত, যা যেকোনো অবশিষ্ট মানকে একটি অখণ্ডনযোগ্য প্যাটার্ন দিয়ে ম্যাচ করা উচিত। রাস্ট আমাদের কেবল একটি arm সহ একটি <code>match</code>-এ একটি অখণ্ডনযোগ্য প্যাটার্ন ব্যবহার করার অনুমতি দেয়, কিন্তু এই সিনট্যাক্সটি বিশেষভাবে কার্যকর নয় এবং একটি সহজ <code>let</code> স্টেটমেন্ট দ্বারা প্রতিস্থাপিত হতে পারে।</p>
+<p>এখন আপনি জানেন কোথায় প্যাটার্ন ব্যবহার করতে হয় এবং খণ্ডনযোগ্য ও অখণ্ডনযোগ্য প্যাটার্নের মধ্যে পার্থক্য কী, চলুন আমরা প্যাটার্ন তৈরি করার জন্য যে সমস্ত সিনট্যাক্স ব্যবহার করতে পারি তা কভার করি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch19-01-all-the-places-for-patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch19-03-pattern-syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch19-01-all-the-places-for-patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch19-03-pattern-syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

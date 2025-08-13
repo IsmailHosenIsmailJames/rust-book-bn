@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>কন্ট্রোল ফ্লো - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="কনটরোল-ফলো-control-flow"><a class="header" href="#কনটরোল-ফলো-control-flow">কন্ট্রোল ফ্লো (Control Flow)</a></h2>
+<p>একটি শর্ত <code>true</code> হলে কিছু কোড চালানো এবং একটি শর্ত <code>true</code> থাকা অবস্থায় কিছু কোড বারবার চালানোর ক্ষমতা বেশিরভাগ প্রোগ্রামিং ভাষার মৌলিক ভিত্তি। রাস্ট কোডের এক্সিকিউশন ফ্লো নিয়ন্ত্রণ করার জন্য সবচেয়ে সাধারণ কনস্ট্রাক্টগুলো হল <code>if</code> এক্সপ্রেশন এবং লুপ।</p>
+<h3 id="if-একসপরেশন-if-expressions"><a class="header" href="#if-একসপরেশন-if-expressions"><code>if</code> এক্সপ্রেশন (if Expressions)</a></h3>
+<p>একটি <code>if</code> এক্সপ্রেশন আপনাকে শর্তের উপর ভিত্তি করে আপনার কোডকে বিভিন্ন শাখায় বিভক্ত করার সুযোগ দেয়। আপনি একটি শর্ত প্রদান করেন এবং তারপর বলেন, "যদি এই শর্তটি পূরণ হয়, তবে এই কোড ব্লকটি চালান। যদি শর্তটি পূরণ না হয়, তবে এই কোড ব্লকটি চালাবেন না।"</p>
+<p><code>if</code> এক্সপ্রেশন অন্বেষণ করতে আপনার <em>projects</em> ডিরেক্টরিতে <em>branches</em> নামে একটি নতুন প্রজেক্ট তৈরি করুন। <em>src/main.rs</em> ফাইলে, নিম্নলিখিতটি ইনপুট করুন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let number = 3;
+
+    if number &lt; 5 {
+        println!("condition was true");
+    } else {
+        println!("condition was false");
+    }
+}</code></pre></pre>
+<p>সমস্ত <code>if</code> এক্সপ্রেশন <code>if</code> কীওয়ার্ড দিয়ে শুরু হয়, তারপরে একটি শর্ত থাকে। এই ক্ষেত্রে, শর্তটি পরীক্ষা করে যে <code>number</code> ভ্যারিয়েবলের মান ৫ এর চেয়ে কম কিনা। শর্তটি <code>true</code> হলে কার্যকর করার জন্য কোড ব্লকটি আমরা শর্তের পরেই কোঁকড়া বন্ধনীর ভিতরে রাখি। <code>if</code> এক্সপ্রেশনের শর্তগুলোর সাথে যুক্ত কোড ব্লকগুলোকে কখনও কখনও <em>arms</em> বলা হয়, ঠিক যেমন অধ্যায় ২-এর <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">"অনুমানের সাথে গোপন সংখ্যার তুলনা"</a> বিভাগে আলোচনা করা <code>match</code> এক্সপ্রেশনের arm-গুলোর মতো।</p>
+<p>ঐচ্ছিকভাবে, আমরা একটি <code>else</code> এক্সপ্রেশনও অন্তর্ভুক্ত করতে পারি, যা আমরা এখানে করেছি, প্রোগ্রামটিকে একটি বিকল্প কোড ব্লক দেওয়ার জন্য যা শর্তটি <code>false</code> হলে কার্যকর হবে। আপনি যদি একটি <code>else</code> এক্সপ্রেশন সরবরাহ না করেন এবং শর্তটি <code>false</code> হয়, প্রোগ্রামটি কেবল <code>if</code> ব্লকটি এড়িয়ে যাবে এবং পরবর্তী কোডে চলে যাবে।</p>
+<p>এই কোডটি চালানোর চেষ্টা করুন; আপনার নিম্নলিখিত আউটপুট দেখতে পাওয়া উচিত:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was true
+</code></pre>
+<p>চলুন <code>number</code>-এর মান পরিবর্তন করে এমন একটি মান দিই যা শর্তটিকে <code>false</code> করে তোলে, দেখি কী হয়:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span>    let number = 7;
+<span class="boring">
+</span><span class="boring">    if number &lt; 5 {
+</span><span class="boring">        println!("condition was true");
+</span><span class="boring">    } else {
+</span><span class="boring">        println!("condition was false");
+</span><span class="boring">    }
+</span><span class="boring">}```
+</span>
+প্রোগ্রামটি আবার চালান, এবং আউটপুট দেখুন:
+
+```console
+$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+condition was false```
+
+এটিও উল্লেখ করার মতো যে এই কোডের শর্তটি _অবশ্যই_ একটি `bool` হতে হবে। যদি শর্তটি `bool` না হয়, আমরা একটি এরর পাব। উদাহরণস্বরূপ, নিম্নলিখিত কোডটি চালানোর চেষ্টা করুন:
+
+&lt;span class="filename"&gt;ফাইলের নাম: src/main.rs&lt;/span&gt;
+
+```rust,ignore,does_not_compile
+fn main() {
+    let number = 3;
+
+    if number {
+        println!("number was three");
+    }
+}</code></pre>
+<p><code>if</code>-এর শর্তটি এবার <code>3</code> মান দেয়, এবং রাস্ট একটি এরর দেখায়:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:4:8
+  |
+4 |     if number {
+  |        ^^^^^^ expected `bool`, found integer
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` (bin "branches") due to 1 previous error
+</code></pre>
+<p>এররটি নির্দেশ করে যে রাস্ট একটি <code>bool</code> আশা করেছিল কিন্তু একটি ইন্টিজার পেয়েছে। রুবি এবং জাভাস্ক্রিপ্টের মতো ভাষার বিপরীতে, রাস্ট স্বয়ংক্রিয়ভাবে নন-বুলিয়ান টাইপকে বুলিয়ানে রূপান্তর করার চেষ্টা করবে না। আপনাকে অবশ্যই সুস্পষ্ট হতে হবে এবং <code>if</code>-কে সর্বদা একটি বুলিয়ান শর্ত হিসাবে সরবরাহ করতে হবে। যদি আমরা চাই যে <code>if</code> কোড ব্লকটি কেবল তখনই চলুক যখন একটি সংখ্যা <code>0</code>-এর সমান না হয়, উদাহরণস্বরূপ, আমরা <code>if</code> এক্সপ্রেশনটিকে নিম্নলিখিতভাবে পরিবর্তন করতে পারি:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let number = 3;
+
+    if number != 0 {
+        println!("number was something other than zero");
+    }
+}</code></pre></pre>
+<p>এই কোডটি চালালে <code>number was something other than zero</code> প্রিন্ট হবে।</p>
+<h4 id="else-if-দিযে-একাধিক-শরত-পরিচালনা-করা"><a class="header" href="#else-if-দিযে-একাধিক-শরত-পরিচালনা-করা"><code>else if</code> দিয়ে একাধিক শর্ত পরিচালনা করা</a></h4>
+<p>আপনি <code>if</code> এবং <code>else</code>-কে একটি <code>else if</code> এক্সপ্রেশনে একত্রিত করে একাধিক শর্ত ব্যবহার করতে পারেন। উদাহরণস্বরূপ:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let number = 6;
+
+    if number % 4 == 0 {
+        println!("number is divisible by 4");
+    } else if number % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }
+}</code></pre></pre>
+<p>এই প্রোগ্রামের চারটি সম্ভাব্য পথ রয়েছে। এটি চালানোর পরে, আপনার নিম্নলিখিত আউটপুট দেখতে পাওয়া উচিত:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/branches`
+number is divisible by 3
+</code></pre>
+<p>যখন এই প্রোগ্রামটি কার্যকর হয়, এটি প্রতিটি <code>if</code> এক্সপ্রেশন পর্যায়ক্রমে পরীক্ষা করে এবং প্রথম যেটির শর্ত <code>true</code> হয়, সেটির বডি কার্যকর করে। লক্ষ্য করুন যে যদিও 6, 2 দ্বারা বিভাজ্য, আমরা <code>number is divisible by 2</code> আউটপুটটি দেখতে পাই না, বা আমরা <code>else</code> ব্লক থেকে <code>number is not divisible by 4, 3, or 2</code> টেক্সটটিও দেখতে পাই না। এর কারণ হল রাস্ট কেবল প্রথম <code>true</code> শর্তের জন্য ব্লকটি কার্যকর করে, এবং একবার এটি একটি খুঁজে পেলে, এটি বাকিগুলো আর পরীক্ষাই করে না।</p>
+<p>অনেক বেশি <code>else if</code> এক্সপ্রেশন ব্যবহার করলে আপনার কোড অগোছালো হয়ে যেতে পারে, তাই আপনার যদি একাধিক থাকে, তবে আপনি আপনার কোড রিফ্যাক্টর করতে চাইতে পারেন। অধ্যায় ৬ এই ধরনের ক্ষেত্রে <code>match</code> নামে একটি শক্তিশালী রাস্ট ব্রাঞ্চিং কনস্ট্রাক্ট বর্ণনা করে।</p>
+<h4 id="একটি-let-সটেটমেনটে-if-বযবহার-করা"><a class="header" href="#একটি-let-সটেটমেনটে-if-বযবহার-করা">একটি <code>let</code> স্টেটমেন্টে <code>if</code> ব্যবহার করা</a></h4>
+<p>যেহেতু <code>if</code> একটি এক্সপ্রেশন, তাই আমরা এটিকে একটি <code>let</code> স্টেটমেন্টের ডানদিকে ব্যবহার করে ফলাফলটি একটি ভ্যারিয়েবলে অ্যাসাইন করতে পারি, যেমনটি লিস্টিং ৩-২-এ দেখানো হয়েছে।</p>
+<Listing number="3-2" file-name="src/main.rs" caption="একটি `if` এক্সপ্রেশনের ফলাফল একটি ভ্যারিয়েবলে অ্যাসাইন করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let condition = true;
+    let number = if condition { 5 } else { 6 };
+
+    println!("The value of number is: {number}");
+}</code></pre></pre>
+</Listing>
+<p><code>number</code> ভ্যারিয়েবলটি <code>if</code> এক্সপ্রেশনের ফলাফলের উপর ভিত্তি করে একটি মানের সাথে বাইন্ড করা হবে। কী ঘটে তা দেখতে এই কোডটি চালান:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/branches`
+The value of number is: 5
+</code></pre>
+<p>মনে রাখবেন যে কোড ব্লকগুলো তাদের শেষ এক্সপ্রেশনে রূপান্তরিত হয়, এবং সংখ্যাগুলো নিজেরাও এক্সপ্রেশন। এই ক্ষেত্রে, পুরো <code>if</code> এক্সপ্রেশনের মান নির্ভর করে কোন কোড ব্লকটি কার্যকর হয় তার উপর। এর মানে হল <code>if</code>-এর প্রতিটি arm থেকে ফলাফল হিসাবে আসার সম্ভাবনা থাকা মানগুলোর টাইপ অবশ্যই একই হতে হবে; লিস্টিং ৩-২-এ, <code>if</code> arm এবং <code>else</code> arm উভয়ের ফলাফলই <code>i32</code> ইন্টিজার ছিল। যদি টাইপগুলো বেমানান হয়, যেমন নিম্নলিখিত উদাহরণে, আমরা একটি এরর পাব:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let condition = true;
+
+    let number = if condition { 5 } else { "six" };
+
+    println!("The value of number is: {number}");
+}</code></pre>
+<p>যখন আমরা এই কোডটি কম্পাইল করার চেষ্টা করব, আমরা একটি এরর পাব। <code>if</code> এবং <code>else</code> arm-গুলোর মানের টাইপ বেমানান, এবং রাস্ট প্রোগ্রামের ঠিক কোথায় সমস্যাটি খুঁজে পাওয়া যাবে তা নির্দেশ করে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling branches v0.1.0 (file:///projects/branches)
+error[E0308]: `if` and `else` have incompatible types
+ --&gt; src/main.rs:4:44
+  |
+4 |     let number = if condition { 5 } else { "six" };
+  |                                 -          ^^^^^ expected integer, found `&amp;str`
+  |                                 |
+  |                                 expected because of this
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `branches` (bin "branches") due to 1 previous error
+</code></pre>
+<p><code>if</code> ব্লকের এক্সপ্রেশনটি একটি ইন্টিজারে রূপান্তরিত হয়, এবং <code>else</code> ব্লকের এক্সপ্রেশনটি একটি স্ট্রিং-এ রূপান্তরিত হয়। এটি কাজ করবে না কারণ ভ্যারিয়েবলগুলোর অবশ্যই একটি একক টাইপ থাকতে হবে, এবং রাস্টকে কম্পাইল করার সময় নির্দিষ্টভাবে জানতে হবে <code>number</code> ভ্যারিয়েবলের টাইপ কী। <code>number</code>-এর টাইপ জানা থাকলে কম্পাইলার যাচাই করতে পারে যে আমরা যেখানেই <code>number</code> ব্যবহার করি সেখানে টাইপটি বৈধ। রাস্ট এটি করতে পারত না যদি <code>number</code>-এর টাইপ কেবল রানটাইমে নির্ধারিত হত; কম্পাইলার আরও জটিল হত এবং কোড সম্পর্কে কম গ্যারান্টি দিত যদি তাকে যেকোনো ভ্যারিয়েবলের জন্য একাধিক কাল্পনিক টাইপের হিসাব রাখতে হত।</p>
+<h3 id="লুপ-দিয়ে-পুনরাবৃততি-repetition-with-loops"><a class="header" href="#লুপ-দিয়ে-পুনরাবৃততি-repetition-with-loops">লুপ দিয়ে পুনরাবৃত্তি (Repetition with Loops)</a></h3>
+<p>প্রায়শই একটি কোড ব্লক একাধিকবার চালানো দরকার হয়। এই কাজের জন্য, রাস্ট বিভিন্ন <em>লুপ</em> (loops) সরবরাহ করে, যা লুপ বডির ভিতরের কোড শেষ পর্যন্ত চালাবে এবং তারপরে অবিলম্বে শুরুতে ফিরে যাবে। লুপ নিয়ে পরীক্ষা করার জন্য, চলুন <em>loops</em> নামে একটি নতুন প্রজেক্ট তৈরি করি।</p>
+<p>রাস্টের তিন ধরনের লুপ রয়েছে: <code>loop</code>, <code>while</code>, এবং <code>for</code>। চলুন প্রতিটি চেষ্টা করি।</p>
+<h4 id="loop-দিযে-কোডের-পুনরাবৃততি-করা"><a class="header" href="#loop-দিযে-কোডের-পুনরাবৃততি-করা"><code>loop</code> দিয়ে কোডের পুনরাবৃত্তি করা</a></h4>
+<p><code>loop</code> কীওয়ার্ড রাস্টকে বলে একটি কোড ব্লক বারবার চালাতে, চিরকালের জন্য অথবা যতক্ষণ না আপনি স্পষ্টভাবে এটিকে থামাতে বলেন।</p>
+<p>উদাহরণস্বরূপ, আপনার <em>loops</em> ডিরেক্টরিতে <em>src/main.rs</em> ফাইলটি পরিবর্তন করে এইরকম করুন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore">fn main() {
+    loop {
+        println!("again!");
+    }
+}</code></pre>
+<p>যখন আমরা এই প্রোগ্রামটি চালাব, আমরা দেখব <code>again!</code> বারবার প্রিন্ট হচ্ছে যতক্ষণ না আমরা প্রোগ্রামটি ম্যানুয়ালি থামাই। বেশিরভাগ টার্মিনাল একটি অবিরাম লুপে আটকে থাকা প্রোগ্রামকে বাধা দেওয়ার জন্য কীবোর্ড শর্টকাট <kbd>ctrl</kbd>-<kbd>c</kbd> সমর্থন করে। চেষ্টা করে দেখুন:</p>
+<!-- manual-regeneration
+cd listings/ch03-common-programming-concepts/no-listing-32-loop
+cargo run
+CTRL-C
+-->
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+     Running `target/debug/loops`
+again!
+again!
+again!
+again!
+^Cagain!
+</code></pre>
+<p><code>^C</code> প্রতীকটি নির্দেশ করে যেখানে আপনি <kbd>ctrl</kbd>-<kbd>c</kbd> চেপেছিলেন।</p>
+<p>আপনি <code>^C</code>-এর পরে <code>again!</code> শব্দটি দেখতেও পারেন বা নাও দেখতে পারেন, এটি নির্ভর করে কোডটি লুপের কোথায় ছিল যখন এটি ইন্টারাপ্ট সিগন্যাল পেয়েছিল।</p>
+<p>সৌভাগ্যবশত, রাস্ট কোড ব্যবহার করে একটি লুপ থেকে বেরিয়ে আসার একটি উপায়ও সরবরাহ করে। আপনি লুপের মধ্যে <code>break</code> কীওয়ার্ডটি রাখতে পারেন প্রোগ্রামকে বলতে যে কখন লুপ চালানো বন্ধ করতে হবে। মনে রাখবেন যে আমরা অধ্যায় ২-এর <a href="ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess">"সঠিক অনুমান করার পরে খেলা শেষ করা"</a> বিভাগে এটি করেছিলাম, যখন ব্যবহারকারী সঠিক সংখ্যা অনুমান করে গেমটি জিতেছিল তখন প্রোগ্রাম থেকে বেরিয়ে আসার জন্য।</p>
+<p>আমরা গেসিং গেমে <code>continue</code> ব্যবহার করেছিলাম, যা একটি লুপে প্রোগ্রামকে বলে যে এই পুনরাবৃত্তির বাকি কোড এড়িয়ে গিয়ে পরবর্তী পুনরাবৃত্তিতে যেতে।</p>
+<h4 id="লুপ-থেকে-মান-রিটারন-করা"><a class="header" href="#লুপ-থেকে-মান-রিটারন-করা">লুপ থেকে মান রিটার্ন করা</a></h4>
+<p>একটি <code>loop</code>-এর একটি ব্যবহার হল এমন একটি অপারেশন পুনরায় চেষ্টা করা যা আপনি জানেন যে ব্যর্থ হতে পারে, যেমন একটি থ্রেড তার কাজ শেষ করেছে কিনা তা পরীক্ষা করা। আপনার সেই অপারেশনের ফলাফলটি লুপ থেকে বের করে আপনার বাকি কোডে পাস করারও প্রয়োজন হতে পারে। এটি করার জন্য, আপনি লুপ থামানোর জন্য যে <code>break</code> এক্সপ্রেশন ব্যবহার করেন তার পরে আপনি যে মানটি রিটার্ন করতে চান তা যোগ করতে পারেন; সেই মানটি লুপ থেকে রিটার্ন করা হবে যাতে আপনি এটি ব্যবহার করতে পারেন, যেমনটি এখানে দেখানো হয়েছে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut counter = 0;
+
+    let result = loop {
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+
+    println!("The result is {result}");
+}</code></pre></pre>
+<p>লুপের আগে, আমরা <code>counter</code> নামে একটি ভ্যারিয়েবল ঘোষণা করি এবং এটিকে <code>0</code> দিয়ে ইনিশিয়ালাইজ করি। তারপরে আমরা লুপ থেকে রিটার্ন করা মানটি ধরে রাখার জন্য <code>result</code> নামে একটি ভ্যারিয়েবল ঘোষণা করি। লুপের প্রতিটি পুনরাবৃত্তিতে, আমরা <code>counter</code> ভ্যারিয়েবলে <code>1</code> যোগ করি, এবং তারপরে পরীক্ষা করি যে <code>counter</code> 10-এর সমান কিনা। যখন এটি হয়, আমরা <code>counter * 2</code> মান সহ <code>break</code> কীওয়ার্ড ব্যবহার করি। লুপের পরে, আমরা একটি সেমিকোলন ব্যবহার করি <code>result</code>-এ মান অ্যাসাইন করা স্টেটমেন্টটি শেষ করতে। অবশেষে, আমরা <code>result</code>-এর মান প্রিন্ট করি, যা এই ক্ষেত্রে <code>20</code>।</p>
+<p>আপনি একটি লুপের ভিতর থেকে <code>return</code> করতেও পারেন। যেখানে <code>break</code> কেবল বর্তমান লুপ থেকে বেরিয়ে যায়, <code>return</code> সর্বদা বর্তমান ফাংশন থেকে বেরিয়ে যায়।</p>
+<h4 id="একাধিক-লুপের-মধযে-পারথকয-করতে-লুপ-লেবেল"><a class="header" href="#একাধিক-লুপের-মধযে-পারথকয-করতে-লুপ-লেবেল">একাধিক লুপের মধ্যে পার্থক্য করতে লুপ লেবেল</a></h4>
+<p>যদি আপনার লুপের ভিতরে লুপ থাকে, <code>break</code> এবং <code>continue</code> সেই মুহূর্তে সবচেয়ে ভিতরের লুপে প্রযোজ্য হয়। আপনি ঐচ্ছিকভাবে একটি লুপে একটি <em>লুপ লেবেল</em> (loop label) নির্দিষ্ট করতে পারেন যা আপনি তখন <code>break</code> বা <code>continue</code> এর সাথে ব্যবহার করতে পারেন নির্দিষ্ট করতে যে সেই কীওয়ার্ডগুলো সবচেয়ে ভিতরের লুপের পরিবর্তে লেবেলযুক্ত লুপে প্রযোজ্য। লুপ লেবেল অবশ্যই একটি একক উদ্ধৃতি চিহ্ন দিয়ে শুরু হতে হবে। এখানে দুটি নেস্টেড লুপের একটি উদাহরণ রয়েছে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}</code></pre></pre>
+<p>বাইরের লুপটির লেবেল <code>'counting_up</code>, এবং এটি 0 থেকে 2 পর্যন্ত গণনা করবে। লেবেল ছাড়া ভিতরের লুপটি 10 থেকে 9 পর্যন্ত গণনা করবে। প্রথম <code>break</code> যা একটি লেবেল নির্দিষ্ট করে না, কেবল ভিতরের লুপ থেকে বেরিয়ে যাবে। <code>break 'counting_up;</code> স্টেটমেন্টটি বাইরের লুপ থেকে বেরিয়ে যাবে। এই কোডটি প্রিন্ট করে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
+     Running `target/debug/loops`
+count = 0
+remaining = 10
+remaining = 9
+count = 1
+remaining = 10
+remaining = 9
+count = 2
+remaining = 10
+End count = 2
+</code></pre>
+<h4 id="while-দিযে-শরতাধীন-লুপ"><a class="header" href="#while-দিযে-শরতাধীন-লুপ"><code>while</code> দিয়ে শর্তাধীন লুপ</a></h4>
+<p>একটি প্রোগ্রামে প্রায়শই একটি লুপের মধ্যে একটি শর্ত মূল্যায়ন করার প্রয়োজন হয়। যতক্ষণ শর্তটি <code>true</code> থাকে, লুপ চলে। যখন শর্তটি <code>true</code> থাকা বন্ধ হয়ে যায়, প্রোগ্রামটি <code>break</code> কল করে, লুপটি থামিয়ে দেয়। <code>loop</code>, <code>if</code>, <code>else</code>, এবং <code>break</code>-এর সংমিশ্রণ ব্যবহার করে এই ধরনের আচরণ বাস্তবায়ন করা সম্ভব; আপনি চাইলে এখন একটি প্রোগ্রামে এটি চেষ্টা করতে পারেন। তবে, এই প্যাটার্নটি এত সাধারণ যে রাস্টের এটির জন্য একটি অন্তর্নির্মিত ভাষা কনস্ট্রাক্ট রয়েছে, যাকে <code>while</code> লুপ বলা হয়। লিস্টিং ৩-৩-এ, আমরা <code>while</code> ব্যবহার করি প্রোগ্রামটিকে তিনবার লুপ করতে, প্রতিবার গণনা করে, এবং তারপরে, লুপের পরে, একটি বার্তা প্রিন্ট করে এবং প্রস্থান করে।</p>
+<Listing number="3-3" file-name="src/main.rs" caption="একটি `while` লুপ ব্যবহার করে কোড চালানো যতক্ষণ একটি শর্ত `true` থাকে">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}</code></pre></pre>
+</Listing>
+<p>এই কনস্ট্রাক্টটি অনেক নেস্টিং দূর করে যা আপনি যদি <code>loop</code>, <code>if</code>, <code>else</code>, এবং <code>break</code> ব্যবহার করতেন তবে প্রয়োজন হত, এবং এটি আরও স্পষ্ট। যতক্ষণ একটি শর্ত <code>true</code> থাকে, কোড চলে; অন্যথায়, এটি লুপ থেকে বেরিয়ে যায়।</p>
+<h4 id="for-দিযে-একটি-কালেকশনের-মাধযমে-লুপিং-করা"><a class="header" href="#for-দিযে-একটি-কালেকশনের-মাধযমে-লুপিং-করা"><code>for</code> দিয়ে একটি কালেকশনের মাধ্যমে লুপিং করা</a></h4>
+<p>আপনি একটি কালেকশনের উপাদানগুলোর উপর লুপ করার জন্য <code>while</code> কনস্ট্রাক্ট ব্যবহার করতে পারেন, যেমন একটি অ্যারে। উদাহরণস্বরূপ, লিস্টিং ৩-৪-এর লুপটি <code>a</code> অ্যারের প্রতিটি উপাদান প্রিন্ট করে।</p>
+<Listing number="3-4" file-name="src/main.rs" caption="একটি `while` লুপ ব্যবহার করে একটি কালেকশনের প্রতিটি উপাদানের মাধ্যমে লুপিং করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+
+    while index &lt; 5 {
+        println!("the value is: {}", a[index]);
+
+        index += 1;
+    }
+}</code></pre></pre>
+</Listing>
+<p>এখানে, কোডটি অ্যারের উপাদানগুলোর মাধ্যমে গণনা করে। এটি ইনডেক্স <code>0</code> থেকে শুরু হয়, এবং তারপরে লুপ করে যতক্ষণ না এটি অ্যারের চূড়ান্ত ইনডেক্সে পৌঁছায় (অর্থাৎ, যখন <code>index &lt; 5</code> আর <code>true</code> থাকে না)। এই কোডটি চালালে অ্যারের প্রতিটি উপাদান প্রিন্ট হবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling loops v0.1.0 (file:///projects/loops)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running `target/debug/loops`
+the value is: 10
+the value is: 20
+the value is: 30
+the value is: 40
+the value is: 50
+</code></pre>
+<p>প্রত্যাশিত হিসাবে, টার্মিনালে পাঁচটি অ্যারের মানই প্রদর্শিত হয়। যদিও <code>index</code> কোনো এক সময় <code>5</code> মানে পৌঁছাবে, লুপটি অ্যারে থেকে ষষ্ঠ মান আনার চেষ্টা করার আগেই কার্যকর হওয়া বন্ধ করে দেয়।</p>
+<p>তবে, এই পদ্ধতিটি ত্রুটিপ্রবণ; আমরা ইনডেক্স মান বা পরীক্ষার শর্ত ভুল হলে প্রোগ্রামটিকে প্যানিক করাতে পারি। উদাহরণস্বরূপ, যদি আপনি <code>a</code> অ্যারের সংজ্ঞা পরিবর্তন করে চারটি উপাদান করেন কিন্তু শর্তটি <code>while index &lt; 4</code>-এ আপডেট করতে ভুলে যান, কোডটি প্যানিক করবে। এটি ধীরও, কারণ কম্পাইলার লুপের প্রতিটি পুনরাবৃত্তিতে অ্যারের সীমার মধ্যে ইনডেক্স আছে কিনা তা পরীক্ষা করার জন্য রানটাইম কোড যোগ করে।</p>
+<p>একটি আরও সংক্ষিপ্ত বিকল্প হিসাবে, আপনি একটি <code>for</code> লুপ ব্যবহার করতে পারেন এবং একটি কালেকশনের প্রতিটি আইটেমের জন্য কিছু কোড কার্যকর করতে পারেন। একটি <code>for</code> লুপ লিস্টিং ৩-৫-এর কোডের মতো দেখায়।</p>
+<Listing number="3-5" file-name="src/main.rs" caption="একটি `for` লুপ ব্যবহার করে একটি কালেকশনের প্রতিটি উপাদানের মাধ্যমে লুপিং করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+}</code></pre></pre>
+</Listing>
+<p>যখন আমরা এই কোডটি চালাব, আমরা লিস্টিং ৩-৪-এর মতো একই আউটপুট দেখতে পাব। আরও গুরুত্বপূর্ণভাবে, আমরা এখন কোডের নিরাপত্তা বাড়িয়েছি এবং অ্যারের শেষের বাইরে যাওয়া বা যথেষ্ট দূরে না গিয়ে কিছু আইটেম বাদ দেওয়ার ফলে হতে পারে এমন বাগের সম্ভাবনা দূর করেছি। <code>for</code> লুপ থেকে তৈরি মেশিন কোড আরও কার্যকর হতে পারে, কারণ প্রতিটি পুনরাবৃত্তিতে ইনডেক্সকে অ্যারের দৈর্ঘ্যের সাথে তুলনা করার প্রয়োজন হয় না।</p>
+<p><code>for</code> লুপ ব্যবহার করলে, আপনি যদি অ্যারের মানের সংখ্যা পরিবর্তন করেন তবে অন্য কোনো কোড পরিবর্তন করার কথা মনে রাখার প্রয়োজন হবে না, যেমনটি লিস্টিং ৩-৪-এ ব্যবহৃত পদ্ধতিতে করতে হত।</p>
+<p><code>for</code> লুপের নিরাপত্তা এবং সংক্ষিপ্ততা তাদের রাস্ট-এ সবচেয়ে বেশি ব্যবহৃত লুপ কনস্ট্রাক্ট করে তুলেছে। এমনকি যে পরিস্থিতিতে আপনি একটি নির্দিষ্ট সংখ্যক বার কিছু কোড চালাতে চান, যেমন লিস্টিং ৩-৩-এ <code>while</code> লুপ ব্যবহার করা কাউন্টডাউন উদাহরণে, বেশিরভাগ রাস্টেশিয়ান একটি <code>for</code> লুপ ব্যবহার করবে। এটি করার উপায় হল একটি <code>Range</code> ব্যবহার করা, যা স্ট্যান্ডার্ড লাইব্রেরি দ্বারা সরবরাহ করা হয়, যা একটি সংখ্যা থেকে শুরু করে এবং অন্য একটি সংখ্যার আগে শেষ হওয়া পর্যন্ত ক্রমানুসারে সমস্ত সংখ্যা তৈরি করে।</p>
+<p>এখানে <code>for</code> লুপ এবং আরেকটি মেথড যা আমরা এখনও আলোচনা করিনি, <code>rev</code> (রেঞ্জটি উল্টো করার জন্য) ব্যবহার করে কাউন্টডাউনটি কেমন দেখাবে:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+    println!("LIFTOFF!!!");
+}</code></pre></pre>
+<p>এই কোডটি একটু সুন্দর, তাই না?</p>
+<h2 id="সারাংশ"><a class="header" href="#সারাংশ">সারাংশ</a></h2>
+<p>আপনি পেরেছেন! এটি একটি বড় অধ্যায় ছিল: আপনি ভ্যারিয়েবল, স্কেলার এবং কম্পাউন্ড ডেটা টাইপ, ফাংশন, কমেন্ট, <code>if</code> এক্সপ্রেশন এবং লুপ সম্পর্কে শিখেছেন! এই অধ্যায়ে আলোচিত ধারণাগুলো অনুশীলন করার জন্য, নিম্নলিখিত কাজগুলো করার জন্য প্রোগ্রাম তৈরি করার চেষ্টা করুন:</p>
+<ul>
+<li>ফারেনহাইট এবং সেলসিয়াসের মধ্যে তাপমাত্রা রূপান্তর করুন।</li>
+<li><em>n</em>-তম ফিবোনাচি সংখ্যা তৈরি করুন।</li>
+<li>ক্রিসমাস ক্যারোল "The Twelve Days of Christmas"-এর লিরিক্স প্রিন্ট করুন, গানের পুনরাবৃত্তির সুবিধা নিয়ে।</li>
+</ul>
+<p>যখন আপনি এগিয়ে যাওয়ার জন্য প্রস্তুত হবেন, আমরা রাস্টের এমন একটি ধারণা নিয়ে কথা বলব যা অন্যান্য প্রোগ্রামিং ভাষায় সাধারণত বিদ্যমান <em>নেই</em>: ওনারশিপ (ownership)।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-04-comments.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-04-comments.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-00-understanding-ownership.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

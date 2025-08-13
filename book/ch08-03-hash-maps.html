@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>হ্যাশ ম্যাপে সংশ্লিষ্ট ভ্যালুসহ কী (key) সংরক্ষণ - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="hash-map-বযবহার-করে-key-এবং-সংশলিষট-value-সটোর-করা"><a class="header" href="#hash-map-বযবহার-করে-key-এবং-সংশলিষট-value-সটোর-করা">Hash Map ব্যবহার করে Key এবং সংশ্লিষ্ট Value স্টোর করা</a></h2>
+<p>আমাদের সাধারণ collection-গুলোর মধ্যে সর্বশেষটি হলো <em>hash map</em>। <code>HashMap&lt;K, V&gt;</code> টাইপটি <code>K</code> টাইপের key-এর সাথে <code>V</code> টাইপের value-এর একটি ম্যাপিং সংরক্ষণ করে। এটি একটি <em>hashing function</em> ব্যবহার করে নির্ধারণ করে কীভাবে মেমরিতে এই key এবং value-গুলো রাখা হবে। অনেক প্রোগ্রামিং ল্যাঙ্গুয়েজ এই ধরনের ডেটা স্ট্রাকচার সমর্থন করে, কিন্তু তারা প্রায়শই ভিন্ন নাম ব্যবহার করে, যেমন <em>hash</em>, <em>map</em>, <em>object</em>, <em>hash table</em>, <em>dictionary</em>, বা <em>associative array</em> ইত্যাদি।</p>
+<p>Hash map তখন দরকারী যখন আপনি কোনো index ব্যবহার করে ডেটা খুঁজতে চান না (যেমনটা vector-এর ক্ষেত্রে করা হয়), বরং একটি key ব্যবহার করে ডেটা খুঁজতে চান যা যেকোনো টাইপের হতে পারে। উদাহরণস্বরূপ, একটি গেমে, আপনি প্রতিটি দলের স্কোর একটি hash map-এ রাখতে পারেন, যেখানে প্রতিটি key হলো দলের নাম এবং value হলো সেই দলের স্কোর। একটি দলের নাম দিয়ে আপনি তার স্কোর পুনরুদ্ধার করতে পারবেন।</p>
+<p>এই বিভাগে আমরা hash map-এর বেসিক API নিয়ে আলোচনা করব, কিন্তু standard library দ্বারা <code>HashMap&lt;K, V&gt;</code>-তে সংজ্ঞায়িত ফাংশনগুলিতে আরও অনেক সুবিধা লুকিয়ে আছে। বরাবরের মতো, আরও তথ্যের জন্য standard library-এর ডকুমেন্টেশন দেখুন।</p>
+<h3 id="নতুন-hash-map-তৈরি-করা"><a class="header" href="#নতুন-hash-map-তৈরি-করা">নতুন Hash Map তৈরি করা</a></h3>
+<p>একটি খালি hash map তৈরি করার একটি উপায় হলো <code>new</code> ব্যবহার করা এবং <code>insert</code> দিয়ে element যোগ করা। লিস্টিং ৮-২০-এ, আমরা দুটি দলের স্কোর ট্র্যাক করছি যাদের নাম <em>Blue</em> এবং <em>Yellow</em>। Blue দলের স্কোর ১০ দিয়ে শুরু হয় এবং Yellow দলের ৫০ দিয়ে।</p>
+<Listing number="8-20" caption="একটি নতুন hash map তৈরি করা এবং কিছু key ও value যুক্ত করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>লক্ষ্য করুন যে আমাদের প্রথমে standard library-এর collections অংশ থেকে <code>HashMap</code> <code>use</code> করতে হবে। আমাদের তিনটি সাধারণ collection-এর মধ্যে এটি সবচেয়ে কম ব্যবহৃত হয়, তাই এটি prelude-এ স্বয়ংক্রিয়ভাবে স্কোপে আনা ফিচারগুলোর অন্তর্ভুক্ত নয়। Hash map-এর জন্য standard library থেকে কম সমর্থনও রয়েছে; উদাহরণস্বরূপ, এটি তৈরি করার জন্য কোনো বিল্ট-ইন ম্যাক্রো নেই।</p>
+<p>Vector-এর মতোই, hash map তাদের ডেটা heap-এ স্টোর করে। এই <code>HashMap</code>-এর key-গুলো <code>String</code> টাইপের এবং value-গুলো <code>i32</code> টাইপের। Vector-এর মতোই, hash map-ও সমজাতীয় (homogeneous): সমস্ত key-এর টাইপ একই হতে হবে এবং সমস্ত value-এর টাইপও একই হতে হবে।</p>
+<h3 id="hash-map-এর-value-অযাকসেস-করা"><a class="header" href="#hash-map-এর-value-অযাকসেস-করা">Hash Map-এর Value অ্যাক্সেস করা</a></h3>
+<p>আমরা hash map থেকে একটি value পেতে পারি তার key <code>get</code> মেথডে সরবরাহ করে, যেমনটি লিস্টিং ৮-২১-এ দেখানো হয়েছে।</p>
+<Listing number="8-21" caption="Hash map-এ সংরক্ষিত Blue দলের স্কোর অ্যাক্সেস করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    let team_name = String::from("Blue");
+    let score = scores.get(&amp;team_name).copied().unwrap_or(0);
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এখানে, <code>score</code>-এর ভ্যালু হবে Blue দলের সাথে যুক্ত ভ্যালুটি, এবং ফলাফল হবে <code>10</code>। <code>get</code> মেথডটি একটি <code>Option&lt;&amp;V&gt;</code> রিটার্ন করে; যদি hash map-এ সেই key-এর জন্য কোনো ভ্যালু না থাকে, <code>get</code> <code>None</code> রিটার্ন করবে। এই প্রোগ্রামটি <code>Option</code>-কে <code>copied</code> কল করে একটি <code>Option&lt;i32&gt;</code> পায় (<code>Option&lt;&amp;i32&gt;</code>-এর পরিবর্তে), তারপর <code>unwrap_or</code> ব্যবহার করে <code>score</code>-কে শূন্যতে সেট করে যদি <code>scores</code>-এ key-টির জন্য কোনো এন্ট্রি না থাকে।</p>
+<p>আমরা একটি <code>for</code> লুপ ব্যবহার করে hash map-এর প্রতিটি key-value পেয়ারের উপর দিয়ে ইটারেট করতে পারি, যেমনটা আমরা vector-এর সাথে করি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    for (key, value) in &amp;scores {
+        println!("{key}: {value}");
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি প্রতিটি জোড়া একটি অনির্দিষ্ট ক্রমে প্রিন্ট করবে:</p>
+<pre><code class="language-text">Yellow: 50
+Blue: 10
+</code></pre>
+<h3 id="hash-map-এবং-ownership"><a class="header" href="#hash-map-এবং-ownership">Hash Map এবং Ownership</a></h3>
+<p>যেসব টাইপ <code>Copy</code> trait ইমপ্লিমেন্ট করে, যেমন <code>i32</code>, সেগুলোর ভ্যালু hash map-এ কপি হয়। <code>String</code>-এর মতো owned ভ্যালুর ক্ষেত্রে, ভ্যালুগুলো মুভ (move) হবে এবং hash map সেই ভ্যালুগুলোর মালিক হবে, যেমনটি লিস্টিং ৮-২২-এ দেখানো হয়েছে।</p>
+<Listing number="8-22" caption="দেখানো হচ্ছে যে key এবং value একবার hash map-এ যুক্ত হলে তার মালিকানা hash map-এর হয়ে যায়">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // field_name and field_value are invalid at this point, try using them and
+    // see what compiler error you get!
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p><code>insert</code> কলের মাধ্যমে <code>field_name</code> এবং <code>field_value</code> ভ্যারিয়েবলগুলো hash map-এ মুভ হয়ে যাওয়ার পরে আমরা আর সেগুলো ব্যবহার করতে পারি না।</p>
+<p>যদি আমরা hash map-এ ভ্যালুর রেফারেন্স যুক্ত করি, তবে ভ্যালুগুলো hash map-এ মুভ হবে না। রেফারেন্সগুলো যে ভ্যালুকে নির্দেশ করে, সেই ভ্যালুগুলো অন্তত hash map যতদিন বৈধ থাকবে, ততদিন বৈধ থাকতে হবে। আমরা এই বিষয়গুলো নিয়ে অধ্যায় ১০-এর <a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">“Validating References with Lifetimes”</a><!-- ignore --> বিভাগে আরও আলোচনা করব।</p>
+<h3 id="একটি-hash-map-আপডেট-করা"><a class="header" href="#একটি-hash-map-আপডেট-করা">একটি Hash Map আপডেট করা</a></h3>
+<p>যদিও key-value পেয়ারের সংখ্যা বাড়ানো যায়, প্রতিটি স্বতন্ত্র key-এর সাথে একবারে কেবল একটিই value যুক্ত থাকতে পারে (কিন্তু এর বিপরীতটি সত্য নয়: উদাহরণস্বরূপ, Blue এবং Yellow উভয় দলেরই <code>scores</code> hash map-এ <code>10</code> ভ্যালুটি থাকতে পারে)।</p>
+<p>যখন আপনি একটি hash map-এর ডেটা পরিবর্তন করতে চান, তখন আপনাকে সিদ্ধান্ত নিতে হবে যে একটি key-তে যখন আগে থেকেই একটি value বরাদ্দ থাকে তখন কী করবেন। আপনি পুরানো ভ্যালুটিকে সম্পূর্ণ উপেক্ষা করে নতুন ভ্যালু দিয়ে প্রতিস্থাপন করতে পারেন। আপনি পুরানো ভ্যালুটি রেখে নতুন ভ্যালুটি উপেক্ষা করতে পারেন, এবং শুধুমাত্র যদি key-টির কোনো ভ্যালু না থাকে তবেই নতুন ভ্যালু যোগ করতে পারেন। অথবা আপনি পুরানো এবং নতুন ভ্যালু একত্রিত করতে পারেন। আসুন দেখি কীভাবে এর প্রতিটি করা যায়!</p>
+<h4 id="একটি-ভযালু-ওভাররাইট-করা"><a class="header" href="#একটি-ভযালু-ওভাররাইট-করা">একটি ভ্যালু ওভাররাইট করা</a></h4>
+<p>যদি আমরা একটি hash map-এ একটি key এবং একটি value যুক্ত করি এবং তারপরে একই key দিয়ে ভিন্ন একটি value যুক্ত করি, তবে সেই key-এর সাথে যুক্ত value প্রতিস্থাপিত হবে। যদিও লিস্টিং ৮-২৩-এর কোডটি দুবার <code>insert</code> কল করে, hash map-এ কেবল একটি key-value পেয়ার থাকবে কারণ আমরা উভয়বারই Blue দলের key-এর জন্য value যুক্ত করছি।</p>
+<Listing number="8-23" caption="একটি নির্দিষ্ট key-এর সাথে সংরক্ষিত ভ্যালু প্রতিস্থাপন করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Blue"), 25);
+
+    println!("{scores:?}");
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>{"Blue": 25}</code> প্রিন্ট করবে। আসল <code>10</code> ভ্যালুটি ওভাররাইট করা হয়েছে।</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="only-inserting-a-value-if-the-key-has-no-value"></a></p>
+<h4 id="শুধুমাতর-key-উপসথিত-না-থাকলে-একটি-key-এবং-value-যোগ-করা"><a class="header" href="#শুধুমাতর-key-উপসথিত-না-থাকলে-একটি-key-এবং-value-যোগ-করা">শুধুমাত্র Key উপস্থিত না থাকলে একটি Key এবং Value যোগ করা</a></h4>
+<p>একটি সাধারণ কাজ হলো hash map-এ একটি নির্দিষ্ট key-এর জন্য কোনো value আছে কিনা তা পরীক্ষা করা এবং তারপরে নিম্নলিখিত পদক্ষেপ নেওয়া: যদি key-টি hash map-এ থাকে, তবে বিদ্যমান value অপরিবর্তিত থাকবে; যদি key-টি না থাকে, তবে এটি এবং এর জন্য একটি value যুক্ত করা হবে।</p>
+<p>Hash map-এর এর জন্য একটি বিশেষ API আছে যার নাম <code>entry</code>, যা প্যারামিটার হিসাবে আপনি যে key পরীক্ষা করতে চান তা নেয়। <code>entry</code> মেথডের রিটার্ন ভ্যালু হলো <code>Entry</code> নামের একটি enum, যা এমন একটি ভ্যালুকে প্রতিনিধিত্ব করে যা থাকতেও পারে বা নাও থাকতে পারে। ধরা যাক আমরা পরীক্ষা করতে চাই Yellow দলের key-এর সাথে কোনো value যুক্ত আছে কিনা। যদি না থাকে, আমরা <code>50</code> ভ্যালুটি যুক্ত করতে চাই, এবং Blue দলের জন্যও একই কাজ করতে চাই। <code>entry</code> API ব্যবহার করে কোডটি লিস্টিং ৮-২৪-এর মতো দেখায়।</p>
+<Listing number="8-24" caption="`entry` মেথড ব্যবহার করে শুধুমাত্র key-এর কোনো ভ্যালু না থাকলে যুক্ত করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+    scores.entry(String::from("Yellow")).or_insert(50);
+    scores.entry(String::from("Blue")).or_insert(50);
+
+    println!("{scores:?}");
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p><code>Entry</code>-এর উপর <code>or_insert</code> মেথডটি এমনভাবে সংজ্ঞায়িত করা হয়েছে যে এটি সংশ্লিষ্ট <code>Entry</code> key-এর ভ্যালুর একটি mutable রেফারেন্স রিটার্ন করে যদি সেই key বিদ্যমান থাকে, এবং যদি না থাকে, তবে এটি প্যারামিটারটিকে এই key-এর নতুন ভ্যালু হিসাবে যুক্ত করে এবং নতুন ভ্যালুর একটি mutable রেফারেন্স রিটার্ন করে। এই কৌশলটি নিজেরা লজিক লেখার চেয়ে অনেক পরিষ্কার এবং borrow checker-এর সাথে আরও ভালোভাবে কাজ করে।</p>
+<p>লিস্টিং ৮-২৪-এর কোডটি চালালে <code>{"Yellow": 50, "Blue": 10}</code> প্রিন্ট হবে। প্রথম <code>entry</code> কলটি Yellow দলের key <code>50</code> ভ্যালুসহ যুক্ত করবে কারণ Yellow দলের আগে থেকে কোনো ভ্যালু নেই। দ্বিতীয় <code>entry</code> কলটি hash map পরিবর্তন করবে না কারণ Blue দলের আগে থেকেই <code>10</code> ভ্যালুটি রয়েছে।</p>
+<h4 id="পুরানো-ভযালুর-উপর-ভিততি-করে-একটি-ভযালু-আপডেট-করা"><a class="header" href="#পুরানো-ভযালুর-উপর-ভিততি-করে-একটি-ভযালু-আপডেট-করা">পুরানো ভ্যালুর উপর ভিত্তি করে একটি ভ্যালু আপডেট করা</a></h4>
+<p>Hash map-এর আরেকটি সাধারণ ব্যবহার হলো একটি key-এর ভ্যালু খুঁজে বের করা এবং তারপর পুরানো ভ্যালুর উপর ভিত্তি করে এটি আপডেট করা। উদাহরণস্বরূপ, লিস্টিং ৮-২৫-এর কোডটি গণনা করে যে কিছু টেক্সটে প্রতিটি শব্দ কতবার আসে। আমরা শব্দগুলোকে key হিসাবে এবং তাদের সংখ্যা ট্র্যাক করার জন্য ভ্যালু বৃদ্ধি করে একটি hash map ব্যবহার করি। যদি আমরা প্রথমবার কোনো শব্দ দেখি, আমরা প্রথমে <code>0</code> ভ্যালুটি যুক্ত করব।</p>
+<Listing number="8-25" caption="শব্দ এবং তাদের সংখ্যা সংরক্ষণ করে একটি hash map ব্যবহার করে শব্দের সংঘটন গণনা করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::collections::HashMap;
+
+    let text = "hello world wonderful world";
+
+    let mut map = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+    }
+
+    println!("{map:?}");
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>{"world": 2, "hello": 1, "wonderful": 1}</code> প্রিন্ট করবে। আপনি একই key-value পেয়ারগুলো ভিন্ন ক্রমে প্রিন্ট করা দেখতে পারেন: <a href="#accessing-values-in-a-hash-map">“Accessing Values in a Hash Map”</a><!-- ignore --> থেকে মনে করুন যে একটি hash map-এর উপর ইটারেট করা একটি অনির্দিষ্ট ক্রমে ঘটে।</p>
+<p><code>split_whitespace</code> মেথডটি <code>text</code>-এর ভ্যালুর হোয়াইটস্পেস দ্বারা পৃথক করা সাবস্লাইসের উপর একটি ইটারেটর রিটার্ন করে। <code>or_insert</code> মেথডটি নির্দিষ্ট key-এর ভ্যালুর একটি mutable রেফারেন্স (<code>&amp;mut V</code>) রিটার্ন করে। এখানে, আমরা সেই mutable রেফারেন্সটি <code>count</code> ভ্যারিয়েবলে সংরক্ষণ করি, তাই সেই ভ্যালুতে অ্যাসাইন করার জন্য, আমাদের প্রথমে অ্যাস্টারিস্ক (<code>*</code>) ব্যবহার করে <code>count</code>-কে dereference করতে হবে। Mutable রেফারেন্সটি <code>for</code> লুপের শেষে স্কোপের বাইরে চলে যায়, তাই এই সমস্ত পরিবর্তনগুলি নিরাপদ এবং borrowing rules দ্বারা অনুমোদিত।</p>
+<h3 id="হযাশিং-ফাংশন-hashing-functions"><a class="header" href="#হযাশিং-ফাংশন-hashing-functions">হ্যাশিং ফাংশন (Hashing Functions)</a></h3>
+<p>ডিফল্টরূপে, <code>HashMap</code> <em>SipHash</em> নামের একটি হ্যাশিং ফাংশন ব্যবহার করে যা denial-of-service (DoS) আক্রমণের বিরুদ্ধে প্রতিরোধ প্রদান করতে পারে<sup class="footnote-reference" id="fr-siphash-1"><a href="#footnote-siphash">1</a></sup><!-- ignore -->। এটি উপলব্ধ দ্রুততম হ্যাশিং অ্যালগরিদম নয়, কিন্তু পারফরম্যান্স হ্রাসের বিনিময়ে যে উন্নত নিরাপত্তা পাওয়া যায় তা মূল্যবান। যদি আপনি আপনার কোড প্রোফাইল করেন এবং দেখেন যে ডিফল্ট হ্যাশ ফাংশনটি আপনার উদ্দেশ্যের জন্য খুব ধীর, আপনি একটি ভিন্ন হ্যাশার নির্দিষ্ট করে অন্য ফাংশনে স্যুইচ করতে পারেন। একটি <em>hasher</em> হলো এমন একটি টাইপ যা <code>BuildHasher</code> trait ইমপ্লিমেন্ট করে। আমরা <a href="ch10-02-traits.html">অধ্যায় ১০</a><!-- ignore -->-এ trait এবং কীভাবে সেগুলি ইমপ্লিমেন্ট করতে হয় সে সম্পর্কে কথা বলব। আপনাকে স্ক্র্যাচ থেকে নিজের হ্যাশার ইমপ্লিমেন্ট করতে হবে না; <a href="https://crates.io/">crates.io</a><!-- ignore -->-তে অন্যান্য Rust ব্যবহারকারীদের দ্বারা শেয়ার করা লাইব্রেরি রয়েছে যা অনেক সাধারণ হ্যাশিং অ্যালগরিদম ইমপ্লিমেন্ট করে এমন হ্যাশার সরবরাহ করে।</p>
+<h2 id="সারসংকষেপ"><a class="header" href="#সারসংকষেপ">সারসংক্ষেপ</a></h2>
+<p>Vector, string, এবং hash map প্রোগ্রামগুলিতে যখন ডেটা সংরক্ষণ, অ্যাক্সেস এবং পরিবর্তন করার প্রয়োজন হয় তখন একটি বিশাল পরিমাণ কার্যকারিতা প্রদান করবে। এখানে কিছু অনুশীলন রয়েছে যা আপনি এখন সমাধান করার জন্য সজ্জিত থাকা উচিত:</p>
+<p>১. পূর্ণসংখ্যার একটি তালিকা দেওয়া হলে, একটি vector ব্যবহার করে তালিকাটির মিডিয়ান (median - সাজানো হলে মাঝের অবস্থানের মান) এবং মোড (mode - যে মানটি সবচেয়ে বেশিবার ঘটে; এখানে একটি hash map সহায়ক হবে) রিটার্ন করুন।
+২. স্ট্রিংগুলিকে পিগ ল্যাটিনে (pig latin) রূপান্তর করুন। প্রতিটি শব্দের প্রথম কনসোনেন্ট (consonant) শব্দের শেষে সরানো হয় এবং <em>ay</em> যোগ করা হয়, তাই <em>first</em> হয়ে যায় <em>irst-fay</em>। যে শব্দগুলি ভাওয়েল (vowel) দিয়ে শুরু হয় সেগুলির শেষে <em>hay</em> যোগ করা হয় (<em>apple</em> হয়ে যায় <em>apple-hay</em>)। UTF-8 এনকোডিং সম্পর্কে বিস্তারিত মনে রাখবেন!
+৩. একটি hash map এবং vector ব্যবহার করে, একটি টেক্সট ইন্টারফেস তৈরি করুন যা একজন ব্যবহারকারীকে একটি কোম্পানির একটি বিভাগে কর্মচারীর নাম যুক্ত করার অনুমতি দেয়; উদাহরণস্বরূপ, “Add Sally to Engineering” বা “Add Amir to Sales”। তারপরে ব্যবহারকারীকে একটি বিভাগের সমস্ত ব্যক্তির তালিকা বা বিভাগ অনুসারে কোম্পানির সমস্ত ব্যক্তির তালিকা বর্ণানুক্রমিকভাবে সাজানো অবস্থায় পুনরুদ্ধার করার অনুমতি দিন।</p>
+<p>Standard library API ডকুমেন্টেশন vector, string, এবং hash map-এর এমন মেথডগুলো বর্ণনা করে যা এই অনুশীলনগুলির জন্য সহায়ক হবে!</p>
+<p>আমরা আরও জটিল প্রোগ্রামগুলিতে প্রবেশ করছি যেখানে অপারেশন ব্যর্থ হতে পারে, তাই error handling নিয়ে আলোচনা করার জন্য এটি একটি উপযুক্ত সময়। আমরা এর পরেই তা করব!</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-siphash">
+<p><a href="https://en.wikipedia.org/wiki/SipHash">https://en.wikipedia.org/wiki/SipHash</a> <a href="#fr-siphash-1">↩</a></p>
+</li>
+</ol>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch08-02-strings.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-00-error-handling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch08-02-strings.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-00-error-handling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

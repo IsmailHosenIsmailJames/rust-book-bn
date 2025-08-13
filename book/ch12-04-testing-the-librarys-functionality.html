@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>টেস্ট ড্রিভেন ডেভেলপমেন্টের মাধ্যমে লাইব্রেরির কার্যকারিতা তৈরি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="টেসট-ডরিভেন-ডেভেলপমেনট-tdd-বযবহার-করে-লাইবরেরির-ফাংশনালিটি-তৈরি-করা"><a class="header" href="#টেসট-ডরিভেন-ডেভেলপমেনট-tdd-বযবহার-করে-লাইবরেরির-ফাংশনালিটি-তৈরি-করা">টেস্ট-ড্রিভেন ডেভেলপমেন্ট (TDD) ব্যবহার করে লাইব্রেরির ফাংশনালিটি তৈরি করা</a></h2>
+<p>যেহেতু এখন আমাদের সার্চ লজিকটি <code>main</code> ফাংশন থেকে আলাদা করে <em>src/lib.rs</em>-এ রাখা হয়েছে, তাই আমাদের কোডের মূল ফাংশনালিটির জন্য টেস্ট লেখা অনেক সহজ হয়ে গেছে। আমরা বিভিন্ন আর্গুমেন্ট দিয়ে সরাসরি ফাংশন কল করতে পারি এবং কমান্ড লাইন থেকে আমাদের বাইনারি কল না করেই রিটার্ন ভ্যালু পরীক্ষা করতে পারি।</p>
+<p>এই বিভাগে, আমরা টেস্ট-ড্রিভেন ডেভেলপমেন্ট (TDD) প্রক্রিয়া ব্যবহার করে <code>minigrep</code> প্রোগ্রামে সার্চিং লজিক যোগ করব। এর জন্য আমরা নিম্নলিখিত ধাপগুলো অনুসরণ করব:</p>
+<ol>
+<li>একটি টেস্ট লিখুন যা ফেইল করবে এবং এটি চালিয়ে নিশ্চিত হন যে এটি আপনার প্রত্যাশিত কারণেই ফেইল করছে।</li>
+<li>নতুন টেস্টটি পাস করানোর জন্য শুধুমাত্র প্রয়োজনীয় কোড লিখুন বা পরিবর্তন করুন।</li>
+<li>আপনি এইমাত্র যে কোড যোগ বা পরিবর্তন করেছেন তা রিফ্যাক্টর করুন এবং নিশ্চিত করুন যে টেস্টগুলো পাস করছে।</li>
+<li>ধাপ ১ থেকে পুনরাবৃত্তি করুন!</li>
+</ol>
+<p>যদিও সফটওয়্যার লেখার অনেক পদ্ধতির মধ্যে এটি একটি, TDD কোড ডিজাইনকে চালিত করতে সাহায্য করতে পারে। যে কোডটি টেস্ট পাস করাবে, তা লেখার আগে টেস্টটি লিখে ফেললে পুরো প্রক্রিয়া জুড়ে হাই টেস্ট কভারেজ বজায় রাখতে সাহায্য করে।</p>
+<p>আমরা সেই ফাংশনালিটির ইমপ্লিমেন্টেশন টেস্ট-ড্রাইভ করব যা ফাইলের কন্টেন্টে কোয়েরি স্ট্রিং খুঁজবে এবং কোয়েরির সাথে মেলে এমন লাইনের একটি তালিকা তৈরি করবে। আমরা এই ফাংশনালিটি <code>search</code> নামের একটি ফাংশনে যোগ করব।</p>
+<h3 id="একটি-ফেইলিং-টেসট-লেখা-writing-a-failing-test"><a class="header" href="#একটি-ফেইলিং-টেসট-লেখা-writing-a-failing-test">একটি ফেইলিং টেস্ট লেখা (Writing a Failing Test)</a></h3>
+<p><em>src/lib.rs</em>-এ, আমরা <a href="ch11-01-writing-tests.html#the-anatomy-of-a-test-function">অধ্যায় ১১</a><!-- ignore -->-এর মতো একটি <code>tests</code> মডিউল এবং একটি টেস্ট ফাংশন যোগ করব। টেস্ট ফাংশনটি <code>search</code> ফাংশনের প্রত্যাশিত আচরণ নির্দিষ্ট করবে: এটি একটি কোয়েরি এবং সার্চ করার জন্য টেক্সট নেবে এবং টেক্সট থেকে শুধুমাত্র সেই লাইনগুলোই রিটার্ন করবে যেগুলোতে কোয়েরিটি রয়েছে। লিস্টিং ১২-১৫ এই টেস্টটি দেখাচ্ছে।</p>
+<Listing number="12-15" file-name="src/lib.rs" caption="`search` ফাংশনের জন্য একটি ফেইলিং টেস্ট তৈরি করা, যে ফাংশনালিটি আমরা পেতে চাই।">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    unimplemented!();
+</span><span class="boring">}
+</span><span class="boring">
+</span>// --snip--
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+}</code></pre>
+</Listing>
+<p>এই টেস্টটি <code>"duct"</code> স্ট্রিংটি সার্চ করছে। আমরা যে টেক্সটটি সার্চ করছি তা তিন লাইনের, যার মধ্যে কেবল একটিতে <code>"duct"</code> রয়েছে (লক্ষ্য করুন যে ওপেনিং ডাবল কোটের পরে ব্যাকস্ল্যাশ Rust-কে বলে যে এই স্ট্রিং লিটারেলের শুরুতে একটি নিউলাইন ক্যারেক্টার যোগ না করতে)। আমরা <code>assert</code> করছি যে <code>search</code> ফাংশন থেকে রিটার্ন করা ভ্যালুতে শুধুমাত্র আমাদের প্রত্যাশিত লাইনটি রয়েছে।</p>
+<p>যদি আমরা এই টেস্টটি চালাই, এটি বর্তমানে ফেইল করবে কারণ <code>unimplemented!</code> ম্যাক্রো "not implemented" মেসেজ দিয়ে প্যানিক করবে। TDD নীতি অনুসারে, আমরা একটি ছোট পদক্ষেপ নেব এবং টেস্টটি যাতে ফাংশন কল করার সময় প্যানিক না করে তার জন্য যথেষ্ট কোড যোগ করব। এর জন্য আমরা <code>search</code> ফাংশনটিকে সর্বদা একটি খালি ভেক্টর রিটার্ন করার জন্য ডিফাইন করব, যেমনটি লিস্টিং ১২-১৬-তে দেখানো হয়েছে। তাহলে টেস্টটি কম্পাইল হবে এবং ফেইল করবে কারণ একটি খালি ভেক্টর <code>"safe, fast, productive."</code> লাইনসহ একটি ভেক্টরের সাথে মিলবে না।</p>
+<Listing number="12-16" file-name="src/lib.rs" caption="`search` ফাংশনটিকে এমনভাবে ডিফাইন করা যাতে এটি কল করলে প্যানিক না হয়।">
+<pre><code class="language-rust noplayground">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    vec![]
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn one_result() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+এখন আসুন আলোচনা করি কেন আমাদের `search`-এর সিগনেচারে একটি সুস্পষ্ট লাইফটাইম `'a` ডিফাইন করতে হবে এবং সেই লাইফটাইমটি `contents` আর্গুমেন্ট এবং রিটার্ন ভ্যালুর সাথে ব্যবহার করতে হবে। [অধ্যায় ১০][ch10-lifetimes]&lt;!-- ignore --&gt; থেকে স্মরণ করুন যে লাইফটাইম প্যারামিটারগুলো নির্দিষ্ট করে যে কোন আর্গুমেন্টের লাইফটাইম রিটার্ন ভ্যালুর লাইফটাইমের সাথে সংযুক্ত। এই ক্ষেত্রে, আমরা নির্দেশ করছি যে রিটার্ন করা ভেক্টরে স্ট্রিং স্লাইস থাকবে যা `contents` আর্গুমেন্টের স্লাইসকে রেফারেন্স করে ( `query` আর্গুমেন্টকে নয়)।
+
+অন্য কথায়, আমরা Rust-কে বলছি যে `search` ফাংশন দ্বারা রিটার্ন করা ডেটা তত সময় পর্যন্ত বেঁচে থাকবে, যত সময় `contents` আর্গুমেন্টে `search` ফাংশনে পাস করা ডেটা বেঁচে থাকবে। এটি গুরুত্বপূর্ণ! একটি স্লাইস দ্বারা রেফারেন্স করা ডেটা রেফারেন্সটি বৈধ হওয়ার জন্য অবশ্যই বৈধ হতে হবে; যদি কম্পাইলার ধরে নেয় যে আমরা `contents`-এর পরিবর্তে `query`-এর স্ট্রিং স্লাইস তৈরি করছি, তবে এটি তার সেফটি চেকিং ভুলভাবে করবে।
+
+যদি আমরা লাইফটাইম অ্যানোটেশন ভুলে যাই এবং এই ফাংশনটি কম্পাইল করার চেষ্টা করি, আমরা এই এররটি পাব:
+
+```console
+$ cargo build
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+error[E0106]: missing lifetime specifier
+ --&gt; src/lib.rs:1:51
+  |
+1 | pub fn search(query: &amp;str, contents: &amp;str) -&gt; Vec&lt;&amp;str&gt; {
+  |                      ----            ----         ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `query` or `contents`
+help: consider introducing a named lifetime parameter
+  |
+1 | pub fn search&lt;'a&gt;(query: &amp;'a str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+  |              ++++         ++                 ++              ++
+
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `minigrep` (lib) due to 1 previous error</code></pre>
+<p>Rust জানতে পারে না যে আউটপুটের জন্য আমাদের দুটি প্যারামিটারের মধ্যে কোনটি প্রয়োজন, তাই আমাদের এটি স্পষ্টভাবে বলতে হবে। লক্ষ্য করুন যে সাহায্যকারী টেক্সটটি সমস্ত প্যারামিটার এবং আউটপুট টাইপের জন্য একই লাইফটাইম প্যারামিটার নির্দিষ্ট করার পরামর্শ দেয়, যা ভুল! যেহেতু <code>contents</code> হলো সেই প্যারামিটার যেখানে আমাদের সমস্ত টেক্সট রয়েছে এবং আমরা সেই টেক্সটের যে অংশগুলো মেলে তা রিটার্ন করতে চাই, আমরা জানি যে শুধুমাত্র <code>contents</code> প্যারামিটারটিই লাইফটাইম সিনট্যাক্স ব্যবহার করে রিটার্ন ভ্যালুর সাথে সংযুক্ত হওয়া উচিত।</p>
+<p>অন্যান্য প্রোগ্রামিং ল্যাঙ্গুয়েজে আপনাকে সিগনেচারে আর্গুমেন্টগুলোকে রিটার্ন ভ্যালুর সাথে সংযুক্ত করতে হয় না, কিন্তু এই অনুশীলনটি সময়ের সাথে সাথে সহজ হয়ে যাবে। আপনি এই উদাহরণটি অধ্যায় ১০-এর <a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">"Validating References with Lifetimes"</a><!-- ignore --> বিভাগের উদাহরণগুলোর সাথে তুলনা করতে পারেন।</p>
+<h3 id="টেসট-পাস-করার-জনয-কোড-লেখা-writing-code-to-pass-the-test"><a class="header" href="#টেসট-পাস-করার-জনয-কোড-লেখা-writing-code-to-pass-the-test">টেস্ট পাস করার জন্য কোড লেখা (Writing Code to Pass the Test)</a></h3>
+<p>বর্তমানে, আমাদের টেস্টটি ফেইল করছে কারণ আমরা সবসময় একটি খালি ভেক্টর রিটার্ন করি। এটি ঠিক করতে এবং <code>search</code> ইমপ্লিমেন্ট করতে, আমাদের প্রোগ্রামকে এই ধাপগুলো অনুসরণ করতে হবে:</p>
+<ol>
+<li>কন্টেন্টের প্রতিটি লাইনের মধ্যে দিয়ে ইটারেট (iterate) করা।</li>
+<li>লাইনটিতে আমাদের কোয়েরি স্ট্রিং আছে কিনা তা পরীক্ষা করা।</li>
+<li>যদি থাকে, তবে এটিকে আমরা যে ভ্যালুগুলো রিটার্ন করছি তার তালিকায় যুক্ত করা।</li>
+<li>যদি না থাকে, তবে কিছুই না করা।</li>
+<li>যে রেজাল্টগুলো ম্যাচ করে তার তালিকা রিটার্ন করা।</li>
+</ol>
+<p>চলুন প্রতিটি ধাপ নিয়ে কাজ করা যাক, লাইন ইটারেট করা দিয়ে শুরু করি।</p>
+<h4 id="lines-মেথড-দিয়ে-লাইন-বরাবর-ইটারেট-করা"><a class="header" href="#lines-মেথড-দিয়ে-লাইন-বরাবর-ইটারেট-করা"><code>lines</code> মেথড দিয়ে লাইন বরাবর ইটারেট করা</a></h4>
+<p>Rust-এর একটি সহায়ক মেথড আছে যা স্ট্রিং-এর লাইন-বাই-লাইন ইটারেশন পরিচালনা করে, যার সুবিধাজনক নাম <code>lines</code>, যা লিস্টিং ১২-১৭-তে দেখানো হয়েছে। মনে রাখবেন যে এটি এখনও কম্পাইল হবে না।</p>
+<Listing number="12-17" file-name="src/lib.rs" caption="`contents`-এর প্রতিটি লাইনের মধ্যে দিয়ে ইটারেট করা">
+<pre><code class="language-rust ignore does_not_compile">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    for line in contents.lines() {
+        // do something with line
+    }
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn one_result() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p><code>lines</code> মেথড একটি iterator রিটার্ন করে। আমরা <a href="ch13-02-iterators.html">অধ্যায় ১৩</a><!-- ignore -->-তে iterator নিয়ে গভীরভাবে আলোচনা করব, কিন্তু স্মরণ করুন যে আপনি <a href="ch03-05-control-flow.html#looping-through-a-collection-with-for">লিস্টিং ৩-৫</a><!-- ignore -->-এ iterator ব্যবহারের এই উপায়টি দেখেছেন, যেখানে আমরা একটি কালেকশনের প্রতিটি আইটেমের উপর কিছু কোড চালানোর জন্য একটি <code>for</code> লুপের সাথে একটি iterator ব্যবহার করেছি।</p>
+<h4 id="কোযেরির-জনয-পরতিটি-লাইন-সারচ-করা"><a class="header" href="#কোযেরির-জনয-পরতিটি-লাইন-সারচ-করা">কোয়েরির জন্য প্রতিটি লাইন সার্চ করা</a></h4>
+<p>এরপরে, আমরা পরীক্ষা করব যে বর্তমান লাইনে আমাদের কোয়েরি স্ট্রিং আছে কিনা। সৌভাগ্যবশত, স্ট্রিং-এর <code>contains</code> নামে একটি সহায়ক মেথড আছে যা আমাদের জন্য এই কাজটি করে দেয়! <code>search</code> ফাংশনে <code>contains</code> মেথডের একটি কল যোগ করুন, যেমনটি লিস্টিং ১২-১৮-তে দেখানো হয়েছে। মনে রাখবেন যে এটি এখনও কম্পাইল হবে না।</p>
+<Listing number="12-18" file-name="src/lib.rs" caption="লাইনে `query`-তে থাকা স্ট্রিংটি আছে কিনা তা দেখার জন্য ফাংশনালিটি যোগ করা">
+<pre><code class="language-rust ignore does_not_compile">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    for line in contents.lines() {
+        if line.contains(query) {
+            // do something with line
+        }
+    }
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn one_result() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এই মুহূর্তে, আমরা ফাংশনালিটি তৈরি করছি। কোডটি কম্পাইল করার জন্য, আমাদের ফাংশন সিগনেচারে যেমনটি নির্দেশ করেছিলাম, তেমন একটি ভ্যালু বডি থেকে রিটার্ন করতে হবে।</p>
+<h4 id="মযাচ-করা-লাইনগুলো-সংরকষণ-করা"><a class="header" href="#মযাচ-করা-লাইনগুলো-সংরকষণ-করা">ম্যাচ করা লাইনগুলো সংরক্ষণ করা</a></h4>
+<p>এই ফাংশনটি শেষ করার জন্য, আমাদের ম্যাচ করা লাইনগুলো সংরক্ষণ করার একটি উপায় দরকার যা আমরা রিটার্ন করতে চাই। এর জন্য, আমরা <code>for</code> লুপের আগে একটি মিউটেবল ভেক্টর তৈরি করতে পারি এবং ভেক্টরে একটি <code>line</code> সংরক্ষণ করতে <code>push</code> মেথড কল করতে পারি। <code>for</code> লুপের পরে, আমরা ভেক্টরটি রিটার্ন করি, যেমনটি লিস্টিং ১২-১৯-এ দেখানো হয়েছে।</p>
+<Listing number="12-19" file-name="src/lib.rs" caption="ম্যাচ করা লাইনগুলো সংরক্ষণ করা যাতে আমরা সেগুলো রিটার্ন করতে পারি">
+<pre><code class="language-rust ignore">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn one_result() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এখন <code>search</code> ফাংশনটি শুধুমাত্র সেই লাইনগুলো রিটার্ন করবে যেগুলোতে <code>query</code> রয়েছে এবং আমাদের টেস্ট পাস করা উচিত। চলুন টেস্টটি চালাই:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.22s
+     Running unittests src/lib.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
+
+running 1 test
+test tests::one_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests minigrep
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+</code></pre>
+<p>আমাদের টেস্ট পাস হয়েছে, তাই আমরা জানি এটি কাজ করছে!</p>
+<p>এই পর্যায়ে, আমরা টেস্টগুলো পাস করিয়ে রেখে একই ফাংশনালিটি বজায় রেখে সার্চ ফাংশনের ইমপ্লিমেন্টেশন রিফ্যাক্টর করার সুযোগ বিবেচনা করতে পারি। সার্চ ফাংশনের কোডটি খুব খারাপ নয়, তবে এটি iterator-এর কিছু দরকারী বৈশিষ্ট্যের সুবিধা নেয় না। আমরা <a href="ch13-02-iterators.html">অধ্যায় ১৩</a><!-- ignore -->-তে এই উদাহরণে ফিরে আসব, যেখানে আমরা iterator বিস্তারিতভাবে অন্বেষণ করব এবং দেখব কীভাবে এটিকে উন্নত করা যায়।</p>
+<p>এখন পুরো প্রোগ্রামটি কাজ করা উচিত! চলুন এটি চেষ্টা করে দেখি, প্রথমে এমন একটি শব্দ দিয়ে যা এমিলি ডিকিনসনের কবিতা থেকে ঠিক একটি লাইন রিটার্ন করবে: <em>frog</em>।</p>
+<pre><code class="language-console">$ cargo run -- frog poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.38s
+     Running `target/debug/minigrep frog poem.txt`
+How public, like a frog
+</code></pre>
+<p>দারুণ! এখন আসুন এমন একটি শব্দ চেষ্টা করি যা একাধিক লাইনের সাথে মিলবে, যেমন <em>body</em>:</p>
+<pre><code class="language-console">$ cargo run -- body poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep body poem.txt`
+I'm nobody! Who are you?
+Are you nobody, too?
+How dreary to be somebody!
+</code></pre>
+<p>এবং অবশেষে, আসুন নিশ্চিত করি যে আমরা যখন এমন একটি শব্দ সার্চ করব যা কবিতায় কোথাও নেই, যেমন <em>monomorphization</em>, তখন আমরা কোনো লাইন পাব না:</p>
+<pre><code class="language-console">$ cargo run -- monomorphization poem.txt
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
+     Running `target/debug/minigrep monomorphization poem.txt`
+</code></pre>
+<p>চমৎকার! আমরা একটি ক্লাসিক টুলের নিজস্ব মিনি সংস্করণ তৈরি করেছি এবং অ্যাপ্লিকেশন কীভাবে গঠন করতে হয় সে সম্পর্কে অনেক কিছু শিখেছি। আমরা ফাইল ইনপুট এবং আউটপুট, লাইফটাইম, টেস্টিং এবং কমান্ড লাইন পার্সিং সম্পর্কেও কিছু শিখেছি।</p>
+<p>এই প্রজেক্টটি শেষ করার জন্য, আমরা সংক্ষেপে দেখাব কীভাবে এনভায়রনমেন্ট ভেরিয়েবলের সাথে কাজ করতে হয় এবং কীভাবে স্ট্যান্ডার্ড এরর-এ প্রিন্ট করতে হয়, উভয়ই কমান্ড লাইন প্রোগ্রাম লেখার সময় দরকারী।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch12-03-improving-error-handling-and-modularity.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch12-05-working-with-environment-variables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch12-03-improving-error-handling-and-modularity.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch12-05-working-with-environment-variables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

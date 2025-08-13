@@ -1,0 +1,527 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>রেফারেন্স সাইকেল মেমোরি লিক করতে পারে - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="রেফারেনস-সাইকেল-মেমোরি-লিক-করতে-পারে-reference-cycles-can-leak-memory"><a class="header" href="#রেফারেনস-সাইকেল-মেমোরি-লিক-করতে-পারে-reference-cycles-can-leak-memory">রেফারেন্স সাইকেল মেমোরি লিক করতে পারে (Reference Cycles Can Leak Memory)</a></h2>
+<p>রাস্টের মেমোরি সেফটি গ্যারান্টি ভুলবশত এমন মেমোরি তৈরি করা কঠিন করে তোলে যা কখনও পরিষ্কার হয় না (যা <em>মেমোরি লিক</em> নামে পরিচিত), কিন্তু অসম্ভব নয়। সম্পূর্ণভাবে মেমোরি লিক প্রতিরোধ করা রাস্টের গ্যারান্টির মধ্যে পড়ে না, যার অর্থ হলো রাস্ট-এ মেমোরি লিক মেমোরি সেফ (memory safe)। আমরা দেখতে পারি যে রাস্ট <code>Rc&lt;T&gt;</code> এবং <code>RefCell&lt;T&gt;</code> ব্যবহার করে মেমোরি লিকের অনুমতি দেয়: এমন রেফারেন্স তৈরি করা সম্ভব যেখানে আইটেমগুলো একে অপরকে একটি সাইকেলে (cycle) নির্দেশ করে। এটি মেমোরি লিক তৈরি করে কারণ সাইকেলের প্রতিটি আইটেমের রেফারেন্স কাউন্ট কখনও ০-তে পৌঁছাবে না, এবং ভ্যালুগুলো কখনও ড্রপ হবে না।</p>
+<h3 id="একটি-রেফারেনস-সাইকেল-তৈরি-করা"><a class="header" href="#একটি-রেফারেনস-সাইকেল-তৈরি-করা">একটি রেফারেন্স সাইকেল তৈরি করা</a></h3>
+<p>চলুন দেখি কীভাবে একটি রেফারেন্স সাইকেল ঘটতে পারে এবং কীভাবে এটি প্রতিরোধ করা যায়। এর জন্য, আমরা Listing 15-25-এ <code>List</code> enum-এর সংজ্ঞা এবং একটি <code>tail</code> মেথড দিয়ে শুরু করব।</p>
+<Listing number="15-25" file-name="src/main.rs" caption="একটি cons list-এর সংজ্ঞা যা একটি `RefCell<T>` ধারণ করে যাতে আমরা একটি `Cons` ভ্যারিয়েন্ট কী নির্দেশ করছে তা পরিবর্তন করতে পারি">
+<pre><pre class="playground"><code class="language-rust edition2024">use crate::List::{Cons, Nil};
+use std::cell::RefCell;
+use std::rc::Rc;
+
+#[derive(Debug)]
+enum List {
+    Cons(i32, RefCell&lt;Rc&lt;List&gt;&gt;),
+    Nil,
+}
+
+impl List {
+    fn tail(&amp;self) -&gt; Option&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; {
+        match self {
+            Cons(_, item) =&gt; Some(item),
+            Nil =&gt; None,
+        }
+    }
+}
+
+fn main() {}</code></pre></pre>
+</Listing>
+<p>আমরা Listing 15-5 থেকে <code>List</code> সংজ্ঞার আরেকটি ভিন্ন সংস্করণ ব্যবহার করছি। <code>Cons</code> ভ্যারিয়েন্টের দ্বিতীয় উপাদানটি এখন <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, যার মানে হলো, Listing 15-24-এর মতো <code>i32</code> ভ্যালু পরিবর্তন করার ক্ষমতার পরিবর্তে, আমরা একটি <code>Cons</code> ভ্যারিয়েন্ট যে <code>List</code> ভ্যালুকে নির্দেশ করছে তা পরিবর্তন করতে চাই। আমরা একটি <code>tail</code> মেথডও যোগ করছি যাতে আমাদের কাছে <code>Cons</code> ভ্যারিয়েন্ট থাকলে দ্বিতীয় আইটেমটি অ্যাক্সেস করা সুবিধাজনক হয়।</p>
+<p>Listing 15-26-এ, আমরা একটি <code>main</code> ফাংশন যোগ করছি যা Listing 15-25-এর সংজ্ঞাগুলো ব্যবহার করে। এই কোডটি <code>a</code>-তে একটি লিস্ট এবং <code>b</code>-তে একটি লিস্ট তৈরি করে যা <code>a</code>-এর লিস্টকে নির্দেশ করে। তারপর এটি <code>a</code>-এর লিস্টকে <code>b</code>-কে নির্দেশ করার জন্য পরিবর্তন করে, যার ফলে একটি রেফারেন্স সাইকেল তৈরি হয়। এই প্রক্রিয়ার বিভিন্ন পর্যায়ে রেফারেন্স কাউন্ট কত তা দেখানোর জন্য পথে <code>println!</code> স্টেটমেন্ট রয়েছে।</p>
+<Listing number="15-26" file-name="src/main.rs" caption="দুটি `List` ভ্যালুর একটি রেফারেন্স সাইকেল তৈরি করা যা একে অপরকে নির্দেশ করে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use crate::List::{Cons, Nil};
+</span><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::Rc;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum List {
+</span><span class="boring">    Cons(i32, RefCell&lt;Rc&lt;List&gt;&gt;),
+</span><span class="boring">    Nil,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl List {
+</span><span class="boring">    fn tail(&amp;self) -&gt; Option&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; {
+</span><span class="boring">        match self {
+</span><span class="boring">            Cons(_, item) =&gt; Some(item),
+</span><span class="boring">            Nil =&gt; None,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+
+    println!("a initial rc count = {}", Rc::strong_count(&amp;a));
+    println!("a next item = {:?}", a.tail());
+
+    let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&amp;a))));
+
+    println!("a rc count after b creation = {}", Rc::strong_count(&amp;a));
+    println!("b initial rc count = {}", Rc::strong_count(&amp;b));
+    println!("b next item = {:?}", b.tail());
+
+    if let Some(link) = a.tail() {
+        *link.borrow_mut() = Rc::clone(&amp;b);
+    }
+
+    println!("b rc count after changing a = {}", Rc::strong_count(&amp;b));
+    println!("a rc count after changing a = {}", Rc::strong_count(&amp;a));
+
+    // Uncomment the next line to see that we have a cycle;
+    // it will overflow the stack.
+    // println!("a next item = {:?}", a.tail());
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>a</code> ভ্যারিয়েবলে একটি <code>List</code> ভ্যালু ধারণকারী একটি <code>Rc&lt;List&gt;</code> ইনস্ট্যান্স তৈরি করি যার প্রাথমিক লিস্ট হলো <code>5, Nil</code>। তারপর আমরা <code>b</code> ভ্যারিয়েবলে আরেকটি <code>List</code> ভ্যালু ধারণকারী একটি <code>Rc&lt;List&gt;</code> ইনস্ট্যান্স তৈরি করি যা <code>10</code> ভ্যালুটি ধারণ করে এবং <code>a</code>-এর লিস্টকে নির্দেশ করে।</p>
+<p>আমরা <code>a</code>-কে পরিবর্তন করি যাতে এটি <code>Nil</code>-এর পরিবর্তে <code>b</code>-কে নির্দেশ করে, যার ফলে একটি সাইকেল তৈরি হয়। আমরা এটি <code>tail</code> মেথড ব্যবহার করে <code>a</code>-এর <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>-এর একটি রেফারেন্স পেয়ে করি, যা আমরা <code>link</code> ভ্যারিয়েবলে রাখি। তারপর আমরা <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>-এর উপর <code>borrow_mut</code> মেথড ব্যবহার করে ভেতরের ভ্যালুটি <code>Nil</code> ভ্যালু ধারণকারী একটি <code>Rc&lt;List&gt;</code> থেকে <code>b</code>-এর <code>Rc&lt;List&gt;</code>-এ পরিবর্তন করি।</p>
+<p>যখন আমরা এই কোডটি রান করি, শেষ <code>println!</code>-টি আপাতত কমেন্ট আউট রেখে, আমরা এই আউটপুটটি পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running `target/debug/cons-list`
+a initial rc count = 1
+a next item = Some(RefCell { value: Nil })
+a rc count after b creation = 2
+b initial rc count = 1
+b next item = Some(RefCell { value: Cons(5, RefCell { value: Nil }) })
+b rc count after changing a = 2
+a rc count after changing a = 2
+</code></pre>
+<p><code>a</code> এবং <code>b</code> উভয়ের <code>Rc&lt;List&gt;</code> ইনস্ট্যান্সের রেফারেন্স কাউন্ট ২ হয়ে যায় যখন আমরা <code>a</code>-এর লিস্টকে <code>b</code>-কে নির্দেশ করার জন্য পরিবর্তন করি। <code>main</code>-এর শেষে, রাস্ট <code>b</code> ভ্যারিয়েবলটি ড্রপ করে, যা <code>b</code> <code>Rc&lt;List&gt;</code> ইনস্ট্যান্সের রেফারেন্স কাউন্ট ২ থেকে ১-এ কমিয়ে দেয়। এই মুহূর্তে <code>Rc&lt;List&gt;</code>-এর হিপে থাকা মেমোরি ড্রপ হবে না কারণ এর রেফারেন্স কাউন্ট ১, ০ নয়। তারপর রাস্ট <code>a</code>-কে ড্রপ করে, যা <code>a</code> <code>Rc&lt;List&gt;</code> ইনস্ট্যান্সের রেফারেন্স কাউন্টও ২ থেকে ১-এ কমিয়ে দেয়। এই ইনস্ট্যান্সের মেমোরিও ড্রপ করা যাবে না, কারণ অন্য <code>Rc&lt;List&gt;</code> ইনস্ট্যান্সটি এখনও এটিকে নির্দেশ করছে। লিস্টের জন্য বরাদ্দ করা মেমোরি চিরকালের জন্য সংগ্রহ করা হবে না। এই রেফারেন্স সাইকেলটি কল্পনা করার জন্য, আমরা Figure 15-4-এ একটি ডায়াগ্রাম তৈরি করেছি।</p>
+<img alt="একটি আয়তক্ষেত্র যার লেবেল 'a' যা পূর্ণসংখ্যা 5 ধারণকারী একটি আয়তক্ষেত্রের দিকে নির্দেশ করছে। একটি আয়তক্ষেত্র যার লেবেল 'b' যা পূর্ণসংখ্যা 10 ধারণকারী একটি আয়তক্ষেত্রের দিকে নির্দেশ করছে। 5 ধারণকারী আয়তক্ষেত্রটি 10 ধারণকারী আয়তক্ষেত্রকে নির্দেশ করছে, এবং 10 ধারণকারী আয়তক্ষেত্রটি 5 ধারণকারী আয়তক্ষেত্রকে আবার নির্দেশ করছে, যার ফলে একটি সাইকেল তৈরি হচ্ছে।" src="img/trpl15-04.svg" class="center" />
+<p><span class="caption">Figure 15-4: লিস্ট <code>a</code> এবং <code>b</code>-এর একটি রেফারেন্স সাইকেল যা একে অপরকে নির্দেশ করছে</span></p>
+<p>আপনি যদি শেষ <code>println!</code>-টি আনকমেন্ট করে প্রোগ্রামটি রান করেন, রাস্ট এই সাইকেলটি প্রিন্ট করার চেষ্টা করবে যেখানে <code>a</code> <code>b</code>-কে নির্দেশ করে, <code>b</code> <code>a</code>-কে নির্দেশ করে এবং এভাবে চলতে থাকবে যতক্ষণ না এটি স্ট্যাক ওভারফ্লো (stack overflow) করে।</p>
+<p>বাস্তব জগতের একটি প্রোগ্রামের তুলনায়, এই উদাহরণে একটি রেফারেন্স সাইকেল তৈরি করার পরিণতি খুব ভয়াবহ নয়: আমরা রেফারেন্স সাইকেল তৈরি করার পরেই প্রোগ্রামটি শেষ হয়ে যায়। তবে, যদি একটি আরও জটিল প্রোগ্রাম একটি সাইকেলে প্রচুর মেমোরি বরাদ্দ করে এবং এটি দীর্ঘ সময়ের জন্য ধরে রাখে, প্রোগ্রামটি প্রয়োজনের চেয়ে বেশি মেমোরি ব্যবহার করবে এবং সিস্টেমকে অভিভূত করতে পারে, যার ফলে উপলব্ধ মেমোরি শেষ হয়ে যেতে পারে।</p>
+<p>রেফারেন্স সাইকেল তৈরি করা সহজ নয়, কিন্তু এটি অসম্ভবও নয়। যদি আপনার কাছে <code>Rc&lt;T&gt;</code> ভ্যালু ধারণকারী <code>RefCell&lt;T&gt;</code> ভ্যালু বা ইন্টেরিয়র মিউটেবিলিটি এবং রেফারেন্স কাউন্টিং সহ টাইপের অনুরূপ নেস্টেড সংমিশ্রণ থাকে, আপনাকে নিশ্চিত করতে হবে যে আপনি সাইকেল তৈরি করছেন না; আপনি রাস্টের উপর নির্ভর করতে পারবেন না যে এটি সেগুলো ধরবে। একটি রেফারেন্স সাইকেল তৈরি করা আপনার প্রোগ্রামে একটি লজিক বাগ হবে যা আপনার উচিত অটোমেটেড টেস্ট, কোড রিভিউ এবং অন্যান্য সফটওয়্যার ডেভেলপমেন্ট অনুশীলন ব্যবহার করে কমিয়ে আনা।</p>
+<p>রেফারেন্স সাইকেল এড়ানোর আরেকটি সমাধান হলো আপনার ডেটা স্ট্রাকচারগুলো এমনভাবে পুনর্গঠিত করা যাতে কিছু রেফারেন্স মালিকানা প্রকাশ করে এবং কিছু রেফারেন্স করে না। ফলস্বরূপ, আপনি কিছু মালিকানা সম্পর্ক এবং কিছু অ-মালিকানা সম্পর্ক দিয়ে গঠিত সাইকেল রাখতে পারেন, এবং শুধুমাত্র মালিকানা সম্পর্কগুলোই একটি ভ্যালু ড্রপ করা যাবে কিনা তা প্রভাবিত করে। Listing 15-25-এ, আমরা সবসময় চাই <code>Cons</code> ভ্যারিয়েন্টগুলো তাদের লিস্টের মালিক হোক, তাই ডেটা স্ট্রাকচার পুনর্গঠন করা সম্ভব নয়। চলুন প্যারেন্ট নোড এবং চাইল্ড নোড দিয়ে গঠিত গ্রাফ ব্যবহার করে একটি উদাহরণ দেখি কখন অ-মালিকানা সম্পর্ক রেফারেন্স সাইকেল প্রতিরোধের একটি উপযুক্ত উপায়।</p>
+<h3 id="weakt-বযবহার-করে-রেফারেনস-সাইকেল-পরতিরোধ-করা"><a class="header" href="#weakt-বযবহার-করে-রেফারেনস-সাইকেল-পরতিরোধ-করা"><code>Weak&lt;T&gt;</code> ব্যবহার করে রেফারেন্স সাইকেল প্রতিরোধ করা</a></h3>
+<p>এখন পর্যন্ত, আমরা দেখিয়েছি যে <code>Rc::clone</code> কল করা একটি <code>Rc&lt;T&gt;</code> ইনস্ট্যান্সের <code>strong_count</code> বাড়ায়, এবং একটি <code>Rc&lt;T&gt;</code> ইনস্ট্যান্স শুধুমাত্র তখনই পরিষ্কার করা হয় যদি এর <code>strong_count</code> ০ হয়। আপনি একটি <code>Rc&lt;T&gt;</code> ইনস্ট্যান্সের ভেতরের ভ্যালুর একটি দুর্বল রেফারেন্সও (weak reference) তৈরি করতে পারেন <code>Rc::downgrade</code> কল করে এবং <code>Rc&lt;T&gt;</code>-এর একটি রেফারেন্স পাস করে। <em>Strong references</em> হলো যেভাবে আপনি একটি <code>Rc&lt;T&gt;</code> ইনস্ট্যান্সের মালিকানা শেয়ার করতে পারেন। <em>Weak references</em> কোনো মালিকানা সম্পর্ক প্রকাশ করে না, এবং তাদের কাউন্ট একটি <code>Rc&lt;T&gt;</code> ইনস্ট্যান্স কখন পরিষ্কার করা হবে তা প্রভাবিত করে না। তারা রেফারেন্স সাইকেল তৈরি করবে না কারণ কিছু দুর্বল রেফারেন্স জড়িত কোনো সাইকেল ভেঙে যাবে যখন জড়িত ভ্যালুগুলোর strong reference count ০ হবে।</p>
+<p>যখন আপনি <code>Rc::downgrade</code> কল করেন, আপনি <code>Weak&lt;T&gt;</code> টাইপের একটি স্মার্ট পয়েন্টার পান। <code>Rc&lt;T&gt;</code> ইনস্ট্যান্সের <code>strong_count</code> ১ বাড়ানোর পরিবর্তে, <code>Rc::downgrade</code> কল করা <code>weak_count</code> ১ বাড়ায়। <code>Rc&lt;T&gt;</code> টাইপ <code>weak_count</code> ব্যবহার করে ট্র্যাক রাখে কতগুলো <code>Weak&lt;T&gt;</code> রেফারেন্স বিদ্যমান, <code>strong_count</code>-এর মতো। পার্থক্য হলো <code>Rc&lt;T&gt;</code> ইনস্ট্যান্সটি পরিষ্কার করার জন্য <code>weak_count</code>-এর ০ হওয়ার প্রয়োজন নেই।</p>
+<p>যেহেতু <code>Weak&lt;T&gt;</code> যে ভ্যালুটিকে রেফারেন্স করে তা ড্রপ হয়ে যেতে পারে, তাই <code>Weak&lt;T&gt;</code> যে ভ্যালুটিকে নির্দেশ করছে তার সাথে কিছু করার জন্য আপনাকে নিশ্চিত করতে হবে যে ভ্যালুটি এখনও বিদ্যমান আছে। এটি <code>Weak&lt;T&gt;</code> ইনস্ট্যান্সের উপর <code>upgrade</code> মেথড কল করে করুন, যা একটি <code>Option&lt;Rc&lt;T&gt;&gt;</code> রিটার্ন করবে। আপনি <code>Some</code> ফলাফল পাবেন যদি <code>Rc&lt;T&gt;</code> ভ্যালুটি এখনও ড্রপ না হয়ে থাকে এবং <code>None</code> ফলাফল পাবেন যদি <code>Rc&lt;T&gt;</code> ভ্যালুটি ড্রপ হয়ে গিয়ে থাকে। যেহেতু <code>upgrade</code> একটি <code>Option&lt;Rc&lt;T&gt;&gt;</code> রিটার্ন করে, রাস্ট নিশ্চিত করবে যে <code>Some</code> কেস এবং <code>None</code> কেস উভয়ই হ্যান্ডেল করা হয়েছে, এবং কোনো অবৈধ পয়েন্টার থাকবে না।</p>
+<p>একটি উদাহরণ হিসাবে, এমন একটি লিস্ট ব্যবহার করার পরিবর্তে যার আইটেমগুলো কেবল পরবর্তী আইটেম সম্পর্কে জানে, আমরা একটি ট্রি (tree) তৈরি করব যার আইটেমগুলো তাদের চাইল্ড আইটেম <em>এবং</em> তাদের প্যারেন্ট আইটেম সম্পর্কে জানে।</p>
+<h4 id="একটি-টরি-ডেটা-সটরাকচার-তৈরি-করা-চাইলড-নোড-সহ-একটি-node"><a class="header" href="#একটি-টরি-ডেটা-সটরাকচার-তৈরি-করা-চাইলড-নোড-সহ-একটি-node">একটি ট্রি ডেটা স্ট্রাকচার তৈরি করা: চাইল্ড নোড সহ একটি <code>Node</code></a></h4>
+<p>শুরুতে, আমরা এমন একটি ট্রি তৈরি করব যার নোডগুলো তাদের চাইল্ড নোড সম্পর্কে জানে। আমরা <code>Node</code> নামে একটি স্ট্রাকট তৈরি করব যা তার নিজস্ব <code>i32</code> ভ্যালু এবং তার চাইল্ড <code>Node</code> ভ্যালুগুলোর রেফারেন্স ধারণ করে:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">use std::cell::RefCell;
+use std::rc::Rc;
+
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let leaf = Rc::new(Node {
+</span><span class="boring">        value: 3,
+</span><span class="boring">        children: RefCell::new(vec![]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    let branch = Rc::new(Node {
+</span><span class="boring">        value: 5,
+</span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+</span><span class="boring">    });
+</span><span class="boring">}</span></code></pre></pre>
+<p>আমরা চাই একটি <code>Node</code> তার চাইল্ডদের মালিক হোক, এবং আমরা সেই মালিকানা ভ্যারিয়েবলগুলোর সাথে শেয়ার করতে চাই যাতে আমরা ট্রির প্রতিটি <code>Node</code> সরাসরি অ্যাক্সেস করতে পারি। এটি করার জন্য, আমরা <code>Vec&lt;T&gt;</code> আইটেমগুলোকে <code>Rc&lt;Node&gt;</code> টাইপের ভ্যালু হিসাবে সংজ্ঞায়িত করি। আমরা আরও পরিবর্তন করতে চাই কোন নোডগুলো অন্য নোডের চাইল্ড, তাই আমাদের <code>children</code>-এ <code>Vec&lt;Rc&lt;Node&gt;&gt;</code>-এর চারপাশে একটি <code>RefCell&lt;T&gt;</code> আছে।</p>
+<p>এরপরে, আমরা আমাদের স্ট্রাকট সংজ্ঞা ব্যবহার করব এবং <code>3</code> মান সহ এবং কোনো চাইল্ড ছাড়া <code>leaf</code> নামে একটি <code>Node</code> ইনস্ট্যান্স এবং <code>5</code> মান সহ এবং <code>leaf</code>-কে তার একটি চাইল্ড হিসাবে <code>branch</code> নামে আরেকটি ইনস্ট্যান্স তৈরি করব, যেমনটি Listing 15-27-এ দেখানো হয়েছে।</p>
+<Listing number="15-27" file-name="src/main.rs" caption="কোনো চাইল্ড ছাড়া একটি `leaf` নোড এবং `leaf`-কে তার একটি চাইল্ড হিসাবে একটি `branch` নোড তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::Rc;
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        children: RefCell::new(vec![]),
+    });
+
+    let branch = Rc::new(Node {
+        value: 5,
+        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+    });
+}</code></pre></pre>
+</Listing>
+<p>আমরা <code>leaf</code>-এর <code>Rc&lt;Node&gt;</code>-কে ক্লোন করি এবং তা <code>branch</code>-এ সংরক্ষণ করি, যার মানে হলো <code>leaf</code>-এর <code>Node</code>-এর এখন দুটি মালিক: <code>leaf</code> এবং <code>branch</code>। আমরা <code>branch.children</code>-এর মাধ্যমে <code>branch</code> থেকে <code>leaf</code>-এ যেতে পারি, কিন্তু <code>leaf</code> থেকে <code>branch</code>-এ যাওয়ার কোনো উপায় নেই। কারণ হলো <code>leaf</code>-এর <code>branch</code>-এর কোনো রেফারেন্স নেই এবং তারা যে সম্পর্কিত তা জানে না। আমরা চাই <code>leaf</code> জানুক যে <code>branch</code> তার প্যারেন্ট। আমরাต่อไป এটি করব।</p>
+<h4 id="একটি-চাইলড-থেকে-তার-পযারেনটের-একটি-রেফারেনস-যোগ-করা"><a class="header" href="#একটি-চাইলড-থেকে-তার-পযারেনটের-একটি-রেফারেনস-যোগ-করা">একটি চাইল্ড থেকে তার প্যারেন্টের একটি রেফারেন্স যোগ করা</a></h4>
+<p>চাইল্ড নোডকে তার প্যারেন্ট সম্পর্কে সচেতন করতে, আমাদের <code>Node</code> স্ট্রাকট সংজ্ঞায় একটি <code>parent</code> ফিল্ড যোগ করতে হবে। সমস্যা হলো <code>parent</code>-এর টাইপ কী হবে তা নির্ধারণ করা। আমরা জানি এটি একটি <code>Rc&lt;T&gt;</code> ধারণ করতে পারে না, কারণ এটি <code>leaf.parent</code>-কে <code>branch</code>-কে নির্দেশ করে এবং <code>branch.children</code>-কে <code>leaf</code>-কে নির্দেশ করে একটি রেফারেন্স সাইকেল তৈরি করবে, যা তাদের <code>strong_count</code> মানগুলোকে কখনও ০ হতে দেবে না।</p>
+<p>সম্পর্কগুলো অন্যভাবে চিন্তা করলে, একটি প্যারেন্ট নোডের উচিত তার চাইল্ডদের মালিক হওয়া: যদি একটি প্যারেন্ট নোড ড্রপ করা হয়, তার চাইল্ড নোডগুলোও ড্রপ করা উচিত। তবে, একটি চাইল্ডের উচিত নয় তার প্যারেন্টের মালিক হওয়া: যদি আমরা একটি চাইল্ড নোড ড্রপ করি, প্যারেন্টটি তখনও বিদ্যমান থাকা উচিত। এটি weak references-এর জন্য একটি ক্ষেত্র!</p>
+<p>সুতরাং <code>Rc&lt;T&gt;</code>-এর পরিবর্তে, আমরা <code>parent</code>-এর টাইপ <code>Weak&lt;T&gt;</code> ব্যবহার করব, নির্দিষ্টভাবে একটি <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code>। এখন আমাদের <code>Node</code> স্ট্রাকট সংজ্ঞাটি এমন দেখাচ্ছে:</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">use std::cell::RefCell;
+use std::rc::{Rc, Weak};
+
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let leaf = Rc::new(Node {
+</span><span class="boring">        value: 3,
+</span><span class="boring">        parent: RefCell::new(Weak::new()),
+</span><span class="boring">        children: RefCell::new(vec![]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+</span><span class="boring">
+</span><span class="boring">    let branch = Rc::new(Node {
+</span><span class="boring">        value: 5,
+</span><span class="boring">        parent: RefCell::new(Weak::new()),
+</span><span class="boring">        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+</span><span class="boring">
+</span><span class="boring">    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+</span><span class="boring">}</span></code></pre></pre>
+<p>একটি নোড তার প্যারেন্ট নোডকে নির্দেশ করতে সক্ষম হবে কিন্তু তার প্যারেন্টের মালিক হবে না। Listing 15-28-এ, আমরা <code>main</code>-কে এই নতুন সংজ্ঞা ব্যবহার করার জন্য আপডেট করি যাতে <code>leaf</code> নোডের তার প্যারেন্ট, <code>branch</code>-কে নির্দেশ করার একটি উপায় থাকে।</p>
+<Listing number="15-28" file-name="src/main.rs" caption="একটি `leaf` নোড যার প্যারেন্ট নোড, `branch`-এর একটি weak reference আছে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::{Rc, Weak};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![]),
+    });
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+
+    let branch = Rc::new(Node {
+        value: 5,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+    });
+
+    *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+}</code></pre></pre>
+</Listing>
+<p><code>leaf</code> নোড তৈরি করা Listing 15-27-এর মতোই দেখাচ্ছে, <code>parent</code> ফিল্ডটি ছাড়া: <code>leaf</code> শুরুতে কোনো প্যারেন্ট ছাড়া থাকে, তাই আমরা একটি নতুন, খালি <code>Weak&lt;Node&gt;</code> রেফারেন্স ইনস্ট্যান্স তৈরি করি।</p>
+<p>এই মুহূর্তে, যখন আমরা <code>upgrade</code> মেথড ব্যবহার করে <code>leaf</code>-এর প্যারেন্টের একটি রেফারেন্স পাওয়ার চেষ্টা করি, আমরা একটি <code>None</code> ভ্যালু পাই। আমরা এটি প্রথম <code>println!</code> স্টেটমেন্টের আউটপুটে দেখতে পাই:</p>
+<pre><code class="language-text">leaf parent = None
+</code></pre>
+<p>যখন আমরা <code>branch</code> নোড তৈরি করি, তখন এটির <code>parent</code> ফিল্ডে একটি নতুন <code>Weak&lt;Node&gt;</code> রেফারেন্সও থাকবে কারণ <code>branch</code>-এর কোনো প্যারেন্ট নোড নেই। আমাদের এখনও <code>leaf</code> <code>branch</code>-এর একটি চাইল্ড হিসাবে আছে। একবার আমাদের <code>branch</code>-এ <code>Node</code> ইনস্ট্যান্সটি থাকলে, আমরা <code>leaf</code>-কে পরিবর্তন করে তার প্যারেন্টের একটি <code>Weak&lt;Node&gt;</code> রেফারেন্স দিতে পারি। আমরা <code>leaf</code>-এর <code>parent</code> ফিল্ডের <code>RefCell&lt;Weak&lt;Node&gt;&gt;</code>-এর উপর <code>borrow_mut</code> মেথড ব্যবহার করি, এবং তারপর আমরা <code>branch</code>-এর <code>Rc&lt;Node&gt;</code> থেকে <code>branch</code>-এর একটি <code>Weak&lt;Node&gt;</code> রেফারেন্স তৈরি করতে <code>Rc::downgrade</code> ফাংশন ব্যবহার করি।</p>
+<p>যখন আমরা <code>leaf</code>-এর প্যারেন্ট আবার প্রিন্ট করি, এবার আমরা <code>branch</code> ধারণকারী একটি <code>Some</code> ভ্যারিয়েন্ট পাব: এখন <code>leaf</code> তার প্যারেন্ট অ্যাক্সেস করতে পারে! যখন আমরা <code>leaf</code> প্রিন্ট করি, আমরা সেই সাইকেলটিও এড়িয়ে যাই যা অবশেষে Listing 15-26-এর মতো একটি স্ট্যাক ওভারফ্লোতে শেষ হয়েছিল; <code>Weak&lt;Node&gt;</code> রেফারেন্সগুলো <code>(Weak)</code> হিসাবে প্রিন্ট করা হয়:</p>
+<pre><code class="language-text">leaf parent = Some(Node { value: 5, parent: RefCell { value: (Weak) },
+children: RefCell { value: [Node { value: 3, parent: RefCell { value: (Weak) },
+children: RefCell { value: [] } }] } })
+</code></pre>
+<p>অসীম আউটপুটের অভাব নির্দেশ করে যে এই কোডটি একটি রেফারেন্স সাইকেল তৈরি করেনি। আমরা <code>Rc::strong_count</code> এবং <code>Rc::weak_count</code> কল করে পাওয়া মানগুলো দেখেও এটি বলতে পারি।</p>
+<h4 id="strong_count-এবং-weak_count-এর-পরিবরতনগুলো-কলপনা-করা"><a class="header" href="#strong_count-এবং-weak_count-এর-পরিবরতনগুলো-কলপনা-করা"><code>strong_count</code> এবং <code>weak_count</code>-এর পরিবর্তনগুলো কল্পনা করা</a></h4>
+<p>চলুন দেখি <code>Rc&lt;Node&gt;</code> ইনস্ট্যান্সগুলোর <code>strong_count</code> এবং <code>weak_count</code> মানগুলো কীভাবে পরিবর্তিত হয় একটি নতুন অভ্যন্তরীণ স্কোপ তৈরি করে এবং <code>branch</code>-এর তৈরিকে সেই স্কোপে সরিয়ে নিয়ে। এটি করার মাধ্যমে, আমরা দেখতে পারি <code>branch</code> তৈরি হলে এবং তারপর স্কোপের বাইরে চলে গেলে কী হয়। পরিবর্তনগুলো Listing 15-29-এ দেখানো হয়েছে।</p>
+<Listing number="15-29" file-name="src/main.rs" caption="একটি অভ্যন্তরীণ স্কোপে `branch` তৈরি করা এবং strong এবং weak রেফারেন্স কাউন্ট পরীক্ষা করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::cell::RefCell;
+</span><span class="boring">use std::rc::{Rc, Weak};
+</span><span class="boring">
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">struct Node {
+</span><span class="boring">    value: i32,
+</span><span class="boring">    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,
+</span><span class="boring">    children: RefCell&lt;Vec&lt;Rc&lt;Node&gt;&gt;&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let leaf = Rc::new(Node {
+        value: 3,
+        parent: RefCell::new(Weak::new()),
+        children: RefCell::new(vec![]),
+    });
+
+    println!(
+        "leaf strong = {}, weak = {}",
+        Rc::strong_count(&amp;leaf),
+        Rc::weak_count(&amp;leaf),
+    );
+
+    {
+        let branch = Rc::new(Node {
+            value: 5,
+            parent: RefCell::new(Weak::new()),
+            children: RefCell::new(vec![Rc::clone(&amp;leaf)]),
+        });
+
+        *leaf.parent.borrow_mut() = Rc::downgrade(&amp;branch);
+
+        println!(
+            "branch strong = {}, weak = {}",
+            Rc::strong_count(&amp;branch),
+            Rc::weak_count(&amp;branch),
+        );
+
+        println!(
+            "leaf strong = {}, weak = {}",
+            Rc::strong_count(&amp;leaf),
+            Rc::weak_count(&amp;leaf),
+        );
+    }
+
+    println!("leaf parent = {:?}", leaf.parent.borrow().upgrade());
+    println!(
+        "leaf strong = {}, weak = {}",
+        Rc::strong_count(&amp;leaf),
+        Rc::weak_count(&amp;leaf),
+    );
+}</code></pre></pre>
+</Listing>
+<p><code>leaf</code> তৈরি করার পরে, তার <code>Rc&lt;Node&gt;</code>-এর একটি strong count of 1 এবং একটি weak count of 0 থাকে। অভ্যন্তরীণ স্কোপে, আমরা <code>branch</code> তৈরি করি এবং এটিকে <code>leaf</code>-এর সাথে যুক্ত করি, সেই সময়ে যখন আমরা কাউন্টগুলো প্রিন্ট করি, <code>branch</code>-এর <code>Rc&lt;Node&gt;</code>-এর একটি strong count of 1 এবং একটি weak count of 1 থাকবে (<code>leaf.parent</code> <code>branch</code>-কে একটি <code>Weak&lt;Node&gt;</code> দিয়ে নির্দেশ করার জন্য)। যখন আমরা <code>leaf</code>-এর কাউন্টগুলো প্রিন্ট করি, আমরা দেখব এটির একটি strong count of 2 থাকবে কারণ <code>branch</code>-এর এখন <code>branch.children</code>-এ সংরক্ষিত <code>leaf</code>-এর <code>Rc&lt;Node&gt;</code>-এর একটি ক্লোন আছে, কিন্তু weak count of 0 থাকবে।</p>
+<p>যখন অভ্যন্তরীণ স্কোপ শেষ হয়, <code>branch</code> স্কোপের বাইরে চলে যায় এবং <code>Rc&lt;Node&gt;</code>-এর strong count ০-তে কমে যায়, তাই তার <code>Node</code> ড্রপ হয়ে যায়। <code>leaf.parent</code> থেকে weak count of 1 <code>Node</code> ড্রপ হবে কিনা তার উপর কোনো প্রভাব ফেলে না, তাই আমরা কোনো মেমোরি লিক পাই না!</p>
+<p>যদি আমরা স্কোপের শেষের পরে <code>leaf</code>-এর প্যারেন্ট অ্যাক্সেস করার চেষ্টা করি, আমরা আবার <code>None</code> পাব। প্রোগ্রামের শেষে, <code>leaf</code>-এর <code>Rc&lt;Node&gt;</code>-এর একটি strong count of 1 এবং একটি weak count of 0 থাকে কারণ <code>leaf</code> ভ্যারিয়েবলটি এখন <code>Rc&lt;Node&gt;</code>-এর একমাত্র রেফারেন্স।</p>
+<p>কাউন্ট এবং ভ্যালু ড্রপিং পরিচালনা করার সমস্ত লজিক <code>Rc&lt;T&gt;</code> এবং <code>Weak&lt;T&gt;</code> এবং তাদের <code>Drop</code> ট্রেইটের ইমপ্লিমেন্টেশনে নির্মিত। <code>Node</code>-এর সংজ্ঞায় একটি চাইল্ড থেকে তার প্যারেন্টের সম্পর্ক একটি <code>Weak&lt;T&gt;</code> রেফারেন্স হওয়া উচিত তা নির্দিষ্ট করার মাধ্যমে, আপনি রেফারেন্স সাইকেল এবং মেমোরি লিক তৈরি না করে প্যারেন্ট নোডগুলোকে চাইল্ড নোডগুলোকে নির্দেশ করতে এবং এর বিপরীতটি করতে সক্ষম হন।</p>
+<h2 id="সারসংকষেপ-summary"><a class="header" href="#সারসংকষেপ-summary">সারসংক্ষেপ (Summary)</a></h2>
+<p>এই অধ্যায়ে আলোচনা করা হয়েছে কীভাবে স্মার্ট পয়েন্টার ব্যবহার করে রাস্টের ডিফল্ট রেফারেন্সের থেকে ভিন্ন গ্যারান্টি এবং ট্রেড-অফ তৈরি করা যায়। <code>Box&lt;T&gt;</code> টাইপের একটি নির্দিষ্ট সাইজ আছে এবং এটি হিপ-এ বরাদ্দ করা ডেটাকে নির্দেশ করে। <code>Rc&lt;T&gt;</code> টাইপ হিপের ডেটার রেফারেন্স সংখ্যা ট্র্যাক করে যাতে ডেটার একাধিক মালিক থাকতে পারে। <code>RefCell&lt;T&gt;</code> টাইপ তার ইন্টেরিয়র মিউটেবিলিটি সহ আমাদের এমন একটি টাইপ দেয় যা আমরা ব্যবহার করতে পারি যখন আমাদের একটি immutable টাইপ প্রয়োজন কিন্তু সেই টাইপের একটি ভেতরের ভ্যালু পরিবর্তন করতে হবে; এটি কম্পাইল টাইমের পরিবর্তে রানটাইমে borrowing-এর নিয়ম প্রয়োগ করে।</p>
+<p>এছাড়াও <code>Deref</code> এবং <code>Drop</code> ট্রেইট নিয়ে আলোচনা করা হয়েছে, যা স্মার্ট পয়েন্টারগুলোর অনেক কার্যকারিতা সক্ষম করে। আমরা রেফারেন্স সাইকেল যা মেমোরি লিক ঘটাতে পারে এবং <code>Weak&lt;T&gt;</code> ব্যবহার করে কীভাবে তা প্রতিরোধ করা যায় তা অন্বেষণ করেছি।</p>
+<p>যদি এই অধ্যায়টি আপনার আগ্রহ জাগিয়ে তোলে এবং আপনি আপনার নিজস্ব স্মার্ট পয়েন্টার ইমপ্লিমেন্ট করতে চান, আরও দরকারী তথ্যের জন্য ["The Rustonomicon"][nomicon] দেখুন।</p>
+<p>এরপরে, আমরা রাস্ট-এ কনকারেন্সি (concurrency) নিয়ে কথা বলব। আপনি এমনকি কয়েকটি নতুন স্মার্ট পয়েন্টার সম্পর্কেও শিখবেন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch15-05-interior-mutability.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch16-00-concurrency.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch15-05-interior-mutability.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch16-00-concurrency.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

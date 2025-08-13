@@ -1,0 +1,677 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>প্যাটার্ন সিনট্যাক্স - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পযাটারন-সিনটযাকস-pattern-syntax"><a class="header" href="#পযাটারন-সিনটযাকস-pattern-syntax">প্যাটার্ন সিনট্যাক্স (Pattern Syntax)</a></h2>
+<p>এই সেকশনে, আমরা প্যাটার্নে বৈধ সমস্ত সিনট্যাক্স একত্রিত করব এবং আলোচনা করব কেন এবং কখন আপনি প্রতিটি ব্যবহার করতে চাইতে পারেন।</p>
+<h3 id="লিটারেলের-সাথে-মযাচিং-matching-literals"><a class="header" href="#লিটারেলের-সাথে-মযাচিং-matching-literals">লিটারেলের সাথে ম্যাচিং (Matching Literals)</a></h3>
+<p>যেমনটি আপনি ৬ষ্ঠ অধ্যায়ে দেখেছেন, আপনি সরাসরি লিটারেলের (literals) সাথে প্যাটার্ন ম্যাচ করতে পারেন। নিচের কোডটি কিছু উদাহরণ দেয়:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 1;
+
+    match x {
+        1 =&gt; println!("one"),
+        2 =&gt; println!("two"),
+        3 =&gt; println!("three"),
+        _ =&gt; println!("anything"),
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি <code>one</code> প্রিন্ট করবে কারণ <code>x</code> এর মান <code>1</code>। এই সিনট্যাক্সটি তখন কার্যকর যখন আপনি চান আপনার কোড একটি নির্দিষ্ট সুনির্দিষ্ট (concrete) মান পেলে কোনো একটি কাজ করুক।</p>
+<h3 id="নামযুকত-ভেরিযেবলের-সাথে-মযাচিং-matching-named-variables"><a class="header" href="#নামযুকত-ভেরিযেবলের-সাথে-মযাচিং-matching-named-variables">নামযুক্ত ভেরিয়েবলের সাথে ম্যাচিং (Matching Named Variables)</a></h3>
+<p>নামযুক্ত ভেরিয়েবলগুলো হলো অখণ্ডনযোগ্য (irrefutable) প্যাটার্ন যা যেকোনো মানের সাথে মেলে, এবং আমরা এই বইয়ে অনেকবার এগুলো ব্যবহার করেছি। তবে, আপনি যখন <code>match</code>, <code>if let</code>, বা <code>while let</code> এক্সপ্রেশনে নামযুক্ত ভেরিয়েবল ব্যবহার করেন তখন একটি জটিলতা দেখা দেয়। যেহেতু এই ধরনের প্রতিটি এক্সপ্রেশন একটি নতুন স্কোপ (scope) শুরু করে, তাই এই এক্সপ্রেশনগুলোর ভিতরে একটি প্যাটার্নের অংশ হিসাবে ঘোষিত ভেরিয়েবলগুলো কনস্ট্রাক্টের বাইরের একই নামের ভেরিয়েবলগুলোকে শ্যাডো (shadow) করবে, যেমনটি সমস্ত ভেরিয়েবলের ক্ষেত্রে হয়। লিস্টিং ১৯-১১-এ, আমরা <code>x</code> নামে একটি ভেরিয়েবল ঘোষণা করি যার মান <code>Some(5)</code> এবং <code>y</code> নামে একটি ভেরিয়েবল যার মান <code>10</code>। তারপর আমরা <code>x</code> মানের উপর একটি <code>match</code> এক্সপ্রেশন তৈরি করি। ম্যাচ arm-গুলোর প্যাটার্ন এবং শেষের <code>println!</code> দেখুন, এবং এই কোডটি চালানোর আগে বা আরও পড়ার আগে অনুমান করার চেষ্টা করুন কোডটি কী প্রিন্ট করবে।</p>
+<Listing number="19-11" file-name="src/main.rs" caption="একটি `match` এক্সপ্রেশন যার একটি arm একটি নতুন ভেরিয়েবল প্রবর্তন করে যা একটি বিদ্যমান `y` ভেরিয়েবলকে শ্যাডো করে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = Some(5);
+    let y = 10;
+
+    match x {
+        Some(50) =&gt; println!("Got 50"),
+        Some(y) =&gt; println!("Matched, y = {y}"),
+        _ =&gt; println!("Default case, x = {x:?}"),
+    }
+
+    println!("at the end: x = {x:?}, y = {y}");
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>চলুন দেখি <code>match</code> এক্সপ্রেশনটি চলার সময় কী ঘটে। প্রথম ম্যাচ arm-এর প্যাটার্নটি <code>x</code>-এর সংজ্ঞায়িত মানের সাথে মেলে না, তাই কোডটি চলতে থাকে।</p>
+<p>দ্বিতীয় ম্যাচ arm-এর প্যাটার্নটি <code>y</code> নামে একটি নতুন ভেরিয়েবল প্রবর্তন করে যা একটি <code>Some</code> মানের ভিতরের যেকোনো মানের সাথে মিলবে। যেহেতু আমরা <code>match</code> এক্সপ্রেশনের ভিতরে একটি নতুন স্কোপে আছি, এটি একটি নতুন <code>y</code> ভেরিয়েবল, শুরুতে <code>10</code> মান দিয়ে ঘোষণা করা <code>y</code> নয়। এই নতুন <code>y</code> বাইন্ডিং একটি <code>Some</code>-এর ভিতরের যেকোনো মানের সাথে মিলবে, যা আমাদের <code>x</code>-এ আছে। সুতরাং, এই নতুন <code>y</code>, <code>x</code>-এর <code>Some</code>-এর ভিতরের মানের সাথে বাইন্ড হয়। সেই মানটি হলো <code>5</code>, তাই সেই arm-এর এক্সপ্রেশনটি কার্যকর হয় এবং <code>Matched, y = 5</code> প্রিন্ট করে।</p>
+<p>যদি <code>x</code> <code>Some(5)</code>-এর পরিবর্তে একটি <code>None</code> মান হতো, তবে প্রথম দুটি arm-এর প্যাটার্ন মিলত না, তাই মানটি আন্ডারস্কোরের সাথে মিলত। আমরা আন্ডারস্কোর arm-এর প্যাটার্নে <code>x</code> ভেরিয়েবল প্রবর্তন করিনি, তাই এক্সপ্রেশনের <code>x</code> এখনও বাইরের <code>x</code> যা শ্যাডো হয়নি। এই কাল্পনিক ক্ষেত্রে, <code>match</code> প্রিন্ট করত <code>Default case, x = None</code>।</p>
+<p><code>match</code> এক্সপ্রেশন শেষ হয়ে গেলে, এর স্কোপও শেষ হয়ে যায়, এবং ভেতরের <code>y</code>-এর স্কোপও শেষ হয়ে যায়। শেষ <code>println!</code> <code>at the end: x = Some(5), y = 10</code> তৈরি করে।</p>
+<p>একটি <code>match</code> এক্সপ্রেশন তৈরি করতে যা বাইরের <code>x</code> এবং <code>y</code>-এর মান তুলনা করে, বিদ্যমান <code>y</code> ভেরিয়েবলকে শ্যাডো করে এমন একটি নতুন ভেরিয়েবল প্রবর্তন করার পরিবর্তে, আমাদের পরিবর্তে একটি ম্যাচ গার্ড কন্ডিশনাল (match guard conditional) ব্যবহার করতে হবে। আমরা ম্যাচ গার্ড সম্পর্কে পরে "<a href="#extra-conditionals-with-match-guards">ম্যাচ গার্ডের সাথে অতিরিক্ত কন্ডিশনাল</a>" অংশে আলোচনা করব।</p>
+<h3 id="একাধিক-পযাটারন-multiple-patterns"><a class="header" href="#একাধিক-পযাটারন-multiple-patterns">একাধিক প্যাটার্ন (Multiple Patterns)</a></h3>
+<p><code>match</code> এক্সপ্রেশনে, আপনি <code>|</code> সিনট্যাক্স ব্যবহার করে একাধিক প্যাটার্ন ম্যাচ করতে পারেন, যা প্যাটার্নের <em>or</em> অপারেটর। উদাহরণস্বরূপ, নিম্নলিখিত কোডে আমরা <code>x</code>-এর মানকে ম্যাচ arm-গুলোর সাথে মেলাই, যার প্রথমটিতে একটি <em>or</em> বিকল্প রয়েছে, যার মানে যদি <code>x</code>-এর মান সেই arm-এর যেকোনো একটি মানের সাথে মেলে, তবে সেই arm-এর কোডটি চলবে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 1;
+
+    match x {
+        1 | 2 =&gt; println!("one or two"),
+        3 =&gt; println!("three"),
+        _ =&gt; println!("anything"),
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি <code>one or two</code> প্রিন্ট করে।</p>
+<h3 id="-দিযে-মানের-রেঞজ-মযাচিং-matching-ranges-of-values-with-"><a class="header" href="#-দিযে-মানের-রেঞজ-মযাচিং-matching-ranges-of-values-with-"><code>..=</code> দিয়ে মানের রেঞ্জ ম্যাচিং (Matching Ranges of Values with <code>..=</code>)</a></h3>
+<p><code>..=</code> সিনট্যাক্স আমাদের একটি অন্তর্ভুক্তিমূলক (inclusive) মানের রেঞ্জের সাথে ম্যাচ করতে দেয়। নিম্নলিখিত কোডে, যখন একটি প্যাটার্ন প্রদত্ত রেঞ্জের মধ্যে যেকোনো মানের সাথে মেলে, তখন সেই arm-টি কার্যকর হবে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 5;
+
+    match x {
+        1..=5 =&gt; println!("one through five"),
+        _ =&gt; println!("something else"),
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>যদি <code>x</code> <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, বা <code>5</code> হয়, তবে প্রথম arm-টি মিলবে। এই সিনট্যাক্সটি একাধিক ম্যাচ মানের জন্য <code>|</code> অপারেটর ব্যবহার করে একই ধারণা প্রকাশ করার চেয়ে বেশি সুবিধাজনক; যদি আমরা <code>|</code> ব্যবহার করতাম, তবে আমাদের <code>1 | 2 | 3 | 4 | 5</code> নির্দিষ্ট করতে হতো। একটি রেঞ্জ নির্দিষ্ট করা অনেক ছোট, বিশেষ করে যদি আমরা, ধরা যাক, 1 থেকে 1,000 এর মধ্যে যেকোনো সংখ্যা মেলাতে চাই!</p>
+<p>কম্পাইলার কম্পাইল টাইমে পরীক্ষা করে যে রেঞ্জটি খালি নয়, এবং যেহেতু রাস্ট কেবল <code>char</code> এবং সাংখ্যিক (numeric) মানের জন্য বলতে পারে একটি রেঞ্জ খালি কিনা, তাই রেঞ্জ কেবল সাংখ্যিক বা <code>char</code> মানের সাথে অনুমোদিত।</p>
+<p>এখানে <code>char</code> মানের রেঞ্জ ব্যবহার করে একটি উদাহরণ দেওয়া হলো:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 'c';
+
+    match x {
+        'a'..='j' =&gt; println!("early ASCII letter"),
+        'k'..='z' =&gt; println!("late ASCII letter"),
+        _ =&gt; println!("something else"),
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>রাস্ট বলতে পারে যে <code>'c'</code> প্রথম প্যাটার্নের রেঞ্জের মধ্যে রয়েছে এবং <code>early ASCII letter</code> প্রিন্ট করে।</p>
+<h3 id="মান-ভাঙার-জনয-ডিসটরাকচারিং-destructuring-to-break-apart-values"><a class="header" href="#মান-ভাঙার-জনয-ডিসটরাকচারিং-destructuring-to-break-apart-values">মান ভাঙার জন্য ডিস্ট্রাকচারিং (Destructuring to Break Apart Values)</a></h3>
+<p>আমরা struct, enum এবং tuple-কে ডিস্ট্রাকচার (destructure) বা ভাঙতে প্যাটার্ন ব্যবহার করতে পারি যাতে এই মানগুলোর বিভিন্ন অংশ ব্যবহার করা যায়। চলুন প্রতিটি মান নিয়ে আলোচনা করি।</p>
+<h4 id="struct-ডিসটরাকচারিং-destructuring-structs"><a class="header" href="#struct-ডিসটরাকচারিং-destructuring-structs">Struct ডিস্ট্রাকচারিং (Destructuring Structs)</a></h4>
+<p>লিস্টিং ১৯-১২ একটি <code>Point</code> struct দেখায় যার দুটি ফিল্ড, <code>x</code> এবং <code>y</code>, আছে যা আমরা একটি <code>let</code> স্টেটমেন্টের সাথে একটি প্যাটার্ন ব্যবহার করে ভাঙতে পারি।</p>
+<Listing number="19-12" file-name="src/main.rs" caption="একটি struct-এর ফিল্ডগুলোকে আলাদা ভেরিয়েবলে ডিস্ট্রাকচার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7 };
+
+    let Point { x: a, y: b } = p;
+    assert_eq!(0, a);
+    assert_eq!(7, b);
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>a</code> এবং <code>b</code> ভেরিয়েবল তৈরি করে যা <code>p</code> struct-এর <code>x</code> এবং <code>y</code> ফিল্ডের মানের সাথে মেলে। এই উদাহরণটি দেখায় যে প্যাটার্নের ভেরিয়েবলের নামগুলো struct-এর ফিল্ডের নামের সাথে মিলতে হবে এমন কোনো কথা নেই। তবে, কোন ভেরিয়েবল কোন ফিল্ড থেকে এসেছে তা মনে রাখা সহজ করার জন্য ভেরিয়েবলের নামগুলো ফিল্ডের নামের সাথে মেলানো একটি সাধারণ অভ্যাস। এই সাধারণ ব্যবহারের কারণে, এবং কারণ <code>let Point { x: x, y: y } = p;</code> লেখাতে অনেক পুনরাবৃত্তি রয়েছে, তাই রাস্টের struct ফিল্ড ম্যাচ করা প্যাটার্নগুলোর জন্য একটি শর্টহ্যান্ড আছে: আপনার কেবল struct ফিল্ডের নাম তালিকাভুক্ত করতে হবে, এবং প্যাটার্ন থেকে তৈরি ভেরিয়েবলগুলোর একই নাম থাকবে। লিস্টিং ১৯-১৩ লিস্টিং ১৯-১২-এর কোডের মতোই আচরণ করে, কিন্তু <code>let</code> প্যাটার্নে তৈরি ভেরিয়েবলগুলো <code>a</code> এবং <code>b</code>-এর পরিবর্তে <code>x</code> এবং <code>y</code>।</p>
+<Listing number="19-13" file-name="src/main.rs" caption="struct ফিল্ড শর্টহ্যান্ড ব্যবহার করে struct ফিল্ড ডিস্ট্রাকচার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7 };
+
+    let Point { x, y } = p;
+    assert_eq!(0, x);
+    assert_eq!(7, y);
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>x</code> এবং <code>y</code> ভেরিয়েবল তৈরি করে যা <code>p</code> ভেরিয়েবলের <code>x</code> এবং <code>y</code> ফিল্ডের সাথে মেলে। ফলাফল হলো <code>x</code> এবং <code>y</code> ভেরিয়েবলগুলো <code>p</code> struct থেকে মান ধারণ করে।</p>
+<p>আমরা struct প্যাটার্নের অংশ হিসাবে সমস্ত ফিল্ডের জন্য ভেরিয়েবল তৈরি করার পরিবর্তে লিটারেল মান দিয়েও ডিস্ট্রাকচার করতে পারি। এটি আমাদের কিছু ফিল্ডকে নির্দিষ্ট মানের জন্য পরীক্ষা করার সুযোগ দেয় এবং অন্য ফিল্ডগুলো ডিস্ট্রাকচার করার জন্য ভেরিয়েবল তৈরি করতে দেয়।</p>
+<p>লিস্টিং ১৯-১৪-এ, আমাদের একটি <code>match</code> এক্সপ্রেশন আছে যা <code>Point</code> মানগুলোকে তিনটি ক্ষেত্রে বিভক্ত করে: যে পয়েন্টগুলো সরাসরি <code>x</code> অক্ষের উপর অবস্থিত (যা <code>y = 0</code> হলে সত্য), <code>y</code> অক্ষের উপর (<code>x = 0</code>), বা কোনো অক্ষের উপরেই নয়।</p>
+<Listing number="19-14" file-name="src/main.rs" caption="একটি প্যাটার্নে লিটারেল মান ডিস্ট্রাকচার এবং ম্যাচিং করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct Point {
+</span><span class="boring">    x: i32,
+</span><span class="boring">    y: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let p = Point { x: 0, y: 7 };
+
+    match p {
+        Point { x, y: 0 } =&gt; println!("On the x axis at {x}"),
+        Point { x: 0, y } =&gt; println!("On the y axis at {y}"),
+        Point { x, y } =&gt; {
+            println!("On neither axis: ({x}, {y})");
+        }
+    }
+}</code></pre></pre>
+</Listing>
+<p>প্রথম arm টি <code>x</code> অক্ষের উপর অবস্থিত যেকোনো পয়েন্টের সাথে মিলবে, এটি নির্দিষ্ট করে যে <code>y</code> ফিল্ডটি মিলবে যদি এর মান লিটারেল <code>0</code> এর সাথে মেলে। প্যাটার্নটি এখনও একটি <code>x</code> ভেরিয়েবল তৈরি করে যা আমরা এই arm-এর কোডে ব্যবহার করতে পারি।</p>
+<p>একইভাবে, দ্বিতীয় arm টি <code>y</code> অক্ষের উপর যেকোনো পয়েন্টের সাথে মেলে, এটি নির্দিষ্ট করে যে <code>x</code> ফিল্ডটি মিলবে যদি এর মান <code>0</code> হয় এবং <code>y</code> ফিল্ডের মানের জন্য একটি <code>y</code> ভেরিয়েবল তৈরি করে। তৃতীয় arm টি কোনো লিটারেল নির্দিষ্ট করে না, তাই এটি অন্য যেকোনো <code>Point</code>-এর সাথে মেলে এবং <code>x</code> ও <code>y</code> উভয় ফিল্ডের জন্য ভেরিয়েবল তৈরি করে।</p>
+<p>এই উদাহরণে, <code>p</code> মানটি দ্বিতীয় arm-এর সাথে মেলে কারণ <code>x</code>-এ <code>0</code> রয়েছে, তাই এই কোডটি <code>On the y axis at 7</code> প্রিন্ট করবে।</p>
+<p>মনে রাখবেন যে একটি <code>match</code> এক্সপ্রেশন প্রথম ম্যাচিং প্যাটার্ন খুঁজে পাওয়ার সাথে সাথে arm পরীক্ষা করা বন্ধ করে দেয়, তাই যদিও <code>Point { x: 0, y: 0 }</code> <code>x</code> অক্ষ এবং <code>y</code> অক্ষ উভয়তেই রয়েছে, এই কোডটি কেবল <code>On the x axis at 0</code> প্রিন্ট করত।</p>
+<h4 id="enum-ডিসটরাকচারিং-destructuring-enums"><a class="header" href="#enum-ডিসটরাকচারিং-destructuring-enums">Enum ডিস্ট্রাকচারিং (Destructuring Enums)</a></h4>
+<p>আমরা এই বইয়ে enum ডিস্ট্রাকচার করেছি (উদাহরণস্বরূপ, ৬ষ্ঠ অধ্যায়ের লিস্টিং ৬-৫), কিন্তু এখনো স্পষ্টভাবে আলোচনা করিনি যে একটি enum ডিস্ট্রাকচার করার প্যাটার্নটি enum-এর মধ্যে সংরক্ষিত ডেটা যেভাবে সংজ্ঞায়িত করা হয়েছে তার সাথে সামঞ্জস্যপূর্ণ। উদাহরণ হিসাবে, লিস্টিং ১৯-১৫-এ আমরা লিস্টিং ৬-২ থেকে <code>Message</code> enum ব্যবহার করি এবং একটি <code>match</code> লিখি এমন প্যাটার্ন দিয়ে যা প্রতিটি ভেতরের মান ডিস্ট্রাকচার করবে।</p>
+<Listing number="19-15" file-name="src/main.rs" caption="ভিন্ন ধরণের মান ধারণকারী enum ভ্যারিয়েন্ট ডিস্ট্রাকচার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+fn main() {
+    let msg = Message::ChangeColor(0, 160, 255);
+
+    match msg {
+        Message::Quit =&gt; {
+            println!("The Quit variant has no data to destructure.");
+        }
+        Message::Move { x, y } =&gt; {
+            println!("Move in the x direction {x} and in the y direction {y}");
+        }
+        Message::Write(text) =&gt; {
+            println!("Text message: {text}");
+        }
+        Message::ChangeColor(r, g, b) =&gt; {
+            println!("Change color to red {r}, green {g}, and blue {b}");
+        }
+    }
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>Change color to red 0, green 160, and blue 255</code> প্রিন্ট করবে। <code>msg</code>-এর মান পরিবর্তন করে অন্য arm-গুলোর কোড চলতে দেখুন।</p>
+<p><code>Message::Quit</code>-এর মতো কোনো ডেটা ছাড়া enum ভ্যারিয়েন্টগুলোর জন্য, আমরা মানটি আর ডিস্ট্রাকচার করতে পারি না। আমরা কেবল লিটারেল <code>Message::Quit</code> মানের সাথে ম্যাচ করতে পারি, এবং সেই প্যাটার্নে কোনো ভেরিয়েবল নেই।</p>
+<p><code>Message::Move</code>-এর মতো struct-এর মতো enum ভ্যারিয়েন্টগুলোর জন্য, আমরা struct ম্যাচ করার জন্য যে প্যাটার্ন নির্দিষ্ট করি তার মতো একটি প্যাটার্ন ব্যবহার করতে পারি। ভ্যারিয়েন্টের নামের পরে, আমরা কোঁকড়া বন্ধনী রাখি এবং তারপর ভেরিয়েবল সহ ফিল্ডগুলো তালিকাভুক্ত করি যাতে আমরা এই arm-এর কোডে ব্যবহারের জন্য টুকরোগুলো ভাঙতে পারি। এখানে আমরা লিস্টিং ১৯-১৩-এর মতো শর্টহ্যান্ড ফর্ম ব্যবহার করি।</p>
+<p><code>Message::Write</code>-এর মতো tuple-এর মতো enum ভ্যারিয়েন্টগুলোর জন্য, যা একটি উপাদান সহ একটি tuple ধারণ করে এবং <code>Message::ChangeColor</code> যা তিনটি উপাদান সহ একটি tuple ধারণ করে, প্যাটার্নটি tuple ম্যাচ করার জন্য আমরা যে প্যাটার্ন নির্দিষ্ট করি তার অনুরূপ। প্যাটার্নের ভেরিয়েবলের সংখ্যা আমরা যে ভ্যারিয়েন্টটি ম্যাচ করছি তার উপাদানের সংখ্যার সাথে অবশ্যই মিলতে হবে।</p>
+<h4 id="নেসটেড-struct-এবং-enum-ডিসটরাকচারিং-destructuring-nested-structs-and-enums"><a class="header" href="#নেসটেড-struct-এবং-enum-ডিসটরাকচারিং-destructuring-nested-structs-and-enums">নেস্টেড Struct এবং Enum ডিস্ট্রাকচারিং (Destructuring Nested Structs and Enums)</a></h4>
+<p>এখন পর্যন্ত, আমাদের উদাহরণগুলো সবই এক স্তরে struct বা enum ম্যাচিং করেছে, কিন্তু ম্যাচিং নেস্টেড আইটেমগুলোতেও কাজ করতে পারে! উদাহরণস্বরূপ, আমরা <code>ChangeColor</code> মেসেজে RGB এবং HSV রঙ সমর্থন করার জন্য লিস্টিং ১৯-১৫-এর কোডটি রিফ্যাক্টর করতে পারি, যেমনটি লিস্টিং ১৯-১৬-তে দেখানো হয়েছে।</p>
+<Listing number="19-16" caption="নেস্টেড enum-এর উপর ম্যাচিং করা">
+<pre><pre class="playground"><code class="language-rust edition2024">enum Color {
+    Rgb(i32, i32, i32),
+    Hsv(i32, i32, i32),
+}
+
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(Color),
+}
+
+fn main() {
+    let msg = Message::ChangeColor(Color::Hsv(0, 160, 255));
+
+    match msg {
+        Message::ChangeColor(Color::Rgb(r, g, b)) =&gt; {
+            println!("Change color to red {r}, green {g}, and blue {b}");
+        }
+        Message::ChangeColor(Color::Hsv(h, s, v)) =&gt; {
+            println!("Change color to hue {h}, saturation {s}, value {v}");
+        }
+        _ =&gt; (),
+    }
+}</code></pre></pre>
+</Listing>
+<p><code>match</code> এক্সপ্রেশনের প্রথম arm-এর প্যাটার্নটি একটি <code>Message::ChangeColor</code> enum ভ্যারিয়েন্টের সাথে মেলে যা একটি <code>Color::Rgb</code> ভ্যারিয়েন্ট ধারণ করে; তারপর প্যাটার্নটি তিনটি ভেতরের <code>i32</code> মানের সাথে বাইন্ড হয়। দ্বিতীয় arm-এর প্যাটার্নটিও একটি <code>Message::ChangeColor</code> enum ভ্যারিয়েন্টের সাথে মেলে, কিন্তু ভেতরের enum <code>Color::Hsv</code>-এর সাথে মেলে। আমরা এই জটিল শর্তগুলো একটি <code>match</code> এক্সপ্রেশনে নির্দিষ্ট করতে পারি, যদিও দুটি enum জড়িত।</p>
+<h4 id="struct-এবং-tuple-ডিসটরাকচারিং-destructuring-structs-and-tuples"><a class="header" href="#struct-এবং-tuple-ডিসটরাকচারিং-destructuring-structs-and-tuples">Struct এবং Tuple ডিস্ট্রাকচারিং (Destructuring Structs and Tuples)</a></h4>
+<p>আমরা আরও জটিল উপায়ে ডিস্ট্রাকচারিং প্যাটার্নগুলো মিশ্রিত, ম্যাচ এবং নেস্ট করতে পারি। নিম্নলিখিত উদাহরণটি একটি জটিল ডিস্ট্রাকচার দেখায় যেখানে আমরা একটি tuple-এর ভিতরে struct এবং tuple নেস্ট করি এবং সমস্ত প্রিমিটিভ (primitive) মান বের করে আনি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span><span class="boring">    struct Point {
+</span><span class="boring">        x: i32,
+</span><span class="boring">        y: i32,
+</span><span class="boring">    }
+</span><span class="boring">
+</span>    let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি আমাদের জটিল টাইপগুলোকে তাদের উপাদান অংশে ভাঙতে দেয় যাতে আমরা আগ্রহী মানগুলো আলাদাভাবে ব্যবহার করতে পারি।</p>
+<p>প্যাটার্ন দিয়ে ডিস্ট্রাকচার করা মানগুলোর টুকরো ব্যবহার করার একটি সুবিধাজনক উপায়, যেমন একটি struct-এর প্রতিটি ফিল্ড থেকে মান, একে অপরের থেকে আলাদাভাবে।</p>
+<h3 id="একটি-পযাটারনে-মান-উপেকষা-করা-ignoring-values-in-a-pattern"><a class="header" href="#একটি-পযাটারনে-মান-উপেকষা-করা-ignoring-values-in-a-pattern">একটি প্যাটার্নে মান উপেক্ষা করা (Ignoring Values in a Pattern)</a></h3>
+<p>আপনি দেখেছেন যে কখনও কখনও একটি প্যাটার্নে মান উপেক্ষা করা কার্যকর, যেমন একটি <code>match</code>-এর শেষ arm-এ, একটি ক্যাচ-অল পাওয়ার জন্য যা আসলে কিছুই করে না কিন্তু বাকি সমস্ত সম্ভাব্য মান বিবেচনা করে। একটি প্যাটার্নে সম্পূর্ণ মান বা মানের অংশ উপেক্ষা করার কয়েকটি উপায় রয়েছে: <code>_</code> প্যাটার্ন ব্যবহার করে (যা আপনি দেখেছেন), অন্য প্যাটার্নের মধ্যে <code>_</code> প্যাটার্ন ব্যবহার করে, একটি আন্ডারস্কোর দিয়ে শুরু হওয়া নাম ব্যবহার করে, অথবা <code>..</code> ব্যবহার করে একটি মানের বাকি অংশ উপেক্ষা করার জন্য। চলুন দেখি কিভাবে এবং কেন এই প্রতিটি প্যাটার্ন ব্যবহার করতে হয়।</p>
+<!-- Old link, do not remove -->
+<p><a id="ignoring-an-entire-value-with-_"></a></p>
+<h4 id="_-দিযে-একটি-সমপূরণ-মান-an-entire-value-with-_"><a class="header" href="#_-দিযে-একটি-সমপূরণ-মান-an-entire-value-with-_"><code>_</code> দিয়ে একটি সম্পূর্ণ মান (<em>An Entire Value with <code>_</code></em>)</a></h4>
+<p>আমরা আন্ডারস্কোরকে একটি ওয়াইল্ডকার্ড প্যাটার্ন হিসাবে ব্যবহার করেছি যা যেকোনো মানের সাথে মিলবে কিন্তু মানের সাথে বাইন্ড হবে না। এটি একটি <code>match</code> এক্সপ্রেশনের শেষ arm হিসাবে বিশেষভাবে কার্যকর, তবে আমরা এটি ফাংশন প্যারামিটার সহ যেকোনো প্যাটার্নেও ব্যবহার করতে পারি, যেমনটি লিস্টিং ১৯-১৭-তে দেখানো হয়েছে।</p>
+<Listing number="19-17" file-name="src/main.rs" caption="একটি ফাংশন সিগনেচারে `_` ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn foo(_: i32, y: i32) {
+    println!("This code only uses the y parameter: {y}");
+}
+
+fn main() {
+    foo(3, 4);
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি প্রথম আর্গুমেন্ট হিসাবে পাস করা <code>3</code> মানটিকে সম্পূর্ণরূপে উপেক্ষা করবে, এবং <code>This code only uses the y parameter: 4</code> প্রিন্ট করবে।</p>
+<p>বেশিরভাগ ক্ষেত্রে যখন আপনার আর কোনো নির্দিষ্ট ফাংশন প্যারামিটারের প্রয়োজন হয় না, তখন আপনি সিগনেচারটি পরিবর্তন করে অব্যবহৃত প্যারামিটারটি সরিয়ে ফেলবেন। একটি ফাংশন প্যারামিটার উপেক্ষা করা বিশেষভাবে কার্যকর হতে পারে এমন ক্ষেত্রে যখন, উদাহরণস্বরূপ, আপনি একটি trait ইমপ্লিমেন্ট করছেন যেখানে আপনার একটি নির্দিষ্ট টাইপ সিগনেচার প্রয়োজন কিন্তু আপনার ইমপ্লিমেন্টেশনের ফাংশন বডিতে প্যারামিটারগুলোর একটির প্রয়োজন নেই। তখন আপনি অব্যবহৃত ফাংশন প্যারামিটার সম্পর্কে কম্পাইলারের সতর্কতা এড়াতে পারেন, যেমনটি আপনি একটি নাম ব্যবহার করলে পেতেন।</p>
+<p><a id="ignoring-parts-of-a-value-with-a-nested-_"></a></p>
+<h4 id="নেসটেড-_-দিযে-একটি-মানের-অংশ-parts-of-a-value-with-a-nested-_"><a class="header" href="#নেসটেড-_-দিযে-একটি-মানের-অংশ-parts-of-a-value-with-a-nested-_">নেস্টেড <code>_</code> দিয়ে একটি মানের অংশ (<em>Parts of a Value with a Nested <code>_</code></em>)</a></h4>
+<p>আমরা একটি মানের কেবল একটি অংশ উপেক্ষা করার জন্য অন্য প্যাটার্নের ভিতরে <code>_</code> ব্যবহার করতে পারি, উদাহরণস্বরূপ, যখন আমরা একটি মানের কেবল একটি অংশ পরীক্ষা করতে চাই কিন্তু সংশ্লিষ্ট কোডে অন্য অংশগুলোর কোনো ব্যবহার নেই। লিস্টিং ১৯-১৮ একটি সেটিং-এর মান পরিচালনার জন্য দায়ী কোড দেখায়। ব্যবসায়িক প্রয়োজনীয়তা হলো ব্যবহারকারীকে একটি বিদ্যমান কাস্টমাইজেশন ওভাররাইট করার অনুমতি দেওয়া উচিত নয় কিন্তু সেটিংটি আনসেট করতে এবং বর্তমানে আনসেট থাকলে একটি মান দিতে পারে।</p>
+<Listing number="19-18" caption="`Some` ভ্যারিয়েন্টের সাথে মেলে এমন প্যাটার্নের মধ্যে একটি আন্ডারস্কোর ব্যবহার করা যখন আমাদের `Some`-এর ভিতরের মান ব্যবহার করার প্রয়োজন নেই">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut setting_value = Some(5);
+    let new_setting_value = Some(10);
+
+    match (setting_value, new_setting_value) {
+        (Some(_), Some(_)) =&gt; {
+            println!("Can't overwrite an existing customized value");
+        }
+        _ =&gt; {
+            setting_value = new_setting_value;
+        }
+    }
+
+    println!("setting is {setting_value:?}");
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>Can't overwrite an existing customized value</code> এবং তারপর <code>setting is Some(5)</code> প্রিন্ট করবে। প্রথম ম্যাচ arm-এ, আমাদের <code>Some</code> ভ্যারিয়েন্টের কোনোটির ভিতরের মানের সাথে ম্যাচ বা ব্যবহার করার প্রয়োজন নেই, কিন্তু আমাদের সেই কেসটি পরীক্ষা করতে হবে যখন <code>setting_value</code> এবং <code>new_setting_value</code> উভয়ই <code>Some</code> ভ্যারিয়েন্ট। সেই ক্ষেত্রে, আমরা <code>setting_value</code> পরিবর্তন না করার কারণ প্রিন্ট করি, এবং এটি পরিবর্তন হয় না।</p>
+<p>অন্য সব ক্ষেত্রে (যদি <code>setting_value</code> বা <code>new_setting_value</code> যেকোনো একটি <code>None</code> হয়) যা দ্বিতীয় arm-এর <code>_</code> প্যাটার্ন দ্বারা প্রকাশ করা হয়, আমরা <code>new_setting_value</code>-কে <code>setting_value</code> হতে দিতে চাই।</p>
+<p>আমরা নির্দিষ্ট মান উপেক্ষা করার জন্য একটি প্যাটার্নের মধ্যে একাধিক জায়গায় আন্ডারস্কোর ব্যবহার করতে পারি। লিস্টিং ১৯-১৯ পাঁচটি আইটেমের একটি tuple-এর দ্বিতীয় এবং চতুর্থ মান উপেক্ষা করার একটি উদাহরণ দেখায়।</p>
+<Listing number="19-19" caption="একটি tuple-এর একাধিক অংশ উপেক্ষা করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let numbers = (2, 4, 8, 16, 32);
+
+    match numbers {
+        (first, _, third, _, fifth) =&gt; {
+            println!("Some numbers: {first}, {third}, {fifth}");
+        }
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>Some numbers: 2, 8, 32</code> প্রিন্ট করবে, এবং <code>4</code> ও <code>16</code> মানগুলো উপেক্ষা করা হবে।</p>
+<!-- Old link, do not remove -->
+<p><a id="ignoring-an-unused-variable-by-starting-its-name-with-_"></a></p>
+<h4 id="_-দিযে-নাম-শুরু-করে-একটি-অবযবহৃত-ভেরিযেবল-an-unused-variable-by-starting-its-name-with-_"><a class="header" href="#_-দিযে-নাম-শুরু-করে-একটি-অবযবহৃত-ভেরিযেবল-an-unused-variable-by-starting-its-name-with-_"><code>_</code> দিয়ে নাম শুরু করে একটি অব্যবহৃত ভেরিয়েবল (<em>An Unused Variable by Starting Its Name with <code>_</code></em>)</a></h4>
+<p>আপনি যদি একটি ভেরিয়েবল তৈরি করেন কিন্তু কোথাও ব্যবহার না করেন, রাস্ট সাধারণত একটি সতর্কতা জারি করবে কারণ একটি অব্যবহৃত ভেরিয়েবল একটি বাগ হতে পারে। তবে, কখনও কখনও এমন একটি ভেরিয়েবল তৈরি করা কার্যকর হয় যা আপনি এখনো ব্যবহার করবেন না, যেমন যখন আপনি প্রোটোটাইপিং করছেন বা সবেমাত্র একটি প্রকল্প শুরু করছেন। এই পরিস্থিতিতে, আপনি ভেরিয়েবলের নামটি একটি আন্ডারস্কোর দিয়ে শুরু করে রাস্টকে বলতে পারেন যাতে সে আপনাকে অব্যবহৃত ভেরিয়েবল সম্পর্কে সতর্ক না করে। লিস্টিং ১৯-২০-এ, আমরা দুটি অব্যবহৃত ভেরিয়েবল তৈরি করি, কিন্তু যখন আমরা এই কোডটি কম্পাইল করি, তখন আমাদের কেবল একটি সম্পর্কে সতর্কতা পাওয়া উচিত।</p>
+<Listing number="19-20" file-name="src/main.rs" caption="অব্যবহৃত ভেরিয়েবলের সতর্কতা এড়াতে একটি ভেরিয়েবলের নাম আন্ডারস্কোর দিয়ে শুরু করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let _x = 5;
+    let y = 10;
+}</code></pre></pre>
+</Listing>
+<p>এখানে, আমরা <code>y</code> ভেরিয়েবল ব্যবহার না করার জন্য একটি সতর্কতা পাই, কিন্তু <code>_x</code> ব্যবহার না করার জন্য কোনো সতর্কতা পাই না।</p>
+<p>লক্ষ্য করুন যে কেবল <code>_</code> ব্যবহার করা এবং একটি আন্ডারস্কোর দিয়ে শুরু হওয়া নাম ব্যবহার করার মধ্যে একটি সূক্ষ্ম পার্থক্য রয়েছে। <code>_x</code> সিনট্যাক্সটি এখনও মানটিকে ভেরিয়েবলের সাথে বাইন্ড করে, যেখানে <code>_</code> মোটেই বাইন্ড করে না। এই পার্থক্যটি গুরুত্বপূর্ণ এমন একটি কেস দেখানোর জন্য, লিস্টিং ১৯-২১ আমাদের একটি এরর দেবে।</p>
+<Listing number="19-21" caption="একটি আন্ডারস্কোর দিয়ে শুরু হওয়া অব্যবহৃত ভেরিয়েবল এখনও মানটি বাইন্ড করে, যা মানের মালিকানা নিতে পারে।">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let s = Some(String::from("Hello!"));
+
+    if let Some(_s) = s {
+        println!("found a string");
+    }
+
+    println!("{s:?}");
+<span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা একটি এরর পাব কারণ <code>s</code> মানটি এখনও <code>_s</code>-এ মুভ করা হবে, যা আমাদের <code>s</code> পুনরায় ব্যবহার করতে বাধা দেয়। তবে, আন্ডারস্কোর নিজে থেকে ব্যবহার করলে তা কখনও মানের সাথে বাইন্ড করে না। লিস্টিং ১৯-২২ কোনো এরর ছাড়াই কম্পাইল হবে কারণ <code>s</code> <code>_</code>-এ মুভ হয় না।</p>
+<Listing number="19-22" caption="একটি আন্ডারস্কোর ব্যবহার করলে মান বাইন্ড হয় না।">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s = Some(String::from("Hello!"));
+
+    if let Some(_) = s {
+        println!("found a string");
+    }
+
+    println!("{s:?}");
+<span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+এই কোডটি ঠিকঠাক কাজ করে কারণ আমরা কখনও `s`-কে কিছুর সাথে বাইন্ড করি না; এটি মুভ হয় না।
+
+&lt;a id="ignoring-remaining-parts-of-a-value-with-"&gt;&lt;/a&gt;
+
+### `..` দিয়ে একটি মানের বাকি অংশ (_Remaining Parts of a Value with `..`_)
+
+অনেক অংশ সহ মানগুলোর জন্য, আমরা নির্দিষ্ট অংশ ব্যবহার করতে এবং বাকিগুলো উপেক্ষা করতে `..` সিনট্যাক্স ব্যবহার করতে পারি, প্রতিটি উপেক্ষা করা মানের জন্য আন্ডারস্কোর তালিকাভুক্ত করার প্রয়োজন এড়িয়ে। `..` প্যাটার্নটি একটি মানের যেকোনো অংশ উপেক্ষা করে যা আমরা প্যাটার্নের বাকি অংশে স্পষ্টভাবে ম্যাচ করিনি। লিস্টিং ১৯-২৩-এ, আমাদের একটি `Point` struct আছে যা ত্রি-মাত্রিক স্থানে একটি স্থানাঙ্ক ধারণ করে। `match` এক্সপ্রেশনে, আমরা কেবল `x` স্থানাঙ্কের উপর কাজ করতে চাই এবং `y` ও `z` ফিল্ডের মানগুলো উপেক্ষা করতে চাই।
+
+&lt;Listing number="19-23" caption="`..` ব্যবহার করে `x` ব্যতীত একটি `Point`-এর সমস্ত ফিল্ড উপেক্ষা করা"&gt;
+
+```rust
+<span class="boring">fn main() {
+</span>    struct Point {
+        x: i32,
+        y: i32,
+        z: i32,
+    }
+
+    let origin = Point { x: 0, y: 0, z: 0 };
+
+    match origin {
+        Point { x, .. } =&gt; println!("x is {x}"),
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা <code>x</code> মানটি তালিকাভুক্ত করি এবং তারপর কেবল <code>..</code> প্যাটার্নটি অন্তর্ভুক্ত করি। এটি <code>y: _</code> এবং <code>z: _</code> তালিকাভুক্ত করার চেয়ে দ্রুততর, বিশেষ করে যখন আমরা এমন struct নিয়ে কাজ করি যার অনেক ফিল্ড আছে এবং যেখানে কেবল এক বা দুটি ফিল্ড প্রাসঙ্গিক।</p>
+<p><code>..</code> সিনট্যাক্সটি যতগুলো মান প্রয়োজন ততগুলো পর্যন্ত প্রসারিত হবে। লিস্টিং ১৯-২৪ দেখায় কিভাবে একটি tuple-এর সাথে <code>..</code> ব্যবহার করতে হয়।</p>
+<Listing number="19-24" file-name="src/main.rs" caption="একটি tuple-এর কেবল প্রথম এবং শেষ মান ম্যাচ করা এবং অন্য সব মান উপেক্ষা করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let numbers = (2, 4, 8, 16, 32);
+
+    match numbers {
+        (first, .., last) =&gt; {
+            println!("Some numbers: {first}, {last}");
+        }
+    }
+}</code></pre></pre>
+</Listing>
+<p>এই কোডে, প্রথম এবং শেষ মান <code>first</code> এবং <code>last</code> দিয়ে ম্যাচ করা হয়। <code>..</code> মাঝের সবকিছু ম্যাচ এবং উপেক্ষা করবে।</p>
+<p>তবে, <code>..</code> ব্যবহার অবশ্যই দ্ব্যর্থহীন হতে হবে। যদি এটি অস্পষ্ট হয় যে কোন মানগুলো ম্যাচ করার জন্য এবং কোনগুলো উপেক্ষা করা উচিত, রাস্ট আমাদের একটি এরর দেবে। লিস্টিং ১৯-২৫ <code>..</code> দ্ব্যর্থকভাবে ব্যবহার করার একটি উদাহরণ দেখায়, তাই এটি কম্পাইল হবে না।</p>
+<Listing number="19-25" file-name="src/main.rs" caption="`..` দ্ব্যর্থকভাবে ব্যবহার করার একটি প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let numbers = (2, 4, 8, 16, 32);
+
+    match numbers {
+        (.., second, ..) =&gt; {
+            println!("Some numbers: {second}")
+        },
+    }
+}</code></pre>
+</Listing>
+<p>যখন আমরা এই উদাহরণটি কম্পাইল করি, আমরা এই এররটি পাই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling patterns v0.1.0 (file:///projects/patterns)
+error: `..` can only be used once per tuple pattern
+ --&gt; src/main.rs:5:22
+  |
+5 |         (.., second, ..) =&gt; {
+  |          --          ^^ can only be used once per tuple pattern
+  |          |
+  |          previously used here
+
+error: could not compile `patterns` (bin "patterns") due to 1 previous error
+</code></pre>
+<p>রাস্টের পক্ষে নির্ধারণ করা অসম্ভব যে tuple-এ <code>second</code>-এর সাথে একটি মান ম্যাচ করার আগে কতগুলো মান উপেক্ষা করতে হবে এবং তারপর আরও কতগুলো মান উপেক্ষা করতে হবে। এই কোডের মানে হতে পারে যে আমরা <code>2</code> উপেক্ষা করতে চাই, <code>second</code>-কে <code>4</code>-এ বাইন্ড করতে চাই, এবং তারপর <code>8</code>, <code>16</code>, এবং <code>32</code> উপেক্ষা করতে চাই; অথবা আমরা <code>2</code> এবং <code>4</code> উপেক্ষা করতে চাই, <code>second</code>-কে <code>8</code>-এ বাইন্ড করতে চাই, এবং তারপর <code>16</code> এবং <code>32</code> উপেক্ষা করতে চাই; ইত্যাদি। <code>second</code> ভেরিয়েবলের নামটি রাস্টের কাছে কোনো বিশেষ অর্থ বহন করে না, তাই আমরা একটি কম্পাইলার এরর পাই কারণ দুটি জায়গায় এভাবে <code>..</code> ব্যবহার করা দ্ব্যর্থক।</p>
+<h3 id="মযাচ-গারডের-সাথে-অতিরিকত-কনডিশনাল-extra-conditionals-with-match-guards"><a class="header" href="#মযাচ-গারডের-সাথে-অতিরিকত-কনডিশনাল-extra-conditionals-with-match-guards">ম্যাচ গার্ডের সাথে অতিরিক্ত কন্ডিশনাল (Extra Conditionals with Match Guards)</a></h3>
+<p>একটি <em>ম্যাচ গার্ড</em> (match guard) হলো একটি অতিরিক্ত <code>if</code> শর্ত, যা একটি <code>match</code> arm-এর প্যাটার্নের পরে নির্দিষ্ট করা হয়, যা সেই arm-টি বেছে নেওয়ার জন্য অবশ্যই মিলতে হবে। ম্যাচ গার্ডগুলো একটি প্যাটার্ন একাই যা প্রকাশ করতে পারে তার চেয়ে জটিল ধারণা প্রকাশ করার জন্য কার্যকর। তবে, লক্ষ্য করুন যে এগুলো কেবল <code>match</code> এক্সপ্রেশনে উপলব্ধ, <code>if let</code> বা <code>while let</code> এক্সপ্রেশনে নয়।</p>
+<p>শর্তটি প্যাটার্নে তৈরি ভেরিয়েবল ব্যবহার করতে পারে। লিস্টিং ১৯-২৬ একটি <code>match</code> দেখায় যেখানে প্রথম arm-এর প্যাটার্ন <code>Some(x)</code> এবং একটি ম্যাচ গার্ড <code>if x % 2 == 0</code> (যা সংখ্যাটি জোড় হলে <code>true</code> হবে) রয়েছে।</p>
+<Listing number="19-26" caption="একটি প্যাটার্নে একটি ম্যাচ গার্ড যোগ করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let num = Some(4);
+
+    match num {
+        Some(x) if x % 2 == 0 =&gt; println!("The number {x} is even"),
+        Some(x) =&gt; println!("The number {x} is odd"),
+        None =&gt; (),
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই উদাহরণটি <code>The number 4 is even</code> প্রিন্ট করবে। যখন <code>num</code>-কে প্রথম arm-এর প্যাটার্নের সাথে তুলনা করা হয়, তখন এটি মেলে কারণ <code>Some(4)</code> <code>Some(x)</code>-এর সাথে মেলে। তারপর ম্যাচ গার্ড পরীক্ষা করে যে <code>x</code>-কে 2 দিয়ে ভাগ করার ভাগশেষ 0 এর সমান কিনা, এবং যেহেতু তা হয়, তাই প্রথম arm-টি নির্বাচন করা হয়।</p>
+<p>যদি <code>num</code> <code>Some(5)</code> হতো, তবে প্রথম arm-এর ম্যাচ গার্ডটি <code>false</code> হতো কারণ 5-কে 2 দিয়ে ভাগ করার ভাগশেষ 1, যা 0 এর সমান নয়। রাস্ট তখন দ্বিতীয় arm-এ যেত, যা মিলত কারণ দ্বিতীয় arm-এর কোনো ম্যাচ গার্ড নেই এবং তাই যেকোনো <code>Some</code> ভ্যারিয়েন্টের সাথে মেলে।</p>
+<p><code>if x % 2 == 0</code> শর্তটি একটি প্যাটার্নের মধ্যে প্রকাশ করার কোনো উপায় নেই, তাই ম্যাচ গার্ড আমাদের এই লজিকটি প্রকাশ করার ক্ষমতা দেয়। এই অতিরিক্ত প্রকাশক্ষমতার অসুবিধা হলো কম্পাইলার ম্যাচ গার্ড এক্সপ্রেশন জড়িত থাকলে এক্সহস্টিভনেস (exhaustiveness) পরীক্ষা করার চেষ্টা করে না।</p>
+<p>লিস্টিং ১৯-১১-এ, আমরা উল্লেখ করেছি যে আমরা আমাদের প্যাটার্ন-শ্যাডোইং সমস্যা সমাধানের জন্য ম্যাচ গার্ড ব্যবহার করতে পারি। মনে করুন, আমরা <code>match</code> এক্সপ্রেশনের বাইরের ভেরিয়েবল ব্যবহার না করে প্যাটার্নের ভিতরে একটি নতুন ভেরিয়েবল তৈরি করেছিলাম। সেই নতুন ভেরিয়েবলের মানে হলো আমরা বাইরের ভেরিয়েবলের মানের বিরুদ্ধে পরীক্ষা করতে পারিনি। লিস্টিং ১৯-২৭ দেখায় কিভাবে আমরা এই সমস্যাটি সমাধান করার জন্য একটি ম্যাচ গার্ড ব্যবহার করতে পারি।</p>
+<Listing number="19-27" file-name="src/main.rs" caption="একটি বাইরের ভেরিয়েবলের সাথে সমতা পরীক্ষা করার জন্য একটি ম্যাচ গার্ড ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = Some(5);
+    let y = 10;
+
+    match x {
+        Some(50) =&gt; println!("Got 50"),
+        Some(n) if n == y =&gt; println!("Matched, n = {n}"),
+        _ =&gt; println!("Default case, x = {x:?}"),
+    }
+
+    println!("at the end: x = {x:?}, y = {y}");
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি এখন <code>Default case, x = Some(5)</code> প্রিন্ট করবে। দ্বিতীয় ম্যাচ arm-এর প্যাটার্নটি একটি নতুন <code>y</code> ভেরিয়েবল প্রবর্তন করে না যা বাইরের <code>y</code>-কে শ্যাডো করবে, যার মানে আমরা ম্যাচ গার্ডে বাইরের <code>y</code> ব্যবহার করতে পারি। প্যাটার্নটিকে <code>Some(y)</code> হিসাবে নির্দিষ্ট করার পরিবর্তে, যা বাইরের <code>y</code>-কে শ্যাডো করত, আমরা <code>Some(n)</code> নির্দিষ্ট করি। এটি একটি নতুন <code>n</code> ভেরিয়েবল তৈরি করে যা কিছুই শ্যাডো করে না কারণ <code>match</code>-এর বাইরে কোনো <code>n</code> ভেরিয়েবল নেই।</p>
+<p>ম্যাচ গার্ড <code>if n == y</code> একটি প্যাটার্ন নয় এবং তাই নতুন ভেরিয়েবল প্রবর্তন করে না। এই <code>y</code> <em>হলো</em> বাইরের <code>y</code> এবং এটি শ্যাডো করা নতুন <code>y</code> নয়, এবং আমরা <code>n</code>-কে <code>y</code>-এর সাথে তুলনা করে বাইরের <code>y</code>-এর সমান মান খুঁজতে পারি।</p>
+<p>আপনি একাধিক প্যাটার্ন নির্দিষ্ট করার জন্য একটি ম্যাচ গার্ডে <em>or</em> অপারেটর <code>|</code> ব্যবহার করতে পারেন; ম্যাচ গার্ড শর্তটি সমস্ত প্যাটার্নে প্রযোজ্য হবে। লিস্টিং ১৯-২৮ <code>|</code> ব্যবহারকারী একটি প্যাটার্নকে একটি ম্যাচ গার্ডের সাথে একত্রিত করার সময় প্রেসিডেন্স (precedence) দেখায়। এই উদাহরণের গুরুত্বপূর্ণ অংশ হলো <code>if y</code> ম্যাচ গার্ডটি <code>4</code>, <code>5</code>, <em>এবং</em> <code>6</code> সবগুলোর ক্ষেত্রেই প্রযোজ্য, যদিও মনে হতে পারে <code>if y</code> কেবল <code>6</code>-এর ক্ষেত্রেই প্রযোজ্য।</p>
+<Listing number="19-28" caption="একটি ম্যাচ গার্ডের সাথে একাধিক প্যাটার্ন একত্রিত করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let x = 4;
+    let y = false;
+
+    match x {
+        4 | 5 | 6 if y =&gt; println!("yes"),
+        _ =&gt; println!("no"),
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>ম্যাচ শর্তটি বলে যে arm-টি কেবল তখনই মিলবে যদি <code>x</code>-এর মান <code>4</code>, <code>5</code>, বা <code>6</code>-এর সমান হয় <em>এবং</em> যদি <code>y</code> <code>true</code> হয়। যখন এই কোডটি চলে, প্রথম arm-এর প্যাটার্নটি মেলে কারণ <code>x</code> <code>4</code>, কিন্তু ম্যাচ গার্ড <code>if y</code> <code>false</code>, তাই প্রথম arm-টি বেছে নেওয়া হয় না। কোডটি দ্বিতীয় arm-এ চলে যায়, যা মেলে, এবং এই প্রোগ্রামটি <code>no</code> প্রিন্ট করে। কারণ হলো <code>if</code> শর্তটি পুরো প্যাটার্ন <code>4 | 5 | 6</code>-এর উপর প্রযোজ্য, কেবল শেষ মান <code>6</code>-এর উপর নয়। অন্য কথায়, একটি প্যাটার্নের সাথে একটি ম্যাচ গার্ডের প্রেসিডেন্স এভাবে আচরণ করে:</p>
+<pre><code class="language-text">(4 | 5 | 6) if y =&gt; ...
+</code></pre>
+<p>এর পরিবর্তে:</p>
+<pre><code class="language-text">4 | 5 | (6 if y) =&gt; ...
+</code></pre>
+<p>কোডটি চালানোর পরে, প্রেসিডেন্স আচরণটি স্পষ্ট: যদি ম্যাচ গার্ডটি কেবল <code>|</code> অপারেটর ব্যবহার করে নির্দিষ্ট করা মানগুলোর তালিকার চূড়ান্ত মানের উপর প্রয়োগ করা হতো, তবে arm-টি মিলত এবং প্রোগ্রামটি <code>yes</code> প্রিন্ট করত।</p>
+<h3 id="-বাইনডিং--bindings"><a class="header" href="#-বাইনডিং--bindings"><code>@</code> বাইন্ডিং (<code>@</code> Bindings)</a></h3>
+<p><em>at</em> অপারেটর <code>@</code> আমাদের একটি ভেরিয়েবল তৈরি করতে দেয় যা একটি মান ধারণ করে একই সময়ে যখন আমরা সেই মানটিকে একটি প্যাটার্ন ম্যাচের জন্য পরীক্ষা করছি। লিস্টিং ১৯-২৯-এ, আমরা পরীক্ষা করতে চাই যে একটি <code>Message::Hello</code> <code>id</code> ফিল্ডটি <code>3..=7</code> রেঞ্জের মধ্যে আছে কিনা। আমরা মানটিকে <code>id</code> ভেরিয়েবলে বাইন্ড করতে চাই যাতে আমরা arm-এর সাথে যুক্ত কোডে এটি ব্যবহার করতে পারি।</p>
+<Listing number="19-29" caption="`@` ব্যবহার করে একটি প্যাটার্নে একটি মানে বাইন্ড করার সময় এটি পরীক্ষা করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    enum Message {
+        Hello { id: i32 },
+    }
+
+    let msg = Message::Hello { id: 5 };
+
+    match msg {
+        Message::Hello { id: id @ 3..=7 } =&gt; {
+            println!("Found an id in range: {id}")
+        }
+        Message::Hello { id: 10..=12 } =&gt; {
+            println!("Found an id in another range")
+        }
+        Message::Hello { id } =&gt; println!("Found some other id: {id}"),
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই উদাহরণটি <code>Found an id in range: 5</code> প্রিন্ট করবে। <code>id @</code> নির্দিষ্ট করে <code>3..=7</code> রেঞ্জের আগে, আমরা রেঞ্জ প্যাটার্নের সাথে মিলে যাওয়া যেকোনো মানকে <code>id</code> নামের একটি ভেরিয়েবলে ক্যাপচার করছি এবং একই সাথে পরীক্ষা করছি যে মানটি রেঞ্জ প্যাটার্নের সাথে মিলেছে কিনা।</p>
+<p>দ্বিতীয় arm-এ, যেখানে আমরা কেবল প্যাটার্নে একটি রেঞ্জ নির্দিষ্ট করেছি, arm-এর সাথে যুক্ত কোডে এমন কোনো ভেরিয়েবল নেই যা <code>id</code> ফিল্ডের আসল মান ধারণ করে। <code>id</code> ফিল্ডের মান 10, 11, বা 12 হতে পারত, কিন্তু সেই প্যাটার্নের সাথে যাওয়া কোড জানে না কোনটি। প্যাটার্ন কোডটি <code>id</code> ফিল্ড থেকে মান ব্যবহার করতে সক্ষম নয়, কারণ আমরা <code>id</code> মানটি একটি ভেরিয়েবলে সংরক্ষণ করিনি।</p>
+<p>শেষ arm-এ, যেখানে আমরা একটি রেঞ্জ ছাড়াই একটি ভেরিয়েবল নির্দিষ্ট করেছি, আমাদের arm-এর কোডে ব্যবহারের জন্য <code>id</code> নামের একটি ভেরিয়েবলে মানটি উপলব্ধ রয়েছে। কারণ হলো আমরা struct ফিল্ড শর্টহ্যান্ড সিনট্যাক্স ব্যবহার করেছি। কিন্তু আমরা এই arm-এ <code>id</code> ফিল্ডের মানের উপর কোনো পরীক্ষা প্রয়োগ করিনি, যেমনটি আমরা প্রথম দুটি arm-এর সাথে করেছি: যেকোনো মান এই প্যাটার্নের সাথে মিলবে।</p>
+<p><code>@</code> ব্যবহার করা আমাদের একটি মান পরীক্ষা করতে এবং এটি একটি ভেরিয়েবলে একটি প্যাটার্নের মধ্যে সংরক্ষণ করতে দেয়।</p>
+<h2 id="সারাংশ-summary"><a class="header" href="#সারাংশ-summary">সারাংশ (Summary)</a></h2>
+<p>রাস্টের প্যাটার্নগুলো বিভিন্ন ধরণের ডেটার মধ্যে পার্থক্য করার জন্য খুব কার্যকর। <code>match</code> এক্সপ্রেশনে ব্যবহার করা হলে, রাস্ট নিশ্চিত করে যে আপনার প্যাটার্নগুলো প্রতিটি সম্ভাব্য মান কভার করে, নতুবা আপনার প্রোগ্রাম কম্পাইল হবে না। <code>let</code> স্টেটমেন্ট এবং ফাংশন প্যারামিটারে প্যাটার্নগুলো সেই কনস্ট্রাক্টগুলোকে আরও কার্যকর করে তোলে, মানগুলোকে ছোট অংশে ডিস্ট্রাকচার করতে এবং সেই অংশগুলোকে ভেরিয়েবলে অ্যাসাইন করতে সক্ষম করে। আমরা আমাদের প্রয়োজন অনুসারে সহজ বা জটিল প্যাটার্ন তৈরি করতে পারি।</p>
+<p>এরপর, বইয়ের উপশেষ অধ্যায়ের জন্য, আমরা রাস্টের বিভিন্ন বৈশিষ্ট্যের কিছু উন্নত দিক দেখব।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch19-02-refutability.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch20-00-advanced-features.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch19-02-refutability.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch20-00-advanced-features.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

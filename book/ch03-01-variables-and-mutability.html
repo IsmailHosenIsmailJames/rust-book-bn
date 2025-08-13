@@ -1,0 +1,352 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ভেরিয়েবল এবং মিউটেবিলিটি - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="ভযারিয়েবল-এবং-পরিবরতনশীলতা-variables-and-mutability"><a class="header" href="#ভযারিয়েবল-এবং-পরিবরতনশীলতা-variables-and-mutability">ভ্যারিয়েবল এবং পরিবর্তনশীলতা (Variables and Mutability)</a></h2>
+<p>যেমনটি <a href="ch02-00-guessing-game-tutorial.html#storing-values-with-variables">"ভ্যারিয়েবলের মাধ্যমে মান সংরক্ষণ করা"</a> বিভাগে উল্লেখ করা হয়েছে, ডিফল্টরূপে, ভ্যারিয়েবলগুলো অপরিবর্তনীয় (immutable)। এটি রাস্টের অনেকগুলো পদ্ধতির মধ্যে একটি যা আপনাকে কোড এমনভাবে লিখতে উৎসাহিত করে যা রাস্টের দেওয়া নিরাপত্তা এবং সহজ কনকারেন্সি (concurrency)-এর সুবিধা নেয়। তবে, আপনার কাছে আপনার ভ্যারিয়েবলগুলোকে পরিবর্তনযোগ্য (mutable) করার বিকল্পও রয়েছে। চলুন অন্বেষণ করি কীভাবে এবং কেন রাস্ট আপনাকে অপরিবর্তনীয়তাকে অগ্রাধিকার দিতে উৎসাহিত করে এবং কেন কখনও কখনও আপনি এর থেকে সরে আসতে চাইতে পারেন।</p>
+<p>যখন একটি ভ্যারিয়েবল অপরিবর্তনীয় হয়, একবার একটি মান একটি নামের সাথে বাইন্ড করা হলে, আপনি সেই মান পরিবর্তন করতে পারবেন না। এটি দেখানোর জন্য, আপনার <em>projects</em> ডিরেক্টরিতে <code>cargo new variables</code> ব্যবহার করে <em>variables</em> নামে একটি নতুন প্রজেক্ট তৈরি করুন।</p>
+<p>তারপর, আপনার নতুন <em>variables</em> ডিরেক্টরিতে, <em>src/main.rs</em> খুলুন এবং এর কোডটি নিম্নলিখিত কোড দিয়ে প্রতিস্থাপন করুন, যা এখনই কম্পাইল হবে না:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x = 5;
+    println!("The value of x is: {x}");
+    x = 6;
+    println!("The value of x is: {x}");
+}</code></pre>
+<p><code>cargo run</code> ব্যবহার করে প্রোগ্রামটি সংরক্ষণ করুন এবং চালান। আপনি একটি অপরিবর্তনীয়তার ত্রুটি সম্পর্কিত একটি এরর বার্তা পাবেন, যেমনটি এই আউটপুটে দেখানো হয়েছে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+error[E0384]: cannot assign twice to immutable variable `x`
+ --&gt; src/main.rs:4:5
+  |
+2 |     let x = 5;
+  |         - first assignment to `x`
+3 |     println!("The value of x is: {x}");
+4 |     x = 6;
+  |     ^^^^^ cannot assign twice to immutable variable
+  |
+help: consider making this binding mutable
+  |
+2 |     let mut x = 5;
+  |         +++
+
+For more information about this error, try `rustc --explain E0384`.
+error: could not compile `variables` (bin "variables") due to 1 previous error
+</code></pre>
+<p>এই উদাহরণটি দেখায় কীভাবে কম্পাইলার আপনাকে আপনার প্রোগ্রামের ত্রুটি খুঁজে পেতে সাহায্য করে। কম্পাইলার এরর হতাশাজনক হতে পারে, কিন্তু আসলে এর মানে শুধু এই যে আপনার প্রোগ্রাম এখনও নিরাপদে যা করতে চায় তা করছে না; এর মানে এই <em>নয়</em> যে আপনি একজন ভাল প্রোগ্রামার নন! অভিজ্ঞ রাস্টেশিয়ানরাও কম্পাইলার এরর পান।</p>
+<p>আপনি <code>cannot assign twice to immutable variable `x`</code> এরর বার্তাটি পেয়েছেন কারণ আপনি অপরিবর্তনীয় <code>x</code> ভ্যারিয়েবলে দ্বিতীয়বার একটি মান অ্যাসাইন করার চেষ্টা করেছেন।</p>
+<p>যখন আমরা একটি মান পরিবর্তন করার চেষ্টা করি যা অপরিবর্তনীয় হিসাবে চিহ্নিত করা হয়েছে, তখন কম্পাইল-টাইম এরর পাওয়া গুরুত্বপূর্ণ কারণ এই পরিস্থিতিটি বাগের কারণ হতে পারে। যদি আমাদের কোডের একটি অংশ এই অনুমানের উপর কাজ করে যে একটি মান কখনও পরিবর্তন হবে না এবং আমাদের কোডের অন্য একটি অংশ সেই মানটি পরিবর্তন করে, তবে এটি সম্ভব যে কোডের প্রথম অংশটি যা করার জন্য ডিজাইন করা হয়েছিল তা করবে না। এই ধরনের বাগের কারণ পরে খুঁজে বের করা কঠিন হতে পারে, বিশেষ করে যখন দ্বিতীয় কোডটি কেবল <em>মাঝে মাঝে</em> মান পরিবর্তন করে। রাস্ট কম্পাইলার গ্যারান্টি দেয় যে যখন আপনি বলেন যে একটি মান পরিবর্তন হবে না, তখন এটি সত্যিই পরিবর্তন হবে না, তাই আপনাকে নিজে এটি ট্র্যাক রাখতে হবে না। আপনার কোড তাই বোঝা সহজ হয়।</p>
+<p>কিন্তু পরিবর্তনশীলতা খুব দরকারী হতে পারে, এবং কোড লেখা আরও সুবিধাজনক করে তুলতে পারে। যদিও ভ্যারিয়েবলগুলো ডিফল্টরূপে অপরিবর্তনীয়, আপনি অধ্যায় ২-এর মতো ভ্যারিয়েবলের নামের সামনে <code>mut</code> যোগ করে সেগুলিকে পরিবর্তনযোগ্য করতে পারেন। <code>mut</code> যোগ করা কোডের ভবিষ্যতের পাঠকদের কাছেও উদ্দেশ্য প্রকাশ করে, এটা নির্দেশ করে যে কোডের অন্যান্য অংশ এই ভ্যারিয়েবলের মান পরিবর্তন করবে।</p>
+<p>উদাহরণস্বরূপ, চলুন <em>src/main.rs</em> পরিবর্তন করে নিম্নলিখিতটি করা যাক:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let mut x = 5;
+    println!("The value of x is: {x}");
+    x = 6;
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<p>যখন আমরা এখন প্রোগ্রামটি চালাই, আমরা এটি পাই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/variables`
+The value of x is: 5
+The value of x is: 6
+</code></pre>
+<p>যখন <code>mut</code> ব্যবহার করা হয়, তখন আমরা <code>x</code>-এর সাথে বাইন্ড করা মান <code>5</code> থেকে <code>6</code>-এ পরিবর্তন করার অনুমতি পাই। পরিশেষে, পরিবর্তনশীলতা ব্যবহার করবেন কি না, তা আপনার উপর নির্ভর করে এবং সেই নির্দিষ্ট পরিস্থিতিতে কোনটি সবচেয়ে স্পষ্ট বলে আপনি মনে করেন তার উপর নির্ভর করে।</p>
+<h3 id="কনসটযানট-constants"><a class="header" href="#কনসটযানট-constants">কনস্ট্যান্ট (Constants)</a></h3>
+<p>অপরিবর্তনীয় ভ্যারিয়েবলের মতো, <em>কনস্ট্যান্ট</em> হলো এমন মান যা একটি নামের সাথে বাইন্ড করা থাকে এবং পরিবর্তন করার অনুমতি নেই, তবে কনস্ট্যান্ট এবং ভ্যারিয়েবলের মধ্যে কয়েকটি পার্থক্য রয়েছে।</p>
+<p>প্রথমত, আপনাকে কনস্ট্যান্টের সাথে <code>mut</code> ব্যবহার করার অনুমতি নেই। কনস্ট্যান্ট শুধু ডিফল্টরূপে অপরিবর্তনীয় নয়—তারা সবসময়ই অপরিবর্তনীয়। আপনি <code>let</code> কীওয়ার্ডের পরিবর্তে <code>const</code> কীওয়ার্ড ব্যবহার করে কনস্ট্যান্ট ঘোষণা করেন, এবং মানের টাইপ <em>অবশ্যই</em> অ্যানোটেট করতে হবে। আমরা পরবর্তী বিভাগে, <a href="ch03-02-data-types.html#data-types">"ডেটা টাইপ"</a>-এ, টাইপ এবং টাইপ অ্যানোটেশন নিয়ে আলোচনা করব, তাই এখনই বিস্তারিত নিয়ে চিন্তা করবেন না। শুধু জেনে রাখুন যে আপনাকে সবসময় টাইপ অ্যানোটেট করতে হবে।</p>
+<p>কনস্ট্যান্ট যেকোনো স্কোপে, এমনকি গ্লোবাল স্কোপেও ঘোষণা করা যেতে পারে, যা তাদের সেইসব মানের জন্য দরকারী করে তোলে যা কোডের অনেক অংশের জানা প্রয়োজন।</p>
+<p>শেষ পার্থক্য হল যে কনস্ট্যান্ট শুধুমাত্র একটি কনস্ট্যান্ট এক্সপ্রেশনে সেট করা যেতে পারে, এমন কোনো মানের ফলাফলে নয় যা কেবল রানটাইমে গণনা করা যেতে পারে।</p>
+<p>এখানে একটি কনস্ট্যান্ট ঘোষণার উদাহরণ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
+<span class="boring">}</span></code></pre></pre>
+<p>কনস্ট্যান্টের নাম <code>THREE_HOURS_IN_SECONDS</code> এবং এর মান 60 (এক মিনিটে সেকেন্ডের সংখ্যা) কে 60 (এক ঘন্টায় মিনিটের সংখ্যা) দিয়ে এবং তারপর 3 (এই প্রোগ্রামে আমরা যত ঘন্টা গণনা করতে চাই) দিয়ে গুণ করার ফলাফলে সেট করা হয়েছে। কনস্ট্যান্টের জন্য রাস্টের নামকরণের প্রথা হল সব বড় হাতের অক্ষর ব্যবহার করা এবং শব্দগুলোর মধ্যে আন্ডারস্কোর ব্যবহার করা। কম্পাইলার কম্পাইল করার সময় একটি সীমিত সেট অপারেশন মূল্যায়ন করতে সক্ষম, যা আমাদের এই মানটিকে এমনভাবে লেখার সুযোগ দেয় যা বোঝা এবং যাচাই করা সহজ, এই কনস্ট্যান্টটিকে 10,800 মানে সেট করার পরিবর্তে। কনস্ট্যান্ট ঘোষণা করার সময় কোন অপারেশনগুলো ব্যবহার করা যেতে পারে সে সম্পর্কে আরও তথ্যের জন্য <a href="../reference/const_eval.html">রাস্ট রেফারেন্সের কনস্ট্যান্ট মূল্যায়ন সম্পর্কিত বিভাগ</a> দেখুন।</p>
+<p>কনস্ট্যান্টগুলো একটি প্রোগ্রাম চলার পুরো সময় জুড়ে বৈধ থাকে, যে স্কোপে তারা ঘোষণা করা হয়েছিল তার মধ্যে। এই বৈশিষ্ট্যটি কনস্ট্যান্টগুলোকে আপনার অ্যাপ্লিকেশনের ডোমেনের এমন মানগুলোর জন্য দরকারী করে তোলে যা প্রোগ্রামের একাধিক অংশের জানা প্রয়োজন হতে পারে, যেমন কোনো খেলোয়াড় সর্বোচ্চ যত পয়েন্ট অর্জন করতে পারে, বা আলোর গতি।</p>
+<p>আপনার প্রোগ্রাম জুড়ে ব্যবহৃত হার্ডকোডেড মানগুলোকে কনস্ট্যান্ট হিসাবে নামকরণ করা কোডের ভবিষ্যতের রক্ষণাবেক্ষণকারীদের কাছে সেই মানের অর্থ বোঝাতে দরকারী। এটি আপনার কোডে কেবল একটি জায়গা রাখতেও সাহায্য করে যা ভবিষ্যতে হার্ডকোডেড মান আপডেট করার প্রয়োজন হলে পরিবর্তন করতে হবে।</p>
+<h3 id="শযাডোইং-shadowing"><a class="header" href="#শযাডোইং-shadowing">শ্যাডোইং (Shadowing)</a></h3>
+<p>যেমন আপনি অধ্যায় ২-এর গেসিং গেম টিউটোরিয়ালে দেখেছেন, আপনি একটি পূর্ববর্তী ভ্যারিয়েবলের একই নামে একটি নতুন ভ্যারিয়েবল ঘোষণা করতে পারেন। রাস্টেশিয়ানরা বলেন যে প্রথম ভ্যারিয়েবলটি দ্বিতীয়টি দ্বারা <em>শ্যাডো</em> (shadowed) করা হয়েছে, যার মানে হল যে দ্বিতীয় ভ্যারিয়েবলটি হল যা কম্পাইলার দেখবে যখন আপনি ভ্যারিয়েবলের নামটি ব্যবহার করবেন। কার্যকরভাবে, দ্বিতীয় ভ্যারিয়েবলটি প্রথমটিকে ছাপিয়ে যায়, ভ্যারিয়েবলের নামের যেকোনো ব্যবহার নিজের দিকে নিয়ে নেয় যতক্ষণ না এটি নিজে শ্যাডো করা হয় বা স্কোপ শেষ হয়। আমরা একই ভ্যারিয়েবলের নাম ব্যবহার করে এবং <code>let</code> কীওয়ার্ডের ব্যবহার পুনরাবৃত্তি করে একটি ভ্যারিয়েবলকে শ্যাডো করতে পারি, যেমনটি নিচে দেওয়া হল:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 5;
+
+    let x = x + 1;
+
+    {
+        let x = x * 2;
+        println!("The value of x in the inner scope is: {x}");
+    }
+
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<p>এই প্রোগ্রামটি প্রথমে <code>x</code>-কে <code>5</code> মানের সাথে বাইন্ড করে। তারপরে এটি <code>let x =</code> পুনরাবৃত্তি করে একটি নতুন ভ্যারিয়েবল <code>x</code> তৈরি করে, মূল মানটি নিয়ে এবং <code>1</code> যোগ করে যাতে <code>x</code>-এর মান তখন <code>6</code> হয়। তারপর, কার্লি ব্র্যাকেট দিয়ে তৈরি একটি অভ্যন্তরীণ স্কোপের মধ্যে, তৃতীয় <code>let</code> স্টেটমেন্টটিও <code>x</code>-কে শ্যাডো করে এবং একটি নতুন ভ্যারিয়েবল তৈরি করে, পূর্ববর্তী মানকে <code>2</code> দিয়ে গুণ করে <code>x</code>-কে <code>12</code> মান দেয়। যখন সেই স্কোপ শেষ হয়ে যায়, তখন অভ্যন্তরীণ শ্যাডোইং শেষ হয় এবং <code>x</code> আবার <code>6</code>-এ ফিরে আসে। যখন আমরা এই প্রোগ্রামটি চালাই, তখন এটি নিম্নলিখিত আউটপুট দেবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/variables`
+The value of x in the inner scope is: 12
+The value of x is: 6
+</code></pre>
+<p>শ্যাডোইং একটি ভ্যারিয়েবলকে <code>mut</code> হিসাবে চিহ্নিত করার থেকে ভিন্ন কারণ আমরা যদি <code>let</code> কীওয়ার্ড ব্যবহার না করে ভুলবশত এই ভ্যারিয়েবলে পুনরায় অ্যাসাইন করার চেষ্টা করি তবে আমরা একটি কম্পাইল-টাইম এরর পাব। <code>let</code> ব্যবহার করে, আমরা একটি মানের উপর কয়েকটি রূপান্তর করতে পারি কিন্তু সেই রূপান্তরগুলো সম্পন্ন হওয়ার পরে ভ্যারিয়েবলটি অপরিবর্তনীয় থাকে।</p>
+<p><code>mut</code> এবং শ্যাডোইংয়ের মধ্যে অন্য পার্থক্য হল যে যেহেতু আমরা <code>let</code> কীওয়ার্ডটি আবার ব্যবহার করার সময় কার্যকরভাবে একটি নতুন ভ্যারিয়েবল তৈরি করছি, তাই আমরা মানের টাইপ পরিবর্তন করতে পারি কিন্তু একই নাম পুনরায় ব্যবহার করতে পারি। উদাহরণস্বরূপ, ধরা যাক আমাদের প্রোগ্রাম একজন ব্যবহারকারীকে কিছু টেক্সটের মধ্যে কতগুলো স্পেস চায় তা স্পেস ক্যারেক্টার ইনপুট করে দেখাতে বলে, এবং তারপর আমরা সেই ইনপুটটিকে একটি সংখ্যা হিসাবে সংরক্ষণ করতে চাই:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let spaces = "   ";
+    let spaces = spaces.len();
+<span class="boring">}</span></code></pre></pre>
+<p>প্রথম <code>spaces</code> ভ্যারিয়েবলটি একটি স্ট্রিং টাইপ এবং দ্বিতীয় <code>spaces</code> ভ্যারিয়েবলটি একটি সংখ্যা টাইপ। শ্যাডোইং এইভাবে আমাদের <code>spaces_str</code> এবং <code>spaces_num</code> এর মতো বিভিন্ন নাম নিয়ে আসা থেকে বাঁচায়; পরিবর্তে, আমরা সহজ <code>spaces</code> নামটি পুনরায় ব্যবহার করতে পারি। তবে, আমরা যদি এর জন্য <code>mut</code> ব্যবহার করার চেষ্টা করি, যেমনটি এখানে দেখানো হয়েছে, আমরা একটি কম্পাইল-টাইম এরর পাব:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let mut spaces = "   ";
+    spaces = spaces.len();
+<span class="boring">}</span></code></pre>
+<p>এররটি বলছে যে আমাদের একটি ভ্যারিয়েবলের টাইপ মিউটেট করার অনুমতি নেই:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling variables v0.1.0 (file:///projects/variables)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:3:14
+  |
+2 |     let mut spaces = "   ";
+  |                      ----- expected due to this value
+3 |     spaces = spaces.len();
+  |              ^^^^^^^^^^^^ expected `&amp;str`, found `usize`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `variables` (bin "variables") due to 1 previous error
+</code></pre>
+<p>এখন আমরা ভ্যারিয়েবলগুলো কীভাবে কাজ করে তা অন্বেষণ করেছি, চলুন দেখা যাক তাদের আর কী কী ডেটা টাইপ থাকতে পারে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-00-common-programming-concepts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-02-data-types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-00-common-programming-concepts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-02-data-types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

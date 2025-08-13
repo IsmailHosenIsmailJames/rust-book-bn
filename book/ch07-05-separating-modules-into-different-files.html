@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>মডিউলগুলোকে বিভিন্ন ফাইলে আলাদা করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="মডিউলগুলোকে-বিভিনন-ফাইলে-বিভকত-করা"><a class="header" href="#মডিউলগুলোকে-বিভিনন-ফাইলে-বিভকত-করা">মডিউলগুলোকে বিভিন্ন ফাইলে বিভক্ত করা</a></h2>
+<p>এখন পর্যন্ত, এই অধ্যায়ের সমস্ত উদাহরণে একটি ফাইলের মধ্যেই একাধিক মডিউল ডিফাইন করা হয়েছে। যখন মডিউলগুলো বড় হয়ে যায়, তখন কোড নেভিগেট করা সহজ করার জন্য আপনি তাদের ডেফিনিশনগুলোকে একটি পৃথক ফাইলে সরাতে চাইতে পারেন।</p>
+<p>উদাহরণস্বরূপ, চলুন Listing 7-17-এর কোড থেকে শুরু করি যেখানে একাধিক রেস্তোরাঁ মডিউল ছিল। আমরা সব মডিউল ক্রেট রুট ফাইলে ডিফাইন না করে, মডিউলগুলোকে আলাদা ফাইলে এক্সট্র্যাক্ট করব। এই ক্ষেত্রে, ক্রেট রুট ফাইলটি হলো <em>src/lib.rs</em>, কিন্তু এই পদ্ধতিটি বাইনারি ক্রেটের ক্ষেত্রেও কাজ করে যার ক্রেট রুট ফাইল হলো <em>src/main.rs</em>।</p>
+<p>প্রথমে আমরা <code>front_of_house</code> মডিউলটিকে তার নিজস্ব ফাইলে এক্সট্র্যাক্ট করব। <code>front_of_house</code> মডিউলের জন্য কোঁকড়া বন্ধনীর (curly brackets) ভিতরের কোডটি সরিয়ে ফেলুন, শুধুমাত্র <code>mod front_of_house;</code> ডিক্লেয়ারেশনটি রেখে দিন, যাতে <em>src/lib.rs</em> ফাইলে Listing 7-21-এ দেখানো কোডটি থাকে। মনে রাখবেন, যতক্ষণ না আমরা Listing 7-22-এ <em>src/front_of_house.rs</em> ফাইলটি তৈরি করছি, ততক্ষণ এটি কম্পাইল হবে না।</p>
+<Listing number="7-21" file-name="src/lib.rs" caption="`front_of_house` মডিউল ডিক্লেয়ার করা যার বডি *src/front_of_house.rs* ফাইলে থাকবে">
+<pre><code class="language-rust ignore does_not_compile">mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}</code></pre>
+</Listing>
+<p>এরপর, কোঁকড়া বন্ধনীর মধ্যে যে কোডটি ছিল, সেটি <em>src/front_of_house.rs</em> নামের একটি নতুন ফাইলে রাখুন, যেমনটি Listing 7-22-এ দেখানো হয়েছে। কম্পাইলার জানে যে এই ফাইলটিতে কোড খুঁজতে হবে কারণ এটি ক্রেট রুটে <code>front_of_house</code> নামের মডিউল ডিক্লেয়ারেশনটি পেয়েছে।</p>
+<Listing number="7-22" file-name="src/front_of_house.rs" caption="*src/front_of_house.rs* ফাইলের মধ্যে `front_of_house` মডিউলের ডেফিনিশন">
+<pre><code class="language-rust ignore">pub mod hosting {
+    pub fn add_to_waitlist() {}
+}```
+
+&lt;/Listing&gt;
+
+মনে রাখবেন যে আপনার মডিউল ট্রি-তে একটি `mod` ডিক্লেয়ারেশন ব্যবহার করে একটি ফাইল শুধুমাত্র _একবারই_ লোড করতে হবে। একবার কম্পাইলার জেনে গেলে যে ফাইলটি প্রজেক্টের অংশ (এবং `mod` স্টেটমেন্টটি কোথায় রেখেছেন তার উপর ভিত্তি করে মডিউল ট্রি-তে কোডটি কোথায় অবস্থিত তা জানে), আপনার প্রজেক্টের অন্যান্য ফাইলগুলোকে লোড করা ফাইলের কোডটি তার ডিক্লেয়ার করা পাথ ব্যবহার করে রেফার করা উচিত, যা [“মডিউল ট্রি-তে কোনো আইটেম রেফার করার জন্য পাথ”][paths]&lt;!-- ignore --&gt; বিভাগে আলোচনা করা হয়েছে। অন্য কথায়, `mod` একটি “include” অপারেশন _নয়_ যা আপনি অন্যান্য প্রোগ্রামিং ভাষায় দেখে থাকতে পারেন।
+
+এর পরে, আমরা `hosting` মডিউলটিকে তার নিজস্ব ফাইলে এক্সট্র্যাক্ট করব। প্রক্রিয়াটি কিছুটা ভিন্ন কারণ `hosting` হলো `front_of_house`-এর একটি চাইল্ড মডিউল, রুট মডিউলের নয়। আমরা `hosting`-এর জন্য ফাইলটিকে একটি নতুন ডিরেক্টরিতে রাখব যার নাম হবে মডিউল ট্রি-তে তার পূর্বপুরুষদের নামে, এই ক্ষেত্রে _src/front_of_house_।
+
+`hosting` সরানো শুরু করতে, আমরা _src/front_of_house.rs_ পরিবর্তন করে শুধুমাত্র `hosting` মডিউলের ডিক্লেয়ারেশনটি রাখব:
+
+&lt;Listing file-name="src/front_of_house.rs"&gt;
+
+```rust,ignore
+pub mod hosting;</code></pre>
+</Listing>
+<p>তারপর আমরা একটি <em>src/front_of_house</em> ডিরেক্টরি এবং একটি <em>hosting.rs</em> ফাইল তৈরি করব যাতে <code>hosting</code> মডিউলে করা ডেফিনিশনগুলো থাকবে:</p>
+<Listing file-name="src/front_of_house/hosting.rs">
+<pre><code class="language-rust ignore">pub fn add_to_waitlist() {}</code></pre>
+</Listing>
+<p>যদি আমরা এর পরিবর্তে <em>hosting.rs</em> ফাইলটি <em>src</em> ডিরেক্টরিতে রাখতাম, কম্পাইলার আশা করত যে <em>hosting.rs</em> কোডটি ক্রেট রুটে ডিক্লেয়ার করা একটি <code>hosting</code> মডিউলে থাকবে, এবং <code>front_of_house</code> মডিউলের চাইল্ড হিসাবে ডিক্লেয়ার করা হবে না। কোন মডিউলের কোডের জন্য কোন ফাইলগুলো পরীক্ষা করতে হবে সে সম্পর্কে কম্পাইলারের নিয়মগুলোর মানে হলো ডিরেক্টরি এবং ফাইলগুলো মডিউল ট্রি-এর সাথে আরও ঘনিষ্ঠভাবে মিলে যায়।</p>
+<blockquote>
+<h3 id="বিকলপ-ফাইল-পাথ"><a class="header" href="#বিকলপ-ফাইল-পাথ">বিকল্প ফাইল পাথ</a></h3>
+<p>এখন পর্যন্ত আমরা সবচেয়ে প্রচলিত ফাইল পাথগুলো কভার করেছি যা রাস্ট কম্পাইলার ব্যবহার করে, কিন্তু রাস্ট একটি পুরানো স্টাইলের ফাইল পাথও সাপোর্ট করে। ক্রেট রুটে ডিক্লেয়ার করা <code>front_of_house</code> নামের একটি মডিউলের জন্য, কম্পাইলার মডিউলের কোডটি খুঁজবে:</p>
+<ul>
+<li><em>src/front_of_house.rs</em> (যা আমরা কভার করেছি)</li>
+<li><em>src/front_of_house/mod.rs</em> (পুরানো স্টাইল, এখনও সমর্থিত পাথ)</li>
+</ul>
+<p><code>front_of_house</code>-এর একটি সাবমডিউল <code>hosting</code>-এর জন্য, কম্পাইলার মডিউলের কোড খুঁজবে:</p>
+<ul>
+<li><em>src/front_of_house/hosting.rs</em> (যা আমরা কভার করেছি)</li>
+<li><em>src/front_of_house/hosting/mod.rs</em> (পুরানো স্টাইল, এখনও সমর্থিত পাথ)</li>
+</ul>
+<p>আপনি যদি একই মডিউলের জন্য উভয় স্টাইল ব্যবহার করেন, আপনি একটি কম্পাইলার এরর পাবেন। একই প্রজেক্টে বিভিন্ন মডিউলের জন্য উভয় স্টাইলের মিশ্রণ ব্যবহার করা অনুমোদিত, কিন্তু এটি আপনার প্রজেক্ট নেভিগেট করা লোকেদের জন্য বিভ্রান্তিকর হতে পারে।</p>
+<p><em>mod.rs</em> নামের ফাইল ব্যবহার করার স্টাইলের প্রধান অসুবিধা হলো আপনার প্রজেক্টে অনেকগুলো <em>mod.rs</em> নামের ফাইল তৈরি হতে পারে, যা আপনার এডিটরে একই সময়ে খোলা থাকলে বিভ্রান্তিকর হতে পারে।</p>
+</blockquote>
+<p>আমরা প্রতিটি মডিউলের কোড একটি পৃথক ফাইলে সরিয়েছি, এবং মডিউল ট্রি একই রয়েছে। <code>eat_at_restaurant</code>-এর ফাংশন কলগুলো কোনো পরিবর্তন ছাড়াই কাজ করবে, যদিও ডেফিনিশনগুলো বিভিন্ন ফাইলে রয়েছে। এই কৌশলটি আপনাকে মডিউলগুলো আকারে বড় হওয়ার সাথে সাথে নতুন ফাইলে স্থানান্তর করতে দেয়।</p>
+<p>মনে রাখবেন যে <em>src/lib.rs</em>-এর <code>pub use crate::front_of_house::hosting</code> স্টেটমেন্টটিও পরিবর্তিত হয়নি, এবং <code>use</code>-এর ক্রেটের অংশ হিসাবে কোন ফাইলগুলো কম্পাইল করা হয় তার উপর কোনো প্রভাব নেই। <code>mod</code> কীওয়ার্ড মডিউল ডিক্লেয়ার করে, এবং রাস্ট সেই মডিউলে থাকা কোডের জন্য মডিউলের নামের সাথে মিলিয়ে একটি ফাইল খোঁজে।</p>
+<h2 id="সারসংকষেপ"><a class="header" href="#সারসংকষেপ">সারসংক্ষেপ</a></h2>
+<p>রাস্ট আপনাকে একটি প্যাকেজকে একাধিক ক্রেটে এবং একটি ক্রেটকে একাধিক মডিউলে বিভক্ত করতে দেয় যাতে আপনি এক মডিউলে ডিফাইন করা আইটেম অন্য মডিউল থেকে রেফার করতে পারেন। আপনি অ্যাবসোলিউট বা রিলেটিভ পাথ নির্দিষ্ট করে এটি করতে পারেন। এই পাথগুলো একটি <code>use</code> স্টেটমেন্টের মাধ্যমে স্কোপে আনা যেতে পারে যাতে আপনি সেই স্কোপে আইটেমটির একাধিক ব্যবহারের জন্য একটি ছোট পাথ ব্যবহার করতে পারেন। মডিউল কোড ডিফল্টরূপে প্রাইভেট থাকে, কিন্তু আপনি <code>pub</code> কীওয়ার্ড যোগ করে ডেফিনিশনগুলোকে পাবলিক করতে পারেন।</p>
+<p>পরবর্তী অধ্যায়ে, আমরা স্ট্যান্ডার্ড লাইব্রেরির কিছু কালেকশন ডেটা স্ট্রাকচার দেখব যা আপনি আপনার সুন্দরভাবে সাজানো কোডে ব্যবহার করতে পারবেন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch08-00-common-collections.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch08-00-common-collections.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

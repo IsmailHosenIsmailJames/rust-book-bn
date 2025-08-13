@@ -1,0 +1,513 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>জেনেরিক ডেটা টাইপ - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="জেনেরিক-ডেটা-টাইপ"><a class="header" href="#জেনেরিক-ডেটা-টাইপ">জেনেরিক ডেটা টাইপ</a></h2>
+<p>আমরা ফাংশন সিগনেচার বা struct-এর মতো আইটেমগুলোর জন্য ডেফিনিশন তৈরি করতে generics ব্যবহার করি, যা আমরা পরে বিভিন্ন concrete ডেটা টাইপের সাথে ব্যবহার করতে পারি। চলুন প্রথমে দেখি কিভাবে generics ব্যবহার করে ফাংশন, struct, enum, এবং মেথড ডিফাইন করা যায়। তারপর আমরা আলোচনা করব generics কীভাবে কোডের পারফরম্যান্সকে প্রভাবিত করে।</p>
+<h3 id="ফাংশন-ডেফিনিশনে"><a class="header" href="#ফাংশন-ডেফিনিশনে">ফাংশন ডেফিনিশনে</a></h3>
+<p>যখন আমরা generics ব্যবহার করে এমন একটি ফাংশন ডিফাইন করি, তখন আমরা ফাংশনের সিগনেচারে generics গুলোকে রাখি, যেখানে আমরা সাধারণত প্যারামিটার এবং রিটার্ন ভ্যালুর ডেটা টাইপ নির্দিষ্ট করি। এভাবে কোড লিখলে আমাদের কোড আরও বেশি ফ্লেক্সিবল হয়, কোডের পুনরাবৃত্তি রোধ করে এবং ফাংশন ব্যবহারকারীদের জন্য আরও বেশি কার্যকারিতা প্রদান করে।</p>
+<p>আমাদের <code>largest</code> ফাংশনটি নিয়ে কাজ করা যাক। লিস্টিং ১০-৪ এ দুটি ফাংশন দেখানো হয়েছে যারা উভয়েই একটি স্লাইসের মধ্যে সবচেয়ে বড় মান খুঁজে বের করে। এরপর আমরা এদেরকে generics ব্যবহার করে একটি একক ফাংশনে একত্রিত করব।</p>
+<Listing number="10-4" file-name="src/main.rs" caption="দুটি ফাংশন যাদের মধ্যে কেবল তাদের নাম এবং সিগনেচারের টাইপ ভিন্ন">
+<pre><pre class="playground"><code class="language-rust edition2024">fn largest_i32(list: &amp;[i32]) -&gt; &amp;i32 {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn largest_char(list: &amp;[char]) -&gt; &amp;char {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest_i32(&amp;number_list);
+    println!("The largest number is {result}");
+<span class="boring">    assert_eq!(*result, 100);
+</span>
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest_char(&amp;char_list);
+    println!("The largest char is {result}");
+<span class="boring">    assert_eq!(*result, 'y');
+</span>}```
+
+&lt;/Listing&gt;
+
+`largest_i32` ফাংশনটি আমরা লিস্টিং ১০-৩ এ এক্সট্র্যাক্ট করেছিলাম, যা একটি স্লাইস থেকে সবচেয়ে বড় `i32` খুঁজে বের করে। `largest_char` ফাংশনটি একটি স্লাইস থেকে সবচেয়ে বড় `char` খুঁজে বের করে। দুটি ফাংশনের বডি একই কোড ধারণ করে, তাই আসুন একটি জেনেরিক টাইপ প্যারামিটার ব্যবহার করে একটি একক ফাংশন তৈরি করে এই পুনরাবৃত্তি দূর করি।
+
+একটি নতুন একক ফাংশনে টাইপগুলোকে প্যারামিটারাইজ করার জন্য, আমাদের টাইপ প্যারামিটারের একটি নাম দিতে হবে, ঠিক যেমন আমরা একটি ফাংশনের ভ্যালু প্যারামিটারের জন্য নাম দিই। আপনি টাইপ প্যারামিটারের নাম হিসেবে যেকোনো আইডেন্টিফায়ার ব্যবহার করতে পারেন। কিন্তু আমরা `T` ব্যবহার করব কারণ, প্রথা অনুযায়ী, Rust-এ টাইপ প্যারামিটারের নাম ছোট হয়, প্রায়শই কেবল একটি অক্ষর, এবং Rust-এর টাইপ-নামকরণের প্রথা হলো CamelCase। _type_-এর সংক্ষিপ্ত রূপ হিসেবে `T` বেশিরভাগ Rust প্রোগ্রামারদের প্রথম পছন্দ।
+
+যখন আমরা ফাংশনের বডিতে একটি প্যারামিটার ব্যবহার করি, তখন আমাদের সিগনেচারে প্যারামিটারের নামটি ডিক্লেয়ার করতে হয় যাতে কম্পাইলার জানে সেই নামের অর্থ কী। একইভাবে, যখন আমরা একটি ফাংশন সিগনেচারে একটি টাইপ প্যারামিটারের নাম ব্যবহার করি, তখন ব্যবহারের আগে আমাদের টাইপ প্যারামিটারের নামটি ডিক্লেয়ার করতে হয়। জেনেরিক `largest` ফাংশনটি ডিফাইন করতে, আমরা ফাংশনের নাম এবং প্যারামিটার তালিকার মধ্যে অ্যাঙ্গেল ব্র্যাকেট `&lt;&gt;`-এর ভিতরে টাইপের নাম ডিক্লেয়ার করি, এভাবে:
+
+```rust,ignore
+fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {</code></pre></pre>
+<p>এই ডেফিনিশনটিকে আমরা এভাবে পড়ি: <code>largest</code> ফাংশনটি কোনো একটি টাইপ <code>T</code>-এর উপর জেনেরিক। এই ফাংশনের <code>list</code> নামে একটি প্যারামিটার আছে, যা <code>T</code> টাইপের ভ্যালুগুলোর একটি স্লাইস। <code>largest</code> ফাংশনটি একই টাইপ <code>T</code>-এর একটি ভ্যালুর রেফারেন্স রিটার্ন করবে।</p>
+<p>লিস্টিং ১০-৫ এ জেনেরিক ডেটা টাইপ ব্যবহার করে সম্মিলিত <code>largest</code> ফাংশনের ডেফিনিশন দেখানো হয়েছে। লিস্টিংটি আরও দেখায় যে আমরা কীভাবে <code>i32</code> মানের স্লাইস বা <code>char</code> মানের স্লাইস দিয়ে ফাংশনটি কল করতে পারি। মনে রাখবেন যে এই কোডটি এখনও কম্পাইল হবে না।</p>
+<Listing number="10-5" file-name="src/main.rs" caption="`largest` ফাংশন জেনেরিক টাইপ প্যারামিটার ব্যবহার করে; এটি এখনও কম্পাইল হয় না">
+<pre><code class="language-rust ignore does_not_compile">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {
+    let mut largest = &amp;list[0];
+
+    for item in list {
+        if item &gt; largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&amp;number_list);
+    println!("The largest number is {result}");
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest(&amp;char_list);
+    println!("The largest char is {result}");
+}</code></pre>
+</Listing>
+<p>যদি আমরা এই কোডটি এখনই কম্পাইল করি, আমরা এই এররটি পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0369]: binary operation `&gt;` cannot be applied to type `&amp;T`
+ --&gt; src/main.rs:5:17
+  |
+5 |         if item &gt; largest {
+  |            ---- ^ ------- &amp;T
+  |            |
+  |            &amp;T
+  |
+help: consider restricting type parameter `T` with trait `PartialOrd`
+  |
+1 | fn largest&lt;T: std::cmp::PartialOrd&gt;(list: &amp;[T]) -&gt; &amp;T {
+  |             ++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0369`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p>হেল্প টেক্সট-এ <code>std::cmp::PartialOrd</code>-এর কথা উল্লেখ করা হয়েছে, যা একটি <em>trait</em>, এবং আমরা পরবর্তী সেকশনে traits নিয়ে কথা বলব। আপাতত, জেনে রাখুন যে এই এররটি বলছে যে <code>largest</code> ফাংশনের বডি <code>T</code>-এর সম্ভাব্য সকল টাইপের জন্য কাজ করবে না। যেহেতু আমরা বডিতে <code>T</code> টাইপের মান তুলনা করতে চাই, তাই আমরা কেবল সেই টাইপগুলো ব্যবহার করতে পারি যাদের মান வரிசை অনুযায়ী সাজানো (ordered) যায়। তুলনা সক্রিয় করার জন্য, স্ট্যান্ডার্ড লাইব্রেরিতে <code>std::cmp::PartialOrd</code> trait রয়েছে যা আপনি টাইপগুলিতে ইমপ্লিমেন্ট করতে পারেন (এই trait সম্পর্কে আরও জানতে Appendix C দেখুন)। লিস্টিং ১০-৫ ঠিক করার জন্য, আমরা হেল্প টেক্সট-এর পরামর্শ অনুসরণ করতে পারি এবং <code>T</code>-এর জন্য বৈধ টাইপগুলোকে কেবল তাদের মধ্যে সীমাবদ্ধ রাখতে পারি যারা <code>PartialOrd</code> ইমপ্লিমেন্ট করে। এরপর লিস্টিংটি কম্পাইল হবে, কারণ স্ট্যান্ডার্ড লাইব্রেরি <code>i32</code> এবং <code>char</code> উভয়ের উপরেই <code>PartialOrd</code> ইমপ্লিমেন্ট করে।</p>
+<h3 id="struct-ডেফিনিশনে"><a class="header" href="#struct-ডেফিনিশনে">Struct ডেফিনিশনে</a></h3>
+<p>আমরা <code>&lt;&gt;</code> সিনট্যাক্স ব্যবহার করে এক বা একাধিক ফিল্ডে জেনেরিক টাইপ প্যারামিটার ব্যবহার করার জন্য struct ডিফাইন করতে পারি। লিস্টিং ১০-৬ একটি <code>Point&lt;T&gt;</code> struct ডিফাইন করে যা যেকোনো টাইপের <code>x</code> এবং <code>y</code> কো-অর্ডিনেট ভ্যালু ধারণ করে।</p>
+<Listing number="10-6" file-name="src/main.rs" caption="একটি `Point<T>` struct যা `T` টাইপের `x` এবং `y` ভ্যালু ধারণ করে">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 4.0 };
+}</code></pre></pre>
+</Listing>
+<p>struct ডেফিনিশনে generics ব্যবহারের সিনট্যাক্স ফাংশন ডেফিনিশনে ব্যবহারের মতোই। প্রথমে আমরা struct-এর নামের ঠিক পরে অ্যাঙ্গেল ব্র্যাকেটের মধ্যে টাইপ প্যারামিটারের নাম ডিক্লেয়ার করি। তারপর আমরা struct ডেফিনিশনের মধ্যে জেনেরিক টাইপ ব্যবহার করি যেখানে আমরা অন্যথায় concrete ডেটা টাইপ নির্দিষ্ট করতাম।</p>
+<p>মনে রাখবেন যে আমরা <code>Point&lt;T&gt;</code> ডিফাইন করতে কেবল একটি জেনেরিক টাইপ ব্যবহার করেছি, তাই এই ডেফিনিশনটি বলে যে <code>Point&lt;T&gt;</code> struct-টি কোনো একটি টাইপ <code>T</code>-এর উপর জেনেরিক, এবং <code>x</code> ও <code>y</code> ফিল্ড দুটি <em>উভয়ই</em> সেই একই টাইপের, টাইপটি যা-ই হোক না কেন। যদি আমরা ভিন্ন টাইপের মান দিয়ে একটি <code>Point&lt;T&gt;</code>-এর ইনস্ট্যান্স তৈরি করি, যেমন লিস্টিং ১০-৭-এ, আমাদের কোড কম্পাইল হবে না।</p>
+<Listing number="10-7" file-name="src/main.rs" caption="`x` এবং `y` ফিল্ড অবশ্যই একই টাইপের হতে হবে কারণ উভয়েরই একই জেনেরিক ডেটা টাইপ `T` রয়েছে।">
+<pre><code class="language-rust ignore does_not_compile">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let wont_work = Point { x: 5, y: 4.0 };
+}</code></pre>
+</Listing>
+<p>এই উদাহরণে, যখন আমরা <code>x</code>-কে ইন্টিজার ভ্যালু <code>5</code> অ্যাসাইন করি, তখন আমরা কম্পাইলারকে জানাই যে <code>Point&lt;T&gt;</code>-এর এই ইনস্ট্যান্সের জন্য জেনেরিক টাইপ <code>T</code> একটি ইন্টিজার হবে। তারপর যখন আমরা <code>y</code>-এর জন্য <code>4.0</code> নির্দিষ্ট করি, যা আমরা <code>x</code>-এর মতো একই টাইপের হিসেবে ডিফাইন করেছি, তখন আমরা একটি টাইপ মিসম্যাচ এরর পাব, যেমন:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling chapter10 v0.1.0 (file:///projects/chapter10)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:7:38
+  |
+7 |     let wont_work = Point { x: 5, y: 4.0 };
+  |                                      ^^^ expected integer, found floating-point number
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
+</code></pre>
+<p><code>x</code> এবং <code>y</code> উভয়ই জেনেরিক কিন্তু ভিন্ন টাইপের হতে পারে এমন একটি <code>Point</code> struct ডিফাইন করতে, আমরা একাধিক জেনেরিক টাইপ প্যারামিটার ব্যবহার করতে পারি। উদাহরণস্বরূপ, লিস্টিং ১০-৮-এ, আমরা <code>Point</code>-এর ডেফিনিশন পরিবর্তন করে <code>T</code> এবং <code>U</code> দুটি টাইপের উপর জেনেরিক করেছি, যেখানে <code>x</code>-এর টাইপ <code>T</code> এবং <code>y</code>-এর টাইপ <code>U</code>।</p>
+<Listing number="10-8" file-name="src/main.rs" caption="একটি `Point<T, U>` দুটি টাইপের উপর জেনেরিক যাতে `x` এবং `y` ভিন্ন টাইপের মান হতে পারে">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point&lt;T, U&gt; {
+    x: T,
+    y: U,
+}
+
+fn main() {
+    let both_integer = Point { x: 5, y: 10 };
+    let both_float = Point { x: 1.0, y: 4.0 };
+    let integer_and_float = Point { x: 5, y: 4.0 };
+}</code></pre></pre>
+</Listing>
+<p>এখন দেখানো <code>Point</code>-এর সমস্ত ইনস্ট্যান্স অনুমোদিত! আপনি একটি ডেফিনিশনে যত খুশি জেনেরিক টাইপ প্যারামিটার ব্যবহার করতে পারেন, তবে অল্প কয়েকটির বেশি ব্যবহার করলে আপনার কোড পড়া কঠিন হয়ে যায়। যদি আপনার কোডে অনেক জেনেরিক টাইপের প্রয়োজন হয়, তবে এটি ইঙ্গিত দিতে পারে যে আপনার কোডকে ছোট ছোট অংশে পুনর্গঠন করা প্রয়োজন।</p>
+<h3 id="enum-ডেফিনিশনে"><a class="header" href="#enum-ডেফিনিশনে">Enum ডেফিনিশনে</a></h3>
+<p>যেমনটি আমরা struct-এর সাথে করেছি, আমরা enum-কেও তাদের ভ্যারিয়েন্টে জেনেরিক ডেটা টাইপ ধারণ করার জন্য ডিফাইন করতে পারি। আসুন আমরা স্ট্যান্ডার্ড লাইব্রেরির দেওয়া <code>Option&lt;T&gt;</code> enum-টি আবার দেখি, যা আমরা চ্যাপ্টার ৬-এ ব্যবহার করেছি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Option&lt;T&gt; {
+    Some(T),
+    None,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>এই ডেফিনিশনটি এখন আপনার কাছে আরও বেশি অর্থবহ মনে হওয়া উচিত। जैसा कि आप देख सकते हैं, <code>Option&lt;T&gt;</code> enum টি <code>T</code> টাইপের উপর জেনেরিক এবং এর দুটি ভ্যারিয়েন্ট রয়েছে: <code>Some</code>, যা <code>T</code> টাইপের একটি মান ধারণ করে, এবং <code>None</code> ভ্যারিয়েন্ট যা কোনো মান ধারণ করে না। <code>Option&lt;T&gt;</code> enum ব্যবহার করে, আমরা একটি ঐচ্ছিক মানের অ্যাবস্ট্রাক্ট ধারণা প্রকাশ করতে পারি, এবং যেহেতু <code>Option&lt;T&gt;</code> জেনেরিক, তাই ঐচ্ছিক মানের টাইপ যা-ই হোক না কেন, আমরা এই অ্যাবস্ট্রাকশনটি ব্যবহার করতে পারি।</p>
+<p>Enum একাধিক জেনেরিক টাইপও ব্যবহার করতে পারে। <code>Result</code> enum-এর ডেফিনিশন, যা আমরা চ্যাপ্টার ৯-এ ব্যবহার করেছি, এর একটি উদাহরণ:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Result&lt;T, E&gt; {
+    Ok(T),
+    Err(E),
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>Result</code> enum-টি <code>T</code> এবং <code>E</code> দুটি টাইপের উপর জেনেরিক, এবং এর দুটি ভ্যারিয়েন্ট রয়েছে: <code>Ok</code>, যা <code>T</code> টাইপের একটি মান ধারণ করে, এবং <code>Err</code>, যা <code>E</code> টাইপের একটি মান ধারণ করে। এই ডেফিনিশনটি <code>Result</code> enum ব্যবহার করা সুবিধাজনক করে তোলে যেখানেই আমাদের এমন কোনো অপারেশন থাকে যা সফল হতে পারে (<code>T</code> টাইপের কোনো মান রিটার্ন করে) বা ব্যর্থ হতে পারে (<code>E</code> টাইপের কোনো এরর রিটার্ন করে)। প্রকৃতপক্ষে, এটিই আমরা লিস্টিং ৯-৩-এ একটি ফাইল খোলার জন্য ব্যবহার করেছিলাম, যেখানে ফাইলটি সফলভাবে খোলা হলে <code>T</code>-কে <code>std::fs::File</code> টাইপ দিয়ে পূরণ করা হয়েছিল এবং ফাইল খুলতে সমস্যা হলে <code>E</code>-কে <code>std::io::Error</code> টাইপ দিয়ে পূরণ করা হয়েছিল।</p>
+<p>যখন আপনি আপনার কোডে এমন পরিস্থিতি শনাক্ত করেন যেখানে একাধিক struct বা enum ডেফিনিশন রয়েছে যা কেবল তাদের ধারণ করা মানের টাইপের দিক থেকে ভিন্ন, তখন আপনি জেনেরিক টাইপ ব্যবহার করে পুনরাবৃত্তি এড়াতে পারেন।</p>
+<h3 id="মেথড-ডেফিনিশনে"><a class="header" href="#মেথড-ডেফিনিশনে">মেথড ডেফিনিশনে</a></h3>
+<p>আমরা struct এবং enum-এর উপর মেথড ইমপ্লিমেন্ট করতে পারি (যেমনটি আমরা চ্যাপ্টার ৫-এ করেছি) এবং তাদের ডেফিনিশনেও জেনেরিক টাইপ ব্যবহার করতে পারি। লিস্টিং ১০-৯-এ আমরা লিস্টিং ১০-৬-এ ডিফাইন করা <code>Point&lt;T&gt;</code> struct-টি দেখাচ্ছি, যার উপর <code>x</code> নামের একটি মেথড ইমপ্লিমেন্ট করা হয়েছে।</p>
+<Listing number="10-9" file-name="src/main.rs" caption="`Point<T>` struct-এর উপর `x` নামের একটি মেথড ইমপ্লিমেন্ট করা যা `T` টাইপের `x` ফিল্ডের একটি রেফারেন্স রিটার্ন করবে">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+impl&lt;T&gt; Point&lt;T&gt; {
+    fn x(&amp;self) -&gt; &amp;T {
+        &amp;self.x
+    }
+}
+
+fn main() {
+    let p = Point { x: 5, y: 10 };
+
+    println!("p.x = {}", p.x());
+}</code></pre></pre>
+</Listing>
+<p>এখানে, আমরা <code>Point&lt;T&gt;</code>-এর উপর <code>x</code> নামের একটি মেথড ডিফাইন করেছি যা <code>x</code> ফিল্ডের ডেটার একটি রেফারেন্স রিটার্ন করে।</p>
+<p>লক্ষ্য করুন যে, <code>impl</code>-এর ঠিক পরেই আমাদের <code>T</code> ডিক্লেয়ার করতে হবে যাতে আমরা <code>Point&lt;T&gt;</code> টাইপের উপর মেথড ইমপ্লিমেন্ট করছি তা নির্দিষ্ট করতে <code>T</code> ব্যবহার করতে পারি। <code>impl</code>-এর পরে <code>T</code>-কে একটি জেনেরিক টাইপ হিসেবে ডিক্লেয়ার করার মাধ্যমে, Rust শনাক্ত করতে পারে যে <code>Point</code>-এর অ্যাঙ্গেল ব্র্যাকেটের মধ্যে থাকা টাইপটি একটি জেনেরিক টাইপ, কোনো concrete টাইপ নয়। আমরা struct ডেফিনিশনে ডিক্লেয়ার করা জেনেরিক প্যারামিটারের চেয়ে এই জেনেরিক প্যারামিটারের জন্য একটি ভিন্ন নাম বেছে নিতে পারতাম, কিন্তু একই নাম ব্যবহার করাই প্রচলিত। যদি আপনি একটি জেনেরিক টাইপ ডিক্লেয়ার করে এমন একটি <code>impl</code>-এর মধ্যে একটি মেথড লেখেন, তবে সেই মেথডটি টাইপের যেকোনো ইনস্ট্যান্সের উপর ডিফাইন করা হবে, জেনেরিক টাইপের পরিবর্তে যে কোনো concrete টাইপই আসুক না কেন।</p>
+<p>আমরা টাইপের উপর মেথড ডিফাইন করার সময় জেনেরিক টাইপের উপর সীমাবদ্ধতাও নির্দিষ্ট করতে পারি। উদাহরণস্বরূপ, আমরা যেকোনো জেনেরিক টাইপের <code>Point&lt;T&gt;</code> ইনস্ট্যান্সের পরিবর্তে শুধুমাত্র <code>Point&lt;f32&gt;</code> ইনস্ট্যান্সের উপর মেথড ইমপ্লিমেন্ট করতে পারি। লিস্টিং ১০-১০-এ আমরা concrete টাইপ <code>f32</code> ব্যবহার করি, যার মানে আমরা <code>impl</code>-এর পরে কোনো টাইপ ডিক্লেয়ার করি না।</p>
+<Listing number="10-10" file-name="src/main.rs" caption="একটি `impl` ব্লক যা শুধুমাত্র জেনেরিক টাইপ প্যারামিটার `T`-এর জন্য একটি নির্দিষ্ট concrete টাইপ সহ একটি struct-এর ক্ষেত্রে প্রযোজ্য">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">struct Point&lt;T&gt; {
+</span><span class="boring">    x: T,
+</span><span class="boring">    y: T,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Point&lt;T&gt; {
+</span><span class="boring">    fn x(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.x
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Point&lt;f32&gt; {
+    fn distance_from_origin(&amp;self) -&gt; f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 5, y: 10 };
+</span><span class="boring">
+</span><span class="boring">    println!("p.x = {}", p.x());
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই কোডের মানে হলো <code>Point&lt;f32&gt;</code> টাইপের একটি <code>distance_from_origin</code> মেথড থাকবে; <code>Point&lt;T&gt;</code>-এর অন্যান্য ইনস্ট্যান্স যেখানে <code>T</code> <code>f32</code> টাইপের নয়, তাদের এই মেথডটি ডিফাইন করা থাকবে না। মেথডটি আমাদের পয়েন্টটি (0.0, 0.0) কো-অর্ডিনেটের পয়েন্ট থেকে কত দূরে তা পরিমাপ করে এবং গাণিতিক অপারেশন ব্যবহার করে যা শুধুমাত্র ফ্লোটিং-পয়েন্ট টাইপের জন্য উপলব্ধ।</p>
+<p>একটি struct ডেফিনিশনের জেনেরিক টাইপ প্যারামিটার সবসময় সেই একই struct-এর মেথড সিগনেচারে ব্যবহার করা প্যারামিটারের মতো হয় না। লিস্টিং ১০-১১ উদাহরণটিকে আরও স্পষ্ট করার জন্য <code>Point</code> struct-এর জন্য <code>X1</code> এবং <code>Y1</code> এবং <code>mixup</code> মেথড সিগনেচারের জন্য <code>X2</code> <code>Y2</code> জেনেরিক টাইপ ব্যবহার করে। মেথডটি <code>self</code> <code>Point</code> (যার টাইপ <code>X1</code>) থেকে <code>x</code> ভ্যালু এবং পাস করা <code>Point</code> (যার টাইপ <code>Y2</code>) থেকে <code>y</code> ভ্যালু নিয়ে একটি নতুন <code>Point</code> ইনস্ট্যান্স তৈরি করে।</p>
+<Listing number="10-11" file-name="src/main.rs" caption="একটি মেথড যা তার struct-এর ডেফিনিশন থেকে ভিন্ন জেনেরিক টাইপ ব্যবহার করে">
+<pre><pre class="playground"><code class="language-rust edition2024">struct Point&lt;X1, Y1&gt; {
+    x: X1,
+    y: Y1,
+}
+
+impl&lt;X1, Y1&gt; Point&lt;X1, Y1&gt; {
+    fn mixup&lt;X2, Y2&gt;(self, other: Point&lt;X2, Y2&gt;) -&gt; Point&lt;X1, Y2&gt; {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4 };
+    let p2 = Point { x: "Hello", y: 'c' };
+
+    let p3 = p1.mixup(p2);
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+}</code></pre></pre>
+</Listing>
+<p><code>main</code> ফাংশনে, আমরা একটি <code>Point</code> ডিফাইন করেছি যার <code>x</code>-এর জন্য একটি <code>i32</code> (মান <code>5</code>) এবং <code>y</code>-এর জন্য একটি <code>f64</code> (মান <code>10.4</code>) রয়েছে। <code>p2</code> ভ্যারিয়েবলটি একটি <code>Point</code> struct যার <code>x</code>-এর জন্য একটি স্ট্রিং স্লাইস (মান <code>"Hello"</code>) এবং <code>y</code>-এর জন্য একটি <code>char</code> (মান <code>c</code>) রয়েছে। <code>p1</code>-এর উপর <code>p2</code> আর্গুমেন্ট দিয়ে <code>mixup</code> কল করলে আমরা <code>p3</code> পাই, যার <code>x</code>-এর জন্য একটি <code>i32</code> থাকবে কারণ <code>x</code> <code>p1</code> থেকে এসেছে। <code>p3</code> ভ্যারিয়েবলের <code>y</code>-এর জন্য একটি <code>char</code> থাকবে কারণ <code>y</code> <code>p2</code> থেকে এসেছে। <code>println!</code> ম্যাক্রো কলটি <code>p3.x = 5, p3.y = c</code> প্রিন্ট করবে।</p>
+<p>এই উদাহরণের উদ্দেশ্য হলো এমন একটি পরিস্থিতি প্রদর্শন করা যেখানে কিছু জেনেরিক প্যারামিটার <code>impl</code>-এর সাথে এবং কিছু মেথড ডেফিনিশনের সাথে ডিক্লেয়ার করা হয়। এখানে, জেনেরিক প্যারামিটার <code>X1</code> এবং <code>Y1</code> <code>impl</code>-এর পরে ডিক্লেয়ার করা হয়েছে কারণ তারা struct ডেফিনিশনের সাথে যায়। জেনেরিক প্যারামিটার <code>X2</code> এবং <code>Y2</code> <code>fn mixup</code>-এর পরে ডিক্লেয়ার করা হয়েছে কারণ তারা কেবল মেথডের জন্য প্রাসঙ্গিক।</p>
+<h3 id="generics-বযবহার-করা-কোডের-পারফরমযানস"><a class="header" href="#generics-বযবহার-করা-কোডের-পারফরমযানস">Generics ব্যবহার করা কোডের পারফরম্যান্স</a></h3>
+<p>আপনি হয়তো ভাবছেন যে জেনেরিক টাইপ প্যারামিটার ব্যবহার করার সময় কোনো রানটাইম খরচ আছে কিনা। সুখবর হলো যে জেনেরিক টাইপ ব্যবহার করলে আপনার প্রোগ্রামটি concrete টাইপ ব্যবহার করার চেয়ে কোনো ধীর গতিতে চলবে না।</p>
+<p>Rust কম্পাইল টাইমে generics ব্যবহার করা কোডের মনোমর্ফাইজেশন (monomorphization) সম্পাদন করে এটি অর্জন করে। <em>Monomorphization</em> হলো কম্পাইল টাইমে ব্যবহৃত concrete টাইপগুলো দিয়ে জেনেরিক কোডকে নির্দিষ্ট কোডে পরিণত করার প্রক্রিয়া। এই প্রক্রিয়ায়, কম্পাইলার আমরা লিস্টিং ১০-৫-এ জেনেরিক ফাংশন তৈরি করার জন্য যে পদক্ষেপগুলো ব্যবহার করেছি তার বিপরীত কাজ করে: কম্পাইলার সেই সমস্ত জায়গা দেখে যেখানে জেনেরিক কোড কল করা হয়েছে এবং যে concrete টাইপ দিয়ে জেনেরিক কোড কল করা হয়েছে তার জন্য কোড তৈরি করে।</p>
+<p>আসুন দেখি এটি কীভাবে কাজ করে স্ট্যান্ডার্ড লাইব্রেরির জেনেরিক <code>Option&lt;T&gt;</code> enum ব্যবহার করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let integer = Some(5);
+let float = Some(5.0);
+<span class="boring">}</span></code></pre></pre>
+<p>যখন Rust এই কোডটি কম্পাইল করে, তখন এটি মনোমর্ফাইজেশন সম্পাদন করে। সেই প্রক্রিয়ার সময়, কম্পাইলার <code>Option&lt;T&gt;</code> ইনস্ট্যান্সে ব্যবহৃত মানগুলো পড়ে এবং দুই ধরণের <code>Option&lt;T&gt;</code> শনাক্ত করে: একটি <code>i32</code> এবং অন্যটি <code>f64</code>। ফলস্বরূপ, এটি <code>Option&lt;T&gt;</code>-এর জেনেরিক ডেফিনিশনকে <code>i32</code> এবং <code>f64</code>-এর জন্য বিশেষায়িত দুটি ডেফিনিশনে প্রসারিত করে, যার ফলে জেনেরিক ডেফিনিশনটিকে নির্দিষ্টগুলো দিয়ে প্রতিস্থাপন করে।</p>
+<p>কোডের মনোমর্ফাইজড সংস্করণটি নিচের মতো দেখতে (কম্পাইলার এখানে উদাহরণের জন্য আমরা যে নামগুলো ব্যবহার করছি তার চেয়ে ভিন্ন নাম ব্যবহার করে):</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024">enum Option_i32 {
+    Some(i32),
+    None,
+}
+
+enum Option_f64 {
+    Some(f64),
+    None,
+}
+
+fn main() {
+    let integer = Option_i32::Some(5);
+    let float = Option_f64::Some(5.0);
+}</code></pre></pre>
+</Listing>
+<p>জেনেরিক <code>Option&lt;T&gt;</code> কম্পাইলার দ্বারা তৈরি করা নির্দিষ্ট ডেফিনিশন দিয়ে প্রতিস্থাপিত হয়। কারণ Rust জেনেরিক কোডকে এমন কোডে কম্পাইল করে যা প্রতিটি ইনস্ট্যান্সে টাইপ নির্দিষ্ট করে, তাই generics ব্যবহারের জন্য আমাদের কোনো রানটাইম খরচ দিতে হয় না। কোডটি যখন চলে, তখন এটি ঠিক তেমনই পারফর্ম করে যেমনটি আমরা প্রতিটি ডেফিনিশন হাতে হাতে ডুপ্লিকেট করলে করত। মনোমর্ফাইজেশন প্রক্রিয়াটি রানটাইমে Rust-এর generics-কে অত্যন্ত কার্যকরী করে তোলে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch10-00-generics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch10-02-traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch10-00-generics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch10-02-traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

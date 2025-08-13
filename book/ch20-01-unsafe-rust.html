@@ -1,0 +1,557 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>আনসেফ Rust - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="unsafe-rust"><a class="header" href="#unsafe-rust">Unsafe Rust</a></h2>
+<p>এখন পর্যন্ত আমরা যে কোড নিয়ে আলোচনা করেছি, তার সবকিছুতেই রাস্টের memory safety গ্যারান্টি কম্পাইল টাইমে প্রয়োগ করা হয়েছে। তবে, রাস্টের ভেতরে আরও একটি দ্বিতীয় ল্যাঙ্গুয়েজ লুকিয়ে আছে যা এই memory safety গ্যারান্টিগুলো প্রয়োগ করে না: একে বলা হয় <em>unsafe Rust</em>। এটি সাধারণ রাস্টের মতোই কাজ করে, কিন্তু আমাদের কিছু অতিরিক্ত ক্ষমতা বা সুপারপাওয়ার দেয়।</p>
+<p>Unsafe Rust এর অস্তিত্বের কারণ হলো, static analysis স্বভাবতই রক্ষণশীল (conservative) হয়। যখন কম্পাইলার কোনো কোড গ্যারান্টিগুলো মেনে চলে কি না তা নির্ধারণ করার চেষ্টা করে, তখন কিছু অবৈধ প্রোগ্রাম গ্রহণ করার চেয়ে কিছু বৈধ প্রোগ্রাম বাতিল করে দেওয়া শ্রেয়। যদিও কোডটি ঠিক <em>থাকতেও পারে</em>, কিন্তু রাস্ট কম্পাইলারের কাছে যদি আত্মবিশ্বাসী হওয়ার মতো যথেষ্ট তথ্য না থাকে, তবে এটি কোডটি বাতিল করে দেবে। এই সব ক্ষেত্রে, আপনি unsafe কোড ব্যবহার করে কম্পাইলারকে বলতে পারেন, "বিশ্বাস করো, আমি জানি আমি কী করছি।" তবে সাবধান থাকবেন যে আপনি নিজের ঝুঁকিতেই unsafe Rust ব্যবহার করছেন: যদি আপনি unsafe কোড ভুলভাবে ব্যবহার করেন, তাহলে memory unsafety-এর কারণে বিভিন্ন সমস্যা দেখা দিতে পারে, যেমন null pointer dereferencing।</p>
+<p>রাস্টের একটি unsafe সত্তা থাকার আরেকটি কারণ হলো, কম্পিউটারের underlying হার্ডওয়্যার স্বাভাবিকভাবেই unsafe। যদি রাস্ট আপনাকে unsafe অপারেশন করতে না দিত, তবে আপনি নির্দিষ্ট কিছু কাজ করতে পারতেন না। রাস্টকে আপনাকে low-level সিস্টেম প্রোগ্রামিং করার সুবিধা দিতে হয়, যেমন সরাসরি অপারেটিং সিস্টেমের সাথে ইন্টারঅ্যাক্ট করা বা এমনকি নিজের অপারেটিং সিস্টেম লেখা। low-level সিস্টেম প্রোগ্রামিং নিয়ে কাজ করা এই ল্যাঙ্গুয়েজের অন্যতম একটি লক্ষ্য। চলুন দেখি unsafe Rust দিয়ে আমরা কী করতে পারি এবং কীভাবে তা করতে পারি।</p>
+<h3 id="unsafe-superpowers"><a class="header" href="#unsafe-superpowers">Unsafe Superpowers</a></h3>
+<p>Unsafe Rust-এ সুইচ করতে, <code>unsafe</code> কীওয়ার্ডটি ব্যবহার করুন এবং তারপর একটি নতুন ব্লক শুরু করুন যেখানে unsafe কোড থাকবে। আপনি unsafe Rust-এ পাঁচটি কাজ করতে পারেন যা safe Rust-এ করা যায় না, যেগুলোকে আমরা <em>unsafe superpowers</em> বলি। সেই সুপারপাওয়ারগুলোর মধ্যে রয়েছে:</p>
+<ol>
+<li>একটি raw pointer dereference করা</li>
+<li>একটি unsafe function বা method কল করা</li>
+<li>একটি mutable static variable অ্যাক্সেস বা মডিফাই করা</li>
+<li>একটি unsafe trait ইমপ্লিমেন্ট করা</li>
+<li><code>union</code>-এর ফিল্ড অ্যাক্সেস করা</li>
+</ol>
+<p>এটা বোঝা গুরুত্বপূর্ণ যে <code>unsafe</code> borrow checker বন্ধ করে না বা রাস্টের অন্য কোনো সেফটি চেক নিষ্ক্রিয় করে না: আপনি যদি unsafe কোডে একটি reference ব্যবহার করেন, তবে তা 여전히 চেক করা হবে। <code>unsafe</code> কীওয়ার্ডটি আপনাকে শুধুমাত্র এই পাঁচটি ফিচারের অ্যাক্সেস দেয়, যা কম্পাইলার memory safety-এর জন্য পরীক্ষা করে না। আপনি একটি unsafe ব্লকের ভেতরেও একটি নির্দিষ্ট স্তরের নিরাপত্তা পাবেন।</p>
+<p>এছাড়াও, <code>unsafe</code> মানে এই নয় যে ব্লকের ভেতরের কোডটি বিপজ্জনক বা এতে অবশ্যই memory safety সমস্যা থাকবে: এর উদ্দেশ্য হলো, প্রোগ্রামার হিসেবে আপনি নিশ্চিত করবেন যে <code>unsafe</code> ব্লকের ভেতরের কোডটি বৈধ উপায়ে মেমরি অ্যাক্সেস করবে।</p>
+<p>মানুষ ভুল করে এবং ভুল হবেই, কিন্তু এই পাঁচটি unsafe অপারেশনকে <code>unsafe</code> দিয়ে চিহ্নিত ব্লকের মধ্যে রাখার ফলে আপনি জানতে পারবেন যে memory safety সম্পর্কিত যেকোনো ত্রুটি অবশ্যই একটি <code>unsafe</code> ব্লকের মধ্যেই রয়েছে। <code>unsafe</code> ব্লকগুলো ছোট রাখুন; পরে যখন আপনি মেমরি বাগ তদন্ত করবেন, তখন এর জন্য কৃতজ্ঞ থাকবেন।</p>
+<p>Unsafe কোডকে যথাসম্ভব বিচ্ছিন্ন রাখতে, এই ধরনের কোডকে একটি safe abstraction-এর মধ্যে আবদ্ধ করা এবং একটি safe API সরবরাহ করা সবচেয়ে ভালো। এই বিষয়ে আমরা এই চ্যাপ্টারের পরে আলোচনা করব যখন আমরা unsafe function এবং method পরীক্ষা করব। স্ট্যান্ডার্ড লাইব্রেরির কিছু অংশ unsafe কোডের উপর safe abstraction হিসেবে প্রয়োগ করা হয়েছে যা নিরীক্ষিত (audited) হয়েছে। Unsafe কোডকে একটি safe abstraction-এ মোড়ানো হলে <code>unsafe</code>-এর ব্যবহার সেই সব জায়গায় ছড়িয়ে পড়া থেকে আটকানো যায় যেখানে আপনি বা আপনার ব্যবহারকারীরা <code>unsafe</code> কোড দিয়ে প্রয়োগ করা ফাংশনালিটি ব্যবহার করতে চাইতে পারেন, কারণ একটি safe abstraction ব্যবহার করা নিরাপদ।</p>
+<p>চলুন এক এক করে পাঁচটি unsafe superpower দেখে নেওয়া যাক। আমরা এমন কিছু abstraction-ও দেখব যা unsafe কোডের জন্য একটি safe ইন্টারফেস সরবরাহ করে।</p>
+<h3 id="একটি-raw-pointer-dereference-করা-dereferencing-a-raw-pointer"><a class="header" href="#একটি-raw-pointer-dereference-করা-dereferencing-a-raw-pointer">একটি Raw Pointer Dereference করা (Dereferencing a Raw Pointer)</a></h3>
+<p>চ্যাপ্টার ৪-এর <a href="ch04-02-references-and-borrowing.html#dangling-references">“Dangling References”</a><!-- ignore --> সেকশনে আমরা উল্লেখ করেছি যে কম্পাইলার নিশ্চিত করে reference-গুলো সবসময় বৈধ থাকে। Unsafe Rust-এ <em>raw pointers</em> নামে দুটি নতুন টাইপ আছে যা reference-এর মতোই। Reference-এর মতো, raw pointer-ও immutable বা mutable হতে পারে এবং এগুলো যথাক্রমে <code>*const T</code> এবং <code>*mut T</code> হিসেবে লেখা হয়। এখানে অ্যাস্টেরিস্ক (*) dereference অপারেটর নয়; এটি টাইপের নামের অংশ। Raw pointer-এর ক্ষেত্রে, <em>immutable</em> মানে হলো পয়েন্টারটি dereference করার পর সরাসরি অ্যাসাইন করা যাবে না।</p>
+<p>Reference এবং smart pointer-এর থেকে raw pointer ভিন্ন কারণ:</p>
+<ul>
+<li>এদেরকে borrowing rule উপেক্ষা করার অনুমতি দেওয়া হয়, যেমন একই লোকেশনে immutable এবং mutable উভয় পয়েন্টার অথবা একাধিক mutable পয়েন্টার থাকতে পারে।</li>
+<li>এরা যে বৈধ মেমরিতে পয়েন্ট করবে তার কোনো গ্যারান্টি নেই।</li>
+<li>এদের null হওয়ার অনুমতি আছে।</li>
+<li>এরা কোনো স্বয়ংক্রিয় cleanup প্রয়োগ করে না।</li>
+</ul>
+<p>রাস্টের এই গ্যারান্টিগুলো প্রয়োগ করা থেকে বিরত থাকার মাধ্যমে, আপনি গ্যারান্টিযুক্ত নিরাপত্তার বিনিময়ে আরও বেশি পারফরম্যান্স বা অন্য কোনো ল্যাঙ্গুয়েজ বা হার্ডওয়্যারের সাথে ইন্টারফেস করার ক্ষমতা পেতে পারেন, যেখানে রাস্টের গ্যারান্টিগুলো প্রযোজ্য নয়।</p>
+<p>লিস্টিং ২০-১ দেখাচ্ছে কীভাবে একটি immutable এবং একটি mutable raw pointer তৈরি করতে হয়।</p>
+<Listing number="20-1" caption="Raw borrow অপারেটর ব্যবহার করে raw pointers তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut num = 5;
+
+    let r1 = &amp;raw const num;
+    let r2 = &amp;raw mut num;
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>লক্ষ্য করুন যে আমরা এই কোডে <code>unsafe</code> কীওয়ার্ড অন্তর্ভুক্ত করিনি। আমরা safe কোডে raw pointer তৈরি করতে পারি; কিন্তু একটি unsafe ব্লকের বাইরে raw pointer dereference করতে পারি না, যা আপনি একটু পরেই দেখতে পাবেন।</p>
+<p>আমরা raw borrow অপারেটর ব্যবহার করে raw pointer তৈরি করেছি: <code>&amp;raw const num</code> একটি <code>*const i32</code> immutable raw pointer তৈরি করে এবং <code>&amp;raw mut num</code> একটি <code>*mut i32</code> mutable raw pointer তৈরি করে। যেহেতু আমরা এগুলো সরাসরি একটি লোকাল ভ্যারিয়েবল থেকে তৈরি করেছি, আমরা জানি যে এই নির্দিষ্ট raw pointer-গুলো বৈধ, কিন্তু যেকোনো raw pointer সম্পর্কে আমরা এই ধারণা করতে পারি না।</p>
+<p>এটি দেখানোর জন্য, পরবর্তীতে আমরা এমন একটি raw pointer তৈরি করব যার বৈধতা সম্পর্কে আমরা এতটা নিশ্চিত হতে পারব না, এর জন্য <code>as</code> কীওয়ার্ড ব্যবহার করে একটি মান কাস্ট করব, raw borrow অপারেটর ব্যবহার না করে। লিস্টিং ২০-২ দেখাচ্ছে কীভাবে মেমরির একটি নির্বিচারী (arbitrary) লোকেশনে একটি raw pointer তৈরি করা যায়। নির্বিচারী মেমরি ব্যবহার করার চেষ্টা করাটা undefined: সেই অ্যাড্রেসে ডেটা থাকতেও পারে বা নাও থাকতে পারে, কম্পাইলার কোডটি এমনভাবে অপটিমাইজ করতে পারে যাতে কোনো মেমরি অ্যাক্সেস না হয়, অথবা প্রোগ্রামটি একটি সেগমেন্টেশন ফল্ট (segmentation fault) দিয়ে বন্ধ হয়ে যেতে পারে। সাধারণত, এই ধরনের কোড লেখার কোনো ভালো কারণ নেই, বিশেষ করে যেখানে আপনি raw borrow অপারেটর ব্যবহার করতে পারেন, তবে এটি সম্ভব।</p>
+<Listing number="20-2" caption="একটি নির্বিচারী মেমরি অ্যাড্রেসে একটি raw pointer তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let address = 0x012345usize;
+    let r = address as *const i32;
+<span class="boring">}```
+</span>
+&lt;/Listing&gt;
+
+মনে রাখবেন যে আমরা safe কোডে raw pointer তৈরি করতে পারি, কিন্তু আমরা raw pointer _dereference_ করতে এবং পয়েন্ট করা ডেটা পড়তে পারি না। লিস্টিং ২০-৩ এ, আমরা একটি raw pointer-এর উপর dereference অপারেটর `*` ব্যবহার করি যার জন্য একটি `unsafe` ব্লক প্রয়োজন।
+
+&lt;Listing number="20-3" caption="একটি `unsafe` ব্লকের মধ্যে raw pointers dereference করা"&gt;
+
+```rust
+<span class="boring">fn main() {
+</span>    let mut num = 5;
+
+    let r1 = &amp;raw const num;
+    let r2 = &amp;raw mut num;
+
+    unsafe {
+        println!("r1 is: {}", *r1);
+        println!("r2 is: {}", *r2);
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>একটি পয়েন্টার তৈরি করা কোনো ক্ষতি করে না; শুধুমাত্র যখন আমরা এর নির্দেশিত মান অ্যাক্সেস করার চেষ্টা করি, তখনই আমরা একটি অবৈধ মানের সম্মুখীন হতে পারি।</p>
+<p>আরও লক্ষ্য করুন যে লিস্টিং ২০-১ এবং ২০-৩ এ, আমরা <code>*const i32</code> এবং <code>*mut i32</code> raw pointer তৈরি করেছি যা উভয়ই একই মেমরি লোকেশনে নির্দেশ করে, যেখানে <code>num</code> স্টোর করা আছে। যদি আমরা এর পরিবর্তে <code>num</code>-এর জন্য একটি immutable এবং একটি mutable reference তৈরি করার চেষ্টা করতাম, কোডটি কম্পাইল হতো না কারণ রাস্টের ownership rule একই সময়ে কোনো immutable reference-এর সাথে একটি mutable reference-কে অনুমতি দেয় না। Raw pointer ব্যবহার করে, আমরা একই লোকেশনে একটি mutable পয়েন্টার এবং একটি immutable পয়েন্টার তৈরি করতে পারি এবং mutable পয়েন্টারের মাধ্যমে ডেটা পরিবর্তন করতে পারি, যা সম্ভাব্যভাবে একটি data race তৈরি করতে পারে। সাবধান!</p>
+<p>এই সব বিপদ থাকা সত্ত্বেও, আপনি কেন raw pointer ব্যবহার করবেন? একটি বড় ব্যবহারের ক্ষেত্র হলো সি (C) কোডের সাথে ইন্টারফেসিং করার সময়, যা আপনি পরবর্তী বিভাগে দেখতে পাবেন। আরেকটি ক্ষেত্র হলো যখন এমন safe abstraction তৈরি করা হয় যা borrow checker বুঝতে পারে না। আমরা প্রথমে unsafe function পরিচিত করাব এবং তারপর unsafe কোড ব্যবহার করে এমন একটি safe abstraction-এর উদাহরণ দেখব।</p>
+<h3 id="একটি-unsafe-function-বা-method-কল-করা-calling-an-unsafe-function-or-method"><a class="header" href="#একটি-unsafe-function-বা-method-কল-করা-calling-an-unsafe-function-or-method">একটি Unsafe Function বা Method কল করা (Calling an Unsafe Function or Method)</a></h3>
+<p>দ্বিতীয় যে অপারেশনটি আপনি একটি unsafe ব্লকে করতে পারেন তা হলো unsafe function কল করা। Unsafe function এবং method দেখতে সাধারণ function এবং method-এর মতোই, কিন্তু তাদের সংজ্ঞার বাকি অংশের আগে একটি অতিরিক্ত <code>unsafe</code> থাকে। এই প্রসঙ্গে <code>unsafe</code> কীওয়ার্ডটি নির্দেশ করে যে ফাংশনটির এমন কিছু প্রয়োজনীয়তা রয়েছে যা আমাদের এই ফাংশনটি কল করার সময় পূরণ করতে হবে, কারণ রাস্ট গ্যারান্টি দিতে পারে না যে আমরা এই প্রয়োজনীয়তাগুলো পূরণ করেছি। একটি <code>unsafe</code> ব্লকের মধ্যে একটি unsafe function কল করার মাধ্যমে, আমরা বলছি যে আমরা এই ফাংশনের ডকুমেন্টেশন পড়েছি এবং আমরা ফাংশনের contract বা চুক্তিগুলো রক্ষা করার দায়িত্ব নিচ্ছি।</p>
+<p>এখানে <code>dangerous</code> নামে একটি unsafe function রয়েছে যা তার বডিতে কিছুই করে না:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    unsafe fn dangerous() {}
+
+    unsafe {
+        dangerous();
+    }
+<span class="boring">}</span></code></pre></pre>
+<p>আমাদের অবশ্যই <code>dangerous</code> ফাংশনটিকে একটি পৃথক <code>unsafe</code> ব্লকের মধ্যে কল করতে হবে। যদি আমরা <code>unsafe</code> ব্লক ছাড়া <code>dangerous</code> কল করার চেষ্টা করি, আমরা একটি এরর পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+error[E0133]: call to unsafe function `dangerous` is unsafe and requires unsafe block
+ --&gt; src/main.rs:4:5
+  |
+4 |     dangerous();
+  |     ^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+
+For more information about this error, try `rustc --explain E0133`.
+error: could not compile `unsafe-example` (bin "unsafe-example") due to 1 previous error
+</code></pre>
+<p><code>unsafe</code> ব্লকের মাধ্যমে, আমরা রাস্টকে জানাচ্ছি যে আমরা ফাংশনের ডকুমেন্টেশন পড়েছি, আমরা এটি সঠিকভাবে কীভাবে ব্যবহার করতে হয় তা বুঝি, এবং আমরা যাচাই করেছি যে আমরা ফাংশনের contract পূরণ করছি।</p>
+<p>একটি <code>unsafe</code> ফাংশনের বডিতে unsafe অপারেশন করার জন্য, আপনাকে এখনও একটি <code>unsafe</code> ব্লক ব্যবহার করতে হবে, যেমনটা একটি সাধারণ ফাংশনের মধ্যে করা হয়, এবং যদি আপনি ভুলে যান তবে কম্পাইলার আপনাকে সতর্ক করবে। এটি আমাদের <code>unsafe</code> ব্লকগুলিকে যতটা সম্ভব ছোট রাখতে সাহায্য করে, কারণ unsafe অপারেশনগুলি পুরো ফাংশন বডি জুড়ে প্রয়োজন নাও হতে পারে।</p>
+<h4 id="unsafe-কোডের-উপর-একটি-safe-abstraction-তৈরি-করা"><a class="header" href="#unsafe-কোডের-উপর-একটি-safe-abstraction-তৈরি-করা">Unsafe কোডের উপর একটি Safe Abstraction তৈরি করা</a></h4>
+<p>শুধু একটি ফাংশনে unsafe কোড থাকলেই পুরো ফাংশনটিকে unsafe হিসেবে চিহ্নিত করার প্রয়োজন নেই। আসলে, unsafe কোডকে একটি safe ফাংশনে মোড়ানো একটি সাধারণ abstraction। উদাহরণস্বরূপ, চলুন স্ট্যান্ডার্ড লাইব্রেরির <code>split_at_mut</code> ফাংশনটি দেখি, যার জন্য কিছু unsafe কোড প্রয়োজন। আমরা দেখব এটি কীভাবে প্রয়োগ করা যেতে পারে। এই safe মেথডটি mutable slice-এর উপর সংজ্ঞায়িত করা হয়েছে: এটি একটি slice নেয় এবং আর্গুমেন্ট হিসেবে দেওয়া ইনডেক্সে slice-টিকে ভাগ করে দুটি slice তৈরি করে। লিস্টিং ২০-৪ দেখাচ্ছে কীভাবে <code>split_at_mut</code> ব্যবহার করতে হয়।</p>
+<Listing number="20-4" caption="Safe `split_at_mut` ফাংশন ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let mut v = vec![1, 2, 3, 4, 5, 6];
+
+    let r = &amp;mut v[..];
+
+    let (a, b) = r.split_at_mut(3);
+
+    assert_eq!(a, &amp;mut [1, 2, 3]);
+    assert_eq!(b, &amp;mut [4, 5, 6]);
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা শুধুমাত্র safe Rust ব্যবহার করে এই ফাংশনটি প্রয়োগ করতে পারি না। একটি প্রচেষ্টা লিস্টিং ২০-৫ এর মতো হতে পারে, যা কম্পাইল হবে না। সরলতার জন্য, আমরা <code>split_at_mut</code> কে একটি মেথডের পরিবর্তে একটি ফাংশন হিসেবে প্রয়োগ করব এবং শুধুমাত্র <code>i32</code> মানের slice-এর জন্য, জেনেরিক টাইপ <code>T</code>-এর জন্য নয়।</p>
+<Listing number="20-5" caption="শুধুমাত্র safe Rust ব্যবহার করে `split_at_mut`-এর একটি প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile">fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+    let len = values.len();
+
+    assert!(mid &lt;= len);
+
+    (&amp;mut values[..mid], &amp;mut values[mid..])
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let mut vector = vec![1, 2, 3, 4, 5, 6];
+</span><span class="boring">    let (left, right) = split_at_mut(&amp;mut vector, 3);
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এই ফাংশনটি প্রথমে slice-টির মোট দৈর্ঘ্য (length) নেয়। তারপর এটি নিশ্চিত করে যে প্যারামিটার হিসেবে দেওয়া ইনডেক্সটি slice-এর মধ্যে আছে কি না, এটি দৈর্ঘ্যের চেয়ে কম বা সমান কি না তা পরীক্ষা করে। এই assertion-এর অর্থ হলো যদি আমরা slice ভাগ করার জন্য দৈর্ঘ্যের চেয়ে বড় একটি ইনডেক্স পাস করি, তাহলে ফাংশনটি সেই ইনডেক্স ব্যবহার করার চেষ্টা করার আগেই প্যানিক (panic) করবে।</p>
+<p>তারপর আমরা একটি টাপলে (tuple) দুটি mutable slice রিটার্ন করি: একটি আসল slice-এর শুরু থেকে <code>mid</code> ইনডেক্স পর্যন্ত এবং অন্যটি <code>mid</code> থেকে slice-এর শেষ পর্যন্ত।</p>
+<p>যখন আমরা লিস্টিং ২০-৫ এর কোড কম্পাইল করার চেষ্টা করব, আমরা একটি এরর পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+error[E0499]: cannot borrow `*values` as mutable more than once at a time
+ --&gt; src/main.rs:6:31
+  |
+1 | fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+  |                         - let's call the lifetime of this reference `'1`
+...
+6 |     (&amp;mut values[..mid], &amp;mut values[mid..])
+  |     --------------------------^^^^^^--------
+  |     |     |                   |
+  |     |     |                   second mutable borrow occurs here
+  |     |     first mutable borrow occurs here
+  |     returning this value requires that `*values` is borrowed for `'1`
+  |
+  = help: use `.split_at_mut(position)` to obtain two mutable non-overlapping sub-slices
+
+For more information about this error, try `rustc --explain E0499`.
+error: could not compile `unsafe-example` (bin "unsafe-example") due to 1 previous error
+</code></pre>
+<p>রাস্টের borrow checker বুঝতে পারে না যে আমরা slice-এর বিভিন্ন অংশ borrow করছি; এটি কেবল জানে যে আমরা একই slice থেকে দুবার borrow করছি। একটি slice-এর বিভিন্ন অংশ borrow করা মৌলিকভাবে ঠিক আছে কারণ দুটি slice ওভারল্যাপিং নয়, কিন্তু রাস্ট এটি জানার মতো যথেষ্ট স্মার্ট নয়। যখন আমরা জানি কোডটি ঠিক আছে, কিন্তু রাস্ট তা জানে না, তখন unsafe কোড ব্যবহার করার সময় আসে।</p>
+<p>লিস্টিং ২০-৬ দেখাচ্ছে কীভাবে একটি <code>unsafe</code> ব্লক, একটি raw pointer, এবং unsafe ফাংশনের কিছু কল ব্যবহার করে <code>split_at_mut</code> এর প্রয়োগ কাজ করানো যায়।</p>
+<Listing number="20-6" caption="`split_at_mut` ফাংশনের প্রয়োগে unsafe কোড ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::slice;
+
+fn split_at_mut(values: &amp;mut [i32], mid: usize) -&gt; (&amp;mut [i32], &amp;mut [i32]) {
+    let len = values.len();
+    let ptr = values.as_mut_ptr();
+
+    assert!(mid &lt;= len);
+
+    unsafe {
+        (
+            slice::from_raw_parts_mut(ptr, mid),
+            slice::from_raw_parts_mut(ptr.add(mid), len - mid),
+        )
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let mut vector = vec![1, 2, 3, 4, 5, 6];
+</span><span class="boring">    let (left, right) = split_at_mut(&amp;mut vector, 3);
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>চ্যাপ্টার ৪-এর <a href="ch04-03-slices.html#the-slice-type">“The Slice Type”</a><!-- ignore --> সেকশন থেকে মনে করুন যে একটি slice হলো কিছু ডেটার একটি পয়েন্টার এবং slice-টির দৈর্ঘ্য। আমরা একটি slice-এর দৈর্ঘ্য পেতে <code>len</code> মেথড এবং একটি slice-এর raw pointer অ্যাক্সেস করতে <code>as_mut_ptr</code> মেথড ব্যবহার করি। এই ক্ষেত্রে, যেহেতু আমাদের কাছে <code>i32</code> মানের একটি mutable slice আছে, <code>as_mut_ptr</code> একটি <code>*mut i32</code> টাইপের raw pointer রিটার্ন করে, যা আমরা <code>ptr</code> ভ্যারিয়েবলে সংরক্ষণ করেছি।</p>
+<p>আমরা <code>mid</code> ইনডেক্সটি slice-এর মধ্যে থাকার assertion টি বজায় রাখি। তারপর আমরা unsafe কোডে আসি: <code>slice::from_raw_parts_mut</code> ফাংশনটি একটি raw pointer এবং একটি দৈর্ঘ্য নেয়, এবং এটি একটি slice তৈরি করে। আমরা এই ফাংশনটি ব্যবহার করে একটি slice তৈরি করি যা <code>ptr</code> থেকে শুরু হয় এবং <code>mid</code> আইটেম দীর্ঘ। তারপর আমরা <code>ptr</code>-এর উপর <code>add</code> মেথড কল করি <code>mid</code> কে আর্গুমেন্ট হিসেবে দিয়ে একটি raw pointer পেতে যা <code>mid</code> থেকে শুরু হয়, এবং আমরা সেই পয়েন্টার এবং <code>mid</code>-এর পরে থাকা বাকি আইটেমের সংখ্যাকে দৈর্ঘ্য হিসেবে ব্যবহার করে একটি slice তৈরি করি।</p>
+<p><code>slice::from_raw_parts_mut</code> ফাংশনটি unsafe কারণ এটি একটি raw pointer নেয় এবং বিশ্বাস করতে হয় যে এই পয়েন্টারটি বৈধ। Raw pointer-এর উপর <code>add</code> মেথডটিও unsafe কারণ এটিকে বিশ্বাস করতে হয় যে অফসেট লোকেশনটিও একটি বৈধ পয়েন্টার। তাই, আমাদের <code>slice::from_raw_parts_mut</code> এবং <code>add</code>-এ আমাদের কলগুলোর চারপাশে একটি <code>unsafe</code> ব্লক রাখতে হয়েছিল যাতে আমরা সেগুলি কল করতে পারি। কোডটি দেখে এবং <code>mid</code> অবশ্যই <code>len</code>-এর চেয়ে কম বা সমান হতে হবে এই assertion যোগ করে, আমরা বলতে পারি যে <code>unsafe</code> ব্লকের মধ্যে ব্যবহৃত সমস্ত raw pointer slice-এর মধ্যে থাকা ডেটার বৈধ পয়েন্টার হবে। এটি <code>unsafe</code>-এর একটি গ্রহণযোগ্য এবং উপযুক্ত ব্যবহার।</p>
+<p>লক্ষ্য করুন যে আমাদের ফলস্বরূপ <code>split_at_mut</code> ফাংশনটিকে <code>unsafe</code> হিসেবে চিহ্নিত করার প্রয়োজন নেই, এবং আমরা এই ফাংশনটিকে safe Rust থেকে কল করতে পারি। আমরা unsafe কোডের জন্য একটি safe abstraction তৈরি করেছি এমন একটি ফাংশনের প্রয়োগের সাথে যা <code>unsafe</code> কোডকে নিরাপদ উপায়ে ব্যবহার করে, কারণ এটি কেবল সেই ডেটা থেকে বৈধ পয়েন্টার তৈরি করে যা এই ফাংশনটির অ্যাক্সেস আছে।</p>
+<p>বিপরীতে, লিস্টিং ২০-৭-এ <code>slice::from_raw_parts_mut</code>-এর ব্যবহার সম্ভবত slice ব্যবহার করার সময় ক্র্যাশ করবে। এই কোডটি একটি নির্বিচারী মেমরি লোকেশন নেয় এবং ১০,০০০ আইটেম দীর্ঘ একটি slice তৈরি করে।</p>
+<Listing number="20-7" caption="একটি নির্বিচারী মেমরি লোকেশন থেকে একটি slice তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::slice;
+
+    let address = 0x01234usize;
+    let r = address as *mut i32;
+
+    let values: &amp;[i32] = unsafe { slice::from_raw_parts_mut(r, 10000) };
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আমরা এই নির্বিচারী লোকেশনের মেমরির মালিক নই, এবং এমন কোনো গ্যারান্টি নেই যে এই কোডটি যে slice তৈরি করে তাতে বৈধ <code>i32</code> মান রয়েছে। <code>values</code>-কে একটি বৈধ slice হিসেবে ব্যবহার করার চেষ্টা করলে undefined behavior ঘটে।</p>
+<h4 id="একসটারনাল-কোড-কল-করার-জনয-extern-ফাংশন-বযবহার-করা"><a class="header" href="#একসটারনাল-কোড-কল-করার-জনয-extern-ফাংশন-বযবহার-করা">এক্সটার্নাল কোড কল করার জন্য <code>extern</code> ফাংশন ব্যবহার করা</a></h4>
+<p>কখনও কখনও আপনার রাস্ট কোডকে অন্য ভাষায় লেখা কোডের সাথে ইন্টারঅ্যাক্ট করার প্রয়োজন হতে পারে। এর জন্য, রাস্টের <code>extern</code> কীওয়ার্ড রয়েছে যা একটি <em>Foreign Function Interface (FFI)</em> তৈরি এবং ব্যবহারে সহায়তা করে। FFI হল একটি প্রোগ্রামিং ভাষার জন্য ফাংশন সংজ্ঞায়িত করার একটি উপায়, যা একটি ভিন্ন (বিদেশী) প্রোগ্রামিং ভাষাকে সেই ফাংশনগুলিকে কল করতে সক্ষম করে।</p>
+<p>লিস্টিং ২০-৮ দেখাচ্ছে কীভাবে সি স্ট্যান্ডার্ড লাইব্রেরি থেকে <code>abs</code> ফাংশনের সাথে ইন্টিগ্রেশন সেট আপ করতে হয়। <code>extern</code> ব্লকের মধ্যে ঘোষিত ফাংশনগুলি রাস্ট কোড থেকে কল করা সাধারণত unsafe হয়, তাই <code>extern</code> ব্লকগুলিকেও <code>unsafe</code> হিসাবে চিহ্নিত করতে হবে। এর কারণ হল অন্যান্য ভাষা রাস্টের নিয়ম এবং গ্যারান্টি প্রয়োগ করে না, এবং রাস্ট সেগুলি পরীক্ষা করতে পারে না, তাই নিরাপত্তা নিশ্চিত করার দায়িত্ব প্রোগ্রামারের উপর বর্তায়।</p>
+<Listing number="20-8" file-name="src/main.rs" caption="অন্য ভাষায় সংজ্ঞায়িত একটি `extern` ফাংশন ঘোষণা এবং কল করা">
+<pre><pre class="playground"><code class="language-rust edition2024">unsafe extern "C" {
+    fn abs(input: i32) -&gt; i32;
+}
+
+fn main() {
+    unsafe {
+        println!("Absolute value of -3 according to C: {}", abs(-3));
+    }
+}</code></pre></pre>
+</Listing>
+<p><code>unsafe extern "C"</code> ব্লকের মধ্যে, আমরা অন্য ভাষা থেকে যে এক্সটার্নাল ফাংশনগুলি কল করতে চাই তাদের নাম এবং সিগনেচার তালিকাভুক্ত করি। <code>"C"</code> অংশটি সংজ্ঞায়িত করে যে এক্সটার্নাল ফাংশনটি কোন <em>application binary interface (ABI)</em> ব্যবহার করে: ABI অ্যাসেম্বলি লেভেলে ফাংশনটি কীভাবে কল করতে হয় তা নির্ধারণ করে। <code>"C"</code> ABI সবচেয়ে সাধারণ এবং সি প্রোগ্রামিং ভাষার ABI অনুসরণ করে। রাস্টের সমর্থিত সমস্ত ABI সম্পর্কে তথ্য <a href="../reference/items/external-blocks.html#abi">the Rust Reference</a>-এ পাওয়া যায়।</p>
+<p>একটি <code>unsafe extern</code> ব্লকের মধ্যে ঘোষিত প্রতিটি আইটেম অন্তর্নিহিতভাবে unsafe। তবে, কিছু FFI ফাংশন কল করা <em>safe</em>। উদাহরণস্বরূপ, সি-এর স্ট্যান্ডার্ড লাইব্রেরির <code>abs</code> ফাংশনে কোনো memory safety সংক্রান্ত বিবেচনা নেই এবং আমরা জানি এটি যেকোনো <code>i32</code> দিয়ে কল করা যেতে পারে। এই ধরনের ক্ষেত্রে, আমরা <code>safe</code> কীওয়ার্ড ব্যবহার করে বলতে পারি যে এই নির্দিষ্ট ফাংশনটি কল করা safe যদিও এটি একটি <code>unsafe extern</code> ব্লকের মধ্যে রয়েছে। একবার আমরা সেই পরিবর্তনটি করলে, এটি কল করার জন্য আর একটি <code>unsafe</code> ব্লকের প্রয়োজন হয় না, যেমনটি লিস্টিং ২০-৯-এ দেখানো হয়েছে।</p>
+<Listing number="20-9" file-name="src/main.rs" caption="একটি `unsafe extern` ব্লকের মধ্যে একটি ফাংশনকে স্পষ্টভাবে `safe` হিসাবে চিহ্নিত করা এবং এটি নিরাপদে কল করা">
+<pre><pre class="playground"><code class="language-rust edition2024">unsafe extern "C" {
+    safe fn abs(input: i32) -&gt; i32;
+}
+
+fn main() {
+    println!("Absolute value of -3 according to C: {}", abs(-3));
+}</code></pre></pre>
+</Listing>
+<p>একটি ফাংশনকে <code>safe</code> হিসাবে চিহ্নিত করা এটিকে অন্তর্নিহিতভাবে safe করে তোলে না! পরিবর্তে, এটি রাস্টের কাছে আপনার করা একটি প্রতিশ্রুতির মতো যে এটি safe। সেই প্রতিশ্রুতি রক্ষা করা হয়েছে কিনা তা নিশ্চিত করার দায়িত্ব এখনও আপনার!</p>
+<h4 id="অনয-ভাষা-থেকে-রাসট-ফাংশন-কল-করা"><a class="header" href="#অনয-ভাষা-থেকে-রাসট-ফাংশন-কল-করা">অন্য ভাষা থেকে রাস্ট ফাংশন কল করা</a></h4>
+<p>আমরা <code>extern</code> ব্যবহার করে একটি ইন্টারফেস তৈরি করতে পারি যা অন্য ভাষাকে রাস্ট ফাংশন কল করার অনুমতি দেয়। একটি সম্পূর্ণ <code>extern</code> ব্লক তৈরি করার পরিবর্তে, আমরা <code>extern</code> কীওয়ার্ড যোগ করি এবং সংশ্লিষ্ট ফাংশনের <code>fn</code> কীওয়ার্ডের ঠিক আগে ব্যবহার করার জন্য ABI নির্দিষ্ট করি। আমাদের এই ফাংশনের নামটি যাতে রাস্ট কম্পাইলার ম্যাঙ্গল (mangle) না করে তা বলার জন্য একটি <code>#[unsafe(no_mangle)]</code> টীকাও যোগ করতে হবে। <em>Mangling</em> হল যখন একটি কম্পাইলার আমাদের দেওয়া একটি ফাংশনের নামকে একটি ভিন্ন নামে পরিবর্তন করে যা কম্পাইলেশন প্রক্রিয়ার অন্যান্য অংশগুলির জন্য আরও তথ্য ধারণ করে কিন্তু মানুষের জন্য কম পাঠযোগ্য হয়। প্রতিটি প্রোগ্রামিং ভাষার কম্পাইলার নামগুলিকে সামান্য ভিন্নভাবে ম্যাঙ্গল করে, তাই একটি রাস্ট ফাংশনকে অন্য ভাষা দ্বারা নামকরণযোগ্য করার জন্য, আমাদের অবশ্যই রাস্ট কম্পাইলারের নাম ম্যাংলিং নিষ্ক্রিয় করতে হবে। এটি unsafe কারণ বিল্ট-ইন ম্যাংলিং ছাড়া লাইব্রেরি জুড়ে নামের সংঘর্ষ হতে পারে, তাই আমরা যে নামটি বেছে নিই তা ম্যাংলিং ছাড়াই এক্সপোর্ট করার জন্য safe কিনা তা নিশ্চিত করা আমাদের দায়িত্ব।</p>
+<p>নিম্নলিখিত উদাহরণে, আমরা <code>call_from_c</code> ফাংশনটিকে সি কোড থেকে অ্যাক্সেসযোগ্য করে তুলি, এটি একটি শেয়ার্ড লাইব্রেরিতে কম্পাইল হওয়ার এবং সি থেকে লিঙ্ক করার পরে:</p>
+<pre><code>#[unsafe(no_mangle)]
+pub extern "C" fn call_from_c() {
+    println!("Just called a Rust function from C!");
+}
+</code></pre>
+<p><code>extern</code>-এর এই ব্যবহারে শুধুমাত্র অ্যাট্রিবিউটে <code>unsafe</code> প্রয়োজন, <code>extern</code> ব্লকে নয়।</p>
+<h3 id="একটি-mutable-static-variable-অযাকসেস-বা-মডিফাই-করা"><a class="header" href="#একটি-mutable-static-variable-অযাকসেস-বা-মডিফাই-করা">একটি Mutable Static Variable অ্যাক্সেস বা মডিফাই করা</a></h3>
+<p>এই বইয়ে আমরা এখনও গ্লোবাল ভ্যারিয়েবল নিয়ে কথা বলিনি, যা রাস্ট সমর্থন করে কিন্তু রাস্টের ownership rules-এর সাথে সমস্যাযুক্ত হতে পারে। যদি দুটি থ্রেড একই mutable গ্লোবাল ভ্যারিয়েবল অ্যাক্সেস করে, তবে এটি একটি data race ঘটাতে পারে।</p>
+<p>রাস্টে, গ্লোবাল ভ্যারিয়েবলকে <em>static</em> ভ্যারিয়েবল বলা হয়। লিস্টিং ২০-১০ একটি স্ট্রিং স্লাইস মান সহ একটি স্ট্যাটিক ভেরিয়েবলের ঘোষণা এবং ব্যবহারের উদাহরণ দেখায়।</p>
+<Listing number="20-10" file-name="src/main.rs" caption="একটি immutable static variable সংজ্ঞায়িত এবং ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024">static HELLO_WORLD: &amp;str = "Hello, world!";
+
+fn main() {
+    println!("value is: {HELLO_WORLD}");
+}</code></pre></pre>
+</Listing>
+<p>Static ভ্যারিয়েবলগুলো ধ্রুবকের (constants) মতো, যা আমরা চ্যাপ্টার ৩-এর <a href="ch03-01-variables-and-mutability.html#constants">“Constants”</a><!-- ignore --> সেকশনে আলোচনা করেছি। Static ভ্যারিয়েবলের নাম প্রথা অনুযায়ী <code>SCREAMING_SNAKE_CASE</code>-এ থাকে। Static ভ্যারিয়েবলগুলো কেবল <code>'static</code> লাইফটাইম সহ reference সংরক্ষণ করতে পারে, যার মানে হল রাস্ট কম্পাইলার লাইফটাইম বের করতে পারে এবং আমাদের স্পষ্টভাবে এটি চিহ্নিত করার প্রয়োজন নেই। একটি immutable static variable অ্যাক্সেস করা নিরাপদ।</p>
+<p>ধ্রুবক এবং immutable static ভ্যারিয়েবলের মধ্যে একটি সূক্ষ্ম পার্থক্য হল যে একটি static ভ্যারিয়েবলের মান মেমরিতে একটি নির্দিষ্ট ঠিকানা থাকে। মানটি ব্যবহার করলে সর্বদা একই ডেটা অ্যাক্সেস করা হবে। অন্যদিকে, ধ্রুবকগুলি যখনই ব্যবহার করা হয় তখন তাদের ডেটা নকল করার অনুমতি দেওয়া হয়। আরেকটি পার্থক্য হল static ভ্যারিয়েবলগুলো mutable হতে পারে। Mutable static ভ্যারিয়েবল অ্যাক্সেস এবং মডিফাই করা <em>unsafe</em>। লিস্টিং ২০-১১ দেখায় কীভাবে <code>COUNTER</code> নামের একটি mutable static ভ্যারিয়েবল ঘোষণা, অ্যাক্সেস এবং মডিফাই করতে হয়।</p>
+<Listing number="20-11" file-name="src/main.rs" caption="একটি mutable static variable থেকে পড়া বা লেখা unsafe">
+<pre><pre class="playground"><code class="language-rust edition2024">static mut COUNTER: u32 = 0;
+
+/// SAFETY: Calling this from more than a single thread at a time is undefined
+/// behavior, so you *must* guarantee you only call it from a single thread at
+/// a time.
+unsafe fn add_to_count(inc: u32) {
+    unsafe {
+        COUNTER += inc;
+    }
+}
+
+fn main() {
+    unsafe {
+        // SAFETY: This is only called from a single thread in `main`.
+        add_to_count(3);
+        println!("COUNTER: {}", *(&amp;raw const COUNTER));
+    }
+}</code></pre></pre>
+</Listing>
+<p>সাধারণ ভ্যারিয়েবলের মতো, আমরা <code>mut</code> কীওয়ার্ড ব্যবহার করে মিউটেবিলিটি নির্দিষ্ট করি। <code>COUNTER</code> থেকে পড়া বা লেখার যেকোনো কোড অবশ্যই একটি <code>unsafe</code> ব্লকের মধ্যে থাকতে হবে। লিস্টিং ২০-১১-এর কোডটি কম্পাইল হয় এবং <code>COUNTER: 3</code> প্রিন্ট করে যেমনটি আমরা আশা করি কারণ এটি একক-থ্রেডেড (single-threaded)। একাধিক থ্রেড <code>COUNTER</code> অ্যাক্সেস করলে সম্ভবত data race হবে, তাই এটি undefined behavior। অতএব, আমাদের পুরো ফাংশনটিকে <code>unsafe</code> হিসাবে চিহ্নিত করতে হবে এবং সেফটি সীমাবদ্ধতা নথিভুক্ত করতে হবে, যাতে যে কেউ ফাংশনটি কল করে তারা জানে যে তারা নিরাপদে কী করতে পারে এবং কী করতে পারে না।</p>
+<p>যখনই আমরা একটি unsafe ফাংশন লিখি, তখন <code>SAFETY</code> দিয়ে শুরু হওয়া একটি মন্তব্য লেখা এবং কলারকে ফাংশনটি নিরাপদে কল করার জন্য কী করতে হবে তা ব্যাখ্যা করা একটি প্রথা। একইভাবে, যখনই আমরা একটি unsafe অপারেশন সম্পাদন করি, তখন <code>SAFETY</code> দিয়ে শুরু হওয়া একটি মন্তব্য লেখা এবং সেফটি নিয়মগুলি কীভাবে বজায় রাখা হয় তা ব্যাখ্যা করা একটি প্রথা।</p>
+<p>অতিরিক্তভাবে, কম্পাইলার একটি কম্পাইলার লিন্টের মাধ্যমে একটি mutable static ভ্যারিয়েবলের রেফারেন্স তৈরির যেকোনো প্রচেষ্টা ডিফল্টরূপে অস্বীকার করবে। আপনাকে অবশ্যই <code>#[allow(static_mut_refs)]</code> টীকা যোগ করে সেই লিন্টের সুরক্ষা থেকে স্পষ্টভাবে অপ্ট-আউট করতে হবে অথবা raw borrow অপারেটরগুলির একটি দিয়ে তৈরি একটি raw pointer-এর মাধ্যমে mutable static ভ্যারিয়েবলটি অ্যাক্সেস করতে হবে। এর মধ্যে এমন ক্ষেত্রগুলিও অন্তর্ভুক্ত রয়েছে যেখানে রেফারেন্সটি অদৃশ্যভাবে তৈরি হয়, যেমন এই কোড তালিকায় <code>println!</code>-এ ব্যবহৃত হলে। static mutable ভ্যারিয়েবলের রেফারেন্সগুলিকে raw pointer-এর মাধ্যমে তৈরি করার প্রয়োজনীয়তা তাদের ব্যবহারের জন্য সেফটি প্রয়োজনীয়তাগুলিকে আরও স্পষ্ট করতে সহায়তা করে।</p>
+<p>বিশ্বব্যাপী অ্যাক্সেসযোগ্য mutable ডেটার সাথে, কোনো data race নেই তা নিশ্চিত করা কঠিন, যে কারণে রাস্ট mutable static ভ্যারিয়েবলগুলিকে unsafe বলে মনে করে। যেখানে সম্ভব, চ্যাপ্টার ১৬-এ আলোচনা করা concurrency কৌশল এবং থ্রেড-সেফ স্মার্ট পয়েন্টারগুলি ব্যবহার করা বাঞ্ছনীয় যাতে কম্পাইলার পরীক্ষা করে যে বিভিন্ন থ্রেড থেকে ডেটা অ্যাক্সেস নিরাপদে করা হয়েছে।</p>
+<h3 id="একটি-unsafe-trait-ইমপলিমেনট-করা-implementing-an-unsafe-trait"><a class="header" href="#একটি-unsafe-trait-ইমপলিমেনট-করা-implementing-an-unsafe-trait">একটি Unsafe Trait ইমপ্লিমেন্ট করা (Implementing an Unsafe Trait)</a></h3>
+<p>আমরা একটি unsafe trait ইমপ্লিমেন্ট করতে <code>unsafe</code> ব্যবহার করতে পারি। একটি trait unsafe হয় যখন এর অন্তত একটি মেথডের এমন কোনো invariant থাকে যা কম্পাইলার যাচাই করতে পারে না। আমরা <code>trait</code>-এর আগে <code>unsafe</code> কীওয়ার্ড যোগ করে একটি trait-কে <code>unsafe</code> ঘোষণা করি এবং trait-এর ইমপ্লিমেন্টেশনটিকেও <code>unsafe</code> হিসেবে চিহ্নিত করি, যেমনটি লিস্টিং ২০-১২-এ দেখানো হয়েছে।</p>
+<Listing number="20-12" caption="একটি unsafe trait সংজ্ঞায়িত এবং ইমপ্লিমেন্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024">unsafe trait Foo {
+    // methods go here
+}
+
+unsafe impl Foo for i32 {
+    // method implementations go here
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p><code>unsafe impl</code> ব্যবহার করে, আমরা প্রতিশ্রুতি দিচ্ছি যে আমরা সেইসব invariant বজায় রাখব যা কম্পাইলার যাচাই করতে পারে না।</p>
+<p>উদাহরণস্বরূপ, চ্যাপ্টার ১৬-এর <a href="ch16-04-extensible-concurrency-sync-and-send.html#extensible-concurrency-with-the-send-and-sync-traits">“Extensible Concurrency with the <code>Send</code> and <code>Sync</code> Traits”</a><!-- ignore --> সেকশনে আলোচনা করা <code>Send</code> এবং <code>Sync</code> মার্কার trait-গুলোর কথা মনে করুন: যদি আমাদের টাইপগুলো সম্পূর্ণরূপে <code>Send</code> এবং <code>Sync</code> ইমপ্লিমেন্ট করা অন্যান্য টাইপ দ্বারা গঠিত হয় তবে কম্পাইলার এই trait-গুলো স্বয়ংক্রিয়ভাবে ইমপ্লিমেন্ট করে। যদি আমরা এমন একটি টাইপ ইমপ্লিমেন্ট করি যাতে <code>Send</code> বা <code>Sync</code> ইমপ্লিমেন্ট করে না এমন একটি টাইপ থাকে, যেমন raw pointers, এবং আমরা সেই টাইপটিকে <code>Send</code> বা <code>Sync</code> হিসেবে চিহ্নিত করতে চাই, তবে আমাদের অবশ্যই <code>unsafe</code> ব্যবহার করতে হবে। রাস্ট যাচাই করতে পারে না যে আমাদের টাইপটি থ্রেড জুড়ে নিরাপদে পাঠানো বা একাধিক থ্রেড থেকে অ্যাক্সেস করার গ্যারান্টি বজায় রাখে; তাই, আমাদের সেইসব পরীক্ষা ম্যানুয়ালি করতে হবে এবং <code>unsafe</code> দিয়ে তা নির্দেশ করতে হবে।</p>
+<h3 id="একটি-union-এর-ফিলড-অযাকসেস-করা-accessing-fields-of-a-union"><a class="header" href="#একটি-union-এর-ফিলড-অযাকসেস-করা-accessing-fields-of-a-union">একটি Union-এর ফিল্ড অ্যাক্সেস করা (Accessing Fields of a Union)</a></h3>
+<p>শেষ যে কাজটি শুধুমাত্র <code>unsafe</code> দিয়ে করা যায় তা হল একটি union-এর ফিল্ড অ্যাক্সেস করা। একটি <em>union</em> <code>struct</code>-এর মতোই, কিন্তু একটি নির্দিষ্ট ইনস্ট্যান্সে একবারে শুধুমাত্র একটি ঘোষিত ফিল্ড ব্যবহার করা হয়। Union প্রধানত সি কোডে union-এর সাথে ইন্টারফেস করার জন্য ব্যবহৃত হয়। Union ফিল্ড অ্যাক্সেস করা unsafe কারণ রাস্ট গ্যারান্টি দিতে পারে না যে union ইনস্ট্যান্সে বর্তমানে কোন ধরনের ডেটা সংরক্ষণ করা হচ্ছে। আপনি <a href="../reference/items/unions.html">the Rust Reference</a>-এ union সম্পর্কে আরও জানতে পারেন।</p>
+<h3 id="unsafe-কোড-পরীকষা-করার-জনয-miri-বযবহার-করা-using-miri-to-check-unsafe-code"><a class="header" href="#unsafe-কোড-পরীকষা-করার-জনয-miri-বযবহার-করা-using-miri-to-check-unsafe-code">Unsafe কোড পরীক্ষা করার জন্য Miri ব্যবহার করা (Using Miri to Check Unsafe Code)</a></h3>
+<p>Unsafe কোড লেখার সময়, আপনি যা লিখেছেন তা আসলে নিরাপদ এবং সঠিক কিনা তা পরীক্ষা করতে চাইতে পারেন। এটি করার অন্যতম সেরা উপায় হল Miri ব্যবহার করা, যা undefined behavior সনাক্ত করার জন্য একটি অফিসিয়াল রাস্ট টুল। যেখানে borrow checker একটি <em>static</em> টুল যা কম্পাইল টাইমে কাজ করে, Miri একটি <em>dynamic</em> টুল যা রানটাইমে কাজ করে। এটি আপনার প্রোগ্রাম বা এর টেস্ট স্যুট চালিয়ে আপনার কোড পরীক্ষা করে এবং যখন আপনি রাস্টের নিয়ম লঙ্ঘন করেন তখন তা সনাক্ত করে।</p>
+<p>Miri ব্যবহার করার জন্য রাস্টের একটি নাইটলি বিল্ড প্রয়োজন (যা আমরা <a href="appendix-07-nightly-rust.html">Appendix G: How Rust is Made and “Nightly Rust”</a><!-- ignore -->-এ আরও আলোচনা করি)। আপনি <code>rustup +nightly component add miri</code> টাইপ করে রাস্টের একটি নাইটলি সংস্করণ এবং Miri টুল উভয়ই ইনস্টল করতে পারেন। এটি আপনার প্রোজেক্ট কোন রাস্ট সংস্করণ ব্যবহার করে তা পরিবর্তন করে না; এটি কেবল আপনার সিস্টেমে টুলটি যুক্ত করে যাতে আপনি যখন চান তখন এটি ব্যবহার করতে পারেন। আপনি একটি প্রোজেক্টে <code>cargo +nightly miri run</code> বা <code>cargo +nightly miri test</code> টাইপ করে Miri চালাতে পারেন।</p>
+<p>এটি কতটা সহায়ক হতে পারে তার একটি উদাহরণের জন্য, লিস্টিং ২০-৭ এর বিরুদ্ধে এটি চালালে কী ঘটে তা বিবেচনা করুন।</p>
+<pre><code class="language-console">$ cargo +nightly miri run
+   Compiling unsafe-example v0.1.0 (file:///projects/unsafe-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `file:///home/.rustup/toolchains/nightly/bin/cargo-miri runner target/miri/debug/unsafe-example`
+warning: integer-to-pointer cast
+ --&gt; src/main.rs:5:13
+  |
+5 |     let r = address as *mut i32;
+  |             ^^^^^^^^^^^^^^^^^^^ integer-to-pointer cast
+  |
+  = help: this program is using integer-to-pointer casts or (equivalently) `ptr::with_exposed_provenance`, which means that Miri might miss pointer bugs in this program
+  = help: see https://doc.rust-lang.org/nightly/std/ptr/fn.with_exposed_provenance.html for more details on that operation
+  = help: to ensure that Miri does not miss bugs in your program, use Strict Provenance APIs (https://doc.rust-lang.org/nightly/std/ptr/index.html#strict-provenance, https://crates.io/crates/sptr) instead
+  = help: you can then set `MIRIFLAGS=-Zmiri-strict-provenance` to ensure you are not relying on `with_exposed_provenance` semantics
+  = help: alternatively, `MIRIFLAGS=-Zmiri-permissive-provenance` disables this warning
+  = note: BACKTRACE:
+  = note: inside `main` at src/main.rs:5:13: 5:32
+
+error: Undefined Behavior: pointer not dereferenceable: pointer must be dereferenceable for 40000 bytes, but got 0x1234[noalloc] which is a dangling pointer (it has no provenance)
+ --&gt; src/main.rs:7:35
+  |
+7 |     let values: &amp;[i32] = unsafe { slice::from_raw_parts_mut(r, 10000) };
+  |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Undefined Behavior occurred here
+  |
+  = help: this indicates a bug in the program: it performed an invalid operation, and caused Undefined Behavior
+  = help: see https://doc.rust-lang.org/nightly/reference/behavior-considered-undefined.html for further information
+  = note: BACKTRACE:
+  = note: inside `main` at src/main.rs:7:35: 7:70
+
+note: some details are omitted, run with `MIRIFLAGS=-Zmiri-backtrace=full` for a verbose backtrace
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+</code></pre>
+<p>Miri সঠিকভাবে আমাদের সতর্ক করে যে আমরা একটি ইন্টিজারকে একটি পয়েন্টারে কাস্ট করছি, যা একটি সমস্যা হতে পারে কিন্তু Miri এটি সনাক্ত করতে পারে না কারণ এটি জানে না পয়েন্টারটি কীভাবে উদ্ভূত হয়েছে। তারপর, Miri একটি ত্রুটি প্রদান করে যেখানে লিস্টিং ২০-৭-এর undefined behavior রয়েছে কারণ আমাদের একটি ড্যাংলিং পয়েন্টার আছে। Miri-কে ধন্যবাদ, আমরা এখন জানি যে undefined behavior-এর ঝুঁকি রয়েছে, এবং আমরা কোডটিকে কীভাবে নিরাপদ করা যায় সে সম্পর্কে ভাবতে পারি। কিছু ক্ষেত্রে, Miri এমনকি ত্রুটিগুলি কীভাবে ঠিক করতে হয় সে সম্পর্কে সুপারিশও করতে পারে।</p>
+<p>Unsafe কোড লেখার সময় আপনি যা কিছু ভুল করতে পারেন Miri তার সবকিছু ধরে না। Miri একটি ডায়নামিক বিশ্লেষণ টুল, তাই এটি কেবল সেই কোডের সমস্যাগুলি ধরে যা আসলে চালানো হয়। এর মানে হল আপনার লেখা unsafe কোড সম্পর্কে আপনার আত্মবিশ্বাস বাড়ানোর জন্য আপনাকে এটি ভাল টেস্টিং কৌশলের সাথে ব্যবহার করতে হবে। Miri আপনার কোড unsound হওয়ার সমস্ত সম্ভাব্য উপায়ও কভার করে না।</p>
+<p>অন্যভাবে বলতে গেলে: যদি Miri একটি সমস্যা ধরে, আপনি জানেন যে একটি বাগ আছে, কিন্তু শুধু Miri একটি বাগ না ধরার মানে এই নয় যে কোনো সমস্যা নেই। তবে এটি অনেক কিছু ধরতে পারে। এই অধ্যায়ের অন্যান্য unsafe কোডের উদাহরণগুলিতে এটি চালানোর চেষ্টা করুন এবং দেখুন এটি কী বলে!</p>
+<p>আপনি Miri সম্পর্কে আরও জানতে পারেন <a href="https://github.com/rust-lang/miri">its GitHub repository</a>-তে।</p>
+<h3 id="কখন-unsafe-কোড-বযবহার-করবেন-when-to-use-unsafe-code"><a class="header" href="#কখন-unsafe-কোড-বযবহার-করবেন-when-to-use-unsafe-code">কখন Unsafe কোড ব্যবহার করবেন (When to Use Unsafe Code)</a></h3>
+<p>আলোচিত পাঁচটি সুপারপাওয়ারের একটি ব্যবহার করার জন্য <code>unsafe</code> ব্যবহার করা ভুল বা এমনকি নিন্দনীয়ও নয়, তবে <code>unsafe</code> কোড সঠিক করা আরও কঠিন কারণ কম্পাইলার মেমরি সেফটি বজায় রাখতে সাহায্য করতে পারে না। যখন আপনার <code>unsafe</code> কোড ব্যবহার করার কোনো কারণ থাকে, আপনি তা করতে পারেন, এবং সুস্পষ্ট <code>unsafe</code> টীকা থাকা সমস্যা দেখা দিলে তার উৎস খুঁজে বের করা সহজ করে তোলে। যখনই আপনি unsafe কোড লিখবেন, আপনি Miri ব্যবহার করে আপনার লেখা কোড রাস্টের নিয়ম বজায় রাখে কিনা সে সম্পর্কে আরও আত্মবিশ্বাসী হতে পারেন।</p>
+<p>Unsafe Rust-এর সাথে কার্যকরভাবে কীভাবে কাজ করতে হয় সে সম্পর্কে আরও গভীর অনুসন্ধানের জন্য, রাস্টের এই বিষয়ে অফিসিয়াল গাইড, <a href="https://doc.rust-lang.org/nomicon/">Rustonomicon</a> পড়ুন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch20-00-advanced-features.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch20-02-advanced-traits.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch20-00-advanced-features.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch20-02-advanced-traits.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

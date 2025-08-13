@@ -1,0 +1,449 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Deref দিয়ে স্মার্ট পয়েন্টারকে রেগুলার রেফারেন্সের মতো ব্যবহার - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="deref-trait-বযবহার-করে-smart-pointer-কে-সাধারণ-reference-এর-মতো-বযবহার-করা"><a class="header" href="#deref-trait-বযবহার-করে-smart-pointer-কে-সাধারণ-reference-এর-মতো-বযবহার-করা"><code>Deref</code> Trait ব্যবহার করে Smart Pointer-কে সাধারণ Reference-এর মতো ব্যবহার করা</a></h2>
+<p><code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করার মাধ্যমে আপনি <em>dereference operator</em> <code>*</code> (মাল্টিপ্লিকেশন বা glob অপারেটরের সাথে বিভ্রান্ত হবেন না) এর আচরণ কাস্টমাইজ করতে পারেন। <code>Deref</code> এমনভাবে ইমপ্লিমেন্ট করার মাধ্যমে একটি smart pointer-কে সাধারণ reference-এর মতো ব্যবহার করা যায়, যার ফলে আপনি এমন কোড লিখতে পারবেন যা reference-এর উপর কাজ করে এবং সেই কোড smart pointer-এর সাথেও ব্যবহার করতে পারবেন।</p>
+<p>চলুন প্রথমে দেখি dereference অপারেটর সাধারণ reference-এর সাথে কীভাবে কাজ করে। তারপর আমরা <code>Box&lt;T&gt;</code>-এর মতো আচরণ করে এমন একটি কাস্টম টাইপ সংজ্ঞায়িত করার চেষ্টা করব এবং দেখব কেন dereference অপারেটর আমাদের নতুন সংজ্ঞায়িত টাইপের উপর reference-এর মতো কাজ করে না। আমরা দেখব কীভাবে <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করা smart pointer-গুলোকে reference-এর মতো কাজ করতে সক্ষম করে। এরপর আমরা রাস্টের <em>deref coercion</em> ফিচারটি দেখব এবং জানব এটি কীভাবে আমাদের reference বা smart pointer উভয়ের সাথেই কাজ করতে দেয়।</p>
+<h3 id="reference-অনুসরণ-করে-ভযালু-পরযনত-পৌঁছানো"><a class="header" href="#reference-অনুসরণ-করে-ভযালু-পরযনত-পৌঁছানো">Reference অনুসরণ করে ভ্যালু পর্যন্ত পৌঁছানো</a></h3>
+<p>একটি সাধারণ reference হলো এক ধরনের pointer, এবং একটি pointer-কে ভাবা যেতে পারে অন্য কোথাও সংরক্ষিত একটি ভ্যালুর দিকে নির্দেশকারী একটি তীর হিসাবে। Listing 15-6-এ, আমরা একটি <code>i32</code> ভ্যালুর একটি reference তৈরি করেছি এবং তারপর dereference অপারেটর ব্যবহার করে reference অনুসরণ করে সেই ভ্যালু পর্যন্ত গিয়েছি।</p>
+<Listing number="15-6" file-name="src/main.rs" caption="একটি `i32` ভ্যালুর reference অনুসরণ করতে dereference অপারেটরের ব্যবহার">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 5;
+    let y = &amp;x;
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre></pre>
+</Listing>
+<p><code>x</code> ভেরিয়েবলটি একটি <code>i32</code> ভ্যালু <code>5</code> ধারণ করে। আমরা <code>y</code>-কে <code>x</code>-এর একটি reference-এর সমান সেট করেছি। আমরা assert করতে পারি যে <code>x</code> এর মান <code>5</code>। কিন্তু, যদি আমরা <code>y</code>-এর ভ্যালু সম্পর্কে একটি assertion করতে চাই, তাহলে আমাদের <code>*y</code> ব্যবহার করে reference-টিকে অনুসরণ করে তার নির্দেশিত ভ্যালু পর্যন্ত যেতে হবে (এজন্যই <em>dereference</em>) যাতে কম্পাইলার আসল ভ্যালুটি তুলনা করতে পারে। একবার আমরা <code>y</code>-কে dereference করলে, আমরা <code>y</code>-এর নির্দেশিত ইন্টিজার ভ্যালুটি অ্যাক্সেস করতে পারি এবং সেটিকে <code>5</code>-এর সাথে তুলনা করতে পারি।</p>
+<p>যদি আমরা এর পরিবর্তে <code>assert_eq!(5, y);</code> লেখার চেষ্টা করতাম, আমরা এই কম্পাইলেশন এররটি পেতাম:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0277]: can't compare `{integer}` with `&amp;{integer}`
+ --&gt; src/main.rs:6:5
+  |
+6 |     assert_eq!(5, y);
+  |     ^^^^^^^^^^^^^^^^ no implementation for `{integer} == &amp;{integer}`
+  |
+  = help: the trait `PartialEq&lt;&amp;{integer}&gt;` is not implemented for `{integer}`
+  = note: this error originates in the macro `assert_eq` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `deref-example` (bin "deref-example") due to 1 previous error
+</code></pre>
+<p>একটি সংখ্যা এবং একটি সংখ্যার reference-এর তুলনা করার অনুমতি নেই কারণ তারা ভিন্ন টাইপের। আমাদের অবশ্যই dereference অপারেটর ব্যবহার করে reference-টিকে তার নির্দেশিত ভ্যালু পর্যন্ত অনুসরণ করতে হবে।</p>
+<h3 id="boxt-কে-reference-এর-মতো-বযবহার-করা"><a class="header" href="#boxt-কে-reference-এর-মতো-বযবহার-করা"><code>Box&lt;T&gt;</code>-কে Reference-এর মতো ব্যবহার করা</a></h3>
+<p>আমরা Listing 15-6-এর কোডটি reference-এর পরিবর্তে <code>Box&lt;T&gt;</code> ব্যবহার করে পুনরায় লিখতে পারি; Listing 15-7-এ <code>Box&lt;T&gt;</code>-এর উপর ব্যবহৃত dereference অপারেটরটি Listing 15-6-এ reference-এর উপর ব্যবহৃত dereference অপারেটরের মতোই কাজ করে।</p>
+<Listing number="15-7" file-name="src/main.rs" caption="একটি `Box<i32>`-এর উপর dereference অপারেটরের ব্যবহার">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = 5;
+    let y = Box::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre></pre>
+</Listing>
+<p>Listing 15-7 এবং Listing 15-6-এর মধ্যে প্রধান পার্থক্য হলো এখানে আমরা <code>y</code>-কে <code>x</code>-এর ভ্যালুকে নির্দেশকারী একটি reference-এর পরিবর্তে <code>x</code>-এর একটি কপি করা ভ্যালুকে নির্দেশকারী একটি box-এর ইনস্ট্যান্স হিসাবে সেট করেছি। শেষ assertion-এ, আমরা box-এর pointer অনুসরণ করতে dereference অপারেটর ব্যবহার করতে পারি, ঠিক সেভাবেই যেভাবে আমরা <code>y</code> যখন একটি reference ছিল তখন করেছিলাম। এরপর, আমরা দেখব <code>Box&lt;T&gt;</code>-এর মধ্যে বিশেষ কী আছে যা আমাদের নিজস্ব box টাইপ সংজ্ঞায়িত করে dereference অপারেটর ব্যবহার করতে সক্ষম করে।</p>
+<h3 id="আমাদের-নিজসব-smart-pointer-তৈরি-করা"><a class="header" href="#আমাদের-নিজসব-smart-pointer-তৈরি-করা">আমাদের নিজস্ব Smart Pointer তৈরি করা</a></h3>
+<p>চলুন, স্ট্যান্ডার্ড লাইব্রেরি দ্বারা প্রদত্ত <code>Box&lt;T&gt;</code> টাইপের মতো একটি wrapper টাইপ তৈরি করি যাতে ডিফল্টভাবে smart pointer টাইপগুলো reference-এর থেকে কীভাবে ভিন্ন আচরণ করে তা অনুভব করা যায়। তারপর আমরা দেখব কীভাবে dereference অপারেটর ব্যবহার করার ক্ষমতা যোগ করা যায়।</p>
+<blockquote>
+<p>দ্রষ্টব্য: আমরা যে <code>MyBox&lt;T&gt;</code> টাইপটি তৈরি করতে যাচ্ছি এবং আসল <code>Box&lt;T&gt;</code>-এর মধ্যে একটি বড় পার্থক্য আছে: আমাদের সংস্করণটি তার ডেটা হিপ-এ সংরক্ষণ করবে না। আমরা এই উদাহরণে <code>Deref</code>-এর উপর ফোকাস করছি, তাই ডেটা আসলে কোথায় সংরক্ষিত আছে তা pointer-এর মতো আচরণের চেয়ে কম গুরুত্বপূর্ণ।</p>
+</blockquote>
+<p><code>Box&lt;T&gt;</code> টাইপটি মূলত একটি একটি উপাদান সহ একটি tuple struct হিসাবে সংজ্ঞায়িত করা হয়েছে, তাই Listing 15-8 একই ভাবে একটি <code>MyBox&lt;T&gt;</code> টাইপ সংজ্ঞায়িত করে। আমরা <code>Box&lt;T&gt;</code>-তে সংজ্ঞায়িত <code>new</code> ফাংশনের সাথে মেলানোর জন্য একটি <code>new</code> ফাংশনও সংজ্ঞায়িত করব।</p>
+<Listing number="15-8" file-name="src/main.rs" caption="একটি `MyBox<T>` টাইপ সংজ্ঞায়িত করা">
+<pre><pre class="playground"><code class="language-rust edition2024">struct MyBox&lt;T&gt;(T);
+
+impl&lt;T&gt; MyBox&lt;T&gt; {
+    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+        MyBox(x)
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>আমরা <code>MyBox</code> নামে একটি struct সংজ্ঞায়িত করি এবং একটি জেনেরিক প্যারামিটার <code>T</code> ঘোষণা করি কারণ আমরা চাই আমাদের টাইপ যেকোনো টাইপের ভ্যালু ধারণ করুক। <code>MyBox</code> টাইপটি <code>T</code> টাইপের একটি উপাদান সহ একটি tuple struct। <code>MyBox::new</code> ফাংশনটি <code>T</code> টাইপের একটি প্যারামিটার নেয় এবং পাস করা ভ্যালুটি ধারণকারী একটি <code>MyBox</code> ইনস্ট্যান্স রিটার্ন করে।</p>
+<p>চলুন Listing 15-7-এর <code>main</code> ফাংশনটি Listing 15-8-এ যোগ করার চেষ্টা করি এবং এটিকে <code>Box&lt;T&gt;</code>-এর পরিবর্তে আমাদের সংজ্ঞায়িত <code>MyBox&lt;T&gt;</code> টাইপ ব্যবহার করার জন্য পরিবর্তন করি। Listing 15-9-এর কোডটি কম্পাইল হবে না কারণ রাস্ট জানে না কীভাবে <code>MyBox</code>-কে dereference করতে হয়।</p>
+<Listing number="15-9" file-name="src/main.rs" caption="`MyBox<T>`-কে reference এবং `Box<T>`-এর মতো একইভাবে ব্যবহার করার প্রচেষ্টা">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let x = 5;
+    let y = MyBox::new(x);
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}</code></pre>
+</Listing>
+<p>এর ফলে এই কম্পাইলেশন এররটি আসে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
+  --&gt; src/main.rs:14:19
+   |
+14 |     assert_eq!(5, *y);
+   |                   ^^
+
+For more information about this error, try `rustc --explain E0614`.
+error: could not compile `deref-example` (bin "deref-example") due to 1 previous error
+</code></pre>
+<p>আমাদের <code>MyBox&lt;T&gt;</code> টাইপটি dereference করা যায় না কারণ আমরা আমাদের টাইপের উপর সেই ক্ষমতা ইমপ্লিমেন্ট করিনি। <code>*</code> অপারেটর দিয়ে dereferencing সক্ষম করতে, আমরা <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করি।</p>
+<h3 id="deref-trait-ইমপলিমেনট-করা"><a class="header" href="#deref-trait-ইমপলিমেনট-করা"><code>Deref</code> Trait ইমপ্লিমেন্ট করা</a></h3>
+<p>Chapter 10-এর ["Implementing a Trait on a Type"][impl-trait] অংশে যেমন আলোচনা করা হয়েছে, একটি ট্রেইট ইমপ্লিমেন্ট করার জন্য আমাদের ট্রেইটের প্রয়োজনীয় মেথডগুলির জন্য ইমপ্লিমেন্টেশন সরবরাহ করতে হবে। স্ট্যান্ডার্ড লাইব্রেরি দ্বারা প্রদত্ত <code>Deref</code> ট্রেইটের জন্য আমাদের <code>deref</code> নামে একটি মেথড ইমপ্লিমেন্ট করতে হবে যা <code>self</code> borrow করে এবং ভেতরের ডেটার একটি reference রিটার্ন করে। Listing 15-10-এ <code>MyBox&lt;T&gt;</code>-এর সংজ্ঞায় যোগ করার জন্য <code>Deref</code>-এর একটি ইমপ্লিমেন্টেশন রয়েছে।</p>
+<Listing number="15-10" file-name="src/main.rs" caption="`MyBox<T>`-এর উপর `Deref` ইমপ্লিমেন্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::ops::Deref;
+
+impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+    type Target = T;
+
+    fn deref(&amp;self) -&gt; &amp;Self::Target {
+        &amp;self.0
+    }
+}
+<span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let x = 5;
+</span><span class="boring">    let y = MyBox::new(x);
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(5, x);
+</span><span class="boring">    assert_eq!(5, *y);
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p><code>type Target = T;</code> সিনট্যাক্সটি <code>Deref</code> ট্রেইটের ব্যবহারের জন্য একটি associated type সংজ্ঞায়িত করে। Associated type গুলো একটি জেনেরিক প্যারামিটার ঘোষণা করার একটি সামান্য ভিন্ন উপায়, কিন্তু আপনার এখন এগুলি নিয়ে চিন্তা করার দরকার নেই; আমরা Chapter 20-এ এগুলি সম্পর্কে আরও বিস্তারিতভাবে আলোচনা করব।</p>
+<p>আমরা <code>deref</code> মেথডের বডি <code>&amp;self.0</code> দিয়ে পূরণ করি যাতে <code>deref</code> সেই ভ্যালুর একটি reference রিটার্ন করে যা আমরা <code>*</code> অপারেটর দিয়ে অ্যাক্সেস করতে চাই; Chapter 5-এর ["Using Tuple Structs Without Named Fields to Create Different Types"][tuple-structs] থেকে স্মরণ করুন যে <code>.0</code> একটি tuple struct-এর প্রথম ভ্যালু অ্যাক্সেস করে। Listing 15-9-এর <code>main</code> ফাংশন যা <code>MyBox&lt;T&gt;</code> ভ্যালুর উপর <code>*</code> কল করে, তা এখন কম্পাইল হয় এবং assertion গুলো পাস করে!</p>
+<p><code>Deref</code> ট্রেইট ছাড়া, কম্পাইলার শুধুমাত্র <code>&amp;</code> reference-গুলো dereference করতে পারে। <code>deref</code> মেথড কম্পাইলারকে যেকোনো টাইপের ভ্যালু যা <code>Deref</code> ইমপ্লিমেন্ট করে তা নিয়ে <code>deref</code> মেথড কল করে একটি <code>&amp;</code> reference পাওয়ার ক্ষমতা দেয়, যা সে dereference করতে জানে।</p>
+<p>যখন আমরা Listing 15-9-এ <code>*y</code> লিখেছিলাম, পর্দার আড়ালে রাস্ট আসলে এই কোডটি রান করেছে:</p>
+<pre><code class="language-rust ignore">*(y.deref())</code></pre>
+<p>রাস্ট <code>*</code> অপারেটরটিকে <code>deref</code> মেথডে একটি কল এবং তারপর একটি সাধারণ dereference দিয়ে প্রতিস্থাপন করে যাতে আমাদের <code>deref</code> মেথড কল করার প্রয়োজন আছে কি না তা নিয়ে ভাবতে না হয়। রাস্টের এই ফিচারটি আমাদের এমন কোড লিখতে দেয় যা একইভাবে কাজ করে, আমাদের কাছে একটি সাধারণ reference থাকুক বা <code>Deref</code> ইমপ্লিমেন্ট করা একটি টাইপ থাকুক।</p>
+<p><code>deref</code> মেথড কেন একটি ভ্যালুর reference রিটার্ন করে, এবং <code>*(y.deref())</code>-এর বন্ধনীর বাইরের সাধারণ dereference কেন এখনও প্রয়োজনীয়, তার কারণ ownership সিস্টেমের সাথে সম্পর্কিত। যদি <code>deref</code> মেথড ভ্যালুর reference-এর পরিবর্তে সরাসরি ভ্যালুটি রিটার্ন করত, তাহলে ভ্যালুটি <code>self</code> থেকে মুভ (move) হয়ে যেত। আমরা এই ক্ষেত্রে বা বেশিরভাগ ক্ষেত্রে যেখানে আমরা dereference অপারেটর ব্যবহার করি সেখানে <code>MyBox&lt;T&gt;</code>-এর ভেতরের ভ্যালুর ownership নিতে চাই না।</p>
+<p>মনে রাখবেন যে <code>*</code> অপারেটরটি <code>deref</code> মেথডে একটি কল এবং তারপর <code>*</code> অপারেটরে একটি কল দ্বারা প্রতিস্থাপিত হয়, প্রতিবার যখন আমরা আমাদের কোডে একটি <code>*</code> ব্যবহার করি। যেহেতু <code>*</code> অপারেটরের প্রতিস্থাপন অসীমভাবে পুনরাবৃত্তি হয় না, তাই আমরা <code>i32</code> টাইপের ডেটা পাই, যা Listing 15-9-এর <code>assert_eq!</code>-তে <code>5</code>-এর সাথে মেলে।</p>
+<h3 id="ফাংশন-এবং-মেথডে-সবয়ংকরিয়-deref-coercion"><a class="header" href="#ফাংশন-এবং-মেথডে-সবয়ংকরিয়-deref-coercion">ফাংশন এবং মেথডে স্বয়ংক্রিয় Deref Coercion</a></h3>
+<p><em>Deref coercion</em> এমন একটি টাইপের reference-কে যা <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করে, অন্য একটি টাইপের reference-এ রূপান্তরিত করে। উদাহরণস্বরূপ, deref coercion <code>&amp;String</code>-কে <code>&amp;str</code>-এ রূপান্তরিত করতে পারে কারণ <code>String</code> <code>Deref</code> ট্রেইট এমনভাবে ইমপ্লিমেন্ট করে যা <code>&amp;str</code> রিটার্ন করে। Deref coercion একটি সুবিধা যা রাস্ট ফাংশন এবং মেথডের আর্গুমেন্টের উপর প্রয়োগ করে এবং এটি শুধুমাত্র সেইসব টাইপের উপর কাজ করে যা <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করে। এটি স্বয়ংক্রিয়ভাবে ঘটে যখন আমরা একটি নির্দিষ্ট টাইপের ভ্যালুর reference একটি ফাংশন বা মেথডের আর্গুমেন্ট হিসাবে পাস করি যা ফাংশন বা মেথড সংজ্ঞার প্যারামিটার টাইপের সাথে মেলে না। <code>deref</code> মেথডে একাধিক কলের একটি ক্রম আমাদের দেওয়া টাইপটিকে প্যারামিটারের প্রয়োজনীয় টাইপে রূপান্তরিত করে।</p>
+<p>Deref coercion রাস্ট-এ যোগ করা হয়েছিল যাতে ফাংশন এবং মেথড কল লেখার সময় প্রোগ্রামারদের <code>&amp;</code> এবং <code>*</code> দিয়ে অনেক বেশি সুস্পষ্ট reference এবং dereference যোগ করার প্রয়োজন না হয়। deref coercion ফিচারটি আমাদের আরও বেশি কোড লিখতে দেয় যা reference বা smart pointer উভয়ের জন্য কাজ করতে পারে।</p>
+<p>Deref coercion বাস্তবে দেখতে, আসুন আমরা Listing 15-8-এ সংজ্ঞায়িত <code>MyBox&lt;T&gt;</code> টাইপ এবং Listing 15-10-এ যোগ করা <code>Deref</code>-এর ইমপ্লিমেন্টেশন ব্যবহার করি। Listing 15-11 একটি ফাংশনের সংজ্ঞা দেখায় যার একটি স্ট্রিং স্লাইস প্যারামিটার রয়েছে।</p>
+<Listing number="15-11" file-name="src/main.rs" caption="একটি `hello` ফাংশন যার `name` প্যারামিটারটি `&str` টাইপের">
+<pre><pre class="playground"><code class="language-rust edition2024">fn hello(name: &amp;str) {
+    println!("Hello, {name}!");
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>আমরা <code>hello</code> ফাংশনটিকে একটি স্ট্রিং স্লাইস আর্গুমেন্ট দিয়ে কল করতে পারি, যেমন <code>hello("Rust");</code>। Deref coercion <code>hello</code>-কে <code>MyBox&lt;String&gt;</code> টাইপের একটি ভ্যালুর reference দিয়ে কল করা সম্ভব করে, যেমনটি Listing 15-12-এ দেখানো হয়েছে।</p>
+<Listing number="15-12" file-name="src/main.rs" caption="`MyBox<String>` ভ্যালুর একটি reference দিয়ে `hello` কল করা, যা deref coercion-এর কারণে কাজ করে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::ops::Deref;
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+</span><span class="boring">    type Target = T;
+</span><span class="boring">
+</span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.0
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;m);
+}</code></pre></pre>
+</Listing>
+<p>এখানে আমরা <code>hello</code> ফাংশনটিকে <code>&amp;m</code> আর্গুমেন্ট দিয়ে কল করছি, যা একটি <code>MyBox&lt;String&gt;</code> ভ্যালুর একটি reference। যেহেতু আমরা Listing 15-10-এ <code>MyBox&lt;T&gt;</code>-এর উপর <code>Deref</code> ট্রেইট ইমপ্লিমেন্ট করেছি, তাই রাস্ট <code>deref</code> কল করে <code>&amp;MyBox&lt;String&gt;</code>-কে <code>&amp;String</code>-এ পরিণত করতে পারে। স্ট্যান্ডার্ড লাইব্রেরি <code>String</code>-এর উপর <code>Deref</code>-এর একটি ইমপ্লিমেন্টেশন প্রদান করে যা একটি স্ট্রিং স্লাইস রিটার্ন করে, এবং এটি <code>Deref</code>-এর API ডকুমেন্টেশনে রয়েছে। রাস্ট <code>&amp;String</code>-কে <code>&amp;str</code>-এ পরিণত করতে আবার <code>deref</code> কল করে, যা <code>hello</code> ফাংশনের সংজ্ঞার সাথে মেলে।</p>
+<p>যদি রাস্ট deref coercion ইমপ্লিমেন্ট না করত, তাহলে <code>hello</code>-কে <code>&amp;MyBox&lt;String&gt;</code> টাইপের একটি ভ্যালু দিয়ে কল করার জন্য আমাদের Listing 15-12-এর কোডের পরিবর্তে Listing 15-13-এর কোডটি লিখতে হতো।</p>
+<Listing number="15-13" file-name="src/main.rs" caption="যদি রাস্ট-এর deref coercion না থাকত তাহলে আমাদের যে কোড লিখতে হতো">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::ops::Deref;
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
+</span><span class="boring">    type Target = T;
+</span><span class="boring">
+</span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
+</span><span class="boring">        &amp;self.0
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;(*m)[..]);
+}</code></pre></pre>
+</Listing>
+<p><code>(*m)</code> <code>MyBox&lt;String&gt;</code>-কে dereference করে একটি <code>String</code>-এ পরিণত করে। তারপর <code>&amp;</code> এবং <code>[..]</code> <code>String</code>-এর একটি স্ট্রিং স্লাইস নেয় যা <code>hello</code>-এর সিগনেচারের সাথে মেলানোর জন্য পুরো স্ট্রিংয়ের সমান। এই সমস্ত চিহ্ন জড়িত থাকার কারণে deref coercion ছাড়া এই কোডটি পড়া, লেখা এবং বোঝা কঠিন। Deref coercion রাস্টকে এই রূপান্তরগুলি আমাদের জন্য স্বয়ংক্রিয়ভাবে পরিচালনা করার অনুমতি দেয়।</p>
+<p>যখন জড়িত টাইপগুলির জন্য <code>Deref</code> ট্রেইট সংজ্ঞায়িত করা হয়, রাস্ট টাইপগুলি বিশ্লেষণ করবে এবং প্যারামিটারের টাইপের সাথে মেলানোর জন্য একটি reference পেতে যতবার প্রয়োজন <code>Deref::deref</code> ব্যবহার করবে। <code>Deref::deref</code> কতবার সন্নিবেশ করা প্রয়োজন তা কম্পাইল টাইমে সমাধান করা হয়, তাই deref coercion-এর সুবিধা নেওয়ার জন্য কোনো রানটাইম পেনাল্টি নেই!</p>
+<h3 id="deref-coercion-এবং-mutability-র-সমপরক"><a class="header" href="#deref-coercion-এবং-mutability-র-সমপরক">Deref Coercion এবং Mutability-র সম্পর্ক</a></h3>
+<p>আপনি যেভাবে immutable reference-এর উপর <code>*</code> অপারেটর ওভাররাইড করতে <code>Deref</code> ট্রেইট ব্যবহার করেন, সেভাবেই আপনি mutable reference-এর উপর <code>*</code> অপারেটর ওভাররাইড করতে <code>DerefMut</code> ট্রেইট ব্যবহার করতে পারেন।</p>
+<p>রাস্ট তিনটি ক্ষেত্রে deref coercion করে যখন এটি টাইপ এবং ট্রেইট ইমপ্লিমেন্টেশন খুঁজে পায়:</p>
+<ol>
+<li><code>&amp;T</code> থেকে <code>&amp;U</code> যখন <code>T: Deref&lt;Target=U&gt;</code></li>
+<li><code>&amp;mut T</code> থেকে <code>&amp;mut U</code> যখন <code>T: DerefMut&lt;Target=U&gt;</code></li>
+<li><code>&amp;mut T</code> থেকে <code>&amp;U</code> যখন <code>T: Deref&lt;Target=U&gt;</code></li>
+</ol>
+<p>প্রথম দুটি ক্ষেত্র একই, শুধুমাত্র দ্বিতীয়টি mutability ইমপ্লিমেন্ট করে। প্রথম ক্ষেত্রটি বলে যে যদি আপনার কাছে একটি <code>&amp;T</code> থাকে, এবং <code>T</code> কোনো টাইপ <code>U</code>-এর জন্য <code>Deref</code> ইমপ্লিমেন্ট করে, আপনি স্বচ্ছভাবে একটি <code>&amp;U</code> পেতে পারেন। দ্বিতীয় ক্ষেত্রটি বলে যে mutable reference-এর জন্য একই deref coercion ঘটে।</p>
+<p>তৃতীয় ক্ষেত্রটি আরও জটিল: রাস্ট একটি mutable reference-কে একটি immutable reference-এও রূপান্তর করবে। কিন্তু এর বিপরীতটি সম্ভব <em>নয়</em>: immutable reference কখনও mutable reference-এ রূপান্তরিত হবে না। borrowing-এর নিয়ম অনুযায়ী, যদি আপনার কাছে একটি mutable reference থাকে, তবে সেই mutable reference-টি অবশ্যই সেই ডেটার একমাত্র reference হতে হবে (অন্যথায়, প্রোগ্রামটি কম্পাইল হবে না)। একটি mutable reference-কে একটি immutable reference-এ রূপান্তরিত করলে borrowing-এর নিয়ম কখনও ভাঙবে না। একটি immutable reference-কে একটি mutable reference-এ রূপান্তরিত করার জন্য প্রয়োজন হবে যে প্রাথমিক immutable reference-টি সেই ডেটার একমাত্র immutable reference, কিন্তু borrowing-এর নিয়ম তার নিশ্চয়তা দেয় না। অতএব, রাস্ট এই ধারণা করতে পারে না যে একটি immutable reference-কে একটি mutable reference-এ রূপান্তরিত করা সম্ভব।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch15-01-box.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch15-03-drop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch15-01-box.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch15-03-drop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

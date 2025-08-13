@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>panic! দিয়ে অপরিবর্তনীয় এরর - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="panic-দিয়ে-অপুনরুদধারযোগয-এরর-unrecoverable-errors"><a class="header" href="#panic-দিয়ে-অপুনরুদধারযোগয-এরর-unrecoverable-errors"><code>panic!</code> দিয়ে অপুনরুদ্ধারযোগ্য এরর (Unrecoverable Errors)</a></h2>
+<p>কখনও কখনও আপনার কোডে খারাপ কিছু ঘটে, এবং আপনি তা নিয়ে কিছুই করতে পারেন না। এই ধরনের ক্ষেত্রে, Rust-এ <code>panic!</code> ম্যাক্রো রয়েছে। বাস্তবে প্যানিক (panic) ঘটানোর দুটি উপায় আছে: এমন কোনো কাজ করা যা আমাদের কোডকে প্যানিক করায় (যেমন একটি array-এর সীমার বাইরে অ্যাক্সেস করা) অথবা স্পষ্টভাবে <code>panic!</code> ম্যাক্রো কল করা। উভয় ক্ষেত্রেই, আমরা আমাদের প্রোগ্রামে একটি প্যানিক ঘটাই। ডিফল্টভাবে, এই প্যানিকগুলো একটি ব্যর্থতার বার্তা প্রিন্ট করবে, স্ট্যাক আনওয়াইন্ড (unwind) করবে, পরিষ্কার করবে এবং প্রোগ্রাম থেকে বেরিয়ে যাবে। একটি এনভায়রনমেন্ট ভেরিয়েবলের মাধ্যমে, আপনি প্যানিকের উৎস খুঁজে বের করা সহজ করার জন্য প্যানিক ঘটলে Rust-কে কল স্ট্যাক (call stack) প্রদর্শন করাতেও পারেন।</p>
+<blockquote>
+<h3 id="পযানিকের-পরতিকরিযায-সটযাক-আনওযাইনড-করা-বা-অযাবোরট-করা-unwinding-the-stack-or-aborting-in-response-to-a-panic"><a class="header" href="#পযানিকের-পরতিকরিযায-সটযাক-আনওযাইনড-করা-বা-অযাবোরট-করা-unwinding-the-stack-or-aborting-in-response-to-a-panic">প্যানিকের প্রতিক্রিয়ায় স্ট্যাক আনওয়াইন্ড করা বা অ্যাবোর্ট করা (Unwinding the Stack or Aborting in Response to a Panic)</a></h3>
+<p>ডিফল্টভাবে, যখন একটি প্যানিক ঘটে, প্রোগ্রামটি <em>unwinding</em> শুরু করে, যার মানে হলো Rust স্ট্যাকের উপরে ফিরে যায় এবং প্রতিটি ফাংশন থেকে ডেটা পরিষ্কার করে। তবে, এভাবে ফিরে যাওয়া এবং পরিষ্কার করা অনেক কাজ। তাই Rust আপনাকে অবিলম্বে <em>aborting</em> (বন্ধ করা) এর বিকল্প বেছে নেওয়ার সুযোগ দেয়, যা কোনো কিছু পরিষ্কার না করেই প্রোগ্রামটি শেষ করে দেয়।</p>
+<p>প্রোগ্রাম যে মেমরি ব্যবহার করছিল তা তখন অপারেটিং সিস্টেম দ্বারা পরিষ্কার করার প্রয়োজন হবে। যদি আপনার প্রকল্পে ফলস্বরূপ বাইনারিটিকে যতটা সম্ভব ছোট করার প্রয়োজন হয়, তবে আপনি আপনার <em>Cargo.toml</em> ফাইলের উপযুক্ত <code>[profile]</code> বিভাগে <code>panic = 'abort'</code> যোগ করে প্যানিকের সময় unwinding থেকে aborting-এ স্যুইচ করতে পারেন। উদাহরণস্বরূপ, যদি আপনি রিলিজ মোডে প্যানিকের সময় অ্যাবোর্ট করতে চান, তবে এটি যোগ করুন:</p>
+<pre><code class="language-toml">[profile.release]
+panic = 'abort'
+</code></pre>
+</blockquote>
+<p>আসুন একটি সহজ প্রোগ্রামে <code>panic!</code> কল করার চেষ্টা করি:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust should_panic panics edition2024">fn main() {
+    panic!("crash and burn");
+}</code></pre></pre>
+</Listing>
+<p>আপনি যখন প্রোগ্রামটি চালাবেন, তখন আপনি এইরকম কিছু দেখতে পাবেন:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling panic v0.1.0 (file:///projects/panic)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.25s
+     Running `target/debug/panic`
+
+thread 'main' panicked at src/main.rs:2:5:
+crash and burn
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</code></pre>
+<p><code>panic!</code>-এর কলটি শেষ দুটি লাইনে থাকা এরর বার্তাটির কারণ। প্রথম লাইনটি আমাদের প্যানিক বার্তা এবং আমাদের সোর্স কোডের সেই স্থানটি দেখায় যেখানে প্যানিক ঘটেছে: <em>src/main.rs:2:5</em> নির্দেশ করে যে এটি আমাদের <em>src/main.rs</em> ফাইলের দ্বিতীয় লাইনের পঞ্চম অক্ষর।</p>
+<p>এই ক্ষেত্রে, নির্দেশিত লাইনটি আমাদের কোডের অংশ, এবং যদি আমরা সেই লাইনে যাই, আমরা <code>panic!</code> ম্যাক্রো কলটি দেখতে পাই। অন্যান্য ক্ষেত্রে, <code>panic!</code> কলটি এমন কোডে থাকতে পারে যা আমাদের কোড কল করে, এবং এরর বার্তা দ্বারা রিপোর্ট করা ফাইলের নাম এবং লাইন নম্বর অন্য কারো কোডের হবে যেখানে <code>panic!</code> ম্যাক্রো কল করা হয়েছে, আমাদের কোডের সেই লাইন নয় যা অবশেষে <code>panic!</code> কলের কারণ হয়েছে।</p>
+<!-- Old heading. Do not remove or links may break. -->
+<p><a id="using-a-panic-backtrace"></a></p>
+<p>আমরা <code>panic!</code> কলটি যে ফাংশনগুলো থেকে এসেছে তার ব্যাকট্রেস (backtrace) ব্যবহার করে আমাদের কোডের কোন অংশটি সমস্যার কারণ তা খুঁজে বের করতে পারি। একটি <code>panic!</code> ব্যাকট্রেস কীভাবে ব্যবহার করতে হয় তা বোঝার জন্য, আসুন আরেকটি উদাহরণ দেখি এবং দেখি যখন আমাদের কোডের কোনো বাগের কারণে কোনো লাইব্রেরি থেকে <code>panic!</code> কল আসে, আমাদের কোড সরাসরি ম্যাক্রো কল করার পরিবর্তে, তখন কেমন হয়। লিস্টিং ৯-১ এ কিছু কোড রয়েছে যা একটি ভেক্টরের বৈধ ইনডেক্সের সীমার বাইরে একটি ইনডেক্স অ্যাক্সেস করার চেষ্টা করে।</p>
+<Listing number="9-1" file-name="src/main.rs" caption="একটি ভেক্টরের শেষের বাইরের কোনো এলিমেন্ট অ্যাক্সেস করার চেষ্টা, যা `panic!` কল করবে">
+<pre><pre class="playground"><code class="language-rust should_panic panics edition2024">fn main() {
+    let v = vec![1, 2, 3];
+
+    v[99];
+}</code></pre></pre>
+</Listing>
+<p>এখানে, আমরা আমাদের ভেক্টরের ১০০তম এলিমেন্টটি (যা ইনডেক্স ৯৯-এ রয়েছে কারণ ইনডেক্সিং শূন্য থেকে শুরু হয়) অ্যাক্সেস করার চেষ্টা করছি, কিন্তু ভেক্টরটিতে মাত্র তিনটি এলিমেন্ট রয়েছে। এই পরিস্থিতিতে, Rust প্যানিক করবে। <code>[]</code> ব্যবহার করার কথা একটি এলিমেন্ট রিটার্ন করা, কিন্তু যদি আপনি একটি অবৈধ ইনডেক্স পাস করেন, তবে এখানে এমন কোনো এলিমেন্ট নেই যা Rust সঠিকভাবে রিটার্ন করতে পারত।</p>
+<p>C ভাষায়, একটি ডেটা স্ট্রাকচারের শেষের বাইরে পড়ার চেষ্টা করা আনডিফাইন্ড বিহেভিয়ার (undefined behavior)। আপনি মেমরির সেই অবস্থানে যা কিছু আছে তা পেতে পারেন যা ডেটা স্ট্রাকচারের সেই এলিমেন্টের সাথে সঙ্গতিপূর্ণ, যদিও মেমরিটি সেই স্ট্রাকচারের অন্তর্গত নয়। এটিকে <em>buffer overread</em> বলা হয় এবং এটি নিরাপত্তা দুর্বলতার কারণ হতে পারে যদি কোনো আক্রমণকারী ইনডেক্সটিকে এমনভাবে ম্যানিপুলেট করতে সক্ষম হয় যাতে সে এমন ডেটা পড়তে পারে যা তার পড়ার অনুমতি নেই এবং যা ডেটা স্ট্রাকচারের পরে সংরক্ষণ করা হয়েছে।</p>
+<p>আপনার প্রোগ্রামকে এই ধরনের দুর্বলতা থেকে রক্ষা করার জন্য, যদি আপনি এমন একটি ইনডেক্সে একটি এলিমেন্ট পড়ার চেষ্টা করেন যা বিদ্যমান নেই, Rust এক্সিকিউশন বন্ধ করে দেবে এবং চলতে অস্বীকার করবে। আসুন এটি চেষ্টা করে দেখি:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling panic v0.1.0 (file:///projects/panic)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running `target/debug/panic`
+
+thread 'main' panicked at src/main.rs:4:6:
+index out of bounds: the len is 3 but the index is 99
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace```
+
+এই এররটি আমাদের _main.rs_ এর ৪ নম্বর লাইনকে নির্দেশ করে যেখানে আমরা `v` ভেক্টরের ইনডেক্স `99` অ্যাক্সেস করার চেষ্টা করছি।
+
+`note:` লাইনটি আমাদের বলছে যে আমরা `RUST_BACKTRACE` এনভায়রনমেন্ট ভেরিয়েবল সেট করে এররের কারণ কী ঘটেছে তার একটি সঠিক ব্যাকট্রেস পেতে পারি। একটি _ব্যাকট্রেস_ হলো এই পয়েন্টে পৌঁছানোর জন্য কল করা সমস্ত ফাংশনের একটি তালিকা। Rust-এ ব্যাকট্রেস অন্যান্য ল্যাঙ্গুয়েজের মতোই কাজ করে: ব্যাকট্রেস পড়ার মূল চাবিকাঠি হলো উপর থেকে শুরু করে পড়া যতক্ষণ না আপনি আপনার লেখা ফাইল দেখতে পান। সেখানেই সমস্যার উৎপত্তি। সেই স্থানের উপরের লাইনগুলো হলো কোড যা আপনার কোড কল করেছে; নীচের লাইনগুলো হলো কোড যা আপনার কোডকে কল করেছে। এই আগের এবং পরের লাইনগুলিতে কোর Rust কোড, স্ট্যান্ডার্ড লাইব্রেরি কোড, বা আপনার ব্যবহার করা ক্রেট অন্তর্ভুক্ত থাকতে পারে। আসুন `RUST_BACKTRACE` এনভায়রনমেন্ট ভেরিয়েবলকে `0` ছাড়া যেকোনো মান দিয়ে সেট করে একটি ব্যাকট্রেস পাওয়ার চেষ্টা করি। লিস্টিং ৯-২ আপনার যা দেখার সম্ভাবনা তার অনুরূপ আউটপুট দেখায়।
+
+&lt;!-- manual-regeneration
+cd listings/ch09-error-handling/listing-09-01
+RUST_BACKTRACE=1 cargo run
+copy the backtrace output below
+check the backtrace number mentioned in the text below the listing
+--&gt;
+
+&lt;Listing number="9-2" caption="`RUST_BACKTRACE` এনভায়রনমেন্ট ভেরিয়েবল সেট করা হলে `panic!` কলের দ্বারা তৈরি ব্যাকট্রেস"&gt;
+
+```console
+$ RUST_BACKTRACE=1 cargo run
+thread 'main' panicked at src/main.rs:4:6:
+index out of bounds: the len is 3 but the index is 99
+stack backtrace:
+   0: rust_begin_unwind
+             at /rustc/4d91de4e48198da2e33413efdcd9cd2cc0c46688/library/std/src/panicking.rs:692:5
+   1: core::panicking::panic_fmt
+             at /rustc/4d91de4e48198da2e33413efdcd9cd2cc0c46688/library/core/src/panicking.rs:75:14
+   2: core::panicking::panic_bounds_check
+             at /rustc/4d91de4e48198da2e33413efdcd9cd2cc0c46688/library/core/src/panicking.rs:273:5
+   3: &lt;usize as core::slice::index::SliceIndex&lt;[T]&gt;&gt;::index
+             at file:///home/.rustup/toolchains/1.85/lib/rustlib/src/rust/library/core/src/slice/index.rs:274:10
+   4: core::slice::index::&lt;impl core::ops::index::Index&lt;I&gt; for [T]&gt;::index
+             at file:///home/.rustup/toolchains/1.85/lib/rustlib/src/rust/library/core/src/slice/index.rs:16:9
+   5: &lt;alloc::vec::Vec&lt;T,A&gt; as core::ops::index::Index&lt;I&gt;&gt;::index
+             at file:///home/.rustup/toolchains/1.85/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:3361:9
+   6: panic::main
+             at ./src/main.rs:4:6
+   7: core::ops::function::FnOnce::call_once
+             at file:///home/.rustup/toolchains/1.85/lib/rustlib/src/rust/library/core/src/ops/function.rs:250:5
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+</code></pre>
+</Listing>
+<p>এটি অনেক বড় আউটপুট! আপনার অপারেটিং সিস্টেম এবং Rust সংস্করণের উপর নির্ভর করে আপনি যে সঠিক আউটপুটটি দেখবেন তা ভিন্ন হতে পারে। এই তথ্য সহ ব্যাকট্রেস পেতে, ডিবাগ চিহ্ন (debug symbols) সক্রিয় থাকতে হবে। <code>cargo build</code> বা <code>cargo run</code> ব্যবহার করার সময় <code>--release</code> ফ্ল্যাগ ছাড়া ডিবাগ চিহ্ন ডিফল্টভাবে সক্রিয় থাকে, যেমনটি আমরা এখানে করেছি।</p>
+<p>লিস্টিং ৯-২ এর আউটপুটে, ব্যাকট্রেসের ৬ নম্বর লাইনটি আমাদের প্রকল্পের সেই লাইনটিকে নির্দেশ করে যা সমস্যার কারণ: <em>src/main.rs</em> এর ৪ নম্বর লাইন। যদি আমরা আমাদের প্রোগ্রামকে প্যানিক করতে না চাই, তবে আমাদের তদন্ত শুরু করা উচিত আমাদের লেখা একটি ফাইলের উল্লেখ করা প্রথম লাইন দ্বারা নির্দেশিত অবস্থান থেকে। লিস্টিং ৯-১-এ, যেখানে আমরা ইচ্ছাকৃতভাবে এমন কোড লিখেছিলাম যা প্যানিক করবে, প্যানিক ঠিক করার উপায় হলো ভেক্টরের ইনডেক্সের সীমার বাইরের কোনো এলিমেন্ট অনুরোধ না করা। ভবিষ্যতে যখন আপনার কোড প্যানিক করবে, তখন আপনাকে বের করতে হবে কোডটি কোন মান দিয়ে কোন কাজটি করার কারণে প্যানিক করছে এবং কোডের পরিবর্তে কী করা উচিত।</p>
+<p>আমরা এই অধ্যায়ের পরে <a href="ch09-03-to-panic-or-not-to-panic.html#to-panic-or-not-to-panic">“To <code>panic!</code> or Not to <code>panic!</code>”</a><!-- ignore --> বিভাগে <code>panic!</code> এবং কখন আমাদের এরর পরিস্থিতি হ্যান্ডেল করার জন্য <code>panic!</code> ব্যবহার করা উচিত এবং কখন উচিত নয় সে বিষয়ে ফিরে আসব। এর পরে, আমরা দেখব কীভাবে <code>Result</code> ব্যবহার করে একটি এরর থেকে পুনরুদ্ধার করা যায়।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch09-00-error-handling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-02-recoverable-errors-with-result.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch09-00-error-handling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-02-recoverable-errors-with-result.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

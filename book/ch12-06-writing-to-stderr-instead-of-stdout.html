@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>স্ট্যান্ডার্ড আউটপুটের পরিবর্তে স্ট্যান্ডার্ড এরর-এ এরর মেসেজ লেখা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="সটযানডারড-আউটপুটের-পরিবরতে-সটযানডারড-এররে-standard-error-এরর-মেসেজ-লেখা"><a class="header" href="#সটযানডারড-আউটপুটের-পরিবরতে-সটযানডারড-এররে-standard-error-এরর-মেসেজ-লেখা">স্ট্যান্ডার্ড আউটপুটের পরিবর্তে স্ট্যান্ডার্ড এররে (Standard Error) এরর মেসেজ লেখা</a></h2>
+<p>এই মুহূর্তে, আমরা <code>println!</code> ম্যাক্রো ব্যবহার করে আমাদের সমস্ত আউটপুট টার্মিনালে লিখছি। বেশিরভাগ টার্মিনালে দুই ধরনের আউটপুট থাকে: সাধারণ তথ্যের জন্য <em>স্ট্যান্ডার্ড আউটপুট</em> (<code>stdout</code>) এবং এরর মেসেজের জন্য <em>স্ট্যান্ডার্ড এরর</em> (<code>stderr</code>)। এই পার্থক্য ব্যবহারকারীদের একটি প্রোগ্রামের সফল আউটপুটকে একটি ফাইলে পাঠানোর সুযোগ দেয়, কিন্তু তারপরেও এরর মেসেজগুলো স্ক্রিনে প্রিন্ট করতে পারে।</p>
+<p><code>println!</code> ম্যাক্রো শুধুমাত্র স্ট্যান্ডার্ড আউটপুটে প্রিন্ট করতে সক্ষম, তাই স্ট্যান্ডার্ড এররে প্রিন্ট করার জন্য আমাদের অন্য কিছু ব্যবহার করতে হবে।</p>
+<h3 id="এররগুলো-কোথায-লেখা-হচছে-তা-পরীকষা-করা"><a class="header" href="#এররগুলো-কোথায-লেখা-হচছে-তা-পরীকষা-করা">এররগুলো কোথায় লেখা হচ্ছে তা পরীক্ষা করা</a></h3>
+<p>প্রথমে চলুন দেখি <code>minigrep</code> দ্বারা প্রিন্ট করা কন্টেন্ট বর্তমানে কীভাবে স্ট্যান্ডার্ড আউটপুটে লেখা হচ্ছে, যার মধ্যে সেইসব এরর মেসেজও অন্তর্ভুক্ত যা আমরা স্ট্যান্ডার্ড এররে লিখতে চাই। আমরা ইচ্ছাকৃতভাবে একটি এরর ঘটিয়ে স্ট্যান্ডার্ড আউটপুট স্ট্রিমকে একটি ফাইলে রিডাইরেক্ট করে এটি করব। আমরা স্ট্যান্ডার্ড এরর স্ট্রিম রিডাইরেক্ট করব না, তাই স্ট্যান্ডার্ড এররে পাঠানো যেকোনো কন্টেন্ট স্ক্রিনে প্রদর্শিত হতে থাকবে।</p>
+<p>কমান্ড লাইন প্রোগ্রামগুলো থেকে আশা করা হয় যে তারা এরর মেসেজ স্ট্যান্ডার্ড এরর স্ট্রিমে পাঠাবে যাতে আমরা স্ট্যান্ডার্ড আউটপুট স্ট্রিম একটি ফাইলে রিডাইরেক্ট করলেও স্ক্রিনে এরর মেসেজ দেখতে পাই। আমাদের প্রোগ্রাম বর্তমানে সঠিকভাবে আচরণ করছে না: আমরা দেখতে চলেছি যে এটি এরর মেসেজ আউটপুট একটি ফাইলে সংরক্ষণ করছে!</p>
+<p>এই আচরণটি দেখানোর জন্য, আমরা প্রোগ্রামটি <code>&gt;</code> এবং ফাইলের পাথ, <em>output.txt</em> দিয়ে চালাব, যেখানে আমরা স্ট্যান্ডার্ড আউটপুট স্ট্রিম রিডাইরেক্ট করতে চাই। আমরা কোনো আর্গুমেন্ট পাস করব না, যা একটি এরর তৈরি করবে:</p>
+<pre><code class="language-console">$ cargo run &gt; output.txt
+</code></pre>
+<p><code>&gt;</code> সিনট্যাক্সটি শেলকে বলে স্ট্যান্ডার্ড আউটপুটের কন্টেন্ট স্ক্রিনের পরিবর্তে <em>output.txt</em>-এ লিখতে। আমরা স্ক্রিনে প্রত্যাশিত এরর মেসেজটি দেখতে পাইনি, তার মানে এটি অবশ্যই ফাইলে চলে গেছে। <em>output.txt</em> ফাইলে এটি রয়েছে:</p>
+<pre><code class="language-text">Problem parsing arguments: not enough arguments
+</code></pre>
+<p>হ্যাঁ, আমাদের এরর মেসেজটি স্ট্যান্ডার্ড আউটপুটে প্রিন্ট হচ্ছে। এই ধরনের এরর মেসেজ স্ট্যান্ডার্ড এররে প্রিন্ট করা অনেক বেশি দরকারী যাতে শুধুমাত্র একটি সফল রানের ডেটা ফাইলে শেষ হয়। আমরা এটি পরিবর্তন করব।</p>
+<h3 id="সটযানডারড-এররে-এরর-পরিনট-করা"><a class="header" href="#সটযানডারড-এররে-এরর-পরিনট-করা">স্ট্যান্ডার্ড এররে এরর প্রিন্ট করা</a></h3>
+<p>এরর মেসেজগুলো কীভাবে প্রিন্ট করা হয় তা পরিবর্তন করার জন্য আমরা লিস্টিং ১২-২৪-এর কোড ব্যবহার করব। এই অধ্যায়ের শুরুতে আমরা যে রিফ্যাক্টরিং করেছি তার কারণে, এরর মেসেজ প্রিন্ট করা সমস্ত কোড একটি ফাংশন, <code>main</code>-এর মধ্যে রয়েছে। স্ট্যান্ডার্ড লাইব্রেরি <code>eprintln!</code> ম্যাক্রো সরবরাহ করে যা স্ট্যান্ডার্ড এরর স্ট্রিমে প্রিন্ট করে, তাই আসুন আমরা যে দুটি জায়গায় এরর প্রিন্ট করার জন্য <code>println!</code> কল করছিলাম, সেখানে <code>eprintln!</code> ব্যবহার করি।</p>
+<Listing number="12-24" file-name="src/main.rs" caption="`eprintln!` ব্যবহার করে স্ট্যান্ডার্ড আউটপুটের পরিবর্তে স্ট্যান্ডার্ড এররে এরর মেসেজ লেখা">
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span>fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+
+    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
+
+    if let Err(e) = run(config) {
+        eprintln!("Application error: {e}");
+        process::exit(1);
+    }
+}
+<span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        let ignore_case = env::var("IGNORE_CASE").is_ok();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config {
+</span><span class="boring">            query,
+</span><span class="boring">            file_path,
+</span><span class="boring">            ignore_case,
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আসুন এখন প্রোগ্রামটি আবার একইভাবে চালাই, কোনো আর্গুমেন্ট ছাড়াই এবং <code>&gt;</code> দিয়ে স্ট্যান্ডার্ড আউটপুট রিডাইরেক্ট করে:</p>
+<pre><code class="language-console">$ cargo run &gt; output.txt
+Problem parsing arguments: not enough arguments
+</code></pre>
+<p>এখন আমরা স্ক্রিনে এররটি দেখতে পাচ্ছি এবং <em>output.txt</em> ফাইলে কিছুই নেই, যা কমান্ড লাইন প্রোগ্রাম থেকে আমরা আশা করি।</p>
+<p>আসুন প্রোগ্রামটি আবার এমন আর্গুমেন্ট দিয়ে চালাই যা কোনো এরর তৈরি করে না কিন্তু স্ট্যান্ডার্ড আউটপুট একটি ফাইলে রিডাইরেক্ট করে, যেমন:</p>
+<pre><code class="language-console">$ cargo run -- to poem.txt &gt; output.txt
+</code></pre>
+<p>আমরা টার্মিনালে কোনো আউটপুট দেখতে পাব না, এবং <em>output.txt</em> আমাদের ফলাফল ধারণ করবে:</p>
+<p><span class="filename">ফাইলের নাম: output.txt</span></p>
+<pre><code class="language-text">Are you nobody, too?
+How dreary to be somebody!
+</code></pre>
+<p>এটি প্রমাণ করে যে আমরা এখন সফল আউটপুটের জন্য স্ট্যান্ডার্ড আউটপুট এবং এরর আউটপুটের জন্য যথাযথভাবে স্ট্যান্ডার্ড এরর ব্যবহার করছি।</p>
+<h2 id="সারসংকষেপ"><a class="header" href="#সারসংকষেপ">সারসংক্ষেপ</a></h2>
+<p>এই অধ্যায়ে আমরা এ পর্যন্ত শেখা প্রধান কিছু ধারণা পুনরালোচনা করেছি এবং রাস্ট-এ সাধারণ I/O অপারেশনগুলো কীভাবে করতে হয় তা কভার করেছি। কমান্ড লাইন আর্গুমেন্ট, ফাইল, এনভায়রনমেন্ট ভেরিয়েবল, এবং এরর প্রিন্ট করার জন্য <code>eprintln!</code> ম্যাক্রো ব্যবহার করে, আপনি এখন কমান্ড লাইন অ্যাপ্লিকেশন লেখার জন্য প্রস্তুত। পূর্ববর্তী অধ্যায়গুলোর ধারণার সাথে মিলিত হয়ে, আপনার কোড সুসংগঠিত হবে, উপযুক্ত ডেটা স্ট্রাকচারে কার্যকরভাবে ডেটা সংরক্ষণ করবে, সুন্দরভাবে এরর হ্যান্ডেল করবে এবং ভালোভাবে টেস্ট করা থাকবে।</p>
+<p>এরপরে, আমরা ফাংশনাল ল্যাঙ্গুয়েজ দ্বারা প্রভাবিত রাস্টের কিছু ফিচার অন্বেষণ করব: ক্লোজার এবং ইটারেটর।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch12-05-working-with-environment-variables.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch13-00-functional-features.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch12-05-working-with-environment-variables.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch13-00-functional-features.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

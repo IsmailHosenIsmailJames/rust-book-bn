@@ -1,0 +1,744 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>অ্যাডভান্সড ট্রেইট - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="advanced-traits"><a class="header" href="#advanced-traits">Advanced Traits</a></h2>
+<p>আমরা প্রথমবার চ্যাপ্টার ১০-এর <a href="ch10-02-traits.html#traits-defining-shared-behavior">“Traits: Defining Shared Behavior”</a><!-- ignore -->-এ trait নিয়ে আলোচনা করেছিলাম, কিন্তু তখন আমরা আরও গভীরে যাইনি। এখন যেহেতু আপনি রাস্ট সম্পর্কে আরও কিছু জানেন, আমরা খুঁটিনাটি বিষয়গুলোতে প্রবেশ করতে পারি।</p>
+<!-- Old link, do not remove -->
+<p><a id="specifying-placeholder-types-in-trait-definitions-with-associated-types"></a></p>
+<h3 id="associated-types"><a class="header" href="#associated-types">Associated Types</a></h3>
+<p><em>Associated types</em> একটি টাইপ প্লেসহোল্ডারকে একটি trait-এর সাথে সংযুক্ত করে, যাতে trait মেথডের সংজ্ঞাগুলো তাদের সিগনেচারে এই প্লেসহোল্ডার টাইপগুলো ব্যবহার করতে পারে। কোনো trait-এর ইমপ্লিমেন্টর নির্দিষ্ট ইমপ্লিমেন্টেশনের জন্য প্লেসহোল্ডার টাইপের পরিবর্তে কোন সুনির্দিষ্ট (concrete) টাইপ ব্যবহার করা হবে তা নির্দিষ্ট করে দেবে। এইভাবে, আমরা এমন একটি trait সংজ্ঞায়িত করতে পারি যা কিছু টাইপ ব্যবহার করে, কিন্তু trait টি ইমপ্লিমেন্ট না করা পর্যন্ত সেই টাইপগুলো ঠিক কী তা জানার প্রয়োজন হয় না।</p>
+<p>আমরা এই চ্যাপ্টারের বেশিরভাগ advanced feature-কে এমনভাবে বর্ণনা করেছি যা খুব কমই প্রয়োজন হয়। Associated types মাঝামাঝি অবস্থানে রয়েছে: এগুলো বইয়ের বাকি অংশে ব্যাখ্যা করা feature-গুলোর চেয়ে কম ব্যবহৃত হয়, তবে এই চ্যাপ্টারে আলোচিত অন্যান্য অনেক feature-এর চেয়ে বেশি ব্যবহৃত হয়।</p>
+<p>Associated type সহ একটি trait-এর উদাহরণ হলো স্ট্যান্ডার্ড লাইব্রেরির <code>Iterator</code> trait। এর associated type-টির নাম <code>Item</code> এবং এটি <code>Iterator</code> trait ইমপ্লিমেন্ট করা টাইপটি যে মানের উপর ইটারেট করছে তার টাইপের প্রতিনিধিত্ব করে। <code>Iterator</code> trait-এর সংজ্ঞাটি লিস্টিং ২০-১৩-এ দেখানো হয়েছে।</p>
+<Listing number="20-13" caption="`Iterator` trait-এর সংজ্ঞা, যার একটি associated type `Item` রয়েছে">
+<pre><code class="language-rust noplayground">pub trait Iterator {
+    type Item;
+
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
+}</code></pre>
+</Listing>
+<p><code>Item</code> টাইপটি একটি প্লেসহোল্ডার, এবং <code>next</code> মেথডের সংজ্ঞা দেখায় যে এটি <code>Option&lt;Self::Item&gt;</code> টাইপের মান রিটার্ন করবে। <code>Iterator</code> trait-এর ইমপ্লিমেন্টররা <code>Item</code>-এর জন্য সুনির্দিষ্ট টাইপ নির্দিষ্ট করবে এবং <code>next</code> মেথডটি সেই সুনির্দিষ্ট টাইপের মানসহ একটি <code>Option</code> রিটার্ন করবে।</p>
+<p>Associated types-কে generics-এর মতো একটি ধারণা বলে মনে হতে পারে, কারণ generics আমাদের কোনো ফাংশন সংজ্ঞায়িত করার সুযোগ দেয় যেখানে এটি কোন টাইপ পরিচালনা করতে পারে তা নির্দিষ্ট করার প্রয়োজন হয় না। এই দুটি ধারণার মধ্যে পার্থক্য পরীক্ষা করার জন্য, আমরা <code>Counter</code> নামক একটি টাইপের উপর <code>Iterator</code> trait-এর একটি ইমপ্লিমেন্টেশন দেখব যা নির্দিষ্ট করে যে <code>Item</code> টাইপটি হলো <code>u32</code>:</p>
+<Listing file-name="src/lib.rs">
+<pre><code class="language-rust ignore"><span class="boring">struct Counter {
+</span><span class="boring">    count: u32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Counter {
+</span><span class="boring">    fn new() -&gt; Counter {
+</span><span class="boring">        Counter { count: 0 }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&amp;mut self) -&gt; Option&lt;Self::Item&gt; {
+        // --snip--
+<span class="boring">        if self.count &lt; 5 {
+</span><span class="boring">            self.count += 1;
+</span><span class="boring">            Some(self.count)
+</span><span class="boring">        } else {
+</span><span class="boring">            None
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>এই সিনট্যাক্সটি generics-এর সিনট্যাক্সের সাথে তুলনীয় বলে মনে হয়। তাহলে কেন <code>Iterator</code> trait-টিকে generics দিয়ে সংজ্ঞায়িত করা হলো না, যেমনটি লিস্টিং ২০-১৪-তে দেখানো হয়েছে?</p>
+<Listing number="20-14" caption="Generics ব্যবহার করে `Iterator` trait-এর একটি কাল্পনিক সংজ্ঞা">
+<pre><code class="language-rust noplayground">pub trait Iterator&lt;T&gt; {
+    fn next(&amp;mut self) -&gt; Option&lt;T&gt;;
+}</code></pre>
+</Listing>
+<p>পার্থক্য হলো, যখন generics ব্যবহার করা হয়, যেমন লিস্টিং ২০-১৪-তে, আমাদের প্রতিটি ইমপ্লিমেন্টেশনে টাইপগুলো annotate করতে হবে; কারণ আমরা <code>Counter</code>-এর জন্য <code>Iterator&lt;String&gt;</code> বা অন্য যেকোনো টাইপও ইমপ্লিমেন্ট করতে পারতাম, ফলে <code>Counter</code>-এর জন্য <code>Iterator</code>-এর একাধিক ইমপ্লিমেন্টেশন থাকতে পারত। অন্য কথায়, যখন একটি trait-এর একটি জেনেরিক প্যারামিটার থাকে, তখন এটি একটি টাইপের জন্য একাধিকবার ইমপ্লিমেন্ট করা যেতে পারে, প্রতিবার জেনেরিক টাইপ প্যারামিটারের সুনির্দিষ্ট টাইপ পরিবর্তন করে। যখন আমরা <code>Counter</code>-এ <code>next</code> মেথড ব্যবহার করতাম, তখন আমাদের <code>Iterator</code>-এর কোন ইমপ্লিমেন্টেশনটি ব্যবহার করতে চাই তা নির্দেশ করার জন্য টাইপ অ্যানোটেশন সরবরাহ করতে হতো।</p>
+<p>Associated types-এর সাথে, আমাদের টাইপ annotate করার প্রয়োজন হয় না কারণ আমরা একটি টাইপের উপর একটি trait একাধিকবার ইমপ্লিমেন্ট করতে পারি না। লিস্টিং ২০-১৩-তে associated types ব্যবহার করা সংজ্ঞার সাথে, আমরা কেবল একবারই <code>Item</code>-এর টাইপ কী হবে তা বেছে নিতে পারি কারণ <code>impl Iterator for Counter</code> কেবল একটাই থাকতে পারে। আমাদের প্রতিবার <code>Counter</code>-এ <code>next</code> কল করার সময় নির্দিষ্ট করতে হবে না যে আমরা <code>u32</code> মানের একটি iterator চাই।</p>
+<p>Associated types trait-এর চুক্তিরও অংশ হয়ে যায়: trait-এর ইমপ্লিমেন্টরদের অবশ্যই associated type প্লেসহোল্ডারের জন্য একটি টাইপ সরবরাহ করতে হবে। Associated types-এর প্রায়শই একটি নাম থাকে যা বর্ণনা করে যে টাইপটি কীভাবে ব্যবহৃত হবে এবং API ডকুমেন্টেশনে associated type-টি নথিভুক্ত করা একটি ভাল অভ্যাস।</p>
+<h3 id="default-generic-type-parameters-এবং-operator-overloading"><a class="header" href="#default-generic-type-parameters-এবং-operator-overloading">Default Generic Type Parameters এবং Operator Overloading</a></h3>
+<p>যখন আমরা জেনেরিক টাইপ প্যারামিটার ব্যবহার করি, তখন আমরা জেনেরিক টাইপের জন্য একটি ডিফল্ট সুনির্দিষ্ট (concrete) টাইপ নির্দিষ্ট করতে পারি। এর ফলে trait-এর ইমপ্লিমেন্টরদের একটি সুনির্দিষ্ট টাইপ নির্দিষ্ট করার প্রয়োজন হয় না যদি ডিফল্ট টাইপটি কাজ করে। আপনি <code>&lt;PlaceholderType=ConcreteType&gt;</code> সিনট্যাক্স দিয়ে একটি জেনেরিক টাইপ ঘোষণা করার সময় একটি ডিফল্ট টাইপ নির্দিষ্ট করেন।</p>
+<p>এই কৌশলটি যেখানে কার্যকর তার একটি சிறந்த উদাহরণ হলো <em>operator overloading</em>, যেখানে আপনি নির্দিষ্ট পরিস্থিতিতে একটি অপারেটরের (যেমন <code>+</code>) আচরণ কাস্টমাইজ করেন।</p>
+<p>রাস্ট আপনাকে নিজের অপারেটর তৈরি করতে বা ইচ্ছামত অপারেটর ওভারলোড করার অনুমতি দেয় না। কিন্তু আপনি <code>std::ops</code>-এ তালিকাভুক্ত অপারেশন এবং সংশ্লিষ্ট trait-গুলো ওভারলোড করতে পারেন অপারেটরের সাথে যুক্ত trait-গুলো ইমপ্লিমেন্ট করে। উদাহরণস্বরূপ, লিস্টিং ২০-১৫-এ আমরা দুটি <code>Point</code> ইনস্ট্যান্সকে একসাথে যোগ করার জন্য <code>+</code> অপারেটরটিকে ওভারলোড করেছি। আমরা একটি <code>Point</code> struct-এ <code>Add</code> trait ইমপ্লিমেন্ট করে এটি করি।</p>
+<Listing number="20-15" file-name="src/main.rs" caption="`Point` ইনস্ট্যান্সের জন্য `+` অপারেটর ওভারলোড করতে `Add` trait ইমপ্লিমেন্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::ops::Add;
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, other: Point) -&gt; Point {
+        Point {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
+}
+
+fn main() {
+    assert_eq!(
+        Point { x: 1, y: 0 } + Point { x: 2, y: 3 },
+        Point { x: 3, y: 3 }
+    );
+}</code></pre></pre>
+</Listing>
+<p><code>add</code> মেথডটি দুটি <code>Point</code> ইনস্ট্যান্সের <code>x</code> মান এবং <code>y</code> মান যোগ করে একটি নতুন <code>Point</code> তৈরি করে। <code>Add</code> trait-টির <code>Output</code> নামে একটি associated type রয়েছে যা <code>add</code> মেথড থেকে রিটার্ন করা টাইপ নির্ধারণ করে।</p>
+<p>এই কোডে ডিফল্ট জেনেরিক টাইপটি <code>Add</code> trait-এর মধ্যে রয়েছে। এখানে এর সংজ্ঞা:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>trait Add&lt;Rhs=Self&gt; {
+    type Output;
+
+    fn add(self, rhs: Rhs) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p>এই কোডটি সাধারণভাবে পরিচিত মনে হওয়া উচিত: একটি মেথড এবং একটি associated type সহ একটি trait। নতুন অংশটি হলো <code>Rhs=Self</code>: এই সিনট্যাক্সটিকে <em>default type parameters</em> বলা হয়। <code>Rhs</code> জেনেরিক টাইপ প্যারামিটার ("right-hand side"-এর সংক্ষিপ্ত রূপ) <code>add</code> মেথডে <code>rhs</code> প্যারামিটারের টাইপ সংজ্ঞায়িত করে। যদি আমরা <code>Add</code> trait ইমপ্লিমেন্ট করার সময় <code>Rhs</code>-এর জন্য একটি সুনির্দিষ্ট টাইপ নির্দিষ্ট না করি, তাহলে <code>Rhs</code>-এর টাইপ ডিফল্ট হিসেবে <code>Self</code> হবে, যা হবে সেই টাইপ যার উপর আমরা <code>Add</code> ইমপ্লিমেন্ট করছি।</p>
+<p>যখন আমরা <code>Point</code>-এর জন্য <code>Add</code> ইমপ্লিমেন্ট করেছিলাম, আমরা <code>Rhs</code>-এর জন্য ডিফল্ট ব্যবহার করেছি কারণ আমরা দুটি <code>Point</code> ইনস্ট্যান্স যোগ করতে চেয়েছিলাম। আসুন <code>Add</code> trait ইমপ্লিমেন্ট করার এমন একটি উদাহরণ দেখি যেখানে আমরা ডিফল্ট ব্যবহার না করে <code>Rhs</code> টাইপটি কাস্টমাইজ করতে চাই।</p>
+<p>আমাদের দুটি struct আছে, <code>Millimeters</code> এবং <code>Meters</code>, যা বিভিন্ন এককে মান ধারণ করে। একটি বিদ্যমান টাইপকে অন্য একটি struct-এ এভাবে মোড়ানোর প্রক্রিয়াকে <em>newtype pattern</em> বলা হয়, যা আমরা <a href="ch20-02-advanced-traits.html#using-the-newtype-pattern-to-implement-external-traits">“Using the Newtype Pattern to Implement External Traits”</a><!-- ignore --> বিভাগে আরও বিস্তারিতভাবে বর্ণনা করব। আমরা মিলিমিটারের মানকে মিটারের মানের সাথে যোগ করতে চাই এবং <code>Add</code>-এর ইমপ্লিমেন্টেশনটি যেন সঠিকভাবে রূপান্তরটি করে। আমরা <code>Millimeters</code>-এর জন্য <code>Add</code> ইমপ্লিমেন্ট করতে পারি <code>Meters</code>-কে <code>Rhs</code> হিসেবে ব্যবহার করে, যেমনটি লিস্টিং ২০-১৬-তে দেখানো হয়েছে।</p>
+<Listing number="20-16" file-name="src/lib.rs" caption="`Millimeters` এবং `Meters` যোগ করার জন্য `Millimeters`-এ `Add` trait ইমপ্লিমেন্ট করা">
+<pre><code class="language-rust noplayground">use std::ops::Add;
+
+struct Millimeters(u32);
+struct Meters(u32);
+
+impl Add&lt;Meters&gt; for Millimeters {
+    type Output = Millimeters;
+
+    fn add(self, other: Meters) -&gt; Millimeters {
+        Millimeters(self.0 + (other.0 * 1000))
+    }
+}</code></pre>
+</Listing>
+<p><code>Millimeters</code> এবং <code>Meters</code> যোগ করার জন্য, আমরা <code>Rhs</code> টাইপ প্যারামিটারের মান সেট করতে <code>impl Add&lt;Meters&gt;</code> নির্দিষ্ট করি, ডিফল্ট <code>Self</code> ব্যবহার করার পরিবর্তে।</p>
+<p>আপনি দুটি প্রধান উপায়ে ডিফল্ট টাইপ প্যারামিটার ব্যবহার করবেন:</p>
+<p>১. বিদ্যমান কোড না ভেঙে একটি টাইপ প্রসারিত করতে।
+২. নির্দিষ্ট ক্ষেত্রে কাস্টমাইজেশনের অনুমতি দিতে যা বেশিরভাগ ব্যবহারকারীর প্রয়োজন হবে না।</p>
+<p>স্ট্যান্ডার্ড লাইব্রেরির <code>Add</code> trait দ্বিতীয় উদ্দেশ্যের একটি উদাহরণ: সাধারণত, আপনি দুটি একই ধরনের টাইপ যোগ করবেন, কিন্তু <code>Add</code> trait এর বাইরেও কাস্টমাইজ করার ক্ষমতা প্রদান করে। <code>Add</code> trait-এর সংজ্ঞায় একটি ডিফল্ট টাইপ প্যারামিটার ব্যবহার করার অর্থ হলো বেশিরভাগ সময় আপনাকে অতিরিক্ত প্যারামিটার নির্দিষ্ট করতে হবে না। অন্য কথায়, সামান্য ইমপ্লিমেন্টেশন বয়লারপ্লেটের প্রয়োজন হয় না, যা trait-টি ব্যবহার করা সহজ করে তোলে।</p>
+<p>প্রথম উদ্দেশ্যটি দ্বিতীয়টির মতোই কিন্তু বিপরীত: যদি আপনি একটি বিদ্যমান trait-এ একটি টাইপ প্যারামিটার যোগ করতে চান, আপনি trait-এর কার্যকারিতা প্রসারিত করার জন্য এটিকে একটি ডিফল্ট দিতে পারেন বিদ্যমান ইমপ্লিমেন্টেশন কোড না ভেঙে।</p>
+<!-- Old link, do not remove -->
+<p><a id="fully-qualified-syntax-for-disambiguation-calling-methods-with-the-same-name"></a></p>
+<h3 id="একই-নামের-মেথডগুলোর-মধযে-পারথকয-করা"><a class="header" href="#একই-নামের-মেথডগুলোর-মধযে-পারথকয-করা">একই নামের মেথডগুলোর মধ্যে পার্থক্য করা</a></h3>
+<p>রাস্টে এমন কোনো নিয়ম নেই যা একটি trait-কে অন্য একটি trait-এর মেথডের সাথে একই নামের মেথড থাকা থেকে বিরত রাখে, বা রাস্ট আপনাকে একটি টাইপের উপর উভয় trait ইমপ্লিমেন্ট করা থেকে বিরত রাখে না। trait-এর মেথডের মতো একই নামের একটি মেথড সরাসরি টাইপের উপর ইমপ্লিমেন্ট করাও সম্ভব।</p>
+<p>একই নামের মেথড কল করার সময়, আপনাকে রাস্টকে বলতে হবে আপনি কোনটি ব্যবহার করতে চান। লিস্টিং ২০-১৭-এর কোডটি বিবেচনা করুন যেখানে আমরা দুটি trait, <code>Pilot</code> এবং <code>Wizard</code>, সংজ্ঞায়িত করেছি যে দুটিরই <code>fly</code> নামে একটি মেথড আছে। তারপর আমরা <code>Human</code> নামক একটি টাইপের উপর উভয় trait ইমপ্লিমেন্ট করি, যার উপর ইতিমধ্যে <code>fly</code> নামের একটি মেথড ইমপ্লিমেন্ট করা আছে। প্রতিটি <code>fly</code> মেথড ভিন্ন কিছু করে।</p>
+<Listing number="20-17" file-name="src/main.rs" caption="দুটি trait-কে `fly` মেথড সহ সংজ্ঞায়িত করা হয়েছে এবং `Human` টাইপের উপর ইমপ্লিমেন্ট করা হয়েছে, এবং একটি `fly` মেথড সরাসরি `Human`-এর উপর ইমপ্লিমেন্ট করা হয়েছে।">
+<pre><pre class="playground"><code class="language-rust edition2024">trait Pilot {
+    fn fly(&amp;self);
+}
+
+trait Wizard {
+    fn fly(&amp;self);
+}
+
+struct Human;
+
+impl Pilot for Human {
+    fn fly(&amp;self) {
+        println!("This is your captain speaking.");
+    }
+}
+
+impl Wizard for Human {
+    fn fly(&amp;self) {
+        println!("Up!");
+    }
+}
+
+impl Human {
+    fn fly(&amp;self) {
+        println!("*waving arms furiously*");
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>যখন আমরা <code>Human</code>-এর একটি ইনস্ট্যান্সের উপর <code>fly</code> কল করি, কম্পাইলার ডিফল্ট হিসেবে সেই মেথডটি কল করে যা সরাসরি টাইপের উপর ইমপ্লিমেন্ট করা হয়েছে, যেমনটি লিস্টিং ২০-১৮-তে দেখানো হয়েছে।</p>
+<Listing number="20-18" file-name="src/main.rs" caption="`Human`-এর একটি ইনস্ট্যান্সের উপর `fly` কল করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Pilot {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">trait Wizard {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Human;
+</span><span class="boring">
+</span><span class="boring">impl Pilot for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("This is your captain speaking.");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Wizard for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("Up!");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("*waving arms furiously*");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let person = Human;
+    person.fly();
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি চালালে <code>*waving arms furiously*</code> প্রিন্ট হবে, যা দেখায় যে রাস্ট সরাসরি <code>Human</code>-এর উপর ইমপ্লিমেন্ট করা <code>fly</code> মেথডটি কল করেছে।</p>
+<p><code>Pilot</code> trait বা <code>Wizard</code> trait থেকে <code>fly</code> মেথডগুলো কল করতে, আমাদের কোন <code>fly</code> মেথডটি বোঝাতে চাই তা নির্দিষ্ট করার জন্য আরও স্পষ্ট সিনট্যাক্স ব্যবহার করতে হবে। লিস্টিং ২০-১৯ এই সিনট্যাক্সটি প্রদর্শন করে।</p>
+<Listing number="20-19" file-name="src/main.rs" caption="আমরা কোন trait-এর `fly` মেথডটি কল করতে চাই তা নির্দিষ্ট করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Pilot {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">trait Wizard {
+</span><span class="boring">    fn fly(&amp;self);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Human;
+</span><span class="boring">
+</span><span class="boring">impl Pilot for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("This is your captain speaking.");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Wizard for Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("Up!");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Human {
+</span><span class="boring">    fn fly(&amp;self) {
+</span><span class="boring">        println!("*waving arms furiously*");
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let person = Human;
+    Pilot::fly(&amp;person);
+    Wizard::fly(&amp;person);
+    person.fly();
+}</code></pre></pre>
+</Listing>
+<p>মেথডের নামের আগে trait-এর নাম নির্দিষ্ট করা রাস্টকে স্পষ্ট করে দেয় যে আমরা <code>fly</code>-এর কোন ইমপ্লিমেন্টেশনটি কল করতে চাই। আমরা <code>Human::fly(&amp;person)</code>-ও লিখতে পারতাম, যা লিস্টিং ২০-১৯-এ ব্যবহৃত <code>person.fly()</code>-এর সমতুল্য, কিন্তু যদি আমাদের দ্ব্যর্থতা নিরসনের প্রয়োজন না হয় তবে এটি লিখতে একটু দীর্ঘ।</p>
+<p>এই কোডটি চালালে নিম্নলিখিতটি প্রিন্ট হয়:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.46s
+     Running `target/debug/traits-example`
+This is your captain speaking.
+Up!
+*waving arms furiously*
+</code></pre>
+<p>যেহেতু <code>fly</code> মেথডটি একটি <code>self</code> প্যারামিটার নেয়, যদি আমাদের দুটি <em>টাইপ</em> থাকত যা উভয়ই একটি <em>trait</em> ইমপ্লিমেন্ট করত, রাস্ট <code>self</code>-এর টাইপের উপর ভিত্তি করে একটি trait-এর কোন ইমপ্লিমেন্টেশনটি ব্যবহার করতে হবে তা বের করতে পারত।</p>
+<p>তবে, যে associated function-গুলো মেথড নয়, তাদের <code>self</code> প্যারামিটার থাকে না। যখন একাধিক টাইপ বা trait থাকে যা একই ফাংশন নামের non-method ফাংশন সংজ্ঞায়িত করে, রাস্ট সবসময় জানে না আপনি কোন টাইপটি বোঝাতে চান যদি না আপনি fully qualified syntax ব্যবহার করেন। উদাহরণস্বরূপ, লিস্টিং ২০-২০-এ আমরা একটি পশু আশ্রয়কেন্দ্রের জন্য একটি trait তৈরি করি যা সব বাচ্চা কুকুরের নাম Spot রাখতে চায়। আমরা <code>baby_name</code> নামে একটি associated non-method ফাংশন সহ একটি <code>Animal</code> trait তৈরি করি। <code>Animal</code> trait টি <code>Dog</code> struct-এর জন্য ইমপ্লিমেন্ট করা হয়েছে, যার উপর আমরা সরাসরি <code>baby_name</code> নামে একটি associated non-method ফাংশনও সরবরাহ করি।</p>
+<Listing number="20-20" file-name="src/main.rs" caption="একটি associated function সহ একটি trait এবং একই নামের একটি associated function সহ একটি টাইপ যা trait-টিও ইমপ্লিমেন্ট করে">
+<pre><pre class="playground"><code class="language-rust edition2024">trait Animal {
+    fn baby_name() -&gt; String;
+}
+
+struct Dog;
+
+impl Dog {
+    fn baby_name() -&gt; String {
+        String::from("Spot")
+    }
+}
+
+impl Animal for Dog {
+    fn baby_name() -&gt; String {
+        String::from("puppy")
+    }
+}
+
+fn main() {
+    println!("A baby dog is called a {}", Dog::baby_name());
+}```
+
+&lt;/Listing&gt;
+
+আমরা `Dog`-এর উপর সংজ্ঞায়িত `baby_name` associated function-এ সব কুকুরছানার নাম Spot রাখার কোডটি ইমপ্লিমেন্ট করি। `Dog` টাইপটি `Animal` trait-ও ইমপ্লিমেন্ট করে, যা সব প্রাণীর বৈশিষ্ট্য বর্ণনা করে। বাচ্চা কুকুরকে puppy বলা হয়, এবং এটি `Animal` trait-এর সাথে যুক্ত `baby_name` ফাংশনে `Dog`-এর উপর `Animal` trait-এর ইমপ্লিমেন্টেশনে প্রকাশ করা হয়েছে।
+
+`main`-এ, আমরা `Dog::baby_name` ফাংশনটি কল করি, যা সরাসরি `Dog`-এর উপর সংজ্ঞায়িত associated function-টিকে কল করে। এই কোডটি নিম্নলিখিতটি প্রিন্ট করে:
+
+```console
+$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.54s
+     Running `target/debug/traits-example`
+A baby dog is called a Spot</code></pre></pre>
+<p>এই আউটপুটটি আমরা যা চেয়েছিলাম তা নয়। আমরা <code>Dog</code>-এর উপর ইমপ্লিমেন্ট করা <code>Animal</code> trait-এর অংশ <code>baby_name</code> ফাংশনটি কল করতে চাই যাতে কোডটি <code>A baby dog is called a puppy</code> প্রিন্ট করে। লিস্টিং ২০-১৯-এ ব্যবহৃত trait-এর নাম নির্দিষ্ট করার কৌশলটি এখানে সাহায্য করবে না; যদি আমরা <code>main</code>-কে লিস্টিং ২০-২১-এর কোডে পরিবর্তন করি, আমরা একটি কম্পাইলেশন এরর পাব।</p>
+<Listing number="20-21" file-name="src/main.rs" caption="`Animal` trait থেকে `baby_name` ফাংশনটি কল করার চেষ্টা, কিন্তু রাস্ট জানে না কোন ইমপ্লিমেন্টেশনটি ব্যবহার করতে হবে">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">trait Animal {
+</span><span class="boring">    fn baby_name() -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Dog;
+</span><span class="boring">
+</span><span class="boring">impl Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("Spot")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Animal for Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("puppy")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    println!("A baby dog is called a {}", Animal::baby_name());
+}</code></pre>
+</Listing>
+<p>যেহেতু <code>Animal::baby_name</code>-এর কোনো <code>self</code> প্যারামিটার নেই, এবং এমন অন্যান্য টাইপ থাকতে পারে যা <code>Animal</code> trait ইমপ্লিমেন্ট করে, রাস্ট বের করতে পারে না আমরা <code>Animal::baby_name</code>-এর কোন ইমপ্লিমেন্টেশনটি চাই। আমরা এই কম্পাইলার এররটি পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+  --&gt; src/main.rs:20:43
+   |
+2  |     fn baby_name() -&gt; String;
+   |     ------------------------- `Animal::baby_name` defined here
+...
+20 |     println!("A baby dog is called a {}", Animal::baby_name());
+   |                                           ^^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+   |
+help: use the fully-qualified path to the only available implementation
+   |
+20 |     println!("A baby dog is called a {}", &lt;Dog as Animal&gt;::baby_name());
+   |                                           +++++++       +
+
+For more information about this error, try `rustc --explain E0790`.
+error: could not compile `traits-example` (bin "traits-example") due to 1 previous error
+</code></pre>
+<p>দ্ব্যর্থতা নিরসন করতে এবং রাস্টকে বলতে যে আমরা অন্য কোনো টাইপের <code>Animal</code> ইমপ্লিমেন্টেশনের পরিবর্তে <code>Dog</code>-এর জন্য <code>Animal</code>-এর ইমপ্লিমেন্টেশন ব্যবহার করতে চাই, আমাদের fully qualified syntax ব্যবহার করতে হবে। লিস্টিং ২০-২২ fully qualified syntax কীভাবে ব্যবহার করতে হয় তা প্রদর্শন করে।</p>
+<Listing number="20-22" file-name="src/main.rs" caption="Fully qualified syntax ব্যবহার করে নির্দিষ্ট করা যে আমরা `Dog`-এর উপর ইমপ্লিমেন্ট করা `Animal` trait থেকে `baby_name` ফাংশনটি কল করতে চাই">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Animal {
+</span><span class="boring">    fn baby_name() -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Dog;
+</span><span class="boring">
+</span><span class="boring">impl Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("Spot")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Animal for Dog {
+</span><span class="boring">    fn baby_name() -&gt; String {
+</span><span class="boring">        String::from("puppy")
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    println!("A baby dog is called a {}", &lt;Dog as Animal&gt;::baby_name());
+}</code></pre></pre>
+</Listing>
+<p>আমরা অ্যাঙ্গেল ব্র্যাকেটের মধ্যে রাস্টকে একটি টাইপ অ্যানোটেশন প্রদান করছি, যা নির্দেশ করে যে আমরা <code>Animal</code> trait থেকে <code>baby_name</code> মেথডটি কল করতে চাই যা <code>Dog</code>-এর উপর ইমপ্লিমেন্ট করা হয়েছে, এই ফাংশন কলের জন্য <code>Dog</code> টাইপটিকে একটি <code>Animal</code> হিসাবে বিবেচনা করতে বলে। এই কোডটি এখন আমরা যা চাই তা প্রিন্ট করবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running `target/debug/traits-example`
+A baby dog is called a puppy
+</code></pre>
+<p>সাধারণভাবে, fully qualified syntax নিম্নরূপ সংজ্ঞায়িত করা হয়:</p>
+<pre><code class="language-rust ignore">&lt;Type as Trait&gt;::function(receiver_if_method, next_arg, ...);</code></pre>
+<p>যেসব associated function মেথড নয়, তাদের জন্য কোনো <code>receiver</code> থাকবে না: কেবল অন্যান্য আর্গুমেন্টের তালিকা থাকবে। আপনি ফাংশন বা মেথড কল করার সব জায়গায় fully qualified syntax ব্যবহার করতে পারতেন। তবে, এই সিনট্যাক্সের যেকোনো অংশ যা রাস্ট প্রোগ্রামের অন্যান্য তথ্য থেকে বের করতে পারে তা বাদ দেওয়ার অনুমতি আপনার আছে। আপনাকে কেবল সেইসব ক্ষেত্রে এই দীর্ঘ সিনট্যাক্স ব্যবহার করতে হবে যেখানে একই নাম ব্যবহার করে একাধিক ইমপ্লিমেন্টেশন রয়েছে এবং রাস্টকে সনাক্ত করতে সাহায্যের প্রয়োজন হয় আপনি কোন ইমপ্লিমেন্টেশনটি কল করতে চান।</p>
+<!-- Old link, do not remove -->
+<p><a id="using-supertraits-to-require-one-traits-functionality-within-another-trait"></a></p>
+<h3 id="supertraits-বযবহার-করা"><a class="header" href="#supertraits-বযবহার-করা">Supertraits ব্যবহার করা</a></h3>
+<p>কখনও কখনও আপনি এমন একটি trait সংজ্ঞা লিখতে পারেন যা অন্য একটি trait-এর উপর নির্ভরশীল: একটি টাইপের জন্য প্রথম trait-টি ইমপ্লিমেন্ট করার জন্য, আপনি চাইতে পারেন যে সেই টাইপটি দ্বিতীয় trait-টিও ইমপ্লিমেন্ট করুক। আপনি এটি করবেন যাতে আপনার trait সংজ্ঞাটি দ্বিতীয় trait-এর associated item-গুলো ব্যবহার করতে পারে। যে trait-এর উপর আপনার trait সংজ্ঞাটি নির্ভর করছে তাকে আপনার trait-এর একটি <em>supertrait</em> বলা হয়।</p>
+<p>উদাহরণস্বরূপ, ধরা যাক আমরা একটি <code>OutlinePrint</code> trait তৈরি করতে চাই যার <code>outline_print</code> মেথডটি একটি প্রদত্ত মানকে এমনভাবে ফরম্যাট করে প্রিন্ট করবে যাতে এটি তারকাচিহ্ন দ্বারা ফ্রেম করা থাকে। অর্থাৎ, একটি <code>Point</code> struct যা স্ট্যান্ডার্ড লাইব্রেরি trait <code>Display</code> ইমপ্লিমেন্ট করে <code>(x, y)</code> ফলাফল দেয়, যখন আমরা <code>x</code>-এর জন্য <code>1</code> এবং <code>y</code>-এর জন্য <code>3</code> সহ একটি <code>Point</code> ইনস্ট্যান্সের উপর <code>outline_print</code> কল করি, তখন এটি নিম্নলিখিতটি প্রিন্ট করা উচিত:</p>
+<pre><code class="language-text">**********
+*        *
+* (1, 3) *
+*        *
+**********```
+
+`outline_print` মেথডের ইমপ্লিমেন্টেশনে, আমরা `Display` trait-এর কার্যকারিতা ব্যবহার করতে চাই। অতএব, আমাদের নির্দিষ্ট করতে হবে যে `OutlinePrint` trait-টি কেবল সেইসব টাইপের জন্য কাজ করবে যা `Display`-ও ইমপ্লিমেন্ট করে এবং `OutlinePrint`-এর প্রয়োজনীয় কার্যকারিতা সরবরাহ করে। আমরা trait সংজ্ঞায় `OutlinePrint: Display` নির্দিষ্ট করে তা করতে পারি। এই কৌশলটি trait-এ একটি trait bound যোগ করার মতো। লিস্টিং ২০-২৩ `OutlinePrint` trait-এর একটি ইমপ্লিমেন্টেশন দেখায়।
+
+&lt;Listing number="20-23" file-name="src/main.rs" caption="`OutlinePrint` trait ইমপ্লিমেন্ট করা যা `Display` থেকে কার্যকারিতা প্রয়োজন"&gt;
+
+```rust
+use std::fmt;
+
+trait OutlinePrint: fmt::Display {
+    fn outline_print(&amp;self) {
+        let output = self.to_string();
+        let len = output.len();
+        println!("{}", "*".repeat(len + 4));
+        println!("*{}*", " ".repeat(len + 2));
+        println!("* {output} *");
+        println!("*{}*", " ".repeat(len + 2));
+        println!("{}", "*".repeat(len + 4));
+    }
+}
+# 
+# fn main() {}
+</code></pre>
+</Listing>
+<p>যেহেতু আমরা নির্দিষ্ট করেছি যে <code>OutlinePrint</code>-এর জন্য <code>Display</code> trait প্রয়োজন, আমরা <code>to_string</code> ফাংশনটি ব্যবহার করতে পারি যা <code>Display</code> ইমপ্লিমেন্ট করে এমন যেকোনো টাইপের জন্য স্বয়ংক্রিয়ভাবে ইমপ্লিমেন্ট করা হয়। যদি আমরা trait নামের পরে একটি কোলন যোগ না করে এবং <code>Display</code> trait নির্দিষ্ট না করে <code>to_string</code> ব্যবহার করার চেষ্টা করতাম, আমরা একটি এরর পেতাম যে বর্তমান স্কোপে <code>&amp;Self</code> টাইপের জন্য <code>to_string</code> নামের কোনো মেথড পাওয়া যায়নি।</p>
+<p>আসুন দেখি কী ঘটে যখন আমরা <code>Display</code> ইমপ্লিমেন্ট করে না এমন একটি টাইপের উপর <code>OutlinePrint</code> ইমপ্লিমেন্ট করার চেষ্টা করি, যেমন <code>Point</code> struct:</p>
+<Listing file-name="src/main.rs">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::fmt;
+</span><span class="boring">
+</span><span class="boring">trait OutlinePrint: fmt::Display {
+</span><span class="boring">    fn outline_print(&amp;self) {
+</span><span class="boring">        let output = self.to_string();
+</span><span class="boring">        let len = output.len();
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("* {output} *");
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl OutlinePrint for Point {}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 1, y: 3 };
+</span><span class="boring">    p.outline_print();
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p>আমরা একটি এরর পাব যে <code>Display</code> প্রয়োজন কিন্তু ইমপ্লিমেন্ট করা হয়নি:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling traits-example v0.1.0 (file:///projects/traits-example)
+error[E0277]: `Point` doesn't implement `std::fmt::Display`
+  --&gt; src/main.rs:20:23
+   |
+20 | impl OutlinePrint for Point {}
+   |                       ^^^^^ `Point` cannot be formatted with the default formatter
+   |
+   = help: the trait `std::fmt::Display` is not implemented for `Point`
+   = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+note: required by a bound in `OutlinePrint`
+  --&gt; src/main.rs:3:21
+   |
+3  | trait OutlinePrint: fmt::Display {
+   |                     ^^^^^^^^^^^^ required by this bound in `OutlinePrint`
+
+error[E0277]: `Point` doesn't implement `std::fmt::Display`
+  --&gt; src/main.rs:24:7
+   |
+24 |     p.outline_print();
+   |       ^^^^^^^^^^^^^ `Point` cannot be formatted with the default formatter
+   |
+   = help: the trait `std::fmt::Display` is not implemented for `Point`
+   = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+note: required by a bound in `OutlinePrint::outline_print`
+  --&gt; src/main.rs:3:21
+   |
+3  | trait OutlinePrint: fmt::Display {
+   |                     ^^^^^^^^^^^^ required by this bound in `OutlinePrint::outline_print`
+4  |     fn outline_print(&amp;self) {
+   |        ------------- required by a bound in this associated function
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `traits-example` (bin "traits-example") due to 2 previous errors
+</code></pre>
+<p>এটি ঠিক করার জন্য, আমরা <code>Point</code>-এর উপর <code>Display</code> ইমপ্লিমেন্ট করি এবং <code>OutlinePrint</code>-এর প্রয়োজনীয় শর্ত পূরণ করি, এইভাবে:</p>
+<Listing file-name="src/main.rs">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">trait OutlinePrint: fmt::Display {
+</span><span class="boring">    fn outline_print(&amp;self) {
+</span><span class="boring">        let output = self.to_string();
+</span><span class="boring">        let len = output.len();
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("* {output} *");
+</span><span class="boring">        println!("*{}*", " ".repeat(len + 2));
+</span><span class="boring">        println!("{}", "*".repeat(len + 4));
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">struct Point {
+</span><span class="boring">    x: i32,
+</span><span class="boring">    y: i32,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl OutlinePrint for Point {}
+</span><span class="boring">
+</span>use std::fmt;
+
+impl fmt::Display for Point {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let p = Point { x: 1, y: 3 };
+</span><span class="boring">    p.outline_print();
+</span><span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>তারপর, <code>Point</code>-এর উপর <code>OutlinePrint</code> trait ইমপ্লিমেন্ট করা সফলভাবে কম্পাইল হবে, এবং আমরা একটি <code>Point</code> ইনস্ট্যান্সের উপর <code>outline_print</code> কল করে এটিকে তারকাচিহ্নের একটি আউটলাইনের মধ্যে প্রদর্শন করতে পারি।</p>
+<!-- Old link, do not remove -->
+<p><a id="using-the-newtype-pattern-to-implement-external-traits-on-external-types"></a></p>
+<h3 id="external-types-এর-উপর-external-traits-ইমপলিমেনট-করার-জনয-newtype-pattern-বযবহার-করা"><a class="header" href="#external-types-এর-উপর-external-traits-ইমপলিমেনট-করার-জনয-newtype-pattern-বযবহার-করা">External Types-এর উপর External Traits ইমপ্লিমেন্ট করার জন্য Newtype Pattern ব্যবহার করা</a></h3>
+<p>চ্যাপ্টার ১০-এর <a href="ch10-02-traits.html#implementing-a-trait-on-a-type">“Implementing a Trait on a Type”</a><!-- ignore -->-এ, আমরা orphan rule-এর কথা উল্লেখ করেছি যা বলে যে আমরা কেবল একটি টাইপের উপর একটি trait ইমপ্লিমেন্ট করতে পারি যদি trait বা টাইপ, অথবা উভয়ই, আমাদের crate-এর জন্য লোকাল হয়। <em>newtype pattern</em> ব্যবহার করে এই সীমাবদ্ধতা এড়ানো সম্ভব, যা একটি tuple struct-এ একটি নতুন টাইপ তৈরি করা জড়িত। (আমরা চ্যাপ্টার ৫-এর <a href="ch05-01-defining-structs.html#using-tuple-structs-without-named-fields-to-create-different-types">“Using Tuple Structs Without Named Fields to Create Different Types”</a><!-- ignore -->-এ tuple struct কভার করেছি।) tuple struct-এর একটি ফিল্ড থাকবে এবং এটি সেই টাইপের একটি পাতলা র‍্যাপার (thin wrapper) হবে যার জন্য আমরা একটি trait ইমপ্লিমেন্ট করতে চাই। তারপর র‍্যাপার টাইপটি আমাদের crate-এর জন্য লোকাল হয়, এবং আমরা র‍্যাপারের উপর trait-টি ইমপ্লিমেন্ট করতে পারি। <em>Newtype</em> শব্দটি Haskell প্রোগ্রামিং ভাষা থেকে উদ্ভূত হয়েছে। এই প্যাটার্নটি ব্যবহার করার জন্য কোনো রানটাইম পারফরম্যান্স পেনাল্টি নেই, এবং র‍্যাপার টাইপটি কম্পাইল টাইমে বাদ দেওয়া হয়।</p>
+<p>উদাহরণস্বরূপ, ধরা যাক আমরা <code>Vec&lt;T&gt;</code>-এর উপর <code>Display</code> ইমপ্লিমেন্ট করতে চাই, যা orphan rule আমাদের সরাসরি করতে বাধা দেয় কারণ <code>Display</code> trait এবং <code>Vec&lt;T&gt;</code> টাইপ উভয়ই আমাদের crate-এর বাইরে সংজ্ঞায়িত। আমরা একটি <code>Wrapper</code> struct তৈরি করতে পারি যা <code>Vec&lt;T&gt;</code>-এর একটি ইনস্ট্যান্স ধারণ করে; তারপর আমরা <code>Wrapper</code>-এর উপর <code>Display</code> ইমপ্লিমেন্ট করতে পারি এবং <code>Vec&lt;T&gt;</code> মানটি ব্যবহার করতে পারি, যেমনটি লিস্টিং ২০-২৪-এ দেখানো হয়েছে।</p>
+<Listing number="20-24" file-name="src/main.rs" caption="`Display` ইমপ্লিমেন্ট করার জন্য `Vec<String>`-এর চারপাশে একটি `Wrapper` টাইপ তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024">use std::fmt;
+
+struct Wrapper(Vec&lt;String&gt;);
+
+impl fmt::Display for Wrapper {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))
+    }
+}
+
+fn main() {
+    let w = Wrapper(vec![String::from("hello"), String::from("world")]);
+    println!("w = {w}");
+}</code></pre></pre>
+</Listing>
+<p><code>Display</code>-এর ইমপ্লিমেন্টেশনটি ভিতরের <code>Vec&lt;T&gt;</code> অ্যাক্সেস করার জন্য <code>self.0</code> ব্যবহার করে কারণ <code>Wrapper</code> একটি tuple struct এবং <code>Vec&lt;T&gt;</code> tuple-এর ০ ইনডেক্সের আইটেম। তারপর আমরা <code>Wrapper</code>-এর উপর <code>Display</code> trait-এর কার্যকারিতা ব্যবহার করতে পারি।</p>
+<p>এই কৌশলটি ব্যবহার করার অসুবিধা হলো <code>Wrapper</code> একটি নতুন টাইপ, তাই এর মধ্যে থাকা মানের মেথডগুলো এর নেই। আমাদের <code>Vec&lt;T&gt;</code>-এর সমস্ত মেথড সরাসরি <code>Wrapper</code>-এর উপর ইমপ্লিমেন্ট করতে হবে যাতে মেথডগুলো <code>self.0</code>-কে ডে্লিগেট করে, যা আমাদের <code>Wrapper</code>-কে ঠিক একটি <code>Vec&lt;T&gt;</code>-এর মতো ব্যবহার করার অনুমতি দেবে। যদি আমরা চাইতাম যে নতুন টাইপটির ভিতরের টাইপের সমস্ত মেথড থাকুক, তাহলে <code>Wrapper</code>-এর উপর <code>Deref</code> trait ইমপ্লিমেন্ট করে ভিতরের টাইপটি রিটার্ন করা একটি সমাধান হবে (আমরা চ্যাপ্টার ১৫-এর <a href="ch15-02-deref.html#treating-smart-pointers-like-regular-references-with-the-deref-trait">“Treating Smart Pointers Like Regular References with <code>Deref</code>”</a><!-- ignore -->-এ <code>Deref</code> trait ইমপ্লিমেন্ট করার বিষয়ে আলোচনা করেছি)। যদি আমরা না চাইতাম যে <code>Wrapper</code> টাইপটির ভিতরের টাইপের সমস্ত মেথড থাকুক—উদাহরণস্বরূপ, <code>Wrapper</code> টাইপের আচরণ সীমিত করার জন্য—আমাদের কেবল সেই মেথডগুলো ম্যানুয়ালি ইমপ্লিমেন্ট করতে হতো যা আমরা চাই।</p>
+<p>এই newtype pattern-টি তখনও কার্যকর যখন কোনো trait জড়িত থাকে না। আসুন ফোকাস পরিবর্তন করি এবং রাস্টের টাইপ সিস্টেমের সাথে ইন্টারঅ্যাক্ট করার কিছু advanced উপায় দেখি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch20-01-unsafe-rust.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch20-03-advanced-types.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch20-01-unsafe-rust.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch20-03-advanced-types.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

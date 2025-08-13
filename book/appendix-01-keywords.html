@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>A - কীওয়ার্ড - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="পরিশিষট-ক-কীওযারড"><a class="header" href="#পরিশিষট-ক-কীওযারড">পরিশিষ্ট ক: কীওয়ার্ড</a></h2>
+<p>নিচের তালিকায় এমন সব কীওয়ার্ড রয়েছে যা Rust ল্যাঙ্গুয়েজ দ্বারা বর্তমান বা ভবিষ্যতের ব্যবহারের জন্য সংরক্ষিত। তাই, এগুলো আইডেন্টিফায়ার (identifier) হিসেবে ব্যবহার করা যাবে না (ব্যতিক্রম হিসেবে 'র আইডেন্টিফায়ার' ব্যবহার করা যেতে পারে, যা আমরা '<a href="#raw-identifiers">র আইডেন্টিফায়ার</a>' বিভাগে আলোচনা করব)। আইডেন্টিফায়ার হলো ফাংশন, ভেরিয়েবল, প্যারামিটার, স্ট্রাকট ফিল্ড, মডিউল, ক্রেট, কনস্ট্যান্ট, ম্যাক্রো, স্ট্যাটিক ভ্যালু, অ্যাট্রিবিউট, টাইপ, ট্রেইট বা লাইফটাইমের নাম।</p>
+<h3 id="বরতমানে-বযবহৃত-কীওযারড"><a class="header" href="#বরতমানে-বযবহৃত-কীওযারড">বর্তমানে ব্যবহৃত কীওয়ার্ড</a></h3>
+<p>নিচে বর্তমানে ব্যবহৃত কীওয়ার্ডগুলোর একটি তালিকা এবং তাদের কার্যকারিতার বর্ণনা দেওয়া হলো।</p>
+<ul>
+<li><code>as</code> - প্রিমিটিভ কাস্টিং করতে, কোনো আইটেম ধারণকারী নির্দিষ্ট ট্রেইটকে দ্ব্যর্থহীন করতে, অথবা <code>use</code> স্টেটমেন্টে আইটেমগুলোর নতুন নাম দিতে ব্যবহৃত হয়।</li>
+<li><code>async</code> - বর্তমান থ্রেডকে ব্লক না করে একটি <code>Future</code> রিটার্ন করে।</li>
+<li><code>await</code> - একটি <code>Future</code>-এর ফলাফল প্রস্তুত না হওয়া পর্যন্ত এক্সিকিউশন স্থগিত রাখে।</li>
+<li><code>break</code> - একটি লুপ থেকে অবিলম্বে বেরিয়ে যায়।</li>
+<li><code>const</code> - কনস্ট্যান্ট আইটেম বা কনস্ট্যান্ট র পয়েন্টার ডিফাইন করে।</li>
+<li><code>continue</code> - লুপের পরবর্তী ইটারেশনে চলে যায়।</li>
+<li><code>crate</code> - একটি মডিউল পাথে, ক্রেটের রুটকে বোঝায়।</li>
+<li><code>dyn</code> - একটি ট্রেইট অবজেক্টে ডাইনামিক ডিসপ্যাচ করে।</li>
+<li><code>else</code> - <code>if</code> এবং <code>if let</code> কন্ট্রোল ফ্লো কনস্ট্রাক্টের ফলব্যাক।</li>
+<li><code>enum</code> - একটি enumeration ডিফাইন করে।</li>
+<li><code>extern</code> - একটি এক্সটার্নাল ফাংশন বা ভেরিয়েবল লিঙ্ক করে।</li>
+<li><code>false</code> - বুলিয়ান <code>false</code> লিটারাল।</li>
+<li><code>fn</code> - একটি ফাংশন বা ফাংশন পয়েন্টার টাইপ ডিফাইন করে।</li>
+<li><code>for</code> - একটি ইটারেটরের আইটেমগুলোর উপর লুপ চালানো, একটি ট্রেইট ইমপ্লিমেন্ট করা, বা একটি হায়ার-র‍্যাঙ্কড লাইফটাইম নির্দিষ্ট করার জন্য ব্যবহৃত হয়।</li>
+<li><code>if</code> - একটি শর্তাধীন এক্সপ্রেশনের ফলাফলের উপর ভিত্তি করে ব্রাঞ্চ তৈরি করে।</li>
+<li><code>impl</code> - ইনহেরেন্ট বা ট্রেইট কার্যকারিতা ইমপ্লিমেন্ট করে।</li>
+<li><code>in</code> - <code>for</code> লুপ সিনট্যাক্সের অংশ।</li>
+<li><code>let</code> - একটি ভেরিয়েবল বাইন্ড করে।</li>
+<li><code>loop</code> - শর্তহীনভাবে লুপ চালায়।</li>
+<li><code>match</code> - একটি ভ্যালুকে প্যাটার্নের সাথে ম্যাচ করে।</li>
+<li><code>mod</code> - একটি মডিউল ডিফাইন করে।</li>
+<li><code>move</code> - একটি ক্লোজারকে তার সমস্ত ক্যাপচারের মালিকানা নিতে বাধ্য করে।</li>
+<li><code>mut</code> - রেফারেন্স, র পয়েন্টার, বা প্যাটার্ন বাইন্ডিং-এ মিউটেবিলিটি বোঝায়।</li>
+<li><code>pub</code> - স্ট্রাকট ফিল্ড, <code>impl</code> ব্লক, বা মডিউলে পাবলিক ভিজিবিলিটি বোঝায়।</li>
+<li><code>ref</code> - রেফারেন্স দ্বারা বাইন্ড করে।</li>
+<li><code>return</code> - ফাংশন থেকে রিটার্ন করে।</li>
+<li><code>Self</code> - যে টাইপটি আমরা ডিফাইন বা ইমপ্লিমেন্ট করছি তার জন্য একটি টাইপ এলিয়াস।</li>
+<li><code>self</code> - মেথডের সাবজেক্ট বা বর্তমান মডিউল।</li>
+<li><code>static</code> - গ্লোবাল ভেরিয়েবল বা পুরো প্রোগ্রাম এক্সিকিউশন পর্যন্ত স্থায়ী লাইফটাইম।</li>
+<li><code>struct</code> - একটি স্ট্রাকচার ডিফাইন করে।</li>
+<li><code>super</code> - বর্তমান মডিউলের প্যারেন্ট মডিউল।</li>
+<li><code>trait</code> - একটি ট্রেইট ডিফাইন করে।</li>
+<li><code>true</code> - বুলিয়ান <code>true</code> লিটারাল।</li>
+<li><code>type</code> - একটি টাইপ এলিয়াস বা অ্যাসোসিয়েটেড টাইপ ডিফাইন করে।</li>
+<li><code>union</code> - একটি <a href="../reference/items/unions.html">union</a> ডিফাইন করে; এটি শুধুমাত্র একটি union ডিক্লারেশনে ব্যবহৃত হলেই কীওয়ার্ড হিসেবে গণ্য হয়।</li>
+<li><code>unsafe</code> - আনসেফ কোড, ফাংশন, ট্রেইট, বা ইমপ্লিমেন্টেশন বোঝায়।</li>
+<li><code>use</code> - স্কোপে সিম্বল নিয়ে আসে; জেনেরিক এবং লাইফটাইম বাউন্ডের জন্য সুনির্দিষ্ট ক্যাপচার নির্দিষ্ট করে।</li>
+<li><code>where</code> - এমন ক্লজ বোঝায় যা একটি টাইপকে সীমাবদ্ধ করে।</li>
+<li><code>while</code> - একটি এক্সপ্রেশনের ফলাফলের উপর ভিত্তি করে শর্তসাপেক্ষে লুপ চালায়।</li>
+</ul>
+<h3 id="ভবিষযৎ-বযবহারের-জনয-সংরকষিত-কীওযারড"><a class="header" href="#ভবিষযৎ-বযবহারের-জনয-সংরকষিত-কীওযারড">ভবিষ্যৎ ব্যবহারের জন্য সংরক্ষিত কীওয়ার্ড</a></h3>
+<p>নিচের কীওয়ার্ডগুলোর এখনো কোনো কার্যকারিতা নেই, কিন্তু Rust ভবিষ্যতে ব্যবহারের সম্ভাবনার জন্য এগুলোকে সংরক্ষিত রেখেছে।</p>
+<ul>
+<li><code>abstract</code></li>
+<li><code>become</code></li>
+<li><code>box</code></li>
+<li><code>do</code></li>
+<li><code>final</code></li>
+<li><code>gen</code></li>
+<li><code>macro</code></li>
+<li><code>override</code></li>
+<li><code>priv</code></li>
+<li><code>try</code></li>
+<li><code>typeof</code></li>
+<li><code>unsized</code></li>
+<li><code>virtual</code></li>
+<li><code>yield</code></li>
+</ul>
+<h3 id="র-আইডেনটিফাযার"><a class="header" href="#র-আইডেনটিফাযার">র আইডেন্টিফায়ার</a></h3>
+<p><em>র আইডেন্টিফায়ার</em> হলো এমন একটি সিনট্যাক্স যা আপনাকে সেইসব জায়গায় কীওয়ার্ড ব্যবহার করতে দেয় যেখানে সাধারণত তা অনুমোদিত নয়। আপনি একটি কীওয়ার্ডের আগে <code>r#</code> উপসর্গ যোগ করে একটি র আইডেন্টিফায়ার ব্যবহার করতে পারেন।</p>
+<p>উদাহরণস্বরূপ, <code>match</code> একটি কীওয়ার্ড। আপনি যদি <code>match</code> নামটি ব্যবহার করে নিচের ফাংশনটি কম্পাইল করার চেষ্টা করেন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
+    haystack.contains(needle)
+}</code></pre>
+<p>আপনি এই এররটি পাবেন:</p>
+<pre><code class="language-text">error: expected identifier, found keyword `match`
+ --&gt; src/main.rs:4:4
+  |
+4 | fn match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
+  |    ^^^^^ expected identifier, found keyword
+</code></pre>
+<p>এররটি দেখাচ্ছে যে আপনি <code>match</code> কীওয়ার্ডটি ফাংশন আইডেন্টিফায়ার হিসেবে ব্যবহার করতে পারবেন না। <code>match</code> কে ফাংশনের নাম হিসেবে ব্যবহার করতে হলে আপনাকে র আইডেন্টিফায়ার সিনট্যাক্স ব্যবহার করতে হবে, যেমন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn r#match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
+    haystack.contains(needle)
+}
+
+fn main() {
+    assert!(r#match("foo", "foobar"));
+}</code></pre></pre>
+<p>এই কোডটি কোনো এরর ছাড়াই কম্পাইল হবে। লক্ষ্য করুন, ফাংশনের সংজ্ঞায় এবং <code>main</code>-এ যেখানে ফাংশনটি কল করা হয়েছে, উভয় স্থানেই ফাংশনের নামের আগে <code>r#</code> উপসর্গটি রয়েছে।</p>
+<p>র আইডেন্টিফায়ার আপনাকে আপনার পছন্দের যেকোনো শব্দকে আইডেন্টিফায়ার হিসেবে ব্যবহার করার অনুমতি দেয়, এমনকি যদি সেই শব্দটি একটি সংরক্ষিত কীওয়ার্ডও হয়। এটি আমাদের আইডেন্টিফায়ারের নাম বেছে নেওয়ার ক্ষেত্রে আরও স্বাধীনতা দেয়, এবং এমন প্রোগ্রামের সাথে ইন্টিগ্রেট করতে সাহায্য করে যা এমন ভাষায় লেখা যেখানে এই শব্দগুলো কীওয়ার্ড নয়। এছাড়াও, র আইডেন্টিফায়ার আপনাকে আপনার ক্রেটের চেয়ে ভিন্ন Rust এডিশনে লেখা লাইব্রেরি ব্যবহার করার সুযোগ দেয়। উদাহরণস্বরূপ, <code>try</code> 2015 এডিশনে কোনো কীওয়ার্ড নয়, কিন্তু 2018, 2021 এবং 2024 এডিশনে এটি একটি কীওয়ার্ড। আপনি যদি 2015 এডিশন ব্যবহার করে লেখা একটি লাইব্রেরির উপর নির্ভর করেন এবং সেখানে একটি <code>try</code> ফাংশন থাকে, তবে পরবর্তী এডিশনগুলোতে আপনার কোড থেকে সেই ফাংশনটি কল করার জন্য আপনাকে র আইডেন্টিফায়ার সিনট্যাক্স, এক্ষেত্রে <code>r#try</code>, ব্যবহার করতে হবে। এডিশন সম্পর্কে আরও তথ্যের জন্য <a href="appendix-05-editions.html">পরিশিষ্ট ঙ</a> দেখুন।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="appendix-00.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="appendix-02-operators.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="appendix-00.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="appendix-02-operators.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ট্রেইট: শেয়ার্ড আচরণ ডিফাইন করা - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="টরেইট-traits-সাধারণ-আচরণ-ডিফাইন-করা"><a class="header" href="#টরেইট-traits-সাধারণ-আচরণ-ডিফাইন-করা">ট্রেইট (Traits): সাধারণ আচরণ ডিফাইন করা</a></h2>
+<p>একটি <em>trait</em> কোনো নির্দিষ্ট টাইপের কার্যকারিতা (functionality) ডিফাইন করে যা অন্যান্য টাইপের সাথে শেয়ার করা যায়। আমরা অ্যাবস্ট্রাক্ট উপায়ে সাধারণ আচরণ (shared behavior) ডিফাইন করতে traits ব্যবহার করতে পারি। আমরা <em>trait bounds</em> ব্যবহার করে নির্দিষ্ট করতে পারি যে একটি জেনেরিক টাইপ যেকোনো টাইপের হতে পারে, যতক্ষণ পর্যন্ত তার একটি নির্দিষ্ট আচরণ থাকে।</p>
+<blockquote>
+<p>দ্রষ্টব্য: Traits অন্যান্য ভাষার <em>interfaces</em> নামক একটি ফিচারের মতো, যদিও কিছু পার্থক্য রয়েছে।</p>
+</blockquote>
+<h3 id="একটি-টরেইট-ডিফাইন-করা"><a class="header" href="#একটি-টরেইট-ডিফাইন-করা">একটি ট্রেইট ডিফাইন করা</a></h3>
+<p>একটি টাইপের আচরণ হলো সেইসব মেথড যা আমরা সেই টাইপের উপর কল করতে পারি। বিভিন্ন টাইপ একই আচরণ শেয়ার করে যদি আমরা সেই সব টাইপের উপর একই মেথড কল করতে পারি। Trait ডেফিনিশন হলো মেথড সিগনেচারগুলোকে একসাথে গ্রুপ করার একটি উপায়, যা কোনো উদ্দেশ্য পূরণের জন্য প্রয়োজনীয় আচরণের একটি সেট ডিফাইন করে।</p>
+<p>উদাহরণস্বরূপ, ধরা যাক আমাদের একাধিক struct আছে যা বিভিন্ন ধরনের এবং পরিমাণের টেক্সট ধারণ করে: একটি <code>NewsArticle</code> struct যা একটি নির্দিষ্ট অবস্থানে ফাইল করা সংবাদ ধরে রাখে এবং একটি <code>SocialPost</code> যা সর্বোচ্চ ২৮০ অক্ষর ধারণ করতে পারে, সাথে মেটাডেটা যা নির্দেশ করে এটি একটি নতুন পোস্ট, একটি রিপোস্ট, বা অন্য কোনো পোস্টের উত্তর ছিল কিনা।</p>
+<p>আমরা <code>aggregator</code> নামে একটি মিডিয়া অ্যাগ্রিগেটর লাইব্রেরি ক্রেট তৈরি করতে চাই যা <code>NewsArticle</code> বা <code>SocialPost</code> ইনস্ট্যান্সে সংরক্ষিত ডেটার সারাংশ প্রদর্শন করতে পারে। এটি করার জন্য, আমাদের প্রতিটি টাইপ থেকে একটি সারাংশ প্রয়োজন, এবং আমরা একটি ইনস্ট্যান্সের উপর <code>summarize</code> মেথড কল করে সেই সারাংশটি অনুরোধ করব। লিস্টিং ১০-১২ একটি পাবলিক <code>Summary</code> trait-এর ডেফিনিশন দেখায় যা এই আচরণটি প্রকাশ করে।</p>
+<Listing number="10-12" file-name="src/lib.rs" caption="একটি `Summary` ট্রেইট যা `summarize` মেথড দ্বারা প্রদত্ত আচরণ নিয়ে গঠিত">
+<pre><code class="language-rust noplayground">pub trait Summary {
+    fn summarize(&amp;self) -&gt; String;
+}</code></pre>
+</Listing>
+<p>এখানে, আমরা <code>trait</code> কিওয়ার্ড ব্যবহার করে একটি trait ডিক্লেয়ার করি এবং তারপর trait-এর নাম, যা এই ক্ষেত্রে <code>Summary</code>। আমরা trait-টিকে <code>pub</code> হিসেবেও ডিক্লেয়ার করি যাতে এই ক্রেটের উপর নির্ভরশীল ক্রেটগুলোও এই trait ব্যবহার করতে পারে, যেমনটি আমরা কয়েকটি উদাহরণে দেখব। কার্লি ব্র্যাকেটের ভিতরে, আমরা মেথড সিগনেচারগুলো ডিক্লেয়ার করি যা এই trait ইমপ্লিমেন্ট করা টাইপগুলোর আচরণ বর্ণনা করে, যা এই ক্ষেত্রে <code>fn summarize(&amp;self) -&gt; String</code>।</p>
+<p>মেথড সিগনেচারের পরে, কার্লি ব্র্যাকেটের মধ্যে একটি ইমপ্লিমেন্টেশন প্রদান করার পরিবর্তে, আমরা একটি সেমিকোলন ব্যবহার করি। এই trait ইমপ্লিমেন্ট করা প্রতিটি টাইপকে অবশ্যই মেথডের বডির জন্য নিজস্ব কাস্টম আচরণ প্রদান করতে হবে। কম্পাইলার নিশ্চিত করবে যে <code>Summary</code> trait যুক্ত যেকোনো টাইপের <code>summarize</code> মেথডটি ঠিক এই সিগনেচার দিয়ে ডিফাইন করা থাকবে।</p>
+<p>একটি trait-এর বডিতে একাধিক মেথড থাকতে পারে: মেথড সিগনেচারগুলো প্রতি লাইনে একটি করে তালিকাভুক্ত করা হয় এবং প্রতিটি লাইন একটি সেমিকোলন দিয়ে শেষ হয়।</p>
+<h3 id="একটি-টাইপের-উপর-টরেইট-ইমপলিমেনট-করা"><a class="header" href="#একটি-টাইপের-উপর-টরেইট-ইমপলিমেনট-করা">একটি টাইপের উপর ট্রেইট ইমপ্লিমেন্ট করা</a></h3>
+<p>এখন যেহেতু আমরা <code>Summary</code> trait-এর মেথডগুলোর কাঙ্ক্ষিত সিগনেচার ডিফাইন করেছি, আমরা এটিকে আমাদের মিডিয়া অ্যাগ্রিগেটরের টাইপগুলোতে ইমপ্লিমেন্ট করতে পারি। লিস্টিং ১০-১৩ <code>NewsArticle</code> struct-এর উপর <code>Summary</code> trait-এর একটি ইমপ্লিমেন্টেশন দেখায় যা <code>summarize</code>-এর রিটার্ন ভ্যালু তৈরি করতে হেডলাইন, লেখক এবং অবস্থান ব্যবহার করে। <code>SocialPost</code> struct-এর জন্য, আমরা <code>summarize</code>-কে ইউজারের নাম এবং পোস্টের সম্পূর্ণ টেক্সট হিসেবে ডিফাইন করি, এই ধরে নিয়ে যে পোস্টের বিষয়বস্তু ইতিমধ্যে ২৮০ অক্ষরের মধ্যে সীমাবদ্ধ।</p>
+<Listing number="10-13" file-name="src/lib.rs" caption="`NewsArticle` এবং `SocialPost` টাইপের উপর `Summary` ট্রেইট ইমপ্লিমেন্ট করা">
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Summary {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize(&amp;self) -&gt; String {
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
+
+pub struct SocialPost {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub repost: bool,
+}
+
+impl Summary for SocialPost {
+    fn summarize(&amp;self) -&gt; String {
+        format!("{}: {}", self.username, self.content)
+    }
+}</code></pre>
+</Listing>
+<p>একটি টাইপের উপর একটি trait ইমপ্লিমেন্ট করা সাধারণ মেথড ইমপ্লিমেন্ট করার মতোই। পার্থক্য হলো <code>impl</code>-এর পরে, আমরা যে trait-টি ইমপ্লিমেন্ট করতে চাই তার নাম লিখি, তারপর <code>for</code> কিওয়ার্ড ব্যবহার করি এবং তারপর যে টাইপের জন্য trait-টি ইমপ্লিমেন্ট করতে চাই তার নাম নির্দিষ্ট করি। <code>impl</code> ব্লকের মধ্যে, আমরা trait ডেফিনিশনে সংজ্ঞায়িত মেথড সিগনেচারগুলো রাখি। প্রতিটি সিগনেচারের পরে সেমিকোলন যোগ করার পরিবর্তে, আমরা কার্লি ব্র্যাকেট ব্যবহার করি এবং নির্দিষ্ট টাইপের জন্য trait-এর মেথডগুলোর যে নির্দিষ্ট আচরণ আমরা চাই তা দিয়ে মেথড বডি পূরণ করি।</p>
+<p>এখন যেহেতু লাইব্রেরিটি <code>NewsArticle</code> এবং <code>SocialPost</code>-এর উপর <code>Summary</code> trait ইমপ্লিমেন্ট করেছে, ক্রেটের ব্যবহারকারীরা <code>NewsArticle</code> এবং <code>SocialPost</code>-এর ইনস্ট্যান্সের উপর trait মেথডগুলো কল করতে পারবে ঠিক যেভাবে আমরা সাধারণ মেথড কল করি। একমাত্র পার্থক্য হলো ব্যবহারকারীকে অবশ্যই trait এবং টাইপ উভয়কেই স্কোপে আনতে হবে। এখানে একটি উদাহরণ দেওয়া হলো যে কীভাবে একটি বাইনারি ক্রেট আমাদের <code>aggregator</code> লাইব্রেরি ক্রেট ব্যবহার করতে পারে:</p>
+<pre><code class="language-rust ignore">use aggregator::{SocialPost, Summary};
+
+fn main() {
+    let post = SocialPost {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        repost: false,
+    };
+
+    println!("1 new post: {}", post.summarize());
+}</code></pre>
+<p>এই কোডটি প্রিন্ট করে <code>1 new post: horse_ebooks: of course, as you probably already know, people</code>।</p>
+<p><code>aggregator</code> ক্রেটের উপর নির্ভরশীল অন্যান্য ক্রেটগুলোও তাদের নিজস্ব টাইপের উপর <code>Summary</code> ইমপ্লিমেন্ট করার জন্য <code>Summary</code> trait-টিকে স্কোপে আনতে পারে। একটি সীমাবদ্ধতা মনে রাখতে হবে যে আমরা একটি টাইপের উপর একটি trait শুধুমাত্র তখনই ইমপ্লিমেন্ট করতে পারি যদি trait অথবা টাইপ, বা উভয়ই, আমাদের ক্রেটের জন্য লোকাল (local) হয়। উদাহরণস্বরূপ, আমরা আমাদের <code>aggregator</code> ক্রেটের কার্যকারিতার অংশ হিসেবে <code>SocialPost</code>-এর মতো একটি কাস্টম টাইপের উপর <code>Display</code>-এর মতো স্ট্যান্ডার্ড লাইব্রেরি trait ইমপ্লিমেন্ট করতে পারি কারণ <code>SocialPost</code> টাইপটি আমাদের <code>aggregator</code> ক্রেটের জন্য লোকাল। আমরা আমাদের <code>aggregator</code> ক্রেটে <code>Vec&lt;T&gt;</code>-এর উপর <code>Summary</code> ইমপ্লিমেন্ট করতে পারি কারণ <code>Summary</code> trait-টি আমাদের <code>aggregator</code> ক্রেটের জন্য লোকাল।</p>
+<p>কিন্তু আমরা এক্সটার্নাল টাইপের উপর এক্সটার্নাল trait ইমপ্লিমেন্ট করতে পারি না। উদাহরণস্বরূপ, আমরা আমাদের <code>aggregator</code> ক্রেটের মধ্যে <code>Vec&lt;T&gt;</code>-এর উপর <code>Display</code> trait ইমপ্লিমেন্ট করতে পারি না কারণ <code>Display</code> এবং <code>Vec&lt;T&gt;</code> উভয়ই স্ট্যান্ডার্ড লাইব্রেরিতে ডিফাইন করা এবং আমাদের <code>aggregator</code> ক্রেটের জন্য লোকাল নয়। এই সীমাবদ্ধতাটি <em>coherence</em> নামক একটি বৈশিষ্ট্যের অংশ, এবং আরও নির্দিষ্টভাবে <em>orphan rule</em> নামে পরিচিত, কারণ প্যারেন্ট টাইপ উপস্থিত নেই। এই নিয়মটি নিশ্চিত করে যে অন্য লোকের কোড আপনার কোড ভাঙতে পারবে না এবং বিপরীতক্রমেও। এই নিয়ম ছাড়া, দুটি ক্রেট একই টাইপের জন্য একই trait ইমপ্লিমেন্ট করতে পারত, এবং Rust জানত না কোন ইমপ্লিমেন্টেশনটি ব্যবহার করতে হবে।</p>
+<h3 id="ডিফলট-ইমপলিমেনটেশন-default-implementations"><a class="header" href="#ডিফলট-ইমপলিমেনটেশন-default-implementations">ডিফল্ট ইমপ্লিমেন্টেশন (Default Implementations)</a></h3>
+<p>কখনও কখনও একটি trait-এর কিছু বা সমস্ত মেথডের জন্য ডিফল্ট আচরণ থাকা দরকারী, প্রতিটি টাইপের উপর সমস্ত মেথডের জন্য ইমপ্লিমেন্টেশন দাবি করার পরিবর্তে। তারপর, যখন আমরা কোনো নির্দিষ্ট টাইপের উপর trait-টি ইমপ্লিমেন্ট করি, তখন আমরা প্রতিটি মেথডের ডিফল্ট আচরণ রাখতে বা ওভাররাইড করতে পারি।</p>
+<p>লিস্টিং ১০-১৪-এ, আমরা <code>Summary</code> trait-এর <code>summarize</code> মেথডের জন্য একটি ডিফল্ট স্ট্রিং নির্দিষ্ট করি, শুধুমাত্র মেথড সিগনেচার ডিফাইন করার পরিবর্তে, যেমনটি আমরা লিস্টিং ১০-১২-এ করেছিলাম।</p>
+<Listing number="10-14" file-name="src/lib.rs" caption="`summarize` মেথডের একটি ডিফল্ট ইমপ্লিমেন্টেশন সহ `Summary` ট্রেইট ডিফাইন করা">
+<pre><code class="language-rust noplayground">pub trait Summary {
+    fn summarize(&amp;self) -&gt; String {
+        String::from("(Read more...)")
+    }
+}
+<span class="boring">
+</span><span class="boring">pub struct NewsArticle {
+</span><span class="boring">    pub headline: String,
+</span><span class="boring">    pub location: String,
+</span><span class="boring">    pub author: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for NewsArticle {}
+</span><span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for SocialPost {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}: {}", self.username, self.content)
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+</Listing>
+<p><code>NewsArticle</code>-এর ইনস্ট্যান্সগুলোর সারাংশ তৈরি করতে ডিফল্ট ইমপ্লিমেন্টেশন ব্যবহার করার জন্য, আমরা <code>impl Summary for NewsArticle {}</code> দিয়ে একটি খালি <code>impl</code> ব্লক নির্দিষ্ট করি।</p>
+<p>যদিও আমরা আর সরাসরি <code>NewsArticle</code>-এ <code>summarize</code> মেথড ডিফাইন করছি না, আমরা একটি ডিফল্ট ইমপ্লিমেন্টেশন সরবরাহ করেছি এবং নির্দিষ্ট করেছি যে <code>NewsArticle</code> <code>Summary</code> trait ইমপ্লিমেন্ট করে। ফলস্বরূপ, আমরা এখনও একটি <code>NewsArticle</code>-এর ইনস্ট্যান্সে <code>summarize</code> মেথড কল করতে পারি, এভাবে:</p>
+<pre><code class="language-rust ignore"><span class="boring">use aggregator::{self, NewsArticle, Summary};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>    let article = NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+             hockey team in the NHL.",
+        ),
+    };
+
+    println!("New article available! {}", article.summarize());
+<span class="boring">}</span></code></pre>
+<p>এই কোডটি <code>New article available! (Read more...)</code> প্রিন্ট করে।</p>
+<p>একটি ডিফল্ট ইমপ্লিমেন্টেশন তৈরি করার জন্য লিস্টিং ১০-১৩-এর <code>SocialPost</code>-এ <code>Summary</code>-এর ইমপ্লিমেন্টেশন সম্পর্কে আমাদের কিছু পরিবর্তন করতে হবে না। কারণটি হলো একটি ডিফল্ট ইমপ্লিমেন্টেশন ওভাররাইড করার সিনট্যাক্স এবং যে trait মেথডের ডিফল্ট ইমপ্লিমেন্টেশন নেই তা ইমপ্লিমেন্ট করার সিনট্যাক্স একই।</p>
+<p>ডিফল্ট ইমপ্লিমেন্টেশনগুলো একই trait-এর অন্যান্য মেথড কল করতে পারে, এমনকি যদি সেই অন্যান্য মেথডগুলোর ডিফল্ট ইমপ্লিমেন্টেশন না থাকে। এইভাবে, একটি trait অনেক দরকারী কার্যকারিতা সরবরাহ করতে পারে এবং ইমপ্লিমেন্টরদের শুধুমাত্র একটি ছোট অংশ নির্দিষ্ট করতে হয়। উদাহরণস্বরূপ, আমরা <code>Summary</code> trait-কে এমনভাবে ডিফাইন করতে পারি যাতে একটি <code>summarize_author</code> মেথড থাকে যার ইমপ্লিমেন্টেশন আবশ্যক, এবং তারপর একটি <code>summarize</code> মেথড ডিফাইন করতে পারি যার একটি ডিফল্ট ইমপ্লিমেন্টেশন থাকে যা <code>summarize_author</code> মেথডকে কল করে:</p>
+<pre><code class="language-rust noplayground">pub trait Summary {
+    fn summarize_author(&amp;self) -&gt; String;
+
+    fn summarize(&amp;self) -&gt; String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
+}
+<span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for SocialPost {
+</span><span class="boring">    fn summarize_author(&amp;self) -&gt; String {
+</span><span class="boring">        format!("@{}", self.username)
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<p><code>Summary</code>-এর এই সংস্করণটি ব্যবহার করতে, আমাদের কেবল একটি টাইপের উপর trait ইমপ্লিমেন্ট করার সময় <code>summarize_author</code> ডিফাইন করতে হবে:</p>
+<pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
+</span><span class="boring">    fn summarize_author(&amp;self) -&gt; String;
+</span><span class="boring">
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("(Read more from {}...)", self.summarize_author())
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Summary for SocialPost {
+    fn summarize_author(&amp;self) -&gt; String {
+        format!("@{}", self.username)
+    }
+}</code></pre>
+<p>আমরা <code>summarize_author</code> ডিফাইন করার পরে, আমরা <code>SocialPost</code> struct-এর ইনস্ট্যান্সগুলিতে <code>summarize</code> কল করতে পারি, এবং <code>summarize</code>-এর ডিফল্ট ইমপ্লিমেন্টেশনটি আমাদের সরবরাহ করা <code>summarize_author</code>-এর ডেফিনিশনকে কল করবে। যেহেতু আমরা <code>summarize_author</code> ইমপ্লিমেন্ট করেছি, <code>Summary</code> trait আমাদের <code>summarize</code> মেথডের আচরণ দিয়েছে কোনো অতিরিক্ত কোড লেখা ছাড়াই। এটি দেখতে এরকম:</p>
+<pre><code class="language-rust ignore"><span class="boring">use aggregator::{self, SocialPost, Summary};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>    let post = SocialPost {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        repost: false,
+    };
+
+    println!("1 new post: {}", post.summarize());
+<span class="boring">}</span></code></pre>
+<p>এই কোডটি প্রিন্ট করে <code>1 new post: (Read more from @horse_ebooks...)</code>।</p>
+<p>মনে রাখবেন যে একই মেথডের একটি ওভাররাইডিং ইমপ্লিমেন্টেশন থেকে ডিফল্ট ইমপ্লিমেন্টেশন কল করা সম্ভব নয়।</p>
+<h3 id="পযারামিটার-হিসাবে-টরেইট-traits-as-parameters"><a class="header" href="#পযারামিটার-হিসাবে-টরেইট-traits-as-parameters">প্যারামিটার হিসাবে ট্রেইট (Traits as Parameters)</a></h3>
+<p>এখন আপনি জানেন কিভাবে trait ডিফাইন এবং ইমপ্লিমেন্ট করতে হয়, আমরা এখন দেখব কিভাবে trait ব্যবহার করে এমন ফাংশন ডিফাইন করা যায় যা বিভিন্ন ধরনের টাইপ গ্রহণ করতে পারে। আমরা লিস্টিং ১০-১৩-এ <code>NewsArticle</code> এবং <code>SocialPost</code> টাইপের উপর ইমপ্লিমেন্ট করা <code>Summary</code> trait ব্যবহার করে একটি <code>notify</code> ফাংশন ডিফাইন করব যা তার <code>item</code> প্যারামিটারে <code>summarize</code> মেথড কল করে, যা এমন কোনো টাইপের যা <code>Summary</code> trait ইমপ্লিমেন্ট করে। এটি করার জন্য, আমরা <code>impl Trait</code> সিনট্যাক্স ব্যবহার করি, এভাবে:</p>
+<pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct NewsArticle {
+</span><span class="boring">    pub headline: String,
+</span><span class="boring">    pub location: String,
+</span><span class="boring">    pub author: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for NewsArticle {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}, by {} ({})", self.headline, self.author, self.location)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for SocialPost {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}: {}", self.username, self.content)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub fn notify(item: &amp;impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}</code></pre>
+<p><code>item</code> প্যারামিটারের জন্য একটি concrete টাইপের পরিবর্তে, আমরা <code>impl</code> কিওয়ার্ড এবং trait-এর নাম নির্দিষ্ট করি। এই প্যারামিটারটি নির্দিষ্ট trait ইমপ্লিমেন্ট করে এমন যেকোনো টাইপ গ্রহণ করে। <code>notify</code>-এর বডিতে, আমরা <code>item</code>-এর উপর <code>Summary</code> trait থেকে আসা যেকোনো মেথড কল করতে পারি, যেমন <code>summarize</code>। আমরা <code>notify</code> কল করতে পারি এবং যেকোনো <code>NewsArticle</code> বা <code>SocialPost</code>-এর ইনস্ট্যান্স পাস করতে পারি। যে কোড <code>String</code> বা <code>i32</code>-এর মতো অন্য কোনো টাইপ দিয়ে ফাংশনটি কল করবে, তা কম্পাইল হবে না কারণ সেই টাইপগুলো <code>Summary</code> ইমপ্লিমেন্ট করে না।</p>
+<h4 id="টরেইট-বাউনড-সিনটযাকস-trait-bound-syntax"><a class="header" href="#টরেইট-বাউনড-সিনটযাকস-trait-bound-syntax">ট্রেইট বাউন্ড সিনট্যাক্স (Trait Bound Syntax)</a></h4>
+<p><code>impl Trait</code> সিনট্যাক্স সহজ ক্ষেত্রে কাজ করে তবে এটি আসলে একটি দীর্ঘ ফর্মের জন্য সিনট্যাক্স সুগার যা <em>trait bound</em> নামে পরিচিত; এটি দেখতে এইরকম:</p>
+<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item: &amp;T) {
+    println!("Breaking news! {}", item.summarize());
+}</code></pre>
+<p>এই দীর্ঘ ফর্মটি পূর্ববর্তী বিভাগের উদাহরণের সমতুল্য তবে আরও ভার্বোস। আমরা জেনেরিক টাইপ প্যারামিটারের ডিক্লেয়ারেশনের সাথে একটি কোলনের পরে এবং অ্যাঙ্গেল ব্র্যাকেটের ভিতরে trait bounds রাখি।</p>
+<p><code>impl Trait</code> সিনট্যাক্স সুবিধাজনক এবং সহজ ক্ষেত্রে কোডকে আরও সংক্ষিপ্ত করে তোলে, যেখানে সম্পূর্ণ trait bound সিনট্যাক্স অন্যান্য ক্ষেত্রে আরও জটিলতা প্রকাশ করতে পারে। উদাহরণস্বরূপ, আমাদের দুটি প্যারামিটার থাকতে পারে যা <code>Summary</code> ইমপ্লিমেন্ট করে। <code>impl Trait</code> সিনট্যাক্স দিয়ে এটি করতে হলে দেখতে এমন হবে:</p>
+<pre><code class="language-rust ignore">pub fn notify(item1: &amp;impl Summary, item2: &amp;impl Summary) {</code></pre>
+<p><code>impl Trait</code> ব্যবহার করা উপযুক্ত যদি আমরা এই ফাংশনটিকে <code>item1</code> এবং <code>item2</code>-কে ভিন্ন টাইপের হতে দিতে চাই (যতক্ষণ উভয় টাইপ <code>Summary</code> ইমপ্লিমেন্ট করে)। যদি আমরা উভয় প্যারামিটারকে একই টাইপের হতে বাধ্য করতে চাই, তবে আমাদের অবশ্যই একটি trait bound ব্যবহার করতে হবে, যেমন:</p>
+<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item1: &amp;T, item2: &amp;T) {</code></pre>
+<p><code>item1</code> এবং <code>item2</code> প্যারামিটারের টাইপ হিসাবে নির্দিষ্ট করা জেনেরিক টাইপ <code>T</code> ফাংশনটিকে এমনভাবে সীমাবদ্ধ করে যে <code>item1</code> এবং <code>item2</code>-এর জন্য আর্গুমেন্ট হিসাবে পাস করা মানের concrete টাইপ অবশ্যই একই হতে হবে।</p>
+<h4 id="-সিনটযাকস-দিয়ে-একাধিক-টরেইট-বাউনড-নিরদিষট-করা"><a class="header" href="#-সিনটযাকস-দিয়ে-একাধিক-টরেইট-বাউনড-নিরদিষট-করা"><code>+</code> সিনট্যাক্স দিয়ে একাধিক ট্রেইট বাউন্ড নির্দিষ্ট করা</a></h4>
+<p>আমরা একাধিক trait bound-ও নির্দিষ্ট করতে পারি। ধরা যাক আমরা চাই <code>notify</code> <code>item</code>-এ <code>summarize</code>-এর পাশাপাশি ডিসপ্লে ফরম্যাটিংও ব্যবহার করুক: আমরা <code>notify</code> ডেফিনিশনে নির্দিষ্ট করি যে <code>item</code> অবশ্যই <code>Display</code> এবং <code>Summary</code> উভয়ই ইমপ্লিমেন্ট করবে। আমরা <code>+</code> সিনট্যাক্স ব্যবহার করে এটি করতে পারি:</p>
+<pre><code class="language-rust ignore">pub fn notify(item: &amp;(impl Summary + Display)) {</code></pre>
+<p><code>+</code> সিনট্যাক্স জেনেরিক টাইপের উপর trait bounds-এর সাথেও বৈধ:</p>
+<pre><code class="language-rust ignore">pub fn notify&lt;T: Summary + Display&gt;(item: &amp;T) {</code></pre>
+<p>দুটি trait bounds নির্দিষ্ট করার সাথে, <code>notify</code>-এর বডি <code>summarize</code> কল করতে পারে এবং <code>item</code> ফরম্যাট করতে <code>{}</code> ব্যবহার করতে পারে।</p>
+<h4 id="where-কলজ-দিয়ে-পরিষকার-টরেইট-বাউনড"><a class="header" href="#where-কলজ-দিয়ে-পরিষকার-টরেইট-বাউনড"><code>where</code> ক্লজ দিয়ে পরিষ্কার ট্রেইট বাউন্ড</a></h4>
+<p>অতিরিক্ত trait bounds ব্যবহার করার কিছু অসুবিধা আছে। প্রতিটি জেনেরিকের নিজস্ব trait bounds থাকে, তাই একাধিক জেনেরিক টাইপ প্যারামিটারযুক্ত ফাংশনগুলোতে ফাংশনের নাম এবং তার প্যারামিটার তালিকার মধ্যে প্রচুর trait bound তথ্য থাকতে পারে, যা ফাংশন সিগনেচার পড়া কঠিন করে তোলে। এই কারণে, Rust-এর ফাংশন সিগনেচারের পরে একটি <code>where</code> ক্লজের ভিতরে trait bounds নির্দিষ্ট করার জন্য বিকল্প সিনট্যাক্স রয়েছে। সুতরাং, এটি লেখার পরিবর্তে:</p>
+<pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {</code></pre>
+<p>আমরা একটি <code>where</code> ক্লজ ব্যবহার করতে পারি, এভাবে:</p>
+<pre><code class="language-rust ignore">fn some_function&lt;T, U&gt;(t: &amp;T, u: &amp;U) -&gt; i32
+where
+    T: Display + Clone,
+    U: Clone + Debug,
+{
+<span class="boring">    unimplemented!()
+</span><span class="boring">}</span></code></pre>
+<p>এই ফাংশনের সিগনেচারটি কম জটীল: ফাংশনের নাম, প্যারামিটার তালিকা এবং রিটার্ন টাইপ কাছাকাছি রয়েছে, অনেকটা trait bounds ছাড়া একটি ফাংশনের মতো।</p>
+<h3 id="টরেইট-ইমপলিমেনট-করে-এমন-টাইপ-রিটারন-করা"><a class="header" href="#টরেইট-ইমপলিমেনট-করে-এমন-টাইপ-রিটারন-করা">ট্রেইট ইমপ্লিমেন্ট করে এমন টাইপ রিটার্ন করা</a></h3>
+<p>আমরা রিটার্ন পজিশনে <code>impl Trait</code> সিনট্যাক্স ব্যবহার করে এমন একটি টাইপের মান রিটার্ন করতে পারি যা একটি trait ইমপ্লিমেন্ট করে, যেমনটি এখানে দেখানো হয়েছে:</p>
+<pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct NewsArticle {
+</span><span class="boring">    pub headline: String,
+</span><span class="boring">    pub location: String,
+</span><span class="boring">    pub author: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for NewsArticle {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}, by {} ({})", self.headline, self.author, self.location)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for SocialPost {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}: {}", self.username, self.content)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn returns_summarizable() -&gt; impl Summary {
+    SocialPost {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        repost: false,
+    }
+}</code></pre>
+<p>রিটার্ন টাইপের জন্য <code>impl Summary</code> ব্যবহার করে, আমরা নির্দিষ্ট করি যে <code>returns_summarizable</code> ফাংশনটি <code>Summary</code> trait ইমপ্লিমেন্ট করে এমন কোনো টাইপ রিটার্ন করে, concrete টাইপের নাম উল্লেখ না করেই। এই ক্ষেত্রে, <code>returns_summarizable</code> একটি <code>SocialPost</code> রিটার্ন করে, কিন্তু এই ফাংশন কল করা কোডকে এটি জানার প্রয়োজন নেই।</p>
+<p>শুধুমাত্র যে trait ইমপ্লিমেন্ট করে তা দ্বারা একটি রিটার্ন টাইপ নির্দিষ্ট করার ক্ষমতাটি ক্লোজার এবং ইটারেটরের প্রসঙ্গে বিশেষভাবে কার্যকর, যা আমরা চ্যাপ্টার ১৩-এ আলোচনা করব। ক্লোজার এবং ইটারেটর এমন টাইপ তৈরি করে যা কেবল কম্পাইলার জানে বা যে টাইপগুলো নির্দিষ্ট করা খুব দীর্ঘ। <code>impl Trait</code> সিনট্যাক্স আপনাকে সংক্ষিপ্তভাবে নির্দিষ্ট করতে দেয় যে একটি ফাংশন <code>Iterator</code> trait ইমপ্লিমেন্ট করে এমন কোনো টাইপ রিটার্ন করে, একটি খুব দীর্ঘ টাইপ লেখার প্রয়োজন ছাড়াই।</p>
+<p>তবে, আপনি কেবল <code>impl Trait</code> ব্যবহার করতে পারেন যদি আপনি একটি একক টাইপ রিটার্ন করেন। উদাহরণস্বরূপ, এই কোডটি যা <code>impl Summary</code> হিসাবে রিটার্ন টাইপ নির্দিষ্ট করে একটি <code>NewsArticle</code> বা একটি <code>SocialPost</code> রিটার্ন করে, কাজ করবে না:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Summary {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct NewsArticle {
+</span><span class="boring">    pub headline: String,
+</span><span class="boring">    pub location: String,
+</span><span class="boring">    pub author: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for NewsArticle {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}, by {} ({})", self.headline, self.author, self.location)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct SocialPost {
+</span><span class="boring">    pub username: String,
+</span><span class="boring">    pub content: String,
+</span><span class="boring">    pub reply: bool,
+</span><span class="boring">    pub repost: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Summary for SocialPost {
+</span><span class="boring">    fn summarize(&amp;self) -&gt; String {
+</span><span class="boring">        format!("{}: {}", self.username, self.content)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn returns_summarizable(switch: bool) -&gt; impl Summary {
+    if switch {
+        NewsArticle {
+            headline: String::from(
+                "Penguins win the Stanley Cup Championship!",
+            ),
+            location: String::from("Pittsburgh, PA, USA"),
+            author: String::from("Iceburgh"),
+            content: String::from(
+                "The Pittsburgh Penguins once again are the best \
+                 hockey team in the NHL.",
+            ),
+        }
+    } else {
+        SocialPost {
+            username: String::from("horse_ebooks"),
+            content: String::from(
+                "of course, as you probably already know, people",
+            ),
+            reply: false,
+            repost: false,
+        }
+    }
+}</code></pre>
+<p>কম্পাইলারে <code>impl Trait</code> সিনট্যাক্স কীভাবে ইমপ্লিমেন্ট করা হয়েছে তার সীমাবদ্ধতার কারণে একটি <code>NewsArticle</code> বা একটি <code>SocialPost</code> রিটার্ন করা অনুমোদিত নয়। আমরা চ্যাপ্টার ১৮-এর “ভিন্ন ধরনের মানের জন্য ট্রেইট অবজেক্ট ব্যবহার করা” বিভাগে এই আচরণ সহ একটি ফাংশন কীভাবে লিখতে হয় তা আলোচনা করব।</p>
+<h3 id="টরেইট-বাউনড-বযবহার-করে-শরতসাপেকষে-মেথড-ইমপলিমেনট-করা"><a class="header" href="#টরেইট-বাউনড-বযবহার-করে-শরতসাপেকষে-মেথড-ইমপলিমেনট-করা">ট্রেইট বাউন্ড ব্যবহার করে শর্তসাপেক্ষে মেথড ইমপ্লিমেন্ট করা</a></h3>
+<p>জেনেরিক টাইপ প্যারামিটার ব্যবহার করে একটি <code>impl</code> ব্লকের সাথে একটি trait bound ব্যবহার করে, আমরা নির্দিষ্ট trait ইমপ্লিমেন্ট করে এমন টাইপগুলোর জন্য শর্তসাপেক্ষে মেথড ইমপ্লিমেন্ট করতে পারি। উদাহরণস্বরূপ, লিস্টিং ১০-১৫-এর <code>Pair&lt;T&gt;</code> টাইপটি সর্বদা <code>Pair&lt;T&gt;</code>-এর একটি নতুন ইনস্ট্যান্স রিটার্ন করার জন্য <code>new</code> ফাংশন ইমপ্লিমেন্ট করে (চ্যাপ্টার ৫-এর “মেথড ডিফাইন করা” বিভাগ থেকে মনে করুন যে <code>Self</code> হলো <code>impl</code> ব্লকের টাইপের একটি টাইপ অ্যালিয়াস, যা এই ক্ষেত্রে <code>Pair&lt;T&gt;</code>)। কিন্তু পরবর্তী <code>impl</code> ব্লকে, <code>Pair&lt;T&gt;</code> কেবল তখনই <code>cmp_display</code> মেথডটি ইমপ্লিমেন্ট করে যদি তার অভ্যন্তরীণ টাইপ <code>T</code> <code>PartialOrd</code> trait ইমপ্লিমেন্ট করে যা তুলনা সক্ষম করে <em>এবং</em> <code>Display</code> trait ইমপ্লিমেন্ট করে যা প্রিন্টিং সক্ষম করে।</p>
+<Listing number="10-15" file-name="src/lib.rs" caption="ট্রেইট বাউন্ডের উপর নির্ভর করে একটি জেনেরিক টাইপের উপর শর্তসাপেক্ষে মেথড ইমপ্লিমেন্ট করা">
+<pre><code class="language-rust noplayground">use std::fmt::Display;
+
+struct Pair&lt;T&gt; {
+    x: T,
+    y: T,
+}
+
+impl&lt;T&gt; Pair&lt;T&gt; {
+    fn new(x: T, y: T) -&gt; Self {
+        Self { x, y }
+    }
+}
+
+impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
+    fn cmp_display(&amp;self) {
+        if self.x &gt;= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}</code></pre>
+</Listing>
+<p>আমরা trait bounds সন্তুষ্ট করে এমন যেকোনো টাইপের জন্য একটি trait শর্তসাপেক্ষে ইমপ্লিমেন্ট করতে পারি। এই ধরনের ইমপ্লিমেন্টেশনকে <em>blanket implementations</em> বলা হয় এবং এটি Rust স্ট্যান্ডার্ড লাইব্রেরিতে ব্যাপকভাবে ব্যবহৃত হয়। উদাহরণস্বরূপ, স্ট্যান্ডার্ড লাইব্রেরি <code>Display</code> trait ইমপ্লিমেন্ট করে এমন যেকোনো টাইপের উপর <code>ToString</code> trait ইমপ্লিমেন্ট করে। স্ট্যান্ডার্ড লাইব্রেরিতে <code>impl</code> ব্লকটি এই কোডের মতো দেখতে:</p>
+<pre><code class="language-rust ignore">impl&lt;T: Display&gt; ToString for T {
+    // --snip--
+}</code></pre>
+<p>যেহেতু স্ট্যান্ডার্ড লাইব্রেরিতে এই blanket implementation রয়েছে, আমরা <code>Display</code> trait ইমপ্লিমেন্ট করে এমন যেকোনো টাইপের উপর <code>ToString</code> trait দ্বারা সংজ্ঞায়িত <code>to_string</code> মেথড কল করতে পারি। উদাহরণস্বরূপ, আমরা পূর্ণসংখ্যাকে তাদের সংশ্লিষ্ট <code>String</code> মানে পরিণত করতে পারি কারণ পূর্ণসংখ্যা <code>Display</code> ইমপ্লিমেন্ট করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = 3.to_string();
+<span class="boring">}</span></code></pre></pre>
+<p>Blanket implementation গুলি trait-এর ডকুমেন্টেশনে “Implementors” বিভাগে উপস্থিত থাকে।</p>
+<p>Traits এবং trait bounds আমাদের জেনেরিক টাইপ প্যারামিটার ব্যবহার করে কোড লিখতে দেয় যা পুনরাবৃত্তি কমায় কিন্তু কম্পাইলারকে নির্দিষ্ট করে দেয় যে আমরা জেনেরিক টাইপের নির্দিষ্ট আচরণ চাই। কম্পাইলার তখন trait bound তথ্য ব্যবহার করে পরীক্ষা করতে পারে যে আমাদের কোডের সাথে ব্যবহৃত সমস্ত concrete টাইপ সঠিক আচরণ প্রদান করে। ডাইনামিক্যালি টাইপড ল্যাঙ্গুয়েজে, আমরা যদি এমন একটি টাইপের উপর একটি মেথড কল করি যা মেথডটি ডিফাইন করে না, তবে আমরা রানটাইমে একটি এরর পেতাম। কিন্তু Rust এই এররগুলিকে কম্পাইল টাইমে নিয়ে আসে যাতে আমরা আমাদের কোড রান করতে সক্ষম হওয়ার আগেই সমস্যাগুলি সমাধান করতে বাধ্য হই। উপরন্তু, আমাদের রানটাইমে আচরণের জন্য পরীক্ষা করার কোড লিখতে হবে না কারণ আমরা ইতিমধ্যে কম্পাইল টাইমে পরীক্ষা করে ফেলেছি। এটি জেনেরিক্সের নমনীয়তা ত্যাগ না করেই পারফরম্যান্স উন্নত করে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch10-01-syntax.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch10-03-lifetime-syntax.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch10-01-syntax.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch10-03-lifetime-syntax.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

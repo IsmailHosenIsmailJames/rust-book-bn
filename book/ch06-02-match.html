@@ -1,0 +1,483 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>match কন্ট্রোল ফ্লো কনস্ট্রাক্ট - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <!-- Old heading. Do not remove or links may break. -->
+<p><a id="the-match-control-flow-operator"></a></p>
+<h2 id="match-কনটরোল-ফলো-কনসটরাকট"><a class="header" href="#match-কনটরোল-ফলো-কনসটরাকট"><code>match</code> কন্ট্রোল ফ্লো কনস্ট্রাক্ট</a></h2>
+<p>Rust-এ <code>match</code> নামে একটি অত্যন্ত শক্তিশালী কন্ট্রোল ফ্লো কনস্ট্রাক্ট আছে যা আপনাকে একটি মানকে একাধিক প্যাটার্নের সাথে তুলনা করতে এবং কোন প্যাটার্নটি মেলে তার উপর ভিত্তি করে কোড এক্সিকিউট করতে দেয়। প্যাটার্নগুলো লিটারেল ভ্যালু, ভেরিয়েবলের নাম, ওয়াইল্ডকার্ড এবং আরও অনেক কিছু দিয়ে তৈরি হতে পারে; <a href="ch19-00-patterns.html">Chapter 19</a><!-- ignore -->-এ বিভিন্ন ধরণের প্যাটার্ন এবং তাদের কাজ সম্পর্কে আলোচনা করা হয়েছে। <code>match</code>-এর আসল শক্তি হলো এর প্যাটার্নগুলোর প্রকাশক্ষমতা (expressiveness) এবং compiler এটা নিশ্চিত করে যে সমস্ত সম্ভাব্য কেস হ্যান্ডেল করা হয়েছে।</p>
+<p><code>match</code> এক্সপ্রেশনকে একটি কয়েন বাছাই করার মেশিনের মতো ভাবুন: কয়েনগুলো বিভিন্ন আকারের ছিদ্রযুক্ত একটি ট্র্যাকের উপর দিয়ে স্লাইড করে, এবং প্রতিটি কয়েন প্রথম যে ছিদ্রের সাথে ফিট করে সেটির মধ্যে পড়ে যায়। একইভাবে, <code>match</code>-এর প্রতিটি প্যাটার্নের মধ্য দিয়ে মানগুলো যায়, এবং প্রথম যে প্যাটার্নের সাথে মানটি "ফিট" করে, সেই মানটি সংশ্লিষ্ট কোড ব্লকে পড়ে যায় এবং এক্সিকিউশনের সময় ব্যবহৃত হয়।</p>
+<p>কয়েনের কথা যেহেতু উঠলই, চলুন <code>match</code> ব্যবহার করে কয়েনকে উদাহরণ হিসাবে ব্যবহার করি! আমরা এমন একটি ফাংশন লিখতে পারি যা একটি অজানা US কয়েন নেয় এবং কাউন্টিং মেশিনের মতো নির্ধারণ করে যে এটি কোন কয়েন এবং সেন্টে এর মান ফেরত দেয়, যেমনটি লিস্টিং ৬-৩ এ দেখানো হয়েছে।</p>
+<Listing number="6-3" caption="একটি enum এবং একটি `match` এক্সপ্রেশন যেখানে enum-এর ভ্যারিয়েন্টগুলো প্যাটার্ন হিসাবে ব্যবহৃত হয়েছে">
+<pre><pre class="playground"><code class="language-rust edition2024">enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; 1,
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter =&gt; 25,
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>চলুন <code>value_in_cents</code> ফাংশনের <code>match</code> অংশটি ভেঙে দেখি। প্রথমে আমরা <code>match</code> কীওয়ার্ডটি লিখি, যার পরে একটি এক্সপ্রেশন থাকে, এক্ষেত্রে <code>coin</code> ভ্যালুটি। এটি <code>if</code>-এর সাথে ব্যবহৃত কন্ডিশনাল এক্সপ্রেশনের মতোই মনে হতে পারে, কিন্তু একটি বড় পার্থক্য আছে: <code>if</code>-এর ক্ষেত্রে কন্ডিশনটিকে একটি বুলিয়ান (boolean) ভ্যালু হতে হয়, কিন্তু এখানে এটি যেকোনো type-এর হতে পারে। এই উদাহরণে <code>coin</code>-এর type হলো <code>Coin</code> enum, যা আমরা প্রথম লাইনে ডিফাইন করেছি।</p>
+<p>এরপর আসে <code>match</code> arm। একটি arm-এর দুটি অংশ থাকে: একটি প্যাটার্ন এবং কিছু কোড। এখানের প্রথম arm-টির প্যাটার্ন হলো <code>Coin::Penny</code> এবং তারপরে <code>=&gt;</code> অপারেটর যা প্যাটার্ন এবং চালানোর জন্য কোডকে আলাদা করে। এই ক্ষেত্রে কোডটি শুধু <code>1</code> ভ্যালুটি। প্রতিটি arm কমা দ্বারা পরবর্তী arm থেকে পৃথক করা হয়।</p>
+<p>যখন <code>match</code> এক্সপ্রেশনটি এক্সিকিউট হয়, এটি তার ফলাফলের মানকে প্রতিটি arm-এর প্যাটার্নের সাথে ক্রমানুসারে তুলনা করে। যদি একটি প্যাটার্ন মানের সাথে মিলে যায়, তবে সেই প্যাটার্নের সাথে যুক্ত কোডটি এক্সিকিউট হয়। যদি সেই প্যাটার্নটি মানের সাথে না মেলে, এক্সিকিউশন পরবর্তী arm-এ চলে যায়, অনেকটা কয়েন বাছাই করার মেশিনের মতো। আমাদের যতগুলো প্রয়োজন ততগুলো arm থাকতে পারে: লিস্টিং ৬-৩-এ, আমাদের <code>match</code>-এর চারটি arm আছে।</p>
+<p>প্রতিটি arm-এর সাথে যুক্ত কোড একটি এক্সপ্রেশন, এবং ম্যাচিং arm-এর এক্সপ্রেশনের ফলাফলই পুরো <code>match</code> এক্সপ্রেশনের রিটার্ন ভ্যালু হিসাবে ফেরত আসে।</p>
+<p>যখন ম্যাচ arm-এর কোড ছোট হয়, যেমন লিস্টিং ৬-৩-এ যেখানে প্রতিটি arm শুধু একটি ভ্যালু রিটার্ন করে, তখন আমরা সাধারণত কার্লি ব্র্যাকেট ব্যবহার করি না। যদি আপনি একটি ম্যাচ arm-এ একাধিক লাইন কোড চালাতে চান, তবে আপনাকে অবশ্যই কার্লি ব্র্যাকেট ব্যবহার করতে হবে, এবং সেক্ষেত্রে arm-এর পরে কমা দেওয়াটা ঐচ্ছিক। উদাহরণস্বরূপ, নিচের কোডটি যখনই একটি <code>Coin::Penny</code> দিয়ে মেথডটি কল করা হয়, তখন "Lucky penny!" প্রিন্ট করে, কিন্তু ব্লকের শেষ মান, <code>1</code>, রিটার্ন করে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">enum Coin {
+</span><span class="boring">    Penny,
+</span><span class="boring">    Nickel,
+</span><span class="boring">    Dime,
+</span><span class="boring">    Quarter,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; {
+            println!("Lucky penny!");
+            1
+        }
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter =&gt; 25,
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+<h3 id="ভযালুর-সাথে-বাইনড-হওয়া-পযাটারন"><a class="header" href="#ভযালুর-সাথে-বাইনড-হওয়া-পযাটারন">ভ্যালুর সাথে বাইন্ড হওয়া প্যাটার্ন</a></h3>
+<p><code>match</code> arm-এর আরেকটি দরকারী বৈশিষ্ট্য হলো যে তারা প্যাটার্নের সাথে মিলে যাওয়া মানগুলোর অংশে বাইন্ড হতে পারে। এভাবেই আমরা enum ভ্যারিয়েন্ট থেকে মান বের করতে পারি।</p>
+<p>উদাহরণস্বরূপ, চলুন আমাদের enum ভ্যারিয়েন্টগুলোর একটিকে পরিবর্তন করে তার ভিতরে ডেটা রাখি। ১৯৯৯ থেকে ২০০৮ সাল পর্যন্ত, মার্কিন যুক্তরাষ্ট্র ৫০টি রাজ্যের জন্য একপাশে বিভিন্ন ডিজাইন সহ কোয়ার্টার তৈরি করেছিল। অন্য কোনো কয়েনে রাজ্যের ডিজাইন ছিল না, তাই শুধুমাত্র কোয়ার্টারেই এই অতিরিক্ত মানটি রয়েছে। আমরা আমাদের <code>enum</code>-এ এই তথ্য যোগ করতে পারি <code>Quarter</code> ভ্যারিয়েন্টটিকে পরিবর্তন করে এর ভিতরে একটি <code>UsState</code> ভ্যালু অন্তর্ভুক্ত করে, যা আমরা লিস্টিং ৬-৪-এ করেছি।</p>
+<Listing number="6-4" caption="একটি `Coin` enum যেখানে `Quarter` ভ্যারিয়েন্ট একটি `UsState` ভ্যালুও ধারণ করে">
+<pre><pre class="playground"><code class="language-rust edition2024">#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p>আসুন কল্পনা করি যে একজন বন্ধু ৫০টি রাজ্যের সমস্ত কোয়ার্টার সংগ্রহ করার চেষ্টা করছে। আমরা যখন আমাদের খুচরা পয়সাগুলো কয়েনের ধরন অনুযায়ী সাজাব, তখন আমরা প্রতিটি কোয়ার্টারের সাথে যুক্ত রাজ্যের নামও ঘোষণা করব যাতে যদি আমাদের বন্ধুর সংগ্রহে সেটি না থাকে, তবে সে তার সংগ্রহে এটি যোগ করতে পারে।</p>
+<p>এই কোডের <code>match</code> এক্সপ্রেশনে, আমরা <code>Coin::Quarter</code> ভ্যারিয়েন্টের মানের সাথে মিলে যাওয়া প্যাটার্নে <code>state</code> নামে একটি ভেরিয়েবল যোগ করি। যখন একটি <code>Coin::Quarter</code> মেলে, <code>state</code> ভেরিয়েবলটি সেই কোয়ার্টারের রাজ্যের মানের সাথে বাইন্ড হবে। তারপর আমরা সেই <code>state</code> ভেরিয়েবলটি সেই arm-এর কোডে ব্যবহার করতে পারি, এভাবে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum UsState {
+</span><span class="boring">    Alabama,
+</span><span class="boring">    Alaska,
+</span><span class="boring">    // --snip--
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Coin {
+</span><span class="boring">    Penny,
+</span><span class="boring">    Nickel,
+</span><span class="boring">    Dime,
+</span><span class="boring">    Quarter(UsState),
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn value_in_cents(coin: Coin) -&gt; u8 {
+    match coin {
+        Coin::Penny =&gt; 1,
+        Coin::Nickel =&gt; 5,
+        Coin::Dime =&gt; 10,
+        Coin::Quarter(state) =&gt; {
+            println!("State quarter from {state:?}!");
+            25
+        }
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    value_in_cents(Coin::Quarter(UsState::Alaska));
+</span><span class="boring">}</span></code></pre></pre>
+<p>যদি আমরা <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code> কল করি, <code>coin</code>-এর মান হবে <code>Coin::Quarter(UsState::Alaska)</code>। যখন আমরা সেই মানটি প্রতিটি <code>match</code> arm-এর সাথে তুলনা করি, <code>Coin::Quarter(state)</code>-এ না পৌঁছানো পর্যন্ত কোনোটিই মেলে না। সেই সময়ে, <code>state</code>-এর জন্য বাইন্ডিং হবে <code>UsState::Alaska</code> মানটি। আমরা তখন সেই বাইন্ডিংটি <code>println!</code> এক্সপ্রেশনে ব্যবহার করতে পারি, যার ফলে <code>Coin</code> enum-এর <code>Quarter</code> ভ্যারিয়েন্ট থেকে ভিতরের রাজ্যের মানটি বের করে আনা যায়।</p>
+<h3 id="optiont-এর-সাথে-মযাচিং"><a class="header" href="#optiont-এর-সাথে-মযাচিং"><code>Option&lt;T&gt;</code> এর সাথে ম্যাচিং</a></h3>
+<p>আগের বিভাগে, আমরা <code>Option&lt;T&gt;</code> ব্যবহার করার সময় <code>Some</code> কেস থেকে ভিতরের <code>T</code> মানটি বের করতে চেয়েছিলাম; আমরা <code>Option&lt;T&gt;</code>-কেও <code>match</code> ব্যবহার করে হ্যান্ডেল করতে পারি, যেমনটি আমরা <code>Coin</code> enum-এর সাথে করেছিলাম! কয়েন তুলনা করার পরিবর্তে, আমরা <code>Option&lt;T&gt;</code>-এর ভ্যারিয়েন্টগুলো তুলনা করব, কিন্তু <code>match</code> এক্সপ্রেশনের কাজ করার পদ্ধতি একই থাকে।</p>
+<p>ধরুন আমরা একটি ফাংশন লিখতে চাই যা একটি <code>Option&lt;i32&gt;</code> নেয় এবং যদি ভিতরে একটি মান থাকে, তবে সেই মানের সাথে ১ যোগ করে। যদি ভিতরে কোনো মান না থাকে, ফাংশনটি <code>None</code> মান ফেরত দেবে এবং কোনো অপারেশন করার চেষ্টা করবে না।</p>
+<p><code>match</code>-এর সৌজন্যে এই ফাংশনটি লেখা খুব সহজ, এবং এটি লিস্টিং ৬-৫-এর মতো দেখাবে।</p>
+<Listing number="6-5" caption="একটি ফাংশন যা `Option<i32>`-এর উপর `match` এক্সপ্রেশন ব্যবহার করে">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+        match x {
+            None =&gt; None,
+            Some(i) =&gt; Some(i + 1),
+        }
+    }
+
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>আসুন <code>plus_one</code>-এর প্রথম এক্সিকিউশনটি আরও বিস্তারিতভাবে পরীক্ষা করি। যখন আমরা <code>plus_one(five)</code> কল করি, <code>plus_one</code>-এর বডিতে <code>x</code> ভেরিয়েবলের মান হবে <code>Some(5)</code>। তারপর আমরা সেটিকে প্রতিটি <code>match</code> arm-এর সাথে তুলনা করি:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+</span><span class="boring">        match x {
+</span>            None =&gt; None,
+<span class="boring">            Some(i) =&gt; Some(i + 1),
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    let five = Some(5);
+</span><span class="boring">    let six = plus_one(five);
+</span><span class="boring">    let none = plus_one(None);
+</span><span class="boring">}</span></code></pre>
+<p><code>Some(5)</code> মানটি <code>None</code> প্যাটার্নের সাথে মেলে না, তাই আমরা পরবর্তী arm-এ যাই:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+</span><span class="boring">        match x {
+</span><span class="boring">            None =&gt; None,
+</span>            Some(i) =&gt; Some(i + 1),
+<span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    let five = Some(5);
+</span><span class="boring">    let six = plus_one(five);
+</span><span class="boring">    let none = plus_one(None);
+</span><span class="boring">}</span></code></pre>
+<p><code>Some(5)</code> কি <code>Some(i)</code>-এর সাথে মেলে? হ্যাঁ, মেলে! আমাদের একই ভ্যারিয়েন্ট আছে। <code>i</code> ভেরিয়েবলটি <code>Some</code>-এর ভিতরের মানের সাথে বাইন্ড হয়, তাই <code>i</code>-এর মান <code>5</code> হয়। ম্যাচ arm-এর কোডটি তখন এক্সিকিউট হয়, তাই আমরা <code>i</code>-এর মানের সাথে ১ যোগ করি এবং আমাদের মোট <code>6</code>-কে ভিতরে নিয়ে একটি নতুন <code>Some</code> মান তৈরি করি।</p>
+<p>এবার লিস্টিং ৬-৫-এ <code>plus_one</code>-এর দ্বিতীয় কলটি বিবেচনা করা যাক, যেখানে <code>x</code> হলো <code>None</code>। আমরা <code>match</code>-এ প্রবেশ করি এবং প্রথম arm-এর সাথে তুলনা করি:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn main() {
+</span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+</span><span class="boring">        match x {
+</span>            None =&gt; None,
+<span class="boring">            Some(i) =&gt; Some(i + 1),
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    let five = Some(5);
+</span><span class="boring">    let six = plus_one(five);
+</span><span class="boring">    let none = plus_one(None);
+</span><span class="boring">}</span></code></pre>
+<p>এটা মিলে গেছে! যোগ করার জন্য কোনো মান নেই, তাই প্রোগ্রামটি থেমে যায় এবং <code>=&gt;</code>-এর ডান পাশের <code>None</code> মানটি রিটার্ন করে। যেহেতু প্রথম arm-টি মিলে গেছে, অন্য কোনো arm-এর সাথে আর তুলনা করা হয় না।</p>
+<p><code>match</code> এবং enum একত্রিত করা অনেক পরিস্থিতিতে দরকারী। আপনি Rust কোডে এই প্যাটার্নটি প্রায়শই দেখবেন: একটি enum-এর উপর <code>match</code> করা, ভিতরের ডেটার সাথে একটি ভেরিয়েবল বাইন্ড করা, এবং তারপর তার উপর ভিত্তি করে কোড চালানো। প্রথমে এটি কিছুটা জটিল মনে হতে পারে, কিন্তু একবার আপনি এতে অভ্যস্ত হয়ে গেলে, আপনার মনে হবে যদি সব ভাষাতেই এটি থাকত। এটি ব্যবহারকারীদের মধ্যে ধারাবাহিকভাবে একটি প্রিয় ফিচার।</p>
+<h3 id="মযাচগুলো-সমপূরণ-exhaustive-হতে-হয়"><a class="header" href="#মযাচগুলো-সমপূরণ-exhaustive-হতে-হয়">ম্যাচগুলো সম্পূর্ণ (Exhaustive) হতে হয়</a></h3>
+<p><code>match</code>-এর আরও একটি দিক নিয়ে আমাদের আলোচনা করতে হবে: arm-এর প্যাটার্নগুলোকে অবশ্যই সমস্ত সম্ভাবনাকে কভার করতে হবে। আমাদের <code>plus_one</code> ফাংশনের এই সংস্করণটি বিবেচনা করুন, যাতে একটি বাগ আছে এবং এটি কম্পাইল হবে না:</p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+        match x {
+            Some(i) =&gt; Some(i + 1),
+        }
+    }
+<span class="boring">
+</span><span class="boring">    let five = Some(5);
+</span><span class="boring">    let six = plus_one(five);
+</span><span class="boring">    let none = plus_one(None);
+</span><span class="boring">}</span></code></pre>
+<p>আমরা <code>None</code> কেসটি হ্যান্ডেল করিনি, তাই এই কোডটি একটি বাগ তৈরি করবে। সৌভাগ্যবশত, এটি এমন একটি বাগ যা Rust ধরতে জানে। যদি আমরা এই কোডটি কম্পাইল করার চেষ্টা করি, আমরা এই error পাব:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling enums v0.1.0 (file:///projects/enums)
+error[E0004]: non-exhaustive patterns: `None` not covered
+ --&gt; src/main.rs:3:15
+  |
+3 |         match x {
+  |               ^ pattern `None` not covered
+  |
+note: `Option&lt;i32&gt;` defined here
+ --&gt; /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/core/src/option.rs:572:1
+ ::: /rustc/4eb161250e340c8f48f66e2b929ef4a5bed7c181/library/core/src/option.rs:576:5
+  |
+  = note: not covered
+  = note: the matched value is of type `Option&lt;i32&gt;`
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+  |
+4 ~             Some(i) =&gt; Some(i + 1),
+5 ~             None =&gt; todo!(),
+  |
+
+For more information about this error, try `rustc --explain E0004`.
+error: could not compile `enums` (bin "enums") due to 1 previous error
+</code></pre>
+<p>Rust জানে যে আমরা প্রতিটি সম্ভাব্য কেস কভার করিনি, এবং এমনকি কোন প্যাটার্নটি আমরা ভুলে গেছি সেটাও জানে! Rust-এর ম্যাচগুলো <em>exhaustive</em> বা সম্পূর্ণ: কোডটি বৈধ হওয়ার জন্য আমাদের অবশ্যই প্রতিটি সম্ভাবনাকে শেষ করতে হবে। বিশেষ করে <code>Option&lt;T&gt;</code>-এর ক্ষেত্রে, যখন Rust আমাদের <code>None</code> কেসটি স্পষ্টভাবে হ্যান্ডেল করতে ভুলে যাওয়া থেকে বিরত রাখে, তখন এটি আমাদের এমন একটি মান আছে বলে ধরে নেওয়া থেকে রক্ষা করে যখন আমাদের কাছে <code>null</code> থাকতে পারে, যার ফলে আগে আলোচিত বিলিয়ন-ডলারের ভুলটি অসম্ভব হয়ে যায়।</p>
+<h3 id="কযাচ-অল-পযাটারন-এবং-_-পলেসহোলডার"><a class="header" href="#কযাচ-অল-পযাটারন-এবং-_-পলেসহোলডার">ক্যাচ-অল প্যাটার্ন এবং <code>_</code> প্লেসহোল্ডার</a></h3>
+<p>enum ব্যবহার করে, আমরা কয়েকটি নির্দিষ্ট মানের জন্য বিশেষ পদক্ষেপ নিতে পারি, কিন্তু অন্য সব মানের জন্য একটি ডিফল্ট পদক্ষেপ নিতে পারি। কল্পনা করুন আমরা একটি গেম তৈরি করছি যেখানে, যদি আপনি একটি ডাইস রোলে ৩ পান, আপনার প্লেয়ার নড়াচড়া করে না, বরং একটি নতুন সুন্দর টুপি পায়। যদি আপনি ৭ পান, আপনার প্লেয়ার একটি সুন্দর টুপি হারায়। অন্য সব মানের জন্য, আপনার প্লেয়ার গেম বোর্ডে সেই সংখ্যক ঘর সরে যায়। এখানে একটি <code>match</code> রয়েছে যা সেই যুক্তিটি বাস্তবায়ন করে, যেখানে ডাইস রোলের ফলাফল একটি র্যান্ডম মানের পরিবর্তে হার্ডকোড করা হয়েছে, এবং অন্য সমস্ত যুক্তি বডি ছাড়া ফাংশন দ্বারা প্রতিনিধিত্ব করা হয়েছে কারণ সেগুলির বাস্তবায়ন এই উদাহরণের আওতার বাইরে:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        other =&gt; move_player(other),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+    fn move_player(num_spaces: u8) {}
+<span class="boring">}</span></code></pre></pre>
+<p>প্রথম দুটি arm-এর জন্য, প্যাটার্নগুলি হলো লিটারেল মান <code>3</code> এবং <code>7</code>। শেষ arm-টির জন্য যা অন্য সব সম্ভাব্য মানকে কভার করে, প্যাটার্নটি হলো <code>other</code> নামে একটি ভেরিয়েবল। <code>other</code> arm-এর জন্য যে কোডটি চলে তা <code>move_player</code> ফাংশনে ভেরিয়েবলটি পাস করে ব্যবহার করে।</p>
+<p>এই কোডটি কম্পাইল হয়, যদিও আমরা <code>u8</code>-এর সমস্ত সম্ভাব্য মান তালিকাভুক্ত করিনি, কারণ শেষ প্যাটার্নটি বিশেষভাবে তালিকাভুক্ত নয় এমন সমস্ত মানকে ম্যাচ করবে। এই ক্যাচ-অল প্যাটার্নটি <code>match</code>-এর সম্পূর্ণ (exhaustive) হওয়ার প্রয়োজনীয়তা পূরণ করে। মনে রাখবেন যে আমাদের ক্যাচ-অল arm-টি শেষে রাখতে হবে কারণ প্যাটার্নগুলো ক্রমানুসারে মূল্যায়ন করা হয়। যদি আমরা ক্যাচ-অল arm-টি আগে রাখি, অন্য arm-গুলো কখনওই চলবে না, তাই Rust আমাদের সতর্ক করবে যদি আমরা একটি ক্যাচ-অল-এর পরে arm যোগ করি!</p>
+<p>Rust-এর আরও একটি প্যাটার্ন আছে যা আমরা ব্যবহার করতে পারি যখন আমরা একটি ক্যাচ-অল চাই কিন্তু ক্যাচ-অল প্যাটার্নের মানটি ব্যবহার করতে চাই না: <code>_</code> একটি বিশেষ প্যাটার্ন যা যেকোনো মানকে ম্যাচ করে এবং সেই মানের সাথে বাইন্ড হয় না। এটি Rust-কে বলে যে আমরা মানটি ব্যবহার করতে যাচ্ছি না, তাই Rust আমাদের একটি অব্যবহৃত ভেরিয়েবল সম্পর্কে সতর্ক করবে না।</p>
+<p>আসুন গেমের নিয়ম পরিবর্তন করি: এখন, যদি আপনি ৩ বা ৭ ছাড়া অন্য কিছু রোল করেন, আপনাকে আবার রোল করতে হবে। আমাদের আর ক্যাচ-অল মানটি ব্যবহার করার প্রয়োজন নেই, তাই আমরা আমাদের কোডটি পরিবর্তন করে <code>other</code> ভেরিয়েবলের পরিবর্তে <code>_</code> ব্যবহার করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        _ =&gt; reroll(),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+    fn reroll() {}
+<span class="boring">}</span></code></pre></pre>
+<p>এই উদাহরণটিও সম্পূর্ণতার (exhaustiveness) প্রয়োজনীয়তা পূরণ করে কারণ আমরা শেষ arm-এ অন্য সব মানকে স্পষ্টভাবে উপেক্ষা করছি; আমরা কিছুই ভুলে যাইনি।</p>
+<p>অবশেষে, আমরা গেমের নিয়ম আরও একবার পরিবর্তন করব যাতে আপনি যদি ৩ বা ৭ ছাড়া অন্য কিছু রোল করেন তবে আপনার টার্নে আর কিছুই হবে না। আমরা <code>_</code> arm-এর সাথে যুক্ত কোড হিসাবে ইউনিট ভ্যালু (খালি টাপল টাইপ যা আমরা <a href="ch03-02-data-types.html#the-tuple-type">"The Tuple Type"</a><!-- ignore --> বিভাগে উল্লেখ করেছি) ব্যবহার করে এটি প্রকাশ করতে পারি:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let dice_roll = 9;
+    match dice_roll {
+        3 =&gt; add_fancy_hat(),
+        7 =&gt; remove_fancy_hat(),
+        _ =&gt; (),
+    }
+
+    fn add_fancy_hat() {}
+    fn remove_fancy_hat() {}
+<span class="boring">}</span></code></pre></pre>
+<p>এখানে, আমরা Rust-কে স্পষ্টভাবে বলছি যে আমরা আগের arm-গুলোর কোনো প্যাটার্নের সাথে মেলে না এমন অন্য কোনো মান ব্যবহার করতে যাচ্ছি না, এবং আমরা এই ক্ষেত্রে কোনো কোড চালাতে চাই না।</p>
+<p>প্যাটার্ন এবং ম্যাচিং সম্পর্কে আরও অনেক কিছু আছে যা আমরা <a href="ch19-00-patterns.html">Chapter 19</a><!-- ignore -->-এ আলোচনা করব। আপাতত, আমরা <code>if let</code> সিনট্যাক্সে চলে যাচ্ছি, যা এমন পরিস্থিতিতে কার্যকর হতে পারে যেখানে <code>match</code> এক্সপ্রেশনটি কিছুটা শব্দবহুল হয়।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch06-01-defining-an-enum.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch06-03-if-let.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch06-01-defining-an-enum.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch06-03-if-let.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

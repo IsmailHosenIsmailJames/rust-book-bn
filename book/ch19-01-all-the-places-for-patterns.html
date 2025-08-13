@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>যেসব জায়গায় প্যাটার্ন ব্যবহার করা যেতে পারে - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="যে-সব-জাযগায-পযাটারন-বযবহার-করা-যায-all-the-places-patterns-can-be-used"><a class="header" href="#যে-সব-জাযগায-পযাটারন-বযবহার-করা-যায-all-the-places-patterns-can-be-used">যে সব জায়গায় প্যাটার্ন ব্যবহার করা যায় (All the Places Patterns Can Be Used)</a></h2>
+<p>রাস্টের বিভিন্ন জায়গায় প্যাটার্ন ব্যবহার করা হয়, এবং আপনি হয়তো না জেনেই ইতোমধ্যেই এগুলো অনেকবার ব্যবহার করেছেন! এই সেকশনে সেই সব জায়গা নিয়ে আলোচনা করা হবে যেখানে প্যাটার্ন ব্যবহার করা বৈধ।</p>
+<h3 id="match-arms"><a class="header" href="#match-arms"><code>match</code> Arms</a></h3>
+<p>৬ষ্ঠ অধ্যায়ে যেমন আলোচনা করা হয়েছে, আমরা <code>match</code> এক্সপ্রেশনের প্রতিটি arm-এ প্যাটার্ন ব্যবহার করি। আনুষ্ঠানিকভাবে, <code>match</code> এক্সপ্রেশনকে এভাবে সংজ্ঞায়িত করা হয়: <code>match</code> কীওয়ার্ড, যার উপর ম্যাচ করা হবে সেই ভ্যালু, এবং এক বা একাধিক ম্যাচ arm যা একটি প্যাটার্ন এবং একটি এক্সপ্রেশন নিয়ে গঠিত। যদি ভ্যালুটি সেই arm-এর প্যাটার্নের সাথে মিলে যায়, তবে এক্সপ্রেশনটি রান হয়, যেমন:</p>
+<!--
+  Manually formatted rather than using Markdown intentionally: Markdown does not
+  support italicizing code in the body of a block like this!
+-->
+<pre><code>match <em>VALUE</em> {
+    <em>PATTERN</em> => <em>EXPRESSION</em>,
+    <em>PATTERN</em> => <em>EXPRESSION</em>,
+    <em>PATTERN</em> => <em>EXPRESSION</em>,
+}</code></pre>
+<p>উদাহরণস্বরূপ, এখানে লিস্টিং ৬-৫ থেকে <code>match</code> এক্সপ্রেশনটি দেওয়া হলো যা <code>x</code> ভেরিয়েবলের একটি <code>Option&lt;i32&gt;</code> ভ্যালুর উপর ম্যাচ করে:</p>
+<pre><code class="language-rust ignore">match x {
+    None =&gt; None,
+    Some(i) =&gt; Some(i + 1),
+}</code></pre>
+<p>এই <code>match</code> এক্সপ্রেশনের প্যাটার্নগুলো হলো প্রতিটি অ্যারো (<code>=&gt;</code>) চিহ্নের বাম দিকের <code>None</code> এবং <code>Some(i)</code>।</p>
+<p><code>match</code> এক্সপ্রেশনের জন্য একটি আবশ্যিক শর্ত হলো সেগুলোকে <em>এক্সহস্টিভ (exhaustive)</em> বা সর্বগ্রাসী হতে হবে, অর্থাৎ <code>match</code> এক্সপ্রেশনের ভ্যালুর জন্য সমস্ত সম্ভাব্য মান বিবেচনা করতে হবে। আপনি যে সমস্ত সম্ভাবনা কভার করেছেন তা নিশ্চিত করার একটি উপায় হলো শেষ arm-এর জন্য একটি ক্যাচ-অল (catch-all) প্যাটার্ন রাখা: উদাহরণস্বরূপ, যেকোনো মানের সাথে মেলে এমন একটি ভেরিয়েবলের নাম কখনও ব্যর্থ হতে পারে না এবং এভাবে বাকি সমস্ত কেইস কভার করে।</p>
+<p>নির্দিষ্ট প্যাটার্ন <code>_</code> যেকোনো কিছুর সাথে মিলবে, কিন্তু এটি কখনও কোনো ভেরিয়েবলের সাথে বাইন্ড হয় না, তাই এটি প্রায়শই শেষ ম্যাচ arm-এ ব্যবহৃত হয়। <code>_</code> প্যাটার্নটি তখন কার্যকর হতে পারে যখন আপনি নির্দিষ্ট করা হয়নি এমন কোনো মান উপেক্ষা করতে চান। আমরা এই অধ্যায়ের পরে "<a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">একটি প্যাটার্নে মান উপেক্ষা করা</a>" অংশে <code>_</code> প্যাটার্ন সম্পর্কে আরও বিস্তারিত আলোচনা করব।</p>
+<h3 id="let-statements"><a class="header" href="#let-statements"><code>let</code> Statements</a></h3>
+<p>এই অধ্যায়ের আগে, আমরা কেবল <code>match</code> এবং <code>if let</code>-এর সাথে প্যাটার্ন ব্যবহার নিয়ে স্পষ্টভাবে আলোচনা করেছি, কিন্তু আসলে, আমরা <code>let</code> স্টেটমেন্ট সহ অন্যান্য জায়গাতেও প্যাটার্ন ব্যবহার করেছি। উদাহরণস্বরূপ, <code>let</code> দিয়ে এই সহজ ভেরিয়েবল অ্যাসাইনমেন্ট বিবেচনা করুন:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5;
+<span class="boring">}</span></code></pre></pre>
+<p>যতবার আপনি এই ধরনের একটি <code>let</code> স্টেটমেন্ট ব্যবহার করেছেন, ততবার আপনি প্যাটার্ন ব্যবহার করেছেন, যদিও আপনি হয়তো তা বুঝতে পারেননি! আরও আনুষ্ঠানিকভাবে, একটি <code>let</code> স্টেটমেন্ট দেখতে এইরকম:</p>
+<!--
+  Manually formatted rather than using Markdown intentionally: Markdown does not
+  support italicizing code in the body of a block like this!
+-->
+<pre>
+<code>let <em>PATTERN</em> = <em>EXPRESSION</em>;</code>
+</pre>
+<p><code>let x = 5;</code> এর মতো স্টেটমেন্টে PATTERN স্লটে একটি ভেরিয়েবলের নাম থাকে, এই ভেরিয়েবলের নামটি আসলে প্যাটার্নের একটি অতি সরল রূপ। রাস্ট এক্সপ্রেশনটিকে প্যাটার্নের সাথে তুলনা করে এবং এটি যে নামগুলো খুঁজে পায় তা অ্যাসাইন করে। সুতরাং, <code>let x = 5;</code> উদাহরণে, <code>x</code> একটি প্যাটার্ন যার অর্থ "এখানে যা মিলবে তা <code>x</code> ভেরিয়েবলে বাইন্ড করো"। যেহেতু <code>x</code> নামটি পুরো প্যাটার্ন, তাই এই প্যাটার্নটির কার্যকর অর্থ হলো "মান যাই হোক না কেন, সবকিছু <code>x</code> ভেরিয়েবলে বাইন্ড করো"।</p>
+<p><code>let</code>-এর প্যাটার্ন-ম্যাচিং দিকটি আরও স্পষ্টভাবে দেখতে, লিস্টিং ১৯-১ বিবেচনা করুন, যা একটি টুপলকে ডিস্ট্রাকচার (destructure) বা ভাঙতে <code>let</code>-এর সাথে একটি প্যাটার্ন ব্যবহার করে।</p>
+<Listing number="19-1" caption="একটি প্যাটার্ন ব্যবহার করে একটি টুপল ডিস্ট্রাকচার করা এবং একবারে তিনটি ভেরিয়েবল তৈরি করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let (x, y, z) = (1, 2, 3);
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এখানে, আমরা একটি টুপলকে একটি প্যাটার্নের সাথে ম্যাচ করাই। রাস্ট <code>(1, 2, 3)</code> ভ্যালুটিকে <code>(x, y, z)</code> প্যাটার্নের সাথে তুলনা করে এবং দেখে যে ভ্যালুটি প্যাটার্নের সাথে মিলেছে, কারণ এটি দেখে যে দুটিতেই উপাদানের সংখ্যা সমান, তাই রাস্ট <code>1</code>-কে <code>x</code>-এ, <code>2</code>-কে <code>y</code>-তে এবং <code>3</code>-কে <code>z</code>-এ বাইন্ড করে। আপনি এই টুপল প্যাটার্নটিকে তিনটি পৃথক ভেরিয়েবল প্যাটার্নের নেস্টেড রূপ হিসাবে ভাবতে পারেন।</p>
+<p>যদি প্যাটার্নের উপাদানের সংখ্যা টুপলের উপাদানের সংখ্যার সাথে না মেলে, তাহলে সামগ্রিক টাইপ মিলবে না এবং আমরা একটি কম্পাইলার এরর পাব। উদাহরণস্বরূপ, লিস্টিং ১৯-২ দেখায় তিনটি উপাদান সহ একটি টুপলকে দুটি ভেরিয়েবলে ডিস্ট্রাকচার করার একটি প্রচেষ্টা, যা কাজ করবে না।</p>
+<Listing number="19-2" caption="একটি প্যাটার্ন ভুলভাবে গঠন করা যার ভেরিয়েবলগুলো টুপলের উপাদানের সংখ্যার সাথে মেলে না">
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
+</span>    let (x, y) = (1, 2, 3);
+<span class="boring">}</span></code></pre>
+</Listing>
+<p>এই কোডটি কম্পাইল করার চেষ্টা করলে এই টাইপ এররটি ঘটে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling patterns v0.1.0 (file:///projects/patterns)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:2:9
+  |
+2 |     let (x, y) = (1, 2, 3);
+  |         ^^^^^^   --------- this expression has type `({integer}, {integer}, {integer})`
+  |         |
+  |         expected a tuple with 3 elements, found one with 2 elements
+  |
+  = note: expected tuple `({integer}, {integer}, {integer})`
+             found tuple `(_, _)`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `patterns` (bin "patterns") due to 1 previous error
+</code></pre>
+<p>এররটি ঠিক করতে, আমরা টুপলের এক বা একাধিক মান উপেক্ষা করতে <code>_</code> বা <code>..</code> ব্যবহার করতে পারতাম, যেমনটি আপনি "<a href="ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern">একটি প্যাটার্নে মান উপেক্ষা করা</a>" সেকশনে দেখবেন। যদি সমস্যাটি প্যাটার্নে অনেক বেশি ভেরিয়েবল থাকা হয়, তবে সমাধান হলো ভেরিয়েবল সরিয়ে টাইপগুলো মেলানো যাতে ভেরিয়েবলের সংখ্যা টুপলের উপাদানের সংখ্যার সমান হয়।</p>
+<h3 id="conditional-if-let-expressions"><a class="header" href="#conditional-if-let-expressions">Conditional <code>if let</code> Expressions</a></h3>
+<p>৬ষ্ঠ অধ্যায়ে, আমরা <code>if let</code> এক্সপ্রেশন নিয়ে আলোচনা করেছি, যা মূলত একটি <code>match</code>-এর সংক্ষিপ্ত রূপ যা কেবল একটি কেইস ম্যাচ করে। ঐচ্ছিকভাবে, <code>if let</code>-এর একটি সংশ্লিষ্ট <code>else</code> থাকতে পারে, যেখানে <code>if let</code>-এর প্যাটার্নটি না মিললে রান করার জন্য কোড থাকে।</p>
+<p>লিস্টিং ১৯-৩ দেখায় যে <code>if let</code>, <code>else if</code>, এবং <code>else if let</code> এক্সপ্রেশনগুলো মিশ্রিত করা এবং মেলানোও সম্ভব। এটি আমাদের <code>match</code> এক্সপ্রেশনের চেয়ে বেশি নমনীয়তা দেয় যেখানে আমরা প্যাটার্নগুলোর সাথে তুলনা করার জন্য কেবল একটি মান প্রকাশ করতে পারি। এছাড়াও, রাস্টের জন্য এটি আবশ্যক নয় যে <code>if let</code>, <code>else if</code>, এবং <code>else if let</code> arm-এর একটি সিরিজের শর্তাবলী একে অপরের সাথে সম্পর্কিত হতে হবে।</p>
+<p>লিস্টিং ১৯-৩-এর কোডটি বেশ কয়েকটি শর্ত পরীক্ষা করে আপনার ব্যাকগ্রাউন্ডের জন্য কোন রঙ তৈরি করতে হবে তা নির্ধারণ করে। এই উদাহরণের জন্য, আমরা হার্ডকোডেড মান সহ ভেরিয়েবল তৈরি করেছি যা একটি বাস্তব প্রোগ্রাম ব্যবহারকারীর ইনপুট থেকে পেতে পারে।</p>
+<Listing number="19-3" file-name="src/main.rs" caption="`if let`, `else if`, `else if let`, এবং `else` মিশ্রিত করা">
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let favorite_color: Option&lt;&amp;str&gt; = None;
+    let is_tuesday = false;
+    let age: Result&lt;u8, _&gt; = "34".parse();
+
+    if let Some(color) = favorite_color {
+        println!("Using your favorite color, {color}, as the background");
+    } else if is_tuesday {
+        println!("Tuesday is green day!");
+    } else if let Ok(age) = age {
+        if age &gt; 30 {
+            println!("Using purple as the background color");
+        } else {
+            println!("Using orange as the background color");
+        }
+    } else {
+        println!("Using blue as the background color");
+    }
+}</code></pre></pre>
+</Listing>
+<p>যদি ব্যবহারকারী একটি প্রিয় রঙ নির্দিষ্ট করে, তবে সেই রঙটি ব্যাকগ্রাউন্ড হিসাবে ব্যবহৃত হয়। যদি কোনো প্রিয় রঙ নির্দিষ্ট না করা হয় এবং আজ মঙ্গলবার হয়, তবে ব্যাকগ্রাউন্ডের রঙ সবুজ হবে। অন্যথায়, যদি ব্যবহারকারী তাদের বয়স একটি স্ট্রিং হিসাবে নির্দিষ্ট করে এবং আমরা সফলভাবে এটিকে একটি সংখ্যা হিসাবে পার্স করতে পারি, তবে সংখ্যার মানের উপর নির্ভর করে রঙটি বেগুনি বা কমলা হবে। যদি এই শর্তগুলোর কোনোটিই প্রযোজ্য না হয়, তবে ব্যাকগ্রাউন্ডের রঙ নীল হবে।</p>
+<p>এই শর্তাধীন কাঠামোটি আমাদের জটিল প্রয়োজনীয়তা সমর্থন করতে দেয়। এখানে আমাদের হার্ডকোডেড মান দিয়ে, এই উদাহরণটি <code>Using purple as the background color</code> প্রিন্ট করবে।</p>
+<p>আপনি দেখতে পাচ্ছেন যে <code>if let</code> নতুন ভেরিয়েবলও প্রবর্তন করতে পারে যা বিদ্যমান ভেরিয়েবলকে শ্যাডো (shadow) করে, ঠিক যেমন <code>match</code> arm করতে পারে: <code>if let Ok(age) = age</code> লাইনটি একটি নতুন <code>age</code> ভেরিয়েবল প্রবর্তন করে যা <code>Ok</code> ভ্যারিয়েন্টের ভিতরের মান ধারণ করে, বিদ্যমান <code>age</code> ভেরিয়েবলটিকে শ্যাডো করে। এর মানে হলো আমাদের <code>if age &gt; 30</code> শর্তটি সেই ব্লকের মধ্যে রাখতে হবে: আমরা এই দুটি শর্তকে <code>if let Ok(age) = age &amp;&amp; age &gt; 30</code>-তে একত্রিত করতে পারি না। নতুন <code>age</code> যা আমরা 30-এর সাথে তুলনা করতে চাই তা নতুন স্কোপ কার্লি ব্র্যাকেট দিয়ে শুরু না হওয়া পর্যন্ত বৈধ নয়।</p>
+<p><code>if let</code> এক্সপ্রেশন ব্যবহারের অসুবিধা হলো কম্পাইলার এক্সহস্টিভনেস বা সর্বগ্রাসীতার জন্য পরীক্ষা করে না, যেখানে <code>match</code> এক্সপ্রেশনের ক্ষেত্রে তা করে। যদি আমরা শেষ <code>else</code> ব্লকটি বাদ দিতাম এবং তাই কিছু কেইস হ্যান্ডেল করতে মিস করতাম, কম্পাইলার আমাদের সম্ভাব্য লজিক বাগ সম্পর্কে সতর্ক করত না।</p>
+<h3 id="while-let-conditional-loops"><a class="header" href="#while-let-conditional-loops"><code>while let</code> Conditional Loops</a></h3>
+<p><code>if let</code>-এর মতো গঠনে, <code>while let</code> কন্ডিশনাল লুপ একটি <code>while</code> লুপকে ততক্ষণ চলতে দেয় যতক্ষণ একটি প্যাটার্ন মিলতে থাকে। লিস্টিং ১৯-৪-এ আমরা একটি <code>while let</code> লুপ দেখাই যা থ্রেডগুলোর মধ্যে পাঠানো মেসেজের জন্য অপেক্ষা করে, কিন্তু এক্ষেত্রে <code>Option</code>-এর পরিবর্তে একটি <code>Result</code> পরীক্ষা করে।</p>
+<Listing number="19-4" caption="`rx.recv()` যতক্ষণ `Ok` রিটার্ন করবে ততক্ষণ মান প্রিন্ট করার জন্য একটি `while let` লুপ ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let (tx, rx) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        for val in [1, 2, 3] {
+            tx.send(val).unwrap();
+        }
+    });
+
+    while let Ok(value) = rx.recv() {
+        println!("{value}");
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>এই উদাহরণটি <code>1</code>, <code>2</code>, এবং তারপর <code>3</code> প্রিন্ট করে। <code>recv</code> মেথডটি চ্যানেলের রিসিভার সাইড থেকে প্রথম মেসেজটি নেয় এবং একটি <code>Ok(value)</code> রিটার্ন করে। যখন আমরা প্রথমবার ১৬ অধ্যায়ে <code>recv</code> দেখেছিলাম, আমরা সরাসরি এররটি আনর‍্যাপ করেছিলাম, অথবা <code>for</code> লুপ ব্যবহার করে একটি ইটারেটর হিসাবে এর সাথে ইন্টারঅ্যাক্ট করেছিলাম। তবে, লিস্টিং ১৯-৪ যেমন দেখাচ্ছে, আমরা <code>while let</code> ব্যবহার করতে পারি, কারণ <code>recv</code> মেথডটি প্রতিবার একটি মেসেজ আসলে একটি <code>Ok</code> রিটার্ন করে, যতক্ষণ প্রেরক বিদ্যমান থাকে, এবং প্রেরক পক্ষ সংযোগ বিচ্ছিন্ন হয়ে গেলে একটি <code>Err</code> তৈরি করে।</p>
+<h3 id="for-loops"><a class="header" href="#for-loops"><code>for</code> Loops</a></h3>
+<p>একটি <code>for</code> লুপে, <code>for</code> কীওয়ার্ডের সরাসরি পরে যে ভ্যালুটি আসে তা একটি প্যাটার্ন। উদাহরণস্বরূপ, <code>for x in y</code>-তে, <code>x</code> হলো প্যাটার্ন। লিস্টিং ১৯-৫ দেখায় কিভাবে <code>for</code> লুপের অংশ হিসেবে একটি টুপলকে <em>ডিস্ট্রাকচার</em> বা ভাঙার জন্য <code>for</code> লুপে একটি প্যাটার্ন ব্যবহার করতে হয়।</p>
+<Listing number="19-5" caption="একটি টুপল ডিস্ট্রাকচার করার জন্য একটি `for` লুপে প্যাটার্ন ব্যবহার করা">
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let v = vec!['a', 'b', 'c'];
+
+    for (index, value) in v.iter().enumerate() {
+        println!("{value} is at index {index}");
+    }
+<span class="boring">}</span></code></pre></pre>
+</Listing>
+<p>লিস্টিং ১৯-৫-এর কোডটি নিম্নলিখিত আউটপুট প্রিন্ট করবে:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling patterns v0.1.0 (file:///projects/patterns)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running `target/debug/patterns`
+a is at index 0
+b is at index 1
+c is at index 2
+</code></pre>
+<p>আমরা <code>enumerate</code> মেথড ব্যবহার করে একটি ইটারেটরকে অভিযোজিত করি যাতে এটি একটি মান এবং সেই মানের জন্য সূচক (index) তৈরি করে, যা একটি টুপলে রাখা হয়। প্রথম উৎপাদিত মানটি হলো টুপল <code>(0, 'a')</code>। যখন এই মানটি <code>(index, value)</code> প্যাটার্নের সাথে ম্যাচ করানো হয়, তখন <code>index</code> হবে <code>0</code> এবং <code>value</code> হবে <code>'a'</code>, যা আউটপুটের প্রথম লাইনটি প্রিন্ট করে।</p>
+<h3 id="function-parameters"><a class="header" href="#function-parameters">Function Parameters</a></h3>
+<p>ফাংশনের প্যারামিটারগুলোও প্যাটার্ন হতে পারে। লিস্টিং ১৯-৬-এর কোড, যা <code>foo</code> নামের একটি ফাংশন ঘোষণা করে যা <code>i32</code> টাইপের <code>x</code> নামের একটি প্যারামিটার নেয়, এতক্ষণে পরিচিত মনে হওয়া উচিত।</p>
+<Listing number="19-6" caption="একটি ফাংশন সিগনেচার প্যারামিটারে প্যাটার্ন ব্যবহার করে">
+<pre><pre class="playground"><code class="language-rust edition2024">fn foo(x: i32) {
+    // code goes here
+}
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre></pre>
+</Listing>
+<p><code>x</code> অংশটি একটি প্যাটার্ন! যেমন আমরা <code>let</code>-এর সাথে করেছি, আমরা একটি ফাংশনের আর্গুমেন্টে একটি টুপলকে প্যাটার্নের সাথে ম্যাচ করতে পারি। লিস্টিং ১৯-৭ একটি টুপলের মানগুলোকে ফাংশনে পাস করার সময় বিভক্ত করে।</p>
+<Listing number="19-7" file-name="src/main.rs" caption="প্যারামিটার সহ একটি ফাংশন যা একটি টুপলকে ডিস্ট্রাকচার করে">
+<pre><pre class="playground"><code class="language-rust edition2024">fn print_coordinates(&amp;(x, y): &amp;(i32, i32)) {
+    println!("Current location: ({x}, {y})");
+}
+
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&amp;point);
+}</code></pre></pre>
+</Listing>
+<p>এই কোডটি <code>Current location: (3, 5)</code> প্রিন্ট করে। <code>&amp;(3, 5)</code> মানগুলো <code>&amp;(x, y)</code> প্যাটার্নের সাথে মেলে, তাই <code>x</code>-এর মান <code>3</code> এবং <code>y</code>-এর মান <code>5</code> হয়।</p>
+<p>আমরা ফাংশন প্যারামিটার তালিকার মতো একইভাবে ক্লোজার প্যারামিটার তালিকাতেও প্যাটার্ন ব্যবহার করতে পারি কারণ ক্লোজারগুলো ফাংশনের মতোই, যেমনটি ১৩ অধ্যায়ে আলোচনা করা হয়েছে।</p>
+<p>এই মুহুর্তে, আপনি প্যাটার্ন ব্যবহার করার বেশ কয়েকটি উপায় দেখেছেন, কিন্তু প্যাটার্নগুলো আমরা যে সব জায়গায় ব্যবহার করতে পারি সেখানে একইভাবে কাজ করে না। কিছু জায়গায়, প্যাটার্নগুলো অবশ্যই অখণ্ডনযোগ্য (irrefutable) হতে হবে; অন্য পরিস্থিতিতে, তারা খণ্ডনযোগ্য (refutable) হতে পারে। আমরা এই দুটি ধারণা নিয়ে পরবর্তীতে আলোচনা করব।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch19-00-patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch19-02-refutability.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch19-00-patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch19-02-refutability.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

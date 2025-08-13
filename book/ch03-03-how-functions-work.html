@@ -1,0 +1,434 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ফাংশন - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="ফাংশন-functions"><a class="header" href="#ফাংশন-functions">ফাংশন (Functions)</a></h2>
+<p>রাস্ট কোডে ফাংশনের ব্যাপক ব্যবহার দেখা যায়। আপনি ইতিমধ্যে ভাষার সবচেয়ে গুরুত্বপূর্ণ ফাংশনগুলোর মধ্যে একটি দেখেছেন: <code>main</code> ফাংশন, যা অনেক প্রোগ্রামের প্রবেশ বিন্দু (entry point)। আপনি <code>fn</code> কীওয়ার্ডও দেখেছেন, যা আপনাকে নতুন ফাংশন ঘোষণা করার সুযোগ দেয়।</p>
+<p>রাস্ট কোড ফাংশন এবং ভ্যারিয়েবলের নামের জন্য প্রচলিত শৈলী হিসাবে <em>স্নেক কেস</em> (snake case) ব্যবহার করে, যেখানে সমস্ত অক্ষর ছোট হাতের হয় এবং শব্দগুলোকে আন্ডারস্কোর দিয়ে আলাদা করা হয়। এখানে একটি প্রোগ্রাম রয়েছে যাতে একটি উদাহরণ ফাংশন সংজ্ঞা রয়েছে:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    println!("Hello, world!");
+
+    another_function();
+}
+
+fn another_function() {
+    println!("Another function.");
+}</code></pre></pre>
+<p>আমরা রাস্ট-এ একটি ফাংশন সংজ্ঞায়িত করি <code>fn</code> লিখে, তারপরে ফাংশনের নাম এবং একজোড়া প্রথম বন্ধনী। কোঁকড়া বন্ধনী (curly brackets) কম্পাইলারকে বলে দেয় যে ফাংশন বডি কোথায় শুরু এবং শেষ হয়েছে।</p>
+<p>আমরা আমাদের সংজ্ঞায়িত যেকোনো ফাংশনকে তার নাম এবং তারপরে একজোড়া প্রথম বন্ধনী লিখে কল করতে পারি। যেহেতু <code>another_function</code> প্রোগ্রামে সংজ্ঞায়িত করা হয়েছে, তাই এটি <code>main</code> ফাংশনের ভিতর থেকে কল করা যেতে পারে। লক্ষ্য করুন যে আমরা সোর্স কোডে <code>main</code> ফাংশনের <em>পরে</em> <code>another_function</code> সংজ্ঞায়িত করেছি; আমরা এটি আগেও সংজ্ঞায়িত করতে পারতাম। রাস্ট আপনার ফাংশনগুলো কোথায় সংজ্ঞায়িত করা হয়েছে তা নিয়ে চিন্তা করে না, কেবল এটি দেখে যে সেগুলো কলারের দ্বারা দেখা যায় এমন একটি স্কোপে সংজ্ঞায়িত করা হয়েছে কিনা।</p>
+<p>চলুন ফাংশন সম্পর্কে আরও অন্বেষণ করতে <em>functions</em> নামে একটি নতুন বাইনারি প্রজেক্ট শুরু করি। <em>src/main.rs</em> ফাইলে <code>another_function</code> উদাহরণটি রাখুন এবং এটি চালান। আপনার নিম্নলিখিত আউটপুট দেখতে পাওয়া উচিত:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running `target/debug/functions`
+Hello, world!
+Another function.
+</code></pre>
+<p>লাইনগুলো <code>main</code> ফাংশনে যেভাবে প্রদর্শিত হয়েছে সেই ক্রমে কার্যকর হয়। প্রথমে "Hello, world!" বার্তাটি প্রিন্ট হয়, এবং তারপর <code>another_function</code> কল করা হয় এবং এর বার্তাটি প্রিন্ট হয়।</p>
+<h3 id="পযারামিটার-parameters"><a class="header" href="#পযারামিটার-parameters">প্যারামিটার (Parameters)</a></h3>
+<p>আমরা ফাংশনগুলোকে <em>প্যারামিটার</em> (parameters) সহ সংজ্ঞায়িত করতে পারি, যা ফাংশনের সিগনেচারের অংশ হিসাবে বিশেষ ভ্যারিয়েবল। যখন একটি ফাংশনে প্যারামিটার থাকে, আপনি সেই প্যারামিটারগুলোর জন্য এটিকে নির্দিষ্ট মান (concrete values) সরবরাহ করতে পারেন। প্রযুক্তিগতভাবে, নির্দিষ্ট মানগুলোকে <em>আর্গুমেন্ট</em> (arguments) বলা হয়, কিন্তু সাধারণ কথোপকথনে, লোকেরা <em>প্যারামিটার</em> এবং <em>আর্গুমেন্ট</em> শব্দ দুটিকে ফাংশনের সংজ্ঞায় ভ্যারিয়েবল বা ফাংশন কল করার সময় পাস করা নির্দিষ্ট মানগুলোর জন্য अदলবদল করে ব্যবহার করে।</p>
+<p><code>another_function</code>-এর এই সংস্করণে আমরা একটি প্যারামিটার যোগ করি:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    another_function(5);
+}
+
+fn another_function(x: i32) {
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<p>এই প্রোগ্রামটি চালানোর চেষ্টা করুন; আপনার নিম্নলিখিত আউটপুট পাওয়া উচিত:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.21s
+     Running `target/debug/functions`
+The value of x is: 5
+</code></pre>
+<p><code>another_function</code>-এর ঘোষণায় <code>x</code> নামে একটি প্যারামিটার রয়েছে। <code>x</code>-এর টাইপ <code>i32</code> হিসাবে নির্দিষ্ট করা হয়েছে। যখন আমরা <code>another_function</code>-এ <code>5</code> পাস করি, <code>println!</code> ম্যাক্রো ফরম্যাট স্ট্রিং-এ <code>x</code> ধারণকারী কোঁকড়া বন্ধনীর জোড়ার জায়গায় <code>5</code> রাখে।</p>
+<p>ফাংশনের সিগনেচারে, আপনাকে <em>অবশ্যই</em> প্রতিটি প্যারামিটারের টাইপ ঘোষণা করতে হবে। এটি রাস্টের ডিজাইনের একটি ইচ্ছাকৃত সিদ্ধান্ত: ফাংশন সংজ্ঞায় টাইপ অ্যানোটেশন প্রয়োজন হওয়ায় কম্পাইলারকে প্রায় কখনোই কোডের অন্য কোথাও আপনার কী টাইপ বোঝাতে চাইছেন তা বের করতে আপনার সাহায্য নিতে হয় না। কম্পাইলার আরও সহায়ক এরর বার্তা দিতে সক্ষম হয় যদি সে জানে ফাংশনটি কোন টাইপ আশা করছে।</p>
+<p>একাধিক প্যারামিটার সংজ্ঞায়িত করার সময়, প্যারামিটার ঘোষণাগুলোকে কমা দিয়ে আলাদা করুন, যেমন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    print_labeled_measurement(5, 'h');
+}
+
+fn print_labeled_measurement(value: i32, unit_label: char) {
+    println!("The measurement is: {value}{unit_label}");
+}</code></pre></pre>
+<p>এই উদাহরণটি <code>print_labeled_measurement</code> নামে একটি ফাংশন তৈরি করে যার দুটি প্যারামিটার রয়েছে। প্রথম প্যারামিটারের নাম <code>value</code> এবং এটি একটি <code>i32</code>। দ্বিতীয়টির নাম <code>unit_label</code> এবং এর টাইপ <code>char</code>। ফাংশনটি তারপর <code>value</code> এবং <code>unit_label</code> উভয়ই ধারণকারী টেক্সট প্রিন্ট করে।</p>
+<p>চলুন এই কোডটি চালানোর চেষ্টা করি। আপনার <em>functions</em> প্রজেক্টের <em>src/main.rs</em> ফাইলের বর্তমান প্রোগ্রামটিকে পূর্ববর্তী উদাহরণ দিয়ে প্রতিস্থাপন করুন এবং <code>cargo run</code> ব্যবহার করে এটি চালান:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/functions`
+The measurement is: 5h```
+
+যেহেতু আমরা `value`-এর জন্য `5` এবং `unit_label`-এর জন্য `'h'` মান দিয়ে ফাংশনটি কল করেছি, তাই প্রোগ্রামের আউটপুটে সেই মানগুলো রয়েছে।
+
+### স্টেটমেন্ট এবং এক্সপ্রেশন (Statements and Expressions)
+
+ফাংশন বডি একটি সিরিজের স্টেটমেন্ট (statements) দিয়ে গঠিত যা ঐচ্ছিকভাবে একটি এক্সপ্রেশন (expression) দিয়ে শেষ হতে পারে। এখন পর্যন্ত, আমরা যে ফাংশনগুলো দেখেছি সেগুলিতে একটি সমাপ্তি এক্সপ্রেশন অন্তর্ভুক্ত ছিল না, তবে আপনি একটি স্টেটমেন্টের অংশ হিসাবে একটি এক্সপ্রেশন দেখেছেন। যেহেতু রাস্ট একটি এক্সপ্রেশন-ভিত্তিক ভাষা, তাই এটি বোঝা একটি গুরুত্বপূর্ণ পার্থক্য। অন্যান্য ভাষার একই পার্থক্য নেই, তাই চলুন দেখি স্টেটমেন্ট এবং এক্সপ্রেশন কী এবং তাদের পার্থক্য ফাংশনের বডিকে কীভাবে প্রভাবিত করে।
+
+-   স্টেটমেন্ট হলো এমন নির্দেশ যা কোনো কাজ সম্পাদন করে এবং কোনো মান রিটার্ন করে না।
+-   এক্সপ্রেশন একটি ফলস্বরূপ মানে (resultant value) রূপান্তরিত হয়।
+
+চলুন কিছু উদাহরণ দেখি।
+
+আমরা আসলে ইতিমধ্যে স্টেটমেন্ট এবং এক্সপ্রেশন ব্যবহার করেছি। `let` কীওয়ার্ড দিয়ে একটি ভ্যারিয়েবল তৈরি করা এবং তাতে একটি মান অ্যাসাইন করা একটি স্টেটমেন্ট। লিস্টিং ৩-১-এ, `let y = 6;` একটি স্টেটমেন্ট।
+
+&lt;Listing number="3-1" file-name="src/main.rs" caption="একটি স্টেটমেন্ট ধারণকারী `main` ফাংশনের ঘোষণা"&gt;
+
+```rust
+fn main() {
+    let y = 6;
+}
+</code></pre>
+</Listing>
+<p>ফাংশন সংজ্ঞাও স্টেটমেন্ট; পুরো পূর্ববর্তী উদাহরণটি নিজেই একটি স্টেটমেন্ট। (যেমন আমরা নিচে দেখব, একটি ফাংশন <em>কল</em> করা একটি স্টেটমেন্ট নয়, যদিও।)</p>
+<p>স্টেটমেন্ট মান রিটার্ন করে না। অতএব, আপনি একটি <code>let</code> স্টেটমেন্টকে অন্য ভ্যারিয়েবলে অ্যাসাইন করতে পারবেন না, যেমন নিম্নলিখিত কোডটি করার চেষ্টা করে; আপনি একটি এরর পাবেন:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x = (let y = 6);
+}</code></pre>
+<p>যখন আপনি এই প্রোগ্রামটি চালান, তখন আপনি যে এররটি পাবেন তা এইরকম দেখায়:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+error: expected expression, found `let` statement
+ --&gt; src/main.rs:2:14
+  |
+2 |     let x = (let y = 6);
+  |              ^^^
+  |
+  = note: only supported directly in conditions of `if` and `while` expressions
+
+warning: unnecessary parentheses around assigned value
+ --&gt; src/main.rs:2:13
+  |
+2 |     let x = (let y = 6);
+  |             ^         ^
+  |
+  = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+  |
+2 -     let x = (let y = 6);
+2 +     let x = let y = 6;
+  |
+
+warning: `functions` (bin "functions") generated 1 warning
+error: could not compile `functions` (bin "functions") due to 1 previous error; 1 warning emitted
+</code></pre>
+<p><code>let y = 6</code> স্টেটমেন্টটি কোনো মান রিটার্ন করে না, তাই <code>x</code>-এর বাইন্ড করার জন্য কিছু নেই। এটি অন্যান্য ভাষায় যা ঘটে তার থেকে ভিন্ন, যেমন C এবং Ruby, যেখানে অ্যাসাইনমেন্টটি অ্যাসাইনমেন্টের মান রিটার্ন করে। সেই ভাষাগুলিতে, আপনি <code>x = y = 6</code> লিখতে পারেন এবং <code>x</code> এবং <code>y</code> উভয়েরই মান <code>6</code> হতে পারে; রাস্ট-এ তা হয় না।</p>
+<p>এক্সপ্রেশন একটি মানে রূপান্তরিত হয় এবং আপনি রাস্ট-এ যে বাকি কোড লিখবেন তার বেশিরভাগই তৈরি করে। একটি গণিত অপারেশন বিবেচনা করুন, যেমন <code>5 + 6</code>, যা একটি এক্সপ্রেশন যা <code>11</code> মানে রূপান্তরিত হয়। এক্সপ্রেশন স্টেটমেন্টের অংশ হতে পারে: লিস্টিং ৩-১-এ, <code>let y = 6;</code> স্টেটমেন্টের <code>6</code> একটি এক্সপ্রেশন যা <code>6</code> মানে রূপান্তরিত হয়। একটি ফাংশন কল করা একটি এক্সপ্রেশন। একটি ম্যাক্রো কল করা একটি এক্সপ্রেশন। কোঁকড়া বন্ধনী দিয়ে তৈরি একটি নতুন স্কোপ ব্লক একটি এক্সপ্রেশন, উদাহরণস্বরূপ:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let y = {
+        let x = 3;
+        x + 1
+    };
+
+    println!("The value of y is: {y}");
+}</code></pre></pre>
+<p>এই এক্সপ্রেশনটি:</p>
+<pre><code class="language-rust ignore">{
+    let x = 3;
+    x + 1
+}</code></pre>
+<p>একটি ব্লক যা, এই ক্ষেত্রে, <code>4</code>-এ রূপান্তরিত হয়। সেই মানটি <code>let</code> স্টেটমেন্টের অংশ হিসাবে <code>y</code>-এর সাথে বাইন্ড করা হয়। লক্ষ্য করুন যে <code>x + 1</code> লাইনের শেষে একটি সেমিকোলন নেই, যা আপনি এখন পর্যন্ত দেখা বেশিরভাগ লাইনের থেকে ভিন্ন। এক্সপ্রেশনের শেষে সেমিকোলন থাকে না। যদি আপনি একটি এক্সপ্রেশনের শেষে সেমিকোলন যোগ করেন, তবে আপনি এটিকে একটি স্টেটমেন্টে পরিণত করেন, এবং এটি তখন কোনো মান রিটার্ন করবে না। ফাংশন রিটার্ন ভ্যালু এবং এক্সপ্রেশন অন্বেষণ করার সময় এটি মনে রাখবেন।</p>
+<h3 id="রিটারন-ভযালু-সহ-ফাংশন-functions-with-return-values"><a class="header" href="#রিটারন-ভযালু-সহ-ফাংশন-functions-with-return-values">রিটার্ন ভ্যালু সহ ফাংশন (Functions with Return Values)</a></h3>
+<p>ফাংশনগুলো কল করা কোডে মান রিটার্ন করতে পারে। আমরা রিটার্ন ভ্যালুর নাম দিই না, তবে আমাদের অবশ্যই একটি তীরচিহ্ন (<code>-&gt;</code>) এর পরে তাদের টাইপ ঘোষণা করতে হবে। রাস্ট-এ, ফাংশনের রিটার্ন ভ্যালু ফাংশনের বডির ব্লকের চূড়ান্ত এক্সপ্রেশনের মানের সমার্থক। আপনি <code>return</code> কীওয়ার্ড ব্যবহার করে এবং একটি মান নির্দিষ্ট করে একটি ফাংশন থেকে আগেভাগে রিটার্ন করতে পারেন, তবে বেশিরভাগ ফাংশন শেষ এক্সপ্রেশনটি অন্তর্নিহিতভাবে রিটার্ন করে। এখানে একটি ফাংশনের উদাহরণ দেওয়া হল যা একটি মান রিটার্ন করে:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn five() -&gt; i32 {
+    5
+}
+
+fn main() {
+    let x = five();
+
+    println!("The value of x is: {x}");
+}</code></pre></pre>
+<p><code>five</code> ফাংশনে কোনো ফাংশন কল, ম্যাক্রো, বা এমনকি <code>let</code> স্টেটমেন্টও নেই—শুধু <code>5</code> সংখ্যাটি নিজেই। এটি রাস্ট-এ একটি সম্পূর্ণ বৈধ ফাংশন। লক্ষ্য করুন যে ফাংশনের রিটার্ন টাইপও <code>-&gt; i32</code> হিসাবে নির্দিষ্ট করা হয়েছে। এই কোডটি চালানোর চেষ্টা করুন; আউটপুটটি এইরকম হওয়া উচিত:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running `target/debug/functions`
+The value of x is: 5
+</code></pre>
+<p><code>five</code>-এর <code>5</code> হল ফাংশনের রিটার্ন ভ্যালু, যার কারণে রিটার্ন টাইপ <code>i32</code>। চলুন এটি আরও বিস্তারিতভাবে পরীক্ষা করি। দুটি গুরুত্বপূর্ণ বিষয় রয়েছে: প্রথমত, <code>let x = five();</code> লাইনটি দেখায় যে আমরা একটি ফাংশনের রিটার্ন ভ্যালু ব্যবহার করে একটি ভ্যারিয়েবল ইনিশিয়ালাইজ করছি। যেহেতু <code>five</code> ফাংশনটি একটি <code>5</code> রিটার্ন করে, তাই সেই লাইনটি নিম্নলিখিতটির সমান:</p>
+<pre><pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5;
+<span class="boring">}</span></code></pre></pre>
+<p>দ্বিতীয়ত, <code>five</code> ফাংশনের কোনো প্যারামিটার নেই এবং রিটার্ন ভ্যালুর টাইপ সংজ্ঞায়িত করে, কিন্তু ফাংশনের বডিটি একটি একাকী <code>5</code> যার কোনো সেমিকোলন নেই কারণ এটি একটি এক্সপ্রেশন যার মান আমরা রিটার্ন করতে চাই।</p>
+<p>চলুন আরেকটি উদাহরণ দেখি:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><pre class="playground"><code class="language-rust edition2024">fn main() {
+    let x = plus_one(5);
+
+    println!("The value of x is: {x}");
+}
+
+fn plus_one(x: i32) -&gt; i32 {
+    x + 1
+}</code></pre></pre>
+<p>এই কোডটি চালালে <code>The value of x is: 6</code> প্রিন্ট হবে। কিন্তু যদি আমরা <code>x + 1</code> ধারণকারী লাইনের শেষে একটি সেমিকোলন রাখি, এটিকে একটি এক্সপ্রেশন থেকে একটি স্টেটমেন্টে পরিবর্তন করে, আমরা একটি এরর পাব:</p>
+<p><span class="filename">ফাইলের নাম: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
+    let x = plus_one(5);
+
+    println!("The value of x is: {x}");
+}
+
+fn plus_one(x: i32) -&gt; i32 {
+    x + 1;
+}</code></pre>
+<p>এই কোডটি কম্পাইল করলে একটি এরর উৎপন্ন হয়, যেমন:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling functions v0.1.0 (file:///projects/functions)
+error[E0308]: mismatched types
+ --&gt; src/main.rs:7:24
+  |
+7 | fn plus_one(x: i32) -&gt; i32 {
+  |    --------            ^^^ expected `i32`, found `()`
+  |    |
+  |    implicitly returns `()` as its body has no tail or `return` expression
+8 |     x + 1;
+  |          - help: remove this semicolon to return this value
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `functions` (bin "functions") due to 1 previous error
+</code></pre>
+<p>প্রধান এরর বার্তা, <code>mismatched types</code> (বেমানান টাইপ), এই কোডের মূল সমস্যাটি প্রকাশ করে। <code>plus_one</code> ফাংশনের সংজ্ঞা বলছে যে এটি একটি <code>i32</code> রিটার্ন করবে, কিন্তু স্টেটমেন্টগুলো কোনো মানে রূপান্তরিত হয় না, যা <code>()</code> (ইউনিট টাইপ) দ্বারা প্রকাশ করা হয়। অতএব, কিছুই রিটার্ন করা হয় না, যা ফাংশন সংজ্ঞার সাথে বিরোধিতা করে এবং একটি এররের কারণ হয়। এই আউটপুটে, রাস্ট সম্ভবত এই সমস্যাটি সংশোধন করতে সাহায্য করার জন্য একটি বার্তা প্রদান করে: এটি সেমিকোলনটি সরানোর পরামর্শ দেয়, যা এররটি ঠিক করবে।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch03-02-data-types.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch03-04-comments.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch03-02-data-types.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch03-04-comments.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

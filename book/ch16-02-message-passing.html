@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>থ্রেডগুলির মধ্যে ডেটা স্থানান্তরের জন্য মেসেজ পাসিং ব্যবহার - The Rust Programming Language</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris.css">
+        <link rel="stylesheet" href="theme/2018-edition.css">
+        <link rel="stylesheet" href="theme/semantic-notes.css">
+        <link rel="stylesheet" href="theme/listing.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust Programming Language</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="থরেডের-মধযে-ডেটা-সথানানতরের-জনয-মেসেজ-পাসিং-বযবহার-করা"><a class="header" href="#থরেডের-মধযে-ডেটা-সথানানতরের-জনয-মেসেজ-পাসিং-বযবহার-করা">থ্রেডের মধ্যে ডেটা স্থানান্তরের জন্য মেসেজ পাসিং ব্যবহার করা</a></h2>
+<p>নিরাপদ কনকারেন্সি নিশ্চিত করার একটি ক্রমবর্ধমান জনপ্রিয় পদ্ধতি হলো <em>মেসেজ পাসিং</em> (message passing), যেখানে থ্রেড বা অ্যাক্টররা ডেটা সহ মেসেজ একে অপরকে পাঠিয়ে যোগাযোগ করে। <a href="https://golang.org/doc/effective_go.html#concurrency">গো ল্যাঙ্গুয়েজের ডকুমেন্টেশন</a> থেকে একটি স্লোগান দিয়ে ধারণাটি এখানে দেওয়া হলো: "মেমরি শেয়ার করে যোগাযোগ করবেন না; পরিবর্তে, যোগাযোগের মাধ্যমে মেমরি শেয়ার করুন।"</p>
+<p>মেসেজ-সেন্ডিং কনকারেন্সি সম্পন্ন করার জন্য, Rust-এর স্ট্যান্ডার্ড লাইব্রেরি চ্যানেলগুলোর একটি ইমপ্লিমেন্টেশন সরবরাহ করে। একটি <em>চ্যানেল</em> (channel) হলো একটি সাধারণ প্রোগ্রামিং ধারণা যার মাধ্যমে ডেটা এক থ্রেড থেকে অন্য থ্রেডে পাঠানো হয়।</p>
+<p>আপনি প্রোগ্রামিংয়ে একটি চ্যানেলকে জলের একটি দিকনির্দেশক চ্যানেলের মতো কল্পনা করতে পারেন, যেমন একটি স্রোত বা নদী। আপনি যদি একটি রাবারের হাঁসের মতো কিছু একটি নদীতে রাখেন, তবে এটি স্রোতের সাথে জলপথের শেষ পর্যন্ত ভ্রমণ করবে।</p>
+<p>একটি চ্যানেলের দুটি অর্ধেক থাকে: একটি ট্রান্সমিটার এবং একটি রিসিভার। ট্রান্সমিটারের অর্ধেকটি হলো উজানের অবস্থান যেখানে আপনি রাবারের হাঁসটিকে নদীতে রাখেন, এবং রিসিভারের অর্ধেকটি হলো যেখানে রাবারের হাঁসটি স্রোতের শেষে পৌঁছায়। আপনার কোডের একটি অংশ আপনি যে ডেটা পাঠাতে চান তা দিয়ে ট্রান্সমিটারের মেথড কল করে, এবং অন্য একটি অংশ আগত মেসেজের জন্য রিসিভিং প্রান্তটি পরীক্ষা করে। যদি ট্রান্সমিটার বা রিসিভারের অর্ধেকটি ড্রপ করা হয় তবে একটি চ্যানেলকে <em>বন্ধ</em> (closed) বলা হয়।</p>
+<p>এখানে, আমরা এমন একটি প্রোগ্রামের দিকে কাজ করব যেখানে একটি থ্রেড ভ্যালু তৈরি করে এবং সেগুলোকে একটি চ্যানেলের মাধ্যমে পাঠায়, এবং অন্য একটি থ্রেড সেই ভ্যালুগুলো গ্রহণ করে এবং সেগুলো প্রিন্ট করে। আমরা ফিচারটি চিত্রিত করার জন্য একটি চ্যানেল ব্যবহার করে থ্রেডগুলোর মধ্যে সহজ ভ্যালু পাঠাব। একবার আপনি এই কৌশলের সাথে পরিচিত হয়ে গেলে, আপনি একে অপরের সাথে যোগাযোগ করার প্রয়োজন এমন যেকোনো থ্রেডের জন্য চ্যানেল ব্যবহার করতে পারেন, যেমন একটি চ্যাট সিস্টেম বা এমন একটি সিস্টেম যেখানে অনেক থ্রেড একটি গণনার অংশ সম্পাদন করে এবং ফলাফলগুলো একত্রিত করে এমন একটি থ্রেডে অংশগুলো পাঠায়।</p>
+<p>প্রথমে, তালিকা ১৬-৬-এ, আমরা একটি চ্যানেল তৈরি করব কিন্তু এটি দিয়ে কিছুই করব না। মনে রাখবেন যে এটি এখনও কম্পাইল হবে না কারণ Rust বলতে পারে না যে আমরা চ্যানেলের মাধ্যমে কোন ধরনের ভ্যালু পাঠাতে চাই।</p>
+<Listing number="16-6" file-name="src/main.rs" caption="একটি চ্যানেল তৈরি করা এবং দুটি অর্ধেককে `tx` এবং `rx`-এ অ্যাসাইন করা">
+<pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+}</code></pre>
+</Listing>
+<p>আমরা <code>mpsc::channel</code> ফাংশন ব্যবহার করে একটি নতুন চ্যানেল তৈরি করি; <code>mpsc</code> মানে হলো <em>multiple producer, single consumer</em> (একাধিক উৎপাদক, একক ভোক্তা)। সংক্ষেপে, Rust-এর স্ট্যান্ডার্ড লাইব্রেরি যেভাবে চ্যানেলগুলো প্রয়োগ করে তার মানে হলো একটি চ্যানেলের একাধিক <em>প্রেরণকারী</em> প্রান্ত থাকতে পারে যা ভ্যালু তৈরি করে কিন্তু শুধুমাত্র একটি <em>গ্রহণকারী</em> প্রান্ত থাকে যা সেই ভ্যালুগুলো গ্রহণ করে। কল্পনা করুন একাধিক স্রোত একসাথে একটি বড় নদীতে প্রবাহিত হচ্ছে: যেকোনো স্রোতে পাঠানো সবকিছু শেষে একটি নদীতেই শেষ হবে। আমরা আপাতত একটি একক প্রডিউসার দিয়ে শুরু করব, কিন্তু এই উদাহরণটি কাজ করলে আমরা একাধিক প্রডিউসার যোগ করব।</p>
+<p><code>mpsc::channel</code> ফাংশনটি একটি টাপল (tuple) রিটার্ন করে, যার প্রথম উপাদানটি হলো প্রেরক প্রান্ত—ট্রান্সমিটার—এবং দ্বিতীয় উপাদানটি হলো প্রাপক প্রান্ত—রিসিভার। <code>tx</code> এবং <code>rx</code> সংক্ষেপণগুলো ঐতিহ্যগতভাবে অনেক ক্ষেত্রে যথাক্রমে <em>ট্রান্সমিটার</em> (transmitter) এবং <em>রিসিভার</em> (receiver) এর জন্য ব্যবহৃত হয়, তাই আমরা প্রতিটি প্রান্ত নির্দেশ করার জন্য আমাদের ভ্যারিয়েবলগুলোর নাম সেভাবেই রাখি। আমরা একটি <code>let</code> স্টেটমেন্ট একটি প্যাটার্নসহ ব্যবহার করছি যা টাপলটিকে ডিস্ট্রাকচার (destructures) করে; আমরা অধ্যায় ১৯-এ <code>let</code> স্টেটমেন্টে প্যাটার্নের ব্যবহার এবং ডিস্ট্রাকচারিং নিয়ে আলোচনা করব। আপাতত, জেনে রাখুন যে <code>mpsc::channel</code> দ্বারা রিটার্ন করা টাপলের অংশগুলো বের করার জন্য এই পদ্ধতিতে একটি <code>let</code> স্টেটমেন্ট ব্যবহার করা একটি সুবিধাজনক উপায়।</p>
+<p>আসুন প্রেরক প্রান্তটিকে একটি স্পনড থ্রেডে منتقل করি এবং এটি একটি স্ট্রিং পাঠাক যাতে স্পনড থ্রেডটি মূল থ্রেডের সাথে যোগাযোগ করে, যেমনটি তালিকা ১৬-৭-এ দেখানো হয়েছে। এটি নদীর উজানে একটি রাবারের হাঁস রাখার মতো বা এক থ্রেড থেকে অন্য থ্রেডে একটি চ্যাট বার্তা পাঠানোর মতো।</p>
+<Listing number="16-7" file-name="src/main.rs" caption='`tx`-কে একটি স্পনড থ্রেডে সরানো এবং `"hi"` পাঠানো'>
+<pre><pre class="playground"><code class="language-rust edition2024">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+}</code></pre></pre>
+</Listing>
+<p>আবারও, আমরা একটি নতুন থ্রেড তৈরি করতে <code>thread::spawn</code> ব্যবহার করছি এবং তারপর <code>tx</code>-কে ক্লোজারে منتقل করতে <code>move</code> ব্যবহার করছি যাতে স্পনড থ্রেড <code>tx</code>-এর মালিক হয়। স্পনড থ্রেডটিকে চ্যানেলের মাধ্যমে বার্তা পাঠাতে সক্ষম হওয়ার জন্য ট্রান্সমিটারের মালিক হতে হবে।</p>
+<p>ট্রান্সমিটারের একটি <code>send</code> মেথড আছে যা আমরা যে ভ্যালুটি পাঠাতে চাই তা নেয়। <code>send</code> মেথডটি একটি <code>Result&lt;T, E&gt;</code> টাইপ রিটার্ন করে, তাই যদি রিসিভারটি ইতিমধ্যে ড্রপ করা হয়ে থাকে এবং একটি ভ্যালু পাঠানোর কোনো জায়গা না থাকে, তবে সেন্ড অপারেশনটি একটি এরর রিটার্ন করবে। এই উদাহরণে, আমরা একটি এররের ক্ষেত্রে প্যানিক করার জন্য <code>unwrap</code> কল করছি। কিন্তু একটি বাস্তব অ্যাপ্লিকেশনে, আমরা এটি সঠিকভাবে হ্যান্ডেল করব: সঠিক এরর হ্যান্ডলিংয়ের কৌশলগুলো পর্যালোচনা করতে অধ্যায় ৯-এ ফিরে যান।</p>
+<p>তালিকা ১৬-৮-এ, আমরা মূল থ্রেডে রিসিভার থেকে ভ্যালুটি পাব। এটি নদীর শেষে জল থেকে রাবারের হাঁসটি উদ্ধার করার মতো বা একটি চ্যাট বার্তা গ্রহণ করার মতো।</p>
+<Listing number="16-8" file-name="src/main.rs" caption='মূল থ্রেডে `"hi"` ভ্যালুটি গ্রহণ করা এবং এটি প্রিন্ট করা'>
+<pre><pre class="playground"><code class="language-rust edition2024">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {received}");
+}</code></pre></pre>
+</Listing>
+<p>রিসিভারের দুটি দরকারী মেথড আছে: <code>recv</code> এবং <code>try_recv</code>। আমরা <code>recv</code> ব্যবহার করছি, যা <em>receive</em> এর সংক্ষিপ্ত রূপ, যা মূল থ্রেডের এক্সিকিউশন ব্লক করবে এবং চ্যানেলের মাধ্যমে একটি ভ্যালু পাঠানো না হওয়া পর্যন্ত অপেক্ষা করবে। একবার একটি ভ্যালু পাঠানো হলে, <code>recv</code> এটি একটি <code>Result&lt;T, E&gt;</code>-এ রিটার্ন করবে। যখন ট্রান্সমিটার বন্ধ হয়ে যায়, <code>recv</code> একটি এরর রিটার্ন করে সংকেত দেবে যে আর কোনো ভ্যালু আসছে না।</p>
+<p><code>try_recv</code> মেথডটি ব্লক করে না, বরং অবিলম্বে একটি <code>Result&lt;T, E&gt;</code> রিটার্ন করবে: একটি <code>Ok</code> ভ্যালু যাতে একটি বার্তা থাকে যদি একটি উপলব্ধ থাকে এবং একটি <code>Err</code> ভ্যালু যদি এই সময়ে কোনো বার্তা না থাকে। <code>try_recv</code> ব্যবহার করা দরকারী যদি এই থ্রেডের বার্তাগুলোর জন্য অপেক্ষা করার সময় অন্য কাজ করার থাকে: আমরা একটি লুপ লিখতে পারি যা প্রতি এতক্ষণ <code>try_recv</code> কল করে, একটি বার্তা উপলব্ধ থাকলে তা হ্যান্ডেল করে, এবং অন্যথায় অন্য কাজ করে কিছুক্ষণ যতক্ষণ না আবার পরীক্ষা করা হয়।</p>
+<p>আমরা এই উদাহরণে সরলতার জন্য <code>recv</code> ব্যবহার করেছি; আমাদের মূল থ্রেডের জন্য বার্তাগুলোর জন্য অপেক্ষা করা ছাড়া অন্য কোনো কাজ নেই, তাই মূল থ্রেডটিকে ব্লক করা উপযুক্ত।</p>
+<p>যখন আমরা তালিকা ১৬-৮-এর কোডটি চালাই, আমরা মূল থ্রেড থেকে প্রিন্ট করা ভ্যালুটি দেখতে পাব:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Got: hi
+</code></pre>
+<p>পারফেক্ট!</p>
+<h3 id="চযানেল-এবং-মালিকানা-সথানানতর-channels-and-ownership-transference"><a class="header" href="#চযানেল-এবং-মালিকানা-সথানানতর-channels-and-ownership-transference">চ্যানেল এবং মালিকানা স্থানান্তর (Channels and Ownership Transference)</a></h3>
+<p>মালিকানার নিয়মগুলো মেসেজ পাঠানোর ক্ষেত্রে একটি গুরুত্বপূর্ণ ভূমিকা পালন করে কারণ এগুলো আপনাকে নিরাপদ, কনকারেন্ট কোড লিখতে সাহায্য করে। আপনার Rust প্রোগ্রামজুড়ে মালিকানা নিয়ে চিন্তা করার সুবিধা হলো কনকারেন্ট প্রোগ্রামিংয়ে ভুল প্রতিরোধ করা। আসুন একটি পরীক্ষা করি যাতে চ্যানেল এবং মালিকানা কীভাবে সমস্যা প্রতিরোধ করতে একসাথে কাজ করে তা দেখানো যায়: আমরা চ্যানেলের মাধ্যমে পাঠানোর <em>পরে</em> স্পনড থ্রেডে একটি <code>val</code> ভ্যালু ব্যবহার করার চেষ্টা করব। তালিকা ১৬-৯-এর কোডটি কম্পাইল করার চেষ্টা করুন যাতে দেখা যায় কেন এই কোডটি অনুমোদিত নয়।</p>
+<Listing number="16-9" file-name="src/main.rs" caption="চ্যানেলের মাধ্যমে `val` পাঠানোর পর এটি ব্যবহার করার চেষ্টা করা">
+<pre><code class="language-rust ignore does_not_compile">use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+        println!("val is {val}");
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {received}");
+}</code></pre>
+</Listing>
+<p>এখানে, আমরা <code>tx.send</code>-এর মাধ্যমে চ্যানেলে পাঠানোর পর <code>val</code> প্রিন্ট করার চেষ্টা করছি। এটি অনুমোদন করা একটি খারাপ ধারণা হবে: একবার ভ্যালুটি অন্য থ্রেডে পাঠানো হয়ে গেলে, সেই থ্রেডটি আমরা আবার ভ্যালুটি ব্যবহার করার চেষ্টা করার আগে এটিকে পরিবর্তন বা ড্রপ করতে পারে। সম্ভবত, অন্য থ্রেডের পরিবর্তনগুলো অসংগত বা অস্তিত্বহীন ডেটার কারণে ত্রুটি বা অপ্রত্যাশিত ফলাফলের কারণ হতে পারে। যাইহোক, যদি আমরা তালিকা ১৬-৯-এর কোডটি কম্পাইল করার চেষ্টা করি তবে Rust আমাদের একটি এরর দেয়:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling message-passing v0.1.0 (file:///projects/message-passing)
+error[E0382]: borrow of moved value: `val`
+  --&gt; src/main.rs:10:26
+   |
+8  |         let val = String::from("hi");
+   |             --- move occurs because `val` has type `String`, which does not implement the `Copy` trait
+9  |         tx.send(val).unwrap();
+   |                 --- value moved here
+10 |         println!("val is {val}");
+   |                          ^^^^^ value borrowed here after move
+   |
+   = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `message-passing` (bin "message-passing") due to 1 previous error
+</code></pre>
+<p>আমাদের কনকারেন্সি ভুল একটি কম্পাইল-টাইম এররের কারণ হয়েছে। <code>send</code> ফাংশনটি তার প্যারামিটারের মালিকানা নেয়, এবং যখন ভ্যালুটি সরানো হয় তখন রিসিভার এটির মালিকানা নেয়। এটি আমাদের পাঠানোর পরে ঘটনাক্রমে আবার ভ্যালুটি ব্যবহার করা থেকে বিরত রাখে; মালিকানা সিস্টেম পরীক্ষা করে যে সবকিছু ঠিক আছে।</p>
+<h3 id="একাধিক-ভযালু-পাঠানো-এবং-রিসিভারকে-অপেকষা-করতে-দেখা"><a class="header" href="#একাধিক-ভযালু-পাঠানো-এবং-রিসিভারকে-অপেকষা-করতে-দেখা">একাধিক ভ্যালু পাঠানো এবং রিসিভারকে অপেক্ষা করতে দেখা</a></h3>
+<p>তালিকা ১৬-৮-এর কোডটি কম্পাইল এবং রান হয়েছে, কিন্তু এটি স্পষ্টভাবে দেখায়নি যে দুটি পৃথক থ্রেড চ্যানেলের মাধ্যমে একে অপরের সাথে কথা বলছে।</p>
+<p>তালিকা ১৬-১০-এ আমরা কিছু পরিবর্তন করেছি যা প্রমাণ করবে যে তালিকা ১৬-৮-এর কোডটি কনকারেন্টলি চলছে: স্পনড থ্রেডটি এখন একাধিক মেসেজ পাঠাবে এবং প্রতিটি মেসেজের মধ্যে এক সেকেন্ডের জন্য বিরতি দেবে।</p>
+<Listing number="16-10" file-name="src/main.rs" caption="একাধিক মেসেজ পাঠানো এবং প্রতিটির মধ্যে বিরতি দেওয়া">
+<pre><code class="language-rust noplayground">use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {received}");
+    }
+}</code></pre>
+</Listing>
+<p>এইবার, স্পনড থ্রেডে স্ট্রিংগুলোর একটি ভেক্টর আছে যা আমরা মূল থ্রেডে পাঠাতে চাই। আমরা সেগুলোর উপর ইটারেট করি, প্রতিটি পৃথকভাবে পাঠাই, এবং প্রতিটির মধ্যে এক সেকেন্ডের <code>Duration</code> ভ্যালু দিয়ে <code>thread::sleep</code> ফাংশন কল করে বিরতি দিই।</p>
+<p>মূল থ্রেডে, আমরা আর স্পষ্টভাবে <code>recv</code> ফাংশন কল করছি না: পরিবর্তে, আমরা <code>rx</code>-কে একটি ইটারেটর হিসাবে ব্যবহার করছি। প্রতিটি প্রাপ্ত ভ্যালুর জন্য, আমরা এটি প্রিন্ট করছি। যখন চ্যানেলটি বন্ধ হয়ে যাবে, ইটারেশন শেষ হয়ে যাবে।</p>
+<p>তালিকা ১৬-১০-এর কোডটি চালানোর সময়, আপনার প্রতিটি লাইনের মধ্যে এক-সেকেন্ডের বিরতিসহ নিম্নলিখিত আউটপুটটি দেখতে পাওয়া উচিত:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Got: hi
+Got: from
+Got: the
+Got: thread
+</code></pre>
+<p>যেহেতু আমাদের মূল থ্রেডের <code>for</code> লুপে কোনো কোড নেই যা বিরতি বা বিলম্ব করে, আমরা বলতে পারি যে মূল থ্রেডটি স্পনড থ্রেড থেকে ভ্যালু গ্রহণ করার জন্য অপেক্ষা করছে।</p>
+<h3 id="টরানসমিটার-কলোন-করে-একাধিক-পরডিউসার-তৈরি-করা"><a class="header" href="#টরানসমিটার-কলোন-করে-একাধিক-পরডিউসার-তৈরি-করা">ট্রান্সমিটার ক্লোন করে একাধিক প্রডিউসার তৈরি করা</a></h3>
+<p>আগে আমরা উল্লেখ করেছি যে <code>mpsc</code> হলো <em>multiple producer, single consumer</em> এর সংক্ষিপ্ত রূপ। আসুন <code>mpsc</code>-কে কাজে লাগাই এবং তালিকা ১৬-১০-এর কোডটি প্রসারিত করে একাধিক থ্রেড তৈরি করি যা সবাই একই রিসিভারে ভ্যালু পাঠায়। আমরা ট্রান্সমিটার ক্লোন করে এটি করতে পারি, যেমনটি তালিকা ১৬-১১-এ দেখানো হয়েছে।</p>
+<Listing number="16-11" file-name="src/main.rs" caption="একাধিক প্রডিউসার থেকে একাধিক মেসেজ পাঠানো">
+<pre><code class="language-rust noplayground"><span class="boring">use std::sync::mpsc;
+</span><span class="boring">use std::thread;
+</span><span class="boring">use std::time::Duration;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>    // --snip--
+
+    let (tx, rx) = mpsc::channel();
+
+    let tx1 = tx.clone();
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("hi"),
+            String::from("from"),
+            String::from("the"),
+            String::from("thread"),
+        ];
+
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("more"),
+            String::from("messages"),
+            String::from("for"),
+            String::from("you"),
+        ];
+
+        for val in vals {
+            tx.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for received in rx {
+        println!("Got: {received}");
+    }
+
+    // --snip--
+<span class="boring">}</span></code></pre>
+</Listing>
+<p>এইবার, আমরা প্রথম স্পনড থ্রেড তৈরি করার আগে, আমরা ট্রান্সমিটারের উপর <code>clone</code> কল করি। এটি আমাদের একটি নতুন ট্রান্সমিটার দেবে যা আমরা প্রথম স্পনড থ্রেডে পাস করতে পারি। আমরা আসল ট্রান্সমিটারটি একটি দ্বিতীয় স্পনড থ্রেডে পাস করি। এটি আমাদের দুটি থ্রেড দেয়, প্রতিটি একটি রিসিভারে ভিন্ন ভিন্ন মেসেজ পাঠায়।</p>
+<p>যখন আপনি কোডটি চালান, আপনার আউটপুটটি এইরকম কিছু দেখতে হবে:</p>
+<!-- Not extracting output because changes to this output aren't significant;
+the changes are likely to be due to the threads running differently rather than
+changes in the compiler -->
+<pre><code class="language-text">Got: hi
+Got: more
+Got: from
+Got: messages
+Got: for
+Got: the
+Got: thread
+Got: you
+</code></pre>
+<p>আপনার সিস্টেমের উপর নির্ভর করে আপনি ভ্যালুগুলো অন্য ক্রমে দেখতে পারেন। এটিই কনকারেন্সি কে আকর্ষণীয় এবং কঠিন করে তোলে। আপনি যদি <code>thread::sleep</code> নিয়ে পরীক্ষা করেন, বিভিন্ন থ্রেডে বিভিন্ন ভ্যালু দেন, প্রতিটি রান আরও নন-ডিটারমিনিস্টিক হবে এবং প্রতিবার ভিন্ন আউটপুট তৈরি করবে।</p>
+<p>এখন যেহেতু আমরা দেখেছি চ্যানেলগুলো কীভাবে কাজ করে, আসুন কনকারেন্সির একটি ভিন্ন পদ্ধতি দেখি।</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch16-01-threads.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch16-03-shared-state.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch16-01-threads.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch16-03-shared-state.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
